@@ -1,45 +1,500 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>testing</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@800&display=swap">
+    <title>Contact List</title>
+    <link rel="icon" type="image/png" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689457077/contacticon_pzou6m.png">
     <style>
         body {
-            background-color: black;
-            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .contact-list {
             padding: 0;
+            list-style: none;
         }
 
-        .gradient-text {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-family: 'Work Sans', sans-serif; /* Updated font-family */
-            font-weight: 800;
-            font-size: 48px;
-            color: transparent;
-            background: linear-gradient(45deg, #ff0084, #3300ff, #ff0000, #00ff00);
-            background-size: 800% 800%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradient 10s ease infinite;
+        .contact-item {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid #ccc;
         }
 
-        @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
+        .contact-item .contact-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #f4f4f4;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .contact-item .contact-avatar span {
+            color: #666;
+            font-weight: bold;
+        }
+
+        .contact-item .contact-info {
+            flex-grow: 1;
+        }
+
+        .contact-item h2 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .contact-item p {
+            margin: 0;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .contact-item .contact-actions {
+            display: flex;
+        }
+
+        .contact-item .contact-actions button {
+            margin-left: 10px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            background-color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .contact-item .contact-actions button:hover {
+            background-color: #f4f4f4;
+        }
+
+        .contact-item .contact-actions button.phone img,
+        .contact-item .contact-actions button.message img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
     </style>
+    <script>
+        // Function to generate a random avatar image based on the initials of the name
+        function generateAvatar(name) {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            const size = 50;
+            canvas.width = size;
+            canvas.height = size;
+
+            const initials = name
+                .split(' ')
+                .map(word => word.charAt(0))
+                .join('');
+
+            const colors = ['#e53935', '#d81b60', '#8e24aa', '#5e35b1', '#3949ab', '#1e88e5', '#039be5', '#00acc1', '#00897b', '#43a047', '#7cb342', '#c0ca33', '#fdd835', '#ffb300', '#fb8c00', '#f4511e', '#6d4c41', '#757575', '#546e7a'];
+
+            const randomIndex = Math.floor(Math.random() * colors.length);
+            const color = colors[randomIndex];
+
+            ctx.fillStyle = color;
+            ctx.fillRect(0, 0, size, size);
+
+            ctx.font = `${Math.floor(size / 2.5)}px Arial`;
+            ctx.fillStyle = '#ffffff';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText(initials, size / 2, size / 2);
+
+            return canvas.toDataURL();
+        }
+    </script>
 </head>
 <body>
-    <div class="gradient-text">TESTING</div>
+    <ul class="contact-list">
+        <li class="contact-item">
+            <div class="contact-avatar" id="alphonsa-avatar"></div>
+            <div class="contact-info">
+                <h2>Alphonsa</h2>
+                <p>519-694-8450</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('5196948450')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('5196948450')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="bethanie-avatar"></div>
+            <div class="contact-info">
+                <h2>Bethanie</h2>
+                <p>226-377-8177</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('2263778177')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('2263778177')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="cali-avatar"></div>
+            <div class="contact-info">
+                <h2>Cali</h2>
+                <p>519-671-7736</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('5196717736')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('5196717736')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="carlin-avatar"></div>
+            <div class="contact-info">
+                <h2>Carlin</h2>
+                <p>519-859-2355</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('5198592355')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('5198592355')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="cynthia-avatar"></div>
+            <div class="contact-info">
+                <h2>Cynthia</h2>
+                <p>226-504-7443</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('2265047443')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('2265047443')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="david-avatar"></div>
+            <div class="contact-info">
+                <h2>David</h2>
+                <p>519-200-1227</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('5192001227')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('5192001227')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="deepanshi-avatar"></div>
+            <div class="contact-info">
+                <h2>Deepanshi</h2>
+                <p>519-701-0850</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('5197010850')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('5197010850')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="emma-d-avatar"></div>
+            <div class="contact-info">
+                <h2>Emma D</h2>
+                <p>519-532-8140</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('5195328140')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('5195328140')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="emma-h-avatar"></div>
+            <div class="contact-info">
+                <h2>Emma H</h2>
+                <p>226-376-3174</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('2263763174')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('2263763174')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="erin-avatar"></div>
+            <div class="contact-info">
+                <h2>Erin</h2>
+                <p>519-851-2909</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('5198512909')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('5198512909')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="fatima-avatar"></div>
+            <div class="contact-info">
+                <h2>Fatima</h2>
+                <p>226-504-7827</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('2265047827')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('2265047827')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="jack-avatar"></div>
+            <div class="contact-info">
+                <h2>Jack</h2>
+                <p>519-702-4163</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('5197024163')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('5197024163')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="jacob-avatar"></div>
+            <div class="contact-info">
+                <h2>Jacob</h2>
+                <p>1-647-923-7579</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('16479237579')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('16479237579')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="jaison-avatar"></div>
+            <div class="contact-info">
+                <h2>Jaison</h2>
+                <p>519-697-9754</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('5196979754')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('5196979754')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="jess-avatar"></div>
+            <div class="contact-info">
+                <h2>Jess</h2>
+                <p>519-641-9150</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('5196419150')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('5196419150')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="julissa-avatar"></div>
+            <div class="contact-info">
+                <h2>Julissa</h2>
+                <p>226-268-3842</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('2262683842')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('2262683842')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="kai-avatar"></div>
+            <div class="contact-info">
+                <h2>Kai</h2>
+                <p>226-984-1761</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('2269841761')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('2269841761')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="kaila-avatar"></div>
+            <div class="contact-info">
+                <h2>Kaila</h2>
+                <p>519-878-1039</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('5198781039')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('5198781039')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="kristen-avatar"></div>
+            <div class="contact-info">
+                <h2>Kristen</h2>
+                <p>226-899-6241</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('2268996241')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('2268996241')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="liam-avatar"></div>
+            <div class="contact-info">
+                <h2>Liam</h2>
+                <p>1-647-677-9892</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('16476779892')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('16476779892')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="madison-avatar"></div>
+            <div class="contact-info">
+                <h2>Madison</h2>
+                <p>226-234-1085</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('2262341085')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('2262341085')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="mae-avatar"></div>
+            <div class="contact-info">
+                <h2>Mae</h2>
+                <p>226-700-8718</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('2267008718')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('2267008718')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="sara-avatar"></div>
+            <div class="contact-info">
+                <h2>Sara</h2>
+                <p>1-416-276-2382</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('14162762382')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('14162762382')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="sean-avatar"></div>
+            <div class="contact-info">
+                <h2>Sean</h2>
+                <p>1-905-699-9287</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('19056999287')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('19056999287')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="shabnam-avatar"></div>
+            <div class="contact-info">
+                <h2>Shabnam</h2>
+                <p>1-437-679-4456</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('14376794456')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('14376794456')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="shriyash-avatar"></div>
+            <div class="contact-info">
+                <h2>Shriyash</h2>
+                <p>226-883-1363</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('2268831363')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('2268831363')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="shyan-avatar"></div>
+            <div class="contact-info">
+                <h2>Shyan</h2>
+                <p>226-927-5383</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('2269275383')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('2269275383')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+        <li class="contact-item">
+            <div class="contact-avatar" id="steph-avatar"></div>
+            <div class="contact-info">
+                <h2>Steph</h2>
+                <p>226-268-1704</p>
+            </div>
+            <div class="contact-actions">
+                <button class="phone" onclick="callContact('2262681704')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/phone_q6yfcj.png" alt="Phone Icon"></button>
+                <button class="message" onclick="sendMessage('2262681704')"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689456408/message_mkbtmc.png" alt="Message Icon"></button>
+            </div>
+        </li>
+    </ul>
+    <script>
+        // Generate random avatar images based on contact names
+        const alphonsaName = "Alphonsa";
+        const bethanieName = "Bethanie";
+        const caliName = "Cali";
+        const carlinName = "Carlin";
+        const cynthiaName = "Cynthia";
+        const davidName = "David";
+        const deepanshiName = "Deepanshi";
+        const emmaDName = "Emma D";
+        const emmaHName = "Emma H";
+        const erinName = "Erin";
+        const fatimaName = "Fatima";
+        const jackName = "Jack";
+        const jacobName = "Jacob";
+        const jaisonName = "Jaison";
+        const jessName = "Jess";
+        const julissaName = "Julissa";
+        const kaiName = "Kai";
+        const kailaName = "Kaila";
+        const kristenName = "Kristen";
+        const liamName = "Liam";
+        const madisonName = "Madison";
+        const maeName = "Mae";
+        const saraName = "Sara";
+        const seanName = "Sean";
+        const shabnamName = "Shabnam";
+        const shriyashName = "Shriyash";
+        const shyanName = "Shyan";
+        const stephName = "Steph";
+
+        document.getElementById("alphonsa-avatar").style.backgroundImage = `url(${generateAvatar(alphonsaName)})`;
+        document.getElementById("bethanie-avatar").style.backgroundImage = `url(${generateAvatar(bethanieName)})`;
+        document.getElementById("cali-avatar").style.backgroundImage = `url(${generateAvatar(caliName)})`;
+        document.getElementById("carlin-avatar").style.backgroundImage = `url(${generateAvatar(carlinName)})`;
+        document.getElementById("cynthia-avatar").style.backgroundImage = `url(${generateAvatar(cynthiaName)})`;
+        document.getElementById("david-avatar").style.backgroundImage = `url(${generateAvatar(davidName)})`;
+        document.getElementById("deepanshi-avatar").style.backgroundImage = `url(${generateAvatar(deepanshiName)})`;
+        document.getElementById("emma-d-avatar").style.backgroundImage = `url(${generateAvatar(emmaDName)})`;
+        document.getElementById("emma-h-avatar").style.backgroundImage = `url(${generateAvatar(emmaHName)})`;
+        document.getElementById("erin-avatar").style.backgroundImage = `url(${generateAvatar(erinName)})`;
+        document.getElementById("fatima-avatar").style.backgroundImage = `url(${generateAvatar(fatimaName)})`;
+        document.getElementById("jack-avatar").style.backgroundImage = `url(${generateAvatar(jackName)})`;
+        document.getElementById("jacob-avatar").style.backgroundImage = `url(${generateAvatar(jacobName)})`;
+        document.getElementById("jaison-avatar").style.backgroundImage = `url(${generateAvatar(jaisonName)})`;
+        document.getElementById("jess-avatar").style.backgroundImage = `url(${generateAvatar(jessName)})`;
+        document.getElementById("julissa-avatar").style.backgroundImage = `url(${generateAvatar(julissaName)})`;
+        document.getElementById("kai-avatar").style.backgroundImage = `url(${generateAvatar(kaiName)})`;
+        document.getElementById("kaila-avatar").style.backgroundImage = `url(${generateAvatar(kailaName)})`;
+        document.getElementById("kristen-avatar").style.backgroundImage = `url(${generateAvatar(kristenName)})`;
+        document.getElementById("liam-avatar").style.backgroundImage = `url(${generateAvatar(liamName)})`;
+        document.getElementById("madison-avatar").style.backgroundImage = `url(${generateAvatar(madisonName)})`;
+        document.getElementById("mae-avatar").style.backgroundImage = `url(${generateAvatar(maeName)})`;
+        document.getElementById("sara-avatar").style.backgroundImage = `url(${generateAvatar(saraName)})`;
+        document.getElementById("sean-avatar").style.backgroundImage = `url(${generateAvatar(seanName)})`;
+        document.getElementById("shabnam-avatar").style.backgroundImage = `url(${generateAvatar(shabnamName)})`;
+        document.getElementById("shriyash-avatar").style.backgroundImage = `url(${generateAvatar(shriyashName)})`;
+        document.getElementById("shyan-avatar").style.backgroundImage = `url(${generateAvatar(shyanName)})`;
+        document.getElementById("steph-avatar").style.backgroundImage = `url(${generateAvatar(stephName)})`;
+
+        // Function to handle calling a contact
+        function callContact(phoneNumber) {
+            console.log('Calling ' + phoneNumber);
+            // Your code to initiate a phone call goes here
+        }
+
+        // Function to handle sending a message to a contact
+        function sendMessage(phoneNumber) {
+            console.log('Sending message to ' + phoneNumber);
+            // Your code to send a text message goes here
+        }
+    </script>
 </body>
 </html>
