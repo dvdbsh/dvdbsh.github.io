@@ -1,78 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello, it's dvdbsh!</title>
+    <title>david</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@800&display=swap">
     <style>
         body {
             background-color: black;
-            font-family: 'Work Sans', sans-serif;
-            font-size: 36px;
             margin: 0;
             padding: 0;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
         }
 
-        header {
-            background-color: #333;
-            color: white;
-            padding: 20px;
+        .gradient-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Work Sans', sans-serif; /* Updated font-family */
+            font-weight: 800;
+            font-size: 48px;
+            color: transparent;
+            background: linear-gradient(45deg, #ff0084, #3300ff, #ff0000, #00ff00);
+            background-size: 800% 800%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradient 10s ease infinite;
         }
 
-        main {
-            flex: 1;
-            display: flex;
-        }
-
-        aside {
-            background-color: #555;
-            color: white;
-            padding: 20px;
-            width: 200px;
-        }
-
-        section {
-            flex: 1;
-            padding: 20px;
-            color: white;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                font-size: 24px;
+        @keyframes gradient {
+            0% {
+                background-position: 0% 50%;
             }
-
-            aside {
-                display: none;
+            50% {
+                background-position: 100% 50%;
             }
-
-            section {
-                width: 100%;
+            100% {
+                background-position: 0% 50%;
             }
         }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <h1>Hello, it's dvdbsh!</h1>
-    </header>
-    <main>
-        <aside>
-            <nav>
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="#">About</a></li>
-                    <li><a href="#">Projects</a></li>
-                    <li><a href="#">Contact</a></li>
-                </ul>
-            </nav>
-        </aside>
-        <section>
-            <h2>Welcome to my GitHub page!</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus vitae nisi mattis, tempus erat a, placerat urna. Sed tincidunt dapibus tellus, vitae maximus lacus porttitor sed.</p>
-        </section>
-    </main>
+    <div class="gradient-text">DVDBSH</div>
 </body>
 </html>
