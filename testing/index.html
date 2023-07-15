@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="apple-touch-icon" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689457077/contacticon_pzou6m.png">
   <script src="https://unpkg.com/feather-icons@4.28.0"></script>
   <style>
@@ -57,13 +57,6 @@
       height: 50px;
       border-radius: 50%;
       margin-right: 10px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-weight: bold;
-      font-size: 20px;
-      color: white;
-      background-color: #007aff;
     }
 
     .contact-name {
@@ -103,26 +96,16 @@
   </style>
   <title>Partners</title>
   <script>
-    // Generate unique background color based on phone number
-    function generateBackgroundColor(phoneNumber) {
-      // Use the last two digits of the phone number for color generation
-      const colorSeed = parseInt(phoneNumber.slice(-2));
-      const hue = colorSeed * 3.6; // Map the seed to a color hue
-      return `hsl(${hue}, 70%, 40%)`;
-    }
+// Set the contact's avatar using DiceBear API
+function setContactAvatar(name, phoneNumber) {
+  const avatar = document.createElement('img');
+  avatar.classList.add('avatar');
+  avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${encodeURIComponent(name)}&scale=80`;
+  avatar.alt = 'avatar';
 
-    // Set the contact's initial and background color
-    function setContactAvatar(name, phoneNumber) {
-      const avatar = document.createElement('div');
-      const initials = name.charAt(0).toUpperCase();
-      const backgroundColor = generateBackgroundColor(phoneNumber);
+  return avatar;
+}
 
-      avatar.classList.add('avatar');
-      avatar.innerText = initials;
-      avatar.style.backgroundColor = backgroundColor;
-
-      return avatar;
-    }
 
     // Create a contact item
     function createContactItem(name, phoneNumber) {
