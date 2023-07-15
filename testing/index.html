@@ -4,14 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689457077/contacticon_pzou6m.png">
   <script src="https://unpkg.com/feather-icons@4.28.0"></script>
   <style>
     body {
       margin: 0;
       font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #fff;
+      background-color: #f9f9f9;
     }
 
     .app-header {
@@ -19,7 +19,7 @@
       align-items: center;
       justify-content: center;
       padding: 20px;
-      background-color: #f4f4f4;
+      background-color: #f2f0eb;
     }
 
     .app-header h1 {
@@ -41,14 +41,14 @@
       font-size: 16px;
       font-weight: 600;
       padding: 10px;
-      background-color: #f4f4f4;
+      background-color: #f2f0eb;
     }
 
     .contact-item {
       display: flex;
       align-items: center;
       padding: 10px;
-      border-bottom: 1px solid #dcdcdc;
+      border-bottom: 1px solid #22292f;
       cursor: pointer;
     }
 
@@ -83,29 +83,32 @@
     }
 
     .circle-button.message {
-      background-color: #007aff;
+      background-color: #83ddbf;
     }
 
     .circle-button.phone {
-      background-color: #34c759;
+      background-color: #00754a;
     }
 
     .circle-button svg {
       stroke: white;
     }
+
+    .blank-space {
+      height: 100px; /* Adjust the height as needed */
+    }
   </style>
   <title>Partners</title>
   <script>
-// Set the contact's avatar using DiceBear API
-function setContactAvatar(name, phoneNumber) {
-  const avatar = document.createElement('img');
-  avatar.classList.add('avatar');
-  avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${encodeURIComponent(name)}&scale=80`;
-  avatar.alt = 'avatar';
+    // Set the contact's avatar using DiceBear API
+    function setContactAvatar(name, phoneNumber) {
+      const avatar = document.createElement('img');
+      avatar.classList.add('avatar');
+      avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${encodeURIComponent(name)}&scale=80&backgroundColor=006241,00754a,1e3932,d4e9e2&shapeColor=eed350,b6cbd5,d3705a,005e66,4c9f87,c89543,c0d48b,edc4c9`;
+      avatar.alt = 'avatar';
 
-  return avatar;
-}
-
+      return avatar;
+    }
 
     // Create a contact item
     function createContactItem(name, phoneNumber) {
@@ -237,5 +240,7 @@ function setContactAvatar(name, phoneNumber) {
   </div>
 
   <div class="contact-list" id="contact-list"></div>
+
+  <div class="blank-space"></div> <!-- Add a blank space at the bottom -->
 </body>
 </html>
