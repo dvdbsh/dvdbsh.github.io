@@ -5,12 +5,61 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/feather-icons@4.28.0"></script>
   <style>
-    .contact {
-      background-color: #eeeeee;
-      border-radius: 25px;
-      padding: 5px;
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+      background-color: #fff;
+    }
+
+    .app-header {
       display: flex;
       align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    .app-header h1 {
+      font-size: 20px;
+      font-weight: 600;
+    }
+
+    .search-bar {
+      padding: 10px;
+      background-color: #f4f4f4;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 5px;
+      border-radius: 5px;
+      border: 1px solid #dcdcdc;
+      font-size: 14px;
+    }
+
+    .contact-list {
+      padding: 0;
+      list-style: none;
+      margin: 0;
+    }
+
+    .contact-section {
+      margin-top: 20px;
+    }
+
+    .contact-section-heading {
+      font-size: 16px;
+      font-weight: 600;
+      padding: 10px;
+      background-color: #f4f4f4;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      padding: 10px;
+      border-bottom: 1px solid #dcdcdc;
+      cursor: pointer;
     }
 
     .avatar {
@@ -24,10 +73,12 @@
       font-weight: bold;
       font-size: 20px;
       color: white;
+      background-color: #007bff;
     }
 
-    .name {
-      margin-right: 10px;
+    .contact-name {
+      font-size: 18px;
+      font-weight: 500;
     }
 
     .circle-buttons {
@@ -40,18 +91,13 @@
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      background-color: #5cb85c;
+      background-color: #007bff;
       margin-left: 5px;
       padding: 5px;
       cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
-    }
-
-    .circle-button.phone {
-      background-color: #0275d8;
-      margin-right: 5px;
     }
 
     .circle-button svg {
@@ -70,45 +116,158 @@
 
     // Set the contact's initial and background color
     function setContactAvatar(name, phoneNumber) {
-      const avatar = document.getElementById('avatar');
+      const avatar = document.createElement('div');
       const initials = name.charAt(0).toUpperCase();
       const backgroundColor = generateBackgroundColor(phoneNumber);
 
+      avatar.classList.add('avatar');
       avatar.innerText = initials;
       avatar.style.backgroundColor = backgroundColor;
+
+      return avatar;
     }
 
-    // Example contact data
-    const name = 'David Busch';
-    const phoneNumber = '519-200-1227';
+    // Create a contact item
+    function createContactItem(name, phoneNumber) {
+      const contactItem = document.createElement('li');
+      contactItem.classList.add('contact-item');
 
-    document.addEventListener('DOMContentLoaded', function () {
+      const avatar = setContactAvatar(name, phoneNumber);
+      const contactName = document.createElement('div');
+      contactName.classList.add('contact-name');
+      contactName.innerText = name;
+
+      const circleButtons = document.createElement('div');
+      circleButtons.classList.add('circle-buttons');
+
+      const messageButton = document.createElement('a');
+      messageButton.classList.add('circle-button');
+      messageButton.href = `sms:${phoneNumber}`;
+      const messageIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      messageIcon.setAttribute('data-feather', 'message-circle');
+      messageIcon.setAttribute('width', '24');
+      messageIcon.setAttribute('height', '24');
+      messageIcon.setAttribute('viewBox', '0 0 24 24');
+      messageIcon.innerHTML = '<circle cx="12" cy="12" r="10" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="8" y1="8" x2="8" y2="8" /><line x1="12" y1="8" x2="12" y2="8" /><line x1="16" y1="8" x2="16" y2="8" /><line x1="8" y1="16" x2="16" y2="16" />';
+      messageButton.appendChild(messageIcon);
+
+      const phoneButton = document.createElement('a');
+      phoneButton.classList.add('circle-button');
+      phoneButton.classList.add('phone');
+      phoneButton.href = `tel:${phoneNumber}`;
+      const phoneIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      phoneIcon.setAttribute('data-feather', 'phone');
+      phoneIcon.setAttribute('width', '24');
+      phoneIcon.setAttribute('height', '24');
+      phoneIcon.setAttribute('viewBox', '0 0 24 24');
+      phoneIcon.innerHTML = '<path d="M3 6c1.53-2.744 4.255-4.718 7.32-5.315C11.297.076 11.648 0 12 0c.352 0 .703.076 1.68.685C16.744 1.282 19.468 3.256 21 6H3zm-1 0v12h22V6H2zm12 2a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm-4 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm8 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zM3 14h6a1 1 0 0 1 1 1v4H2v-4a1 1 0 0 1 1-1zm14 0h6a1 1 0 0 1 1 1v4h-8v-4a1 1 0 0 1 1-1zm-7 3a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1z" />';
+      phoneButton.appendChild(phoneIcon);
+
+      circleButtons.appendChild(messageButton);
+      circleButtons.appendChild(phoneButton);
+
+      contactItem.appendChild(avatar);
+      contactItem.appendChild(contactName);
+      contactItem.appendChild(circleButtons);
+
+      return contactItem;
+    }
+
+    // Group contacts by the first letter of their names
+    function groupContactsByLetter(contacts) {
+      const groups = {};
+
+      contacts.forEach(contact => {
+        const firstLetter = contact.name.charAt(0).toUpperCase();
+        if (!groups[firstLetter]) {
+          groups[firstLetter] = [];
+        }
+        groups[firstLetter].push(contact);
+      });
+
+      return groups;
+    }
+
+    // Filter contacts based on search query
+    function filterContacts(query) {
+      const contactList = document.getElementById('contact-list');
+      const contactSections = contactList.getElementsByClassName('contact-section');
+
+      for (let i = 0; i < contactSections.length; i++) {
+        const contactSection = contactSections[i];
+        const contactItems = contactSection.getElementsByClassName('contact-item');
+
+        let sectionHidden = true; // Flag to check if the section should be hidden
+
+        for (let j = 0; j < contactItems.length; j++) {
+          const contactItem = contactItems[j];
+          const contactName = contactItem.getElementsByClassName('contact-name')[0].innerText.toUpperCase();
+
+          if (contactName.includes(query.toUpperCase())) {
+            contactItem.style.display = '';
+            sectionHidden = false; // At least one matching contact, so section should be visible
+          } else {
+            contactItem.style.display = 'none';
+          }
+        }
+
+        // Show/hide the section heading based on the presence of matching contacts
+        contactSection.getElementsByClassName('contact-section-heading')[0].style.display = sectionHidden ? 'none' : '';
+      }
+    }
+
+    function initializeContacts() {
+      const contacts = [
+        { name: 'John Doe', phoneNumber: '123-456-7890' },
+        { name: 'Jane Smith', phoneNumber: '987-654-3210' },
+        { name: 'David Busch', phoneNumber: '519-200-1227' },
+        { name: 'Adam Smith', phoneNumber: '555-123-4567' },
+        { name: 'Amy Johnson', phoneNumber: '999-888-7777' },
+        { name: 'Bob Williams', phoneNumber: '111-222-3333' },
+      ];
+
+      const groupedContacts = groupContactsByLetter(contacts);
+      const contactList = document.getElementById('contact-list');
+
+      for (const letter in groupedContacts) {
+        const section = document.createElement('div');
+        section.classList.add('contact-section');
+
+        const heading = document.createElement('div');
+        heading.classList.add('contact-section-heading');
+        heading.innerText = letter;
+
+        const contacts = groupedContacts[letter];
+
+        contacts.forEach(contact => {
+          const contactItem = createContactItem(contact.name, contact.phoneNumber);
+          section.appendChild(contactItem);
+        });
+
+        section.insertBefore(heading, section.firstChild);
+        contactList.appendChild(section);
+      }
+
       feather.replace();
-      setContactAvatar(name, phoneNumber);
+    }
+
+    document.addEventListener('DOMContentLoaded', initializeContacts);
+
+    const searchInput = document.getElementById('search-input');
+    searchInput.addEventListener('keyup', () => {
+      filterContacts(searchInput.value);
     });
   </script>
 </head>
 <body>
-  <div class="contact">
-    <div class="avatar" id="avatar"></div>
-    <div class="name">David Busch</div>
-    <div class="circle-buttons">
-      <div class="circle-button">
-        <svg data-feather="message-circle" width="24" height="24" viewBox="0 0 24 24">
-          <circle cx="12" cy="12" r="10" />
-          <line x1="8" y1="12" x2="16" y2="12" />
-          <line x1="8" y1="8" x2="8" y2="8" />
-          <line x1="12" y1="8" x2="12" y2="8" />
-          <line x1="16" y1="8" x2="16" y2="8" />
-          <line x1="8" y1="16" x2="16" y2="16" />
-        </svg>
-      </div>
-      <div class="circle-button phone">
-        <svg data-feather="phone" width="24" height="24" viewBox="0 0 24 24">
-          <path d="M3 6c1.53-2.744 4.255-4.718 7.32-5.315C11.297.076 11.648 0 12 0c.352 0 .703.076 1.68.685C16.744 1.282 19.468 3.256 21 6H3zm-1 0v12h22V6H2zm12 2a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm-4 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm8 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zM3 14h6a1 1 0 0 1 1 1v4H2v-4a1 1 0 0 1 1-1zm14 0h6a1 1 0 0 1 1 1v4h-8v-4a1 1 0 0 1 1-1zm-7 3a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1z"/>
-        </svg>
-      </div>
-    </div>
+  <div class="app-header">
+    <h1>Contacts</h1>
   </div>
+
+  <div class="search-bar">
+    <input type="text" id="search-input" class="search-input" placeholder="Search contacts">
+  </div>
+
+  <div class="contact-list" id="contact-list"></div>
 </body>
 </html>
