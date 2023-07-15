@@ -2,7 +2,10 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link rel="apple-touch-icon" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689457077/contacticon_pzou6m.png">
   <script src="https://unpkg.com/feather-icons@4.28.0"></script>
   <style>
     body {
@@ -22,19 +25,6 @@
     .app-header h1 {
       font-size: 20px;
       font-weight: 600;
-    }
-
-    .search-bar {
-      padding: 10px;
-      background-color: #f4f4f4;
-    }
-
-    .search-input {
-      width: 100%;
-      padding: 5px;
-      border-radius: 5px;
-      border: 1px solid #dcdcdc;
-      font-size: 14px;
     }
 
     .contact-list {
@@ -73,7 +63,7 @@
       font-weight: bold;
       font-size: 20px;
       color: white;
-      background-color: #007bff;
+      background-color: #007aff;
     }
 
     .contact-name {
@@ -91,7 +81,6 @@
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      background-color: #007bff;
       margin-left: 5px;
       padding: 5px;
       cursor: pointer;
@@ -100,18 +89,26 @@
       align-items: center;
     }
 
+    .circle-button.message {
+      background-color: #007aff;
+    }
+
+    .circle-button.phone {
+      background-color: #34c759;
+    }
+
     .circle-button svg {
       stroke: white;
     }
   </style>
-  <title>Contacts Web App</title>
+  <title>Partners</title>
   <script>
     // Generate unique background color based on phone number
     function generateBackgroundColor(phoneNumber) {
       // Use the last two digits of the phone number for color generation
       const colorSeed = parseInt(phoneNumber.slice(-2));
       const hue = colorSeed * 3.6; // Map the seed to a color hue
-      return `hsl(${hue}, 70%, 50%)`;
+      return `hsl(${hue}, 70%, 40%)`;
     }
 
     // Set the contact's initial and background color
@@ -142,6 +139,7 @@
 
       const messageButton = document.createElement('a');
       messageButton.classList.add('circle-button');
+      messageButton.classList.add('message');
       messageButton.href = `sms:${phoneNumber}`;
       const messageIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
       messageIcon.setAttribute('data-feather', 'message-circle');
@@ -188,43 +186,39 @@
       return groups;
     }
 
-    // Filter contacts based on search query
-    function filterContacts(query) {
-      const contactList = document.getElementById('contact-list');
-      const contactSections = contactList.getElementsByClassName('contact-section');
-
-      for (let i = 0; i < contactSections.length; i++) {
-        const contactSection = contactSections[i];
-        const contactItems = contactSection.getElementsByClassName('contact-item');
-
-        let sectionHidden = true; // Flag to check if the section should be hidden
-
-        for (let j = 0; j < contactItems.length; j++) {
-          const contactItem = contactItems[j];
-          const contactName = contactItem.getElementsByClassName('contact-name')[0].innerText.toUpperCase();
-
-          if (contactName.includes(query.toUpperCase())) {
-            contactItem.style.display = '';
-            sectionHidden = false; // At least one matching contact, so section should be visible
-          } else {
-            contactItem.style.display = 'none';
-          }
-        }
-
-        // Show/hide the section heading based on the presence of matching contacts
-        contactSection.getElementsByClassName('contact-section-heading')[0].style.display = sectionHidden ? 'none' : '';
-      }
-    }
-
     function initializeContacts() {
       const contacts = [
-        { name: 'John Doe', phoneNumber: '123-456-7890' },
-        { name: 'Jane Smith', phoneNumber: '987-654-3210' },
-        { name: 'David Busch', phoneNumber: '519-200-1227' },
-        { name: 'Adam Smith', phoneNumber: '555-123-4567' },
-        { name: 'Amy Johnson', phoneNumber: '999-888-7777' },
-        { name: 'Bob Williams', phoneNumber: '111-222-3333' },
+        { name: 'Alphonsa', phoneNumber: '519-694-8450' },
+        { name: 'Bethanie', phoneNumber: '226-377-8177' },
+        { name: 'Cali', phoneNumber: '519-671-7736' },
+        { name: 'Carlin', phoneNumber: '519-859-2355' },
+        { name: 'Cynthia', phoneNumber: '226-504-7443' },
+        { name: 'David', phoneNumber: '519-200-1227' },
+        { name: 'Deepanshi', phoneNumber: '519-701-0850' },
+        { name: 'Emma D', phoneNumber: '519-532-8140' },
+        { name: 'Emma H', phoneNumber: '226-376-3174' },
+        { name: 'Erin', phoneNumber: '519-851-2909' },
+        { name: 'Fatima', phoneNumber: '226-504-7827' },
+        { name: 'Jack', phoneNumber: '519-702-4163' },
+        { name: 'Jacob', phoneNumber: '1-647-923-7579' },
+        { name: 'Jaison', phoneNumber: '519-697-9754' },
+        { name: 'Jess', phoneNumber: '519-641-9150' },
+        { name: 'Julissa', phoneNumber: '226-268-3842' },
+        { name: 'Kai', phoneNumber: '226-984-1761' },
+        { name: 'Kaila', phoneNumber: '519-878-1039' },
+        { name: 'Kristen', phoneNumber: '226-899-6241' },
+        { name: 'Liam', phoneNumber: '1-647-677-9892' },
+        { name: 'Madison', phoneNumber: '226-234-1085' },
+        { name: 'Mae', phoneNumber: '226-700-8718' },
+        { name: 'Sara', phoneNumber: '1-416-276-2382' },
+        { name: 'Sean', phoneNumber: '1-905-699-9287' },
+        { name: 'Shabnam', phoneNumber: '1-437-679-4456' },
+        { name: 'Shriyash', phoneNumber: '226-883-1363' },
+        { name: 'Shyan', phoneNumber: '226-927-5383' },
+        { name: 'Steph', phoneNumber: '226-268-1704' }
       ];
+
+      contacts.sort((a, b) => a.name.localeCompare(b.name));
 
       const groupedContacts = groupContactsByLetter(contacts);
       const contactList = document.getElementById('contact-list');
@@ -252,20 +246,11 @@
     }
 
     document.addEventListener('DOMContentLoaded', initializeContacts);
-
-    const searchInput = document.getElementById('search-input');
-    searchInput.addEventListener('keyup', () => {
-      filterContacts(searchInput.value);
-    });
   </script>
 </head>
 <body>
   <div class="app-header">
-    <h1>Contacts</h1>
-  </div>
-
-  <div class="search-bar">
-    <input type="text" id="search-input" class="search-input" placeholder="Search contacts">
+    <h1>Partners</h1>
   </div>
 
   <div class="contact-list" id="contact-list"></div>
