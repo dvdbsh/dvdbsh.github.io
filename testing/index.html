@@ -6,12 +6,13 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689457077/contacticon_pzou6m.png">
+  <link href="https://fonts.googleapis.com/css?family=Work+Sans&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/feather-icons@4.28.0"></script>
   <style>
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-      background-color: #f9f9f9;
+      font-family: 'Work Sans', sans-serif;
+      background-color: #f2f0eb;
     }
 
     .app-header {
@@ -48,6 +49,7 @@
       display: flex;
       align-items: center;
       padding: 10px;
+      background-color:#f9f9f9;
       border-bottom: 1px solid #22292f;
       cursor: pointer;
     }
@@ -92,10 +94,13 @@
 
     .circle-button svg {
       stroke: white;
+      stroke-width: 1;
     }
 
     .blank-space {
-      height: 100px; /* Adjust the height as needed */
+      height: 100px;
+      background-color:#f9f9f9;
+      /* Adjust the height as needed */
     }
   </style>
   <title>Partners</title>
@@ -104,7 +109,7 @@
     function setContactAvatar(name, phoneNumber) {
       const avatar = document.createElement('img');
       avatar.classList.add('avatar');
-      avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${encodeURIComponent(name)}&scale=80&backgroundColor=006241,00754a,1e3932,d4e9e2&shapeColor=eed350,b6cbd5,d3705a,005e66,4c9f87,c89543,c0d48b,edc4c9`;
+      avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${encodeURIComponent(name)}&scale=70&backgroundColor=006241,00754a,1e3932,d4e9e2&shapeColor=eed350,b6cbd5,d3705a,005e66,4c9f87,c89543,dc714e,f0e0b0`;
       avatar.alt = 'avatar';
 
       return avatar;
@@ -144,7 +149,7 @@
       phoneIcon.setAttribute('width', '24');
       phoneIcon.setAttribute('height', '24');
       phoneIcon.setAttribute('viewBox', '0 0 24 24');
-      phoneIcon.innerHTML = '<path d="M3 6c1.53-2.744 4.255-4.718 7.32-5.315C11.297.076 11.648 0 12 0c.352 0 .703.076 1.68.685C16.744 1.282 19.468 3.256 21 6H3zm-1 0v12h22V6H2zm12 2a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm-4 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm8 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zM3 14h6a1 1 0 0 1 1 1v4H2v-4a1 1 0 0 1 1-1zm14 0h6a1 1 0 0 1 1 1v4h-8v-4a1 1 0 0 1 1-1zm-7 3a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1z" />';
+      phoneIcon.innerHTML = '<path d="M3 6c1.53-2.744 4.255-4.718 7.32-5.315C11.297.076 11.648 0 12 0c.352 0 .703.076 1.68.685C16.744 1.282 19.468 3.256 21 6H3zm-1 0v12h22V6H2zm12 2a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm-4 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm8 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm3 2h-2V8h2v2zm-4 0h-2V8h2v2zm-4 0H8V8h2v2zm-4 0H4V8h2v2zm-3 2h14a1 1 0 0 1 1 1v4H2v-4a1 1 0 0 1 1-1zm16 0h2v6h-2v-6z" />';
       phoneButton.appendChild(phoneIcon);
 
       circleButtons.appendChild(messageButton);
@@ -185,7 +190,6 @@
         { name: 'Emma H', phoneNumber: '226-376-3174' },
         { name: 'Erin', phoneNumber: '519-851-2909' },
         { name: 'Fatima', phoneNumber: '226-504-7827' },
-        { name: 'Jack', phoneNumber: '519-702-4163' },
         { name: 'Jacob', phoneNumber: '1-647-923-7579' },
         { name: 'Jaison', phoneNumber: '519-697-9754' },
         { name: 'Jess', phoneNumber: '519-641-9150' },
@@ -193,13 +197,11 @@
         { name: 'Kai', phoneNumber: '226-984-1761' },
         { name: 'Kaila', phoneNumber: '519-878-1039' },
         { name: 'Kristen', phoneNumber: '226-899-6241' },
-        { name: 'Liam', phoneNumber: '1-647-677-9892' },
         { name: 'Madison', phoneNumber: '226-234-1085' },
         { name: 'Mae', phoneNumber: '226-700-8718' },
         { name: 'Sara', phoneNumber: '1-416-276-2382' },
         { name: 'Sean', phoneNumber: '1-905-699-9287' },
         { name: 'Shabnam', phoneNumber: '1-437-679-4456' },
-        { name: 'Shriyash', phoneNumber: '226-883-1363' },
         { name: 'Shyan', phoneNumber: '226-927-5383' },
         { name: 'Steph', phoneNumber: '226-268-1704' }
       ];
