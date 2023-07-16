@@ -115,9 +115,10 @@
   <script>
     // Set the contact's avatar using DiceBear API
     function setContactAvatar(name, phoneNumber) {
+      const lastFourDigits = phoneNumber.slice(-6) + (phoneNumber);
       const avatar = document.createElement('img');
       avatar.classList.add('avatar');
-      avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${encodeURIComponent(name)}&scale=70&backgroundColor=006241,00754a,1e3932,d4e9e2&shapeColor=eed350,b6cbd5,d3705a,00747e,4c9f87,c89543,dc714e,f0e0b0`;
+      avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${lastFourDigits}&scale=70&backgroundColor=006241,00754a,1e3932,d4e9e2&shapeColor=eed350,b6cbd5,d3705a,00747e,4c9f87,c89543,dc714e,f0e0b0`;
       avatar.alt = 'avatar';
 
       return avatar;
