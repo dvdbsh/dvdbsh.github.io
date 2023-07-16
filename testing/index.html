@@ -69,6 +69,12 @@
       font-weight: 500;
     }
 
+    .contact-position {
+      font-size: 14px;
+      font-weight: 400;
+      color: #555;
+    }
+
     .circle-buttons {
       margin-left: auto;
       display: flex;
@@ -104,16 +110,6 @@
       height: 100px;
       background-color: #f9f9f9;
     }
-    
-    .fixed-top-bar {
-      position: fixed;
-      top: -260px;
-      left: 0;
-      width: 100%;
-      height: 300px;
-      background-color: #006241;
-      z-index: 999;
-    }
   </style>
   <title>Partners</title>
   <script>
@@ -128,14 +124,21 @@
     }
 
     // Create a contact item
-    function createContactItem(name, phoneNumber) {
+    function createContactItem(name, phoneNumber, position) {
       const contactItem = document.createElement('li');
       contactItem.classList.add('contact-item');
 
       const avatar = setContactAvatar(name, phoneNumber);
+      const contactInfo = document.createElement('div');
+      contactInfo.classList.add('contact-info');
+
       const contactName = document.createElement('div');
       contactName.classList.add('contact-name');
       contactName.innerText = name;
+
+      const contactPosition = document.createElement('div');
+      contactPosition.classList.add('contact-position');
+      contactPosition.innerText = position;
 
       const circleButtons = document.createElement('div');
       circleButtons.classList.add('circle-buttons');
@@ -167,8 +170,10 @@
       circleButtons.appendChild(messageButton);
       circleButtons.appendChild(phoneButton);
 
+      contactInfo.appendChild(contactName);
+      contactInfo.appendChild(contactPosition);
       contactItem.appendChild(avatar);
-      contactItem.appendChild(contactName);
+      contactItem.appendChild(contactInfo);
       contactItem.appendChild(circleButtons);
 
       return contactItem;
@@ -191,31 +196,31 @@
 
     function initializeContacts() {
       const contacts = [
-        { name: 'Alphonsa', phoneNumber: '519-694-8450' },
-        { name: 'Bethanie', phoneNumber: '226-377-8177' },
-        { name: 'Cali', phoneNumber: '519-671-7736' },
-        { name: 'Carlin', phoneNumber: '519-859-2355' },
-        { name: 'Cynthia', phoneNumber: '226-504-7443' },
-        { name: 'David', phoneNumber: '519-200-1227' },
-        { name: 'Deepanshi', phoneNumber: '519-701-0850' },
-        { name: 'Emma D', phoneNumber: '519-532-8140' },
-        { name: 'Emma H', phoneNumber: '226-376-3174' },
-        { name: 'Erin', phoneNumber: '519-851-2909' },
-        { name: 'Fatima', phoneNumber: '226-504-7827' },
-        { name: 'Jacob', phoneNumber: '1-647-923-7579' },
-        { name: 'Jaison', phoneNumber: '519-697-9754' },
-        { name: 'Jess', phoneNumber: '519-641-9150' },
-        { name: 'Julissa', phoneNumber: '226-268-3842' },
-        { name: 'Kai', phoneNumber: '226-984-1761' },
-        { name: 'Kaila', phoneNumber: '519-878-1039' },
-        { name: 'Kristen', phoneNumber: '226-899-6241' },
-        { name: 'Madison', phoneNumber: '226-234-1085' },
-        { name: 'Mae', phoneNumber: '226-700-8718' },
-        { name: 'Sara', phoneNumber: '1-416-276-2382' },
-        { name: 'Sean', phoneNumber: '1-905-699-9287' },
-        { name: 'Shabnam', phoneNumber: '1-437-679-4456' },
-        { name: 'Shyan', phoneNumber: '226-927-5383' },
-        { name: 'Steph', phoneNumber: '226-268-1704' }
+        { name: 'Alphonsa', phoneNumber: '519-694-8450', position: 'Barista' },
+        { name: 'Bethanie', phoneNumber: '226-377-8177', position: 'Barista' },
+        { name: 'Cali', phoneNumber: '519-671-7736', position: 'Barista' },
+        { name: 'Carlin', phoneNumber: '519-859-2355', position: 'Barista' },
+        { name: 'Cynthia', phoneNumber: '226-504-7443', position: 'Barista' },
+        { name: 'David', phoneNumber: '519-200-1227', position: 'Shift Supervisor' },
+        { name: 'Deepanshi', phoneNumber: '519-701-0850', position: 'Barista' },
+        { name: 'Emma D', phoneNumber: '519-532-8140', position: 'Barista' },
+        { name: 'Emma H', phoneNumber: '226-376-3174', position: 'Shift Supervisor' },
+        { name: 'Erin', phoneNumber: '519-851-2909', position: 'Store Manager' },
+        { name: 'Fatima', phoneNumber: '226-504-7827', position: 'Barista' },
+        { name: 'Jacob', phoneNumber: '1-647-923-7579', position: 'Barista' },
+        { name: 'Jaison', phoneNumber: '519-697-9754', position: 'Barista' },
+        { name: 'Jess', phoneNumber: '519-641-9150', position: 'Barista' },
+        { name: 'Julissa', phoneNumber: '226-268-3842', position: 'Shift Supervisor' },
+        { name: 'Kai', phoneNumber: '226-984-1761', position: 'Barista' },
+        { name: 'Kaila', phoneNumber: '519-878-1039', position: 'Shift Supervisor' },
+        { name: 'Kristen', phoneNumber: '226-899-6241', position: 'Barista' },
+        { name: 'Madison', phoneNumber: '226-234-1085', position: 'Shift Supervisor' },
+        { name: 'Mae', phoneNumber: '226-700-8718', position: 'Barista' },
+        { name: 'Sara', phoneNumber: '1-416-276-2382', position: 'Shift Supervisor' },
+        { name: 'Sean', phoneNumber: '1-905-699-9287', position: 'Shift Supervisor' },
+        { name: 'Shabnam', phoneNumber: '1-437-679-4456', position: 'Barista' },
+        { name: 'Shyan', phoneNumber: '226-927-5383', position: 'Barista' },
+        { name: 'Steph', phoneNumber: '226-268-1704', position: 'Barista' }
       ];
 
       contacts.sort((a, b) => a.name.localeCompare(b.name));
@@ -234,7 +239,7 @@
         const contacts = groupedContacts[letter];
 
         contacts.forEach(contact => {
-          const contactItem = createContactItem(contact.name, contact.phoneNumber);
+          const contactItem = createContactItem(contact.name, contact.phoneNumber, contact.position);
           section.appendChild(contactItem);
         });
 
@@ -249,14 +254,12 @@
   </script>
 
   <!-- Add the theme-color meta tag -->
-  <meta name="theme-color" content="#dc714e">
+  <meta name="theme-color" content="#006241">
 
   <!-- Add the viewport-fit meta tag -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 </head>
 <body>
-  <div class="fixed-top-bar"></div>
-
   <div class="app-header">
     <h1>
       <span class="title">Partners</span>
