@@ -4,26 +4,43 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="#006241">
   <link rel="apple-touch-icon" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689457077/contacticon_pzou6m.png">
   <script src="https://unpkg.com/feather-icons@4.28.0"></script>
   <style>
     body {
-  margin: 0;
-  font-family: 'SoDoSans', sans-serif;
-  background-color: #f9f9f9;
-}
+      margin: 0;
+      font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      background-color: #f9f9f9;
+      padding-top: env(safe-area-inset-top); /* Add padding-top to account for transparent status bar */
+    }
 
-@font-face {
-  font-family: 'SoDoSans';
-  src: url('https://github.com/dvdbsh/dvdbsh.github.io/raw/main/sodosans-regular-webfont.woff') format('woff');
-}
+    /* Make the status bar transparent */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: env(safe-area-inset-top); /* Adjust the height if needed */
+      background-color: transparent;
+      z-index: 1;
+    }
 
+    .status-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: env(safe-area-inset-top); /* Adjust the height to match the transparent status bar */
+      background-color: #006241; /* Set your desired background color here */
+      z-index: 0;
+    }
 
     .app-header {
       display: flex;
       align-items: flex-end;
       padding: 8px;
+      padding-top: 100px; /* Adjust the padding-top to account for the transparent status bar */
       background-color: #f9f9f9;
     }
 
@@ -47,7 +64,7 @@
     }
 
     .contact-section {
-      margin-top: 20px;
+      margin-top: 0px;
     }
 
     .contact-section-heading {
@@ -62,7 +79,7 @@
       align-items: center;
       padding: 10px;
       background-color:#f9f9f9;
-      border-bottom: 1px solid #22292f;
+      border-bottom: 1px solid #f2f0eb;
       cursor: pointer;
     }
 
@@ -249,6 +266,7 @@
   </script>
 </head>
 <body>
+  <div class="status-bar"></div> <!-- Add the div for the background color -->
   <div class="app-header">
     <h1>
       <span class="title">Partners</span>
