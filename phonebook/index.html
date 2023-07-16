@@ -60,7 +60,7 @@
     .avatar {
       width: 60px;
       height: 60px;
-      border-radius: 50%;
+      border-radius: 8px;
       margin-right: 10px;
     }
 
@@ -99,6 +99,8 @@
 
     .circle-button.phone {
       background-color: #f2f0eb;
+      margin-right:10px;
+      margin-left:10px;
     }
 
     .circle-button svg {
@@ -115,10 +117,10 @@
   <script>
     // Set the contact's avatar using DiceBear API
     function setContactAvatar(name, phoneNumber) {
-      const lastFourDigits = phoneNumber.slice(-6) + (phoneNumber);
+      const lastFourDigits = phoneNumber.slice(-4) + (phoneNumber);
       const avatar = document.createElement('img');
       avatar.classList.add('avatar');
-      avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${lastFourDigits}&scale=70&backgroundColor=006241,00754a,1e3932,d4e9e2&shapeColor=eed350,b6cbd5,d3705a,00747e,4c9f87,c89543,dc714e,f0e0b0`;
+      avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${lastFourDigits}&scale=70&backgroundColor=1e3932,006241,00754a,d4e9e2&shapeColor=eed350,dd92c0,f0cdbc,d3705a,f0e0b0,4c9f87,4ca06f,c0d48b,dc714e,edc4c9,d3af5a,92d35a,d7c4ed,edd9c4,50eee8,437dc8`;
       avatar.alt = 'avatar';
 
       return avatar;
