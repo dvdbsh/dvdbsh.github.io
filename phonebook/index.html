@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="apple-touch-icon" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689457077/contacticon_pzou6m.png">
+  <link href="https://api.fontshare.com/v2/css?f[]=switzer@2,101,600,701,800,501,601,900,100,700,901,400,201,401,200,300,301,801,500,1&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://unpkg.com/feather-icons@4.28.0"></script>
+  <script>
+    // Set the contact's avatar using DiceBear API
+    function setContactAvatar(name, phoneNumber) {
+      const lastFourDigits = phoneNumber.slice(-6) + (phoneNumber);
+      const avatar = document.createElement('img');
+      avatar.classList.add('avatar');
+      avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${lastFourDigits}&scale=70&backgroundColor=006241,00754a,1e3932,d4e9e2&shapeColor=eed350,b6cbd5,d3705a,00747e,4c9f87,c89543,dc714e,f0e0b0`;
+      avatar.alt = 'avatar';
+
+      return avatar;
+    }
+
+    // Create a contact item
+    function createContactItem(name, phoneNumber, position) {
+      const contactItem = document.createElement('li');
+      contactItem.classList.add('contact-item');
+
+      const avatar = setContactAvatar(name, phoneNumber);
+      const contactInfo = document.createElement('div');
+      contactInfo.classList.add('contact-info');
+
+      const contactName = document.createElement('div');
+      contactName.classList.add('contact-name');
+      contactName.innerText = name;
+
+      const contactPosition = document.createElement('div');
+      contactPosition.classList.add('contact-position');
+      contactPosition.innerText = position;
+
+      const circleButtons = document.createElement('div');
+      circleButtons.classList.add('circle-buttons');
+
+      const messageButton = document.createElement('a');
+      messageButton.classList.add('circle-button');
+      messageButton.classList.add('message');
+      messageButton.href = `sms:${phoneNumber}`;
+      const messageIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      messageIcon.setAttribute('data-feather', 'message-circle');
+      messageIcon.setAttribute('width', '24');
+      messageIcon.setAttribute('height', '24');
+      messageIcon.setAttribute('viewBox', '0 0 24 24');
+      messageIcon.innerHTML = '<circle cx="12" cy="12" r="10" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="8" y1="8" x2="8" y2="8" /><line x1="12" y1="8" x2="12" y2="8" /><line x1="16" y1="8" x2="16" y2="8" /><line x1="8" y1="16" x2="16" y2="16" />';
+      messageButton.appendChild(messageIcon);
+
+      const phoneButton = document.createElement('a');
+      phoneButton.classList.add('circle-button');
+      phoneButton.classList.add('phone');
+      phoneButton.href = `tel:${phoneNumber}`;
+      const phoneIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+      phoneIcon.setAttribute('data-feather', 'phone');
+      phoneIcon.setAttribute('width', '24');
+      phoneIcon.setAttribute('height', '24');
+      phoneIcon.setAttribute('viewBox', '0 0 24 24');
+      phoneIcon.innerHTML = '<path d="M3 6c1.53-2.744 4.255-4.718 7.32-5.315C11.297.076 11.648 0 12 0c.352 0 .703.076 1.68.685C16.744 1.282 19.468 3.256 21 6H3zm-1 0v12h22V6H2zm12 2a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm-4 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm8 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm3 2h-2V8h2v2zm-4 0h-2V8h2v2zm-4 0H8V8h2v2zm-4 0H4V8h2v2zm-3 2h14a1 1 0 0 1 1 1v4H2v-4a1 1 0 0 1 1-1zm16 0h2v6h-2v-6z" />';
+      phoneButton.appendChild(phoneIcon);
+
+      circleButtons.appendChild(messageButton);
+      circleButtons.appendChild(phoneButton);
+
+      contactInfo.appendChild(contactName);
+      contactInfo.appendChild(contactPosition);
+      contactItem.appendChild(avatar);
+      contactItem.appendChild(contactInfo);
+      contactItem.appendChild(circleButtons);
+
+      return contactItem;
+    }
+
+    // Group contacts by the first letter of their names
+    function groupContactsByLetter(contacts) {
+      const groups = {};
+
+      contacts.forEach(contact => {
+        const firstLetter = contact.name.charAt(0).toUpperCase();
+        if (!groups[firstLetter]) {
+          groups[firstLetter] = [];
+        }
+        groups[firstLetter].push(contact);
+      });
+
+      return groups;
+    }
+
+    function initializeContacts() {
+      const contacts = [
+        { name: 'Alphonsa', phoneNumber: '519-694-8450', position: 'Barista' },
+        { name: 'Bethanie', phoneNumber: '226-377-8177', position: 'Barista' },
+        { name: 'Cali', phoneNumber: '519-671-7736', position: 'Barista' },
+        { name: 'Carlin', phoneNumber: '519-859-2355', position: 'Barista' },
+        { name: 'Cynthia', phoneNumber: '226-504-7443', position: 'Barista' },
+        { name: 'David', phoneNumber: '519-200-1227', position: 'Shift Supervisor' },
+        { name: 'Deepanshi', phoneNumber: '519-701-0850', position: 'Barista' },
+        { name: 'Emma D', phoneNumber: '519-532-8140', position: 'Barista' },
+        { name: 'Emma H', phoneNumber: '226-376-3174', position: 'Shift Supervisor' },
+        { name: 'Erin', phoneNumber: '519-851-2909', position: 'Store Manager' },
+        { name: 'Fatima', phoneNumber: '226-504-7827', position: 'Barista' },
+        { name: 'Jacob', phoneNumber: '1-647-923-7579', position: 'Barista' },
+        { name: 'Jaison', phoneNumber: '519-697-9754', position: 'Barista' },
+        { name: 'Jess', phoneNumber: '519-641-9150', position: 'Barista' },
+        { name: 'Julissa', phoneNumber: '226-268-3842', position: 'Shift Supervisor' },
+        { name: 'Kai', phoneNumber: '226-984-1761', position: 'Barista' },
+        { name: 'Kaila', phoneNumber: '519-878-1039', position: 'Shift Supervisor' },
+        { name: 'Kristen', phoneNumber: '226-899-6241', position: 'Barista' },
+        { name: 'Madison', phoneNumber: '226-234-1085', position: 'Shift Supervisor' },
+        { name: 'Mae', phoneNumber: '226-700-8718', position: 'Barista' },
+        { name: 'Sara', phoneNumber: '1-416-276-2382', position: 'Shift Supervisor' },
+        { name: 'Sean', phoneNumber: '1-905-699-9287', position: 'Shift Supervisor' },
+        { name: 'Shabnam', phoneNumber: '1-437-679-4456', position: 'Barista' },
+        { name: 'Shyan', phoneNumber: '226-927-5383', position: 'Barista' },
+        { name: 'Steph', phoneNumber: '226-268-1704', position: 'Barista' }
+      ];
+
+      contacts.sort((a, b) => a.name.localeCompare(b.name));
+
+      const groupedContacts = groupContactsByLetter(contacts);
+      const contactList = document.getElementById('contact-list');
+
+      for (const letter in groupedContacts) {
+        const section = document.createElement('div');
+        section.classList.add('contact-section');
+
+        const heading = document.createElement('div');
+        heading.classList.add('contact-section-heading');
+        heading.innerText = letter;
+
+        const contacts = groupedContacts[letter];
+
+        contacts.forEach(contact => {
+          const contactItem = createContactItem(contact.name, contact.phoneNumber, contact.position);
+          section.appendChild(contactItem);
+        });
+
+        section.insertBefore(heading, section.firstChild);
+        contactList.appendChild(section);
+      }
+
+      feather.replace();
+    }
+
+    document.addEventListener('DOMContentLoaded', initializeContacts);
+  </script>
+
+  <!-- Add the theme-color meta tag -->
+  <meta name="theme-color" content="#006241">
+
+  <!-- Add the viewport-fit meta tag -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+</head>
+<body>
+  <div class="app-header">
+    <h1>
+      <span class="title">Partners</span>
+    </h1>
+  </div>
+
+  <div class="contact-list" id="contact-list"></div>
+
+  <div class="blank-space"></div>
+</body>
+</html>
