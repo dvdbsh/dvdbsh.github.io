@@ -3,74 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="apple-mobile-web-app-capable" content="yes">
   <link rel="apple-touch-icon" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689457077/contacticon_pzou6m.png">
+  <link href="https://api.fontshare.com/v2/css?f[]=switzer@2,101,600,701,800,501,601,900,100,700,901,400,201,401,200,300,301,801,500,1&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/feather-icons@4.28.0"></script>
   <style>
-    @font-face {
-      font-family: 'SF Pro Display Regular';
-      src: url('https://github.com/dvdbsh/dvdbsh.github.io/raw/Fonts/SFPRODISPLAYREGULAR.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-    }
-    
-    @font-face {
-      font-family: 'SF Pro Display Medium';
-      src: url('https://github.com/dvdbsh/dvdbsh.github.io/raw/Fonts/SFPRODISPLAYMEDIUM.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-    }
-    
-    @font-face {
-      font-family: 'SF Pro Display Bold';
-      src: url('https://github.com/dvdbsh/dvdbsh.github.io/raw/Fonts/SFPRODISPLAYBOLD.woff') format('woff');
-      font-weight: normal;
-      font-style: normal;
-    }
-
     body {
       margin: 0;
-      font-family: 'SF Pro Display Regular', -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-family: 'Switzer', sans-serif;
       background-color: #f9f9f9;
-      padding-top: env(safe-area-inset-top); /* Add padding-top to account for transparent status bar */
-    }
-
-    /* Make the status bar transparent */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: env(safe-area-inset-top); /* Adjust the height if needed */
-      background-color: transparent;
-      z-index: 1;
-    }
-
-    .simulated-status-bar {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      height: env(safe-area-inset-top); /* Adjust the height to match the transparent status bar */
-      background-color: #006241; /* Set your desired background color here */
-      z-index: 0;
     }
 
     .app-header {
       display: flex;
       align-items: flex-end;
       padding: 8px;
-      padding-top: calc(env(safe-area-inset-top) + 48px); /* Adjust the padding-top to account for the transparent status bar */
       background-color: #f9f9f9;
     }
 
     .app-header h1 {
       font-size: 22px;
       font-weight: 600;
-      margin: 0;
+      margin-top: 100px;
       padding: 0;
-      font-family: 'SF Pro Display Bold', sans-serif; /* Set the header font to bold */
     }
 
     .app-header .title {
@@ -96,7 +50,7 @@
       display: flex;
       align-items: center;
       padding: 10px;
-      background-color:#f9f9f9;
+      background-color: #f9f9f9;
       border-bottom: 1px solid #f2f0eb;
       cursor: pointer;
     }
@@ -120,8 +74,8 @@
     }
 
     .circle-button {
-      width: 30px;
-      height: 30px;
+      width: 40px;
+      height: 40px;
       border-radius: 50%;
       margin-left: 5px;
       padding: 5px;
@@ -146,8 +100,17 @@
 
     .blank-space {
       height: 100px;
-      background-color:#f9f9f9;
-      /* Adjust the height as needed */
+      background-color: #f9f9f9;
+    }
+    
+    .fixed-top-bar {
+      position: absolute;
+      top: -10px;
+      left: 0;
+      width: 100vw;
+      height: 50px;
+      background-color: #006241;
+      z-index: 999;
     }
   </style>
   <title>Partners</title>
@@ -284,15 +247,16 @@
   </script>
 </head>
 <body>
-  <div class="simulated-status-bar"></div> <!-- Add the div for the simulated status bar -->
+  <div class="fixed-top-bar"></div>
+
   <div class="app-header">
     <h1>
-      <span class="title"><strong>Partners</strong></span> <!-- Wrap "Partners" in <strong> tag -->
+      <span class="title">Partners</span>
     </h1>
   </div>
 
   <div class="contact-list" id="contact-list"></div>
 
-  <div class="blank-space"></div> <!-- Add a blank space at the bottom -->
+  <div class="blank-space"></div>
 </body>
 </html>
