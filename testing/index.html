@@ -121,15 +121,15 @@
     }
 
     .circle-button.message {
-      background-color: #83ddbf;
+      background-color: #e9e9e9;
     }
 
     .circle-button.phone {
-      background-color: #00754a;
+      background-color: #e9e9e9;
     }
 
     .circle-button svg {
-      stroke: white;
+      stroke: #00754a;
       stroke-width: 1;
     }
 
@@ -145,7 +145,7 @@
     function setContactAvatar(name, phoneNumber) {
       const avatar = document.createElement('img');
       avatar.classList.add('avatar');
-      avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${encodeURIComponent(name)}&scale=70&backgroundColor=006241,00754a,1e3932,d4e9e2&shapeColor=eed350,b6cbd5,d3705a,005e66,4c9f87,c89543,dc714e,f0e0b0`;
+      avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${encodeURIComponent(name)}&scale=70&backgroundColor=006241,00754a,1e3932,d4e9e2&shapeColor=eed350,b6cbd5,d3705a,00747e,4c9f87,c89543,dc714e,f0e0b0`;
       avatar.alt = 'avatar';
 
       return avatar;
