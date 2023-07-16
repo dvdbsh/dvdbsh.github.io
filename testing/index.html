@@ -13,6 +13,20 @@
       font-weight: normal;
       font-style: normal;
     }
+    
+    @font-face {
+      font-family: 'SF Pro Display Medium';
+      src: url('https://github.com/dvdbsh/dvdbsh.github.io/raw/Fonts/SFPRODISPLAYMEDIUM.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+    
+    @font-face {
+      font-family: 'SF Pro Display Bold';
+      src: url('https://github.com/dvdbsh/dvdbsh.github.io/raw/Fonts/SFPRODISPLAYBOLD.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
 
     body {
       margin: 0;
@@ -52,26 +66,23 @@
     }
 
     .app-header h1 {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 600;
       margin: 0;
       padding: 0;
+      font-family: 'SF Pro Display Bold', sans-serif; /* Set the header font to bold */
     }
 
     .app-header .title {
-      font-size: 50px;
+      font-size: 40px;
       font-weight: 700;
-      margin-left: 0px;
+      margin-left: 5px;
     }
 
     .contact-list {
       padding: 0;
       list-style: none;
       margin: 0;
-    }
-
-    .contact-section {
-      margin-top: 0px;
     }
 
     .contact-section-heading {
@@ -276,7 +287,7 @@
   <div class="simulated-status-bar"></div> <!-- Add the div for the simulated status bar -->
   <div class="app-header">
     <h1>
-      <span class="title">Partners</span>
+      <span class="title"><strong>Partners</strong></span> <!-- Wrap "Partners" in <strong> tag -->
     </h1>
   </div>
 
