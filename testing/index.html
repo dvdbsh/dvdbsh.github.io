@@ -7,9 +7,16 @@
   <link rel="apple-touch-icon" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689457077/contacticon_pzou6m.png">
   <script src="https://unpkg.com/feather-icons@4.28.0"></script>
   <style>
+    @font-face {
+      font-family: 'SF Pro Display Regular';
+      src: url('https://github.com/dvdbsh/dvdbsh.github.io/raw/Fonts/SFPRODISPLAYREGULAR.woff') format('woff');
+      font-weight: normal;
+      font-style: normal;
+    }
+
     body {
       margin: 0;
-      font-family: -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      font-family: 'SF Pro Display Regular', -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       background-color: #f9f9f9;
       padding-top: env(safe-area-inset-top); /* Add padding-top to account for transparent status bar */
     }
@@ -26,7 +33,7 @@
       z-index: 1;
     }
 
-    .status-bar {
+    .simulated-status-bar {
       position: fixed;
       top: 0;
       left: 0;
@@ -40,7 +47,7 @@
       display: flex;
       align-items: flex-end;
       padding: 8px;
-      padding-top: 100px; /* Adjust the padding-top to account for the transparent status bar */
+      padding-top: calc(env(safe-area-inset-top) + 48px); /* Adjust the padding-top to account for the transparent status bar */
       background-color: #f9f9f9;
     }
 
@@ -266,7 +273,7 @@
   </script>
 </head>
 <body>
-  <div class="status-bar"></div> <!-- Add the div for the background color -->
+  <div class="simulated-status-bar"></div> <!-- Add the div for the simulated status bar -->
   <div class="app-header">
     <h1>
       <span class="title">Partners</span>
