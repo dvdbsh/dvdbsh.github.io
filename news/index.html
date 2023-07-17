@@ -173,12 +173,11 @@
     };
 
     const parseRSSData = (rssData) => {
-      var combinedFeed = [];
-
       var parser = new DOMParser();
       var xmlDoc = parser.parseFromString(rssData, 'text/xml');
       var items = xmlDoc.getElementsByTagName('item');
 
+      var feedItems = [];
       for (var i = 0; i < items.length; i++) {
         var item = items[i];
         var title = item.getElementsByTagName('title')[0].textContent;
@@ -186,13 +185,10 @@
         var pubDate = item.getElementsByTagName('pubDate')[0].textContent;
         var image = item.getElementsByTagName('enclosure')[0]?.getAttribute('url');
 
-        combinedFeed.push({ title: title, link: link, pubDate: pubDate, image: image });
+        feedItems.push({ title: title, link: link, pubDate: pubDate, image: image });
       }
 
-      // Sort the combined feed by publication date in chronological order
-      combinedFeed.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-
-      return combinedFeed;
+      return feedItems;
     };
 
     const displayNewsArticles = async () => {
@@ -204,6 +200,9 @@
           var feedItems = parseRSSData(rssData);
           combinedFeed = combinedFeed.concat(feedItems);
         }
+
+        // Sort the combined feed by publication date in chronological order
+        combinedFeed.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
 
         const newsContainer = document.getElementById('news-container');
         newsContainer.innerHTML = '';
