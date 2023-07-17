@@ -95,19 +95,21 @@
       display: inline-block;
     }
     
-.current-date {
-  color: #9E9E9E;
-  font-size: 14px;
-  margin-bottom: 0;
-  margin-top: 0px;
-  margin-left: 20px;
-}
-
+    .current-date {
+      color: #9E9E9E;
+      font-size: 14px;
+      margin-bottom: 0;
+      margin-top: 0px;
+      margin-left: 20px;
+    }
   </style>
 
   <!-- Apple WebKit support -->
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- Theme color -->
+  <meta name="theme-color" content="#121212">
 
   <!-- App Icon -->
   <link rel="apple-touch-icon" sizes="180x180" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689564176/apple-touch-icon_jq66yl.png">
@@ -118,7 +120,7 @@
 </head>
 <body>
   <h1>News Alligator</h1>
-  <p class="current-date"><span id="current-date"></span></p>
+  <p id="current-date" class="current-date"></p>
   <div id="news-container"></div>
 
   <script>
@@ -254,11 +256,19 @@
       return date.toLocaleDateString(undefined, options);
     };
 
-    // Set the current date
-    const currentDateElement = document.getElementById('current-date');
-    currentDateElement.textContent = formatDate(new Date());
+    const displayCurrentDate = () => {
+      const currentDateElement = document.getElementById('current-date');
+      const currentDate = new Date().toLocaleDateString();
+      currentDateElement.textContent = currentDate;
+    };
 
+    displayCurrentDate();
     displayNewsArticles();
+
+    // Refresh the content every 5 minutes
+    setInterval(() => {
+      displayNewsArticles();
+    }, 5 * 60 * 1000);
   </script>
 </body>
 </html>
