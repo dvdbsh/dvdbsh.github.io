@@ -40,6 +40,27 @@
       position: relative;
     }
 
+    .article-overlay {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #f44336;
+      opacity: 0.9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 1;
+      visibility: hidden;
+    }
+
+    .article-overlay i.material-icons {
+      color: #FFFFFF;
+      font-size: 20px;
+    }
+
     .article-image {
       width: 100%;
       height: 250px;
@@ -110,21 +131,6 @@
       body {
         background-color: #121212;
       }
-      /* For iOS */
-      /* To make the status bar transparent and match the background color */
-      /* You may need to adjust this to achieve the desired appearance */
-      /* On newer devices, you may need to set the "viewport-fit" meta tag to "cover" for this to work */
-      /* <meta name="viewport-fit" content="cover"> */
-      /* You can remove the next two lines if you don't want to make the status bar text white */
-      /* <meta name="apple-mobile-web-app-status-bar-style" content="black"> */
-      /* <meta name="apple-mobile-web-app-capable" content="yes"> */
-      /* For Android */
-      /* To make the status bar transparent and match the background color */
-      /* You may need to adjust this to achieve the desired appearance */
-      /* This will only work if your app is installed on the home screen */
-      /* You can remove the next two lines if you don't want to make the status bar text white */
-      /* <meta name="theme-color" content="#121212"> */
-      /* <meta name="mobile-web-app-capable" content="yes"> */
     }
   </style>
 
@@ -148,11 +154,16 @@
   <div id="news-container"></div>
 
   <script>
-    const rssFeedUrl = 'https://rss.app/feeds/_wzychKsCWii9zoSJ.xml';
+    // Array of RSS feed URLs
+    var feedUrls = [
+      'https://cors-anywhere.herokuapp.com/https://globalnews.ca/london/feed',
+      'https://cors-anywhere.herokuapp.com/https://london.ctvnews.ca/rss/ctv-news-london-1.1073369',
+      'https://cors-anywhere.herokuapp.com/https://www.cbc.ca/cmlink/rss-canada-london'
+    ];
 
-    const fetchRSSData = async () => {
+    const fetchRSSData = async (url) => {
       try {
-        const response = await fetch(rssFeedUrl);
+        const response = await fetch(url);
         const data = await response.text();
         return data;
       } catch (error) {
@@ -162,110 +173,94 @@
     };
 
     const parseRSSData = (rssData) => {
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(rssData, 'text/xml');
-      const items = xmlDoc.getElementsByTagName('item');
+      var combinedFeed = [];
 
-      const feedItems = [];
-      for (let i = 0; i < items.length; i++) {
-        const title = items[i].getElementsByTagName('title')[0].textContent;
-        const descriptionNode = items[i].getElementsByTagName('description')[0];
-        const description = getDescriptionText(descriptionNode);
-        const link = items[i].getElementsByTagName('link')[0].textContent;
-        const pubDate = items[i].getElementsByTagName('pubDate')[0].textContent;
-        const source = getSource(items[i]) || '';
+      var parser = new DOMParser();
+      var xmlDoc = parser.parseFromString(rssData, 'text/xml');
+      var items = xmlDoc.getElementsByTagName('item');
 
-        const articleCard = document.createElement('div');
-        articleCard.classList.add('article-card');
+      for (var i = 0; i < items.length; i++) {
+        var item = items[i];
+        var title = item.getElementsByTagName('title')[0].textContent;
+        var link = item.getElementsByTagName('link')[0].textContent;
+        var pubDate = item.getElementsByTagName('pubDate')[0].textContent;
+        var image = item.getElementsByTagName('enclosure')[0]?.getAttribute('url');
 
-        const articleImage = document.createElement('a');
-        articleImage.classList.add('article-image');
-        articleImage.href = link || '';
-        articleImage.target = '_blank';
-
-        const image = document.createElement('img');
-        image.src = getImageURL(items[i]) || 'placeholder.jpg';
-        articleImage.appendChild(image);
-
-        articleCard.appendChild(articleImage);
-
-        const articleContent = document.createElement('div');
-        articleContent.classList.add('article-content');
-
-        const dateSourceElement = document.createElement('div');
-        dateSourceElement.classList.add('article-date-source');
-
-        const dateElement = document.createElement('p');
-        const formattedDate = formatDate(pubDate);
-        dateElement.classList.add('article-date');
-        dateElement.innerHTML = `<span class="material-icons">event</span>${formattedDate}`;
-        dateSourceElement.appendChild(dateElement);
-
-        const sourceElement = document.createElement('p');
-        sourceElement.innerHTML = `<span class="material-icons">source</span>${source}`;
-        dateSourceElement.appendChild(sourceElement);
-
-        articleContent.appendChild(dateSourceElement);
-
-        const titleElement = document.createElement('h2');
-        titleElement.classList.add('article-title');
-        titleElement.textContent = title || '';
-        articleContent.appendChild(titleElement);
-
-        const descriptionElement = document.createElement('p');
-        descriptionElement.classList.add('article-description');
-        descriptionElement.textContent = description || '';
-        articleContent.appendChild(descriptionElement);
-
-        const linkElement = document.createElement('a');
-        linkElement.classList.add('article-link');
-        linkElement.textContent = 'Read More';
-        linkElement.href = link || '';
-        linkElement.target = '_blank';
-        articleContent.appendChild(linkElement);
-
-        articleCard.appendChild(articleContent);
-        feedItems.push(articleCard);
+        combinedFeed.push({ title: title, link: link, pubDate: pubDate, image: image });
       }
 
-      return feedItems;
-    };
+      // Sort the combined feed by publication date in chronological order
+      combinedFeed.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
 
-    const getDescriptionText = (descriptionNode) => {
-      let descriptionText = '';
-      const childNodes = descriptionNode.childNodes;
-
-      for (let i = 0; i < childNodes.length; i++) {
-        const node = childNodes[i];
-        if (node.nodeType === Node.TEXT_NODE) {
-          descriptionText += node.textContent.trim();
-        }
-      }
-
-      return descriptionText;
-    };
-
-    const getImageURL = (item) => {
-      const description = item.getElementsByTagName('description')[0]?.textContent || '';
-      const match = description.match(/<img\s+.*?src\s*=\s*['"]([^'"]+)['"].*?>/i);
-      return match ? match[1] : '';
-    };
-
-    const getSource = (item) => {
-      const creator = item.getElementsByTagName('dc:creator')[0]?.textContent || '';
-      return creator.trim();
+      return combinedFeed;
     };
 
     const displayNewsArticles = async () => {
       try {
-        const rssData = await fetchRSSData();
-        const feedItems = parseRSSData(rssData);
+        var combinedFeed = [];
+
+        for (var i = 0; i < feedUrls.length; i++) {
+          var rssData = await fetchRSSData(feedUrls[i]);
+          var feedItems = parseRSSData(rssData);
+          combinedFeed = combinedFeed.concat(feedItems);
+        }
 
         const newsContainer = document.getElementById('news-container');
         newsContainer.innerHTML = '';
 
-        for (const item of feedItems) {
-          newsContainer.appendChild(item);
+        for (const item of combinedFeed) {
+          const articleCard = document.createElement('div');
+          articleCard.classList.add('article-card');
+
+          if (item.image) {
+            const articleImage = document.createElement('a');
+            articleImage.classList.add('article-image');
+            articleImage.href = item.link || '';
+            articleImage.target = '_blank';
+
+            const image = document.createElement('img');
+            image.src = item.image || 'placeholder.jpg';
+            articleImage.appendChild(image);
+
+            const articleOverlay = document.createElement('div');
+            articleOverlay.classList.add('article-overlay');
+            const overlayIcon = document.createElement('i');
+            overlayIcon.classList.add('material-icons');
+            overlayIcon.textContent = 'done';
+            articleOverlay.appendChild(overlayIcon);
+            articleImage.appendChild(articleOverlay);
+
+            articleCard.appendChild(articleImage);
+          }
+
+          const articleContent = document.createElement('div');
+          articleContent.classList.add('article-content');
+
+          const dateSourceElement = document.createElement('div');
+          dateSourceElement.classList.add('article-date-source');
+
+          const dateElement = document.createElement('p');
+          const formattedDate = formatDate(item.pubDate);
+          dateElement.classList.add('article-date');
+          dateElement.innerHTML = `<span class="material-icons">event</span>${formattedDate}`;
+          dateSourceElement.appendChild(dateElement);
+
+          articleContent.appendChild(dateSourceElement);
+
+          const titleElement = document.createElement('h2');
+          titleElement.classList.add('article-title');
+          titleElement.textContent = item.title || '';
+          articleContent.appendChild(titleElement);
+
+          const linkElement = document.createElement('a');
+          linkElement.classList.add('article-link');
+          linkElement.textContent = 'Read More';
+          linkElement.href = item.link || '';
+          linkElement.target = '_blank';
+          articleContent.appendChild(linkElement);
+
+          articleCard.appendChild(articleContent);
+          newsContainer.appendChild(articleCard);
         }
       } catch (error) {
         console.error('Error displaying news articles:', error);
@@ -286,6 +281,17 @@
 
     displayCurrentDate();
     displayNewsArticles();
+
+    // Add event listener for overlay on click
+    const articleCards = document.querySelectorAll('.article-card');
+    articleCards.forEach((card) => {
+      const linkElement = card.querySelector('.article-link');
+      const overlayElement = card.querySelector('.article-overlay');
+
+      linkElement.addEventListener('click', () => {
+        overlayElement.style.visibility = 'visible';
+      });
+    });
 
     // Refresh the content every 5 minutes
     setInterval(() => {
