@@ -78,11 +78,6 @@
       margin-bottom: 4px;
     }
 
-    .article-days-ago {
-      margin-top: 0;
-      margin-left: 19px;
-    }
-
     .article-title {
       font-size: 20px;
       font-weight: bold;
@@ -109,7 +104,32 @@
       margin-left: 20px;
     }
 
+    /* Set the status bar color */
+    @media (prefers-color-scheme: dark) {
+      /* For dark mode */
+      body {
+        background-color: #121212;
+      }
+      /* For iOS */
+      /* To make the status bar transparent and match the background color */
+      /* You may need to adjust this to achieve the desired appearance */
+      /* On newer devices, you may need to set the "viewport-fit" meta tag to "cover" for this to work */
+      /* <meta name="viewport-fit" content="cover"> */
+      /* You can remove the next two lines if you don't want to make the status bar text white */
+      /* <meta name="apple-mobile-web-app-status-bar-style" content="black"> */
+      /* <meta name="apple-mobile-web-app-capable" content="yes"> */
+      /* For Android */
+      /* To make the status bar transparent and match the background color */
+      /* You may need to adjust this to achieve the desired appearance */
+      /* This will only work if your app is installed on the home screen */
+      /* You can remove the next two lines if you don't want to make the status bar text white */
+      /* <meta name="theme-color" content="#121212"> */
+      /* <meta name="mobile-web-app-capable" content="yes"> */
+    }
   </style>
+
+  <!-- Add this meta tag to set the theme color -->
+  <meta name="theme-color" content="#121212">
 
   <!-- Apple WebKit support -->
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -256,14 +276,6 @@
       const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
       const date = new Date(dateString);
       return date.toLocaleDateString(undefined, options);
-    };
-
-    const getDaysAgo = (dateString) => {
-      const today = new Date();
-      const date = new Date(dateString);
-      const diffInTime = today.getTime() - date.getTime();
-      const diffInDays = Math.floor(diffInTime / (1000 * 3600 * 24));
-      return diffInDays > 0 && diffInDays <= 7 ? `${diffInDays} ${diffInDays === 1 ? 'day' : 'days'} ago` : '';
     };
 
     const displayCurrentDate = () => {
