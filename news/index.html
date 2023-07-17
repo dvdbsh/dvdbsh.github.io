@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>News Aggregator</title>
+  <title>News Alligator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
   <style>
@@ -16,7 +16,8 @@
 
     h1 {
       text-align: left;
-      padding: 20px;
+      padding-top: 20px;
+      padding-left:20px;
       color: #FFFFFF;
       margin: 0;
       -webkit-app-region: drag;
@@ -31,7 +32,7 @@
 
     .article-card {
       background-color: #212121;
-      border-radius: 4px;
+      border-radius: 20px;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       margin: 10px;
       width: 400px;
@@ -45,10 +46,35 @@
       object-fit: cover;
       border-top-left-radius: 4px;
       border-top-right-radius: 4px;
+      cursor: pointer;
+    }
+
+    .article-image img {
+      width: 100%;
+      height: auto;
     }
 
     .article-content {
       padding: 16px;
+    }
+
+    .article-date-source {
+      display: flex;
+      align-items: center;
+      font-size: 12px;
+      color: #9E9E9E;
+      margin-bottom: 8px;
+      vertical-align: middle;
+    }
+
+    .article-date-source .material-icons {
+      font-size: 15px;
+      margin-right: 4px;
+      vertical-align: middle;
+    }
+
+    .article-date-source .spacer {
+      margin-right: 8px;
     }
 
     .article-title {
@@ -56,18 +82,6 @@
       font-weight: bold;
       margin: 10px 0;
       color: #FFFFFF;
-    }
-
-    .article-date {
-      margin-bottom: 8px;
-      font-size: 14px;
-      color: #BDBDBD;
-    }
-
-    .article-source {
-      font-size: 14px;
-      color: #9E9E9E;
-      margin-bottom: 8px;
     }
 
     .article-description {
@@ -80,6 +94,15 @@
       color: #1E88E5;
       display: inline-block;
     }
+    
+.current-date {
+  color: #9E9E9E;
+  font-size: 14px;
+  margin-bottom: 0;
+  margin-top: 0px;
+  margin-left: 20px;
+}
+
   </style>
 
   <!-- Apple WebKit support -->
@@ -94,7 +117,8 @@
 
 </head>
 <body>
-  <h1>News Aggregator</h1>
+  <h1>News Alligator</h1>
+  <p class="current-date"><span id="current-date"></span></p>
   <div id="news-container"></div>
 
   <script>
@@ -128,28 +152,42 @@
         const articleCard = document.createElement('div');
         articleCard.classList.add('article-card');
 
-        const articleImage = document.createElement('img');
+        const articleImage = document.createElement('a');
         articleImage.classList.add('article-image');
-        articleImage.src = getImageURL(items[i]) || 'placeholder.jpg';
+        articleImage.href = link || '';
+        articleImage.target = '_blank';
+
+        const image = document.createElement('img');
+        image.src = getImageURL(items[i]) || 'placeholder.jpg';
+        articleImage.appendChild(image);
+
         articleCard.appendChild(articleImage);
 
         const articleContent = document.createElement('div');
         articleContent.classList.add('article-content');
 
+        const dateSourceElement = document.createElement('div');
+        dateSourceElement.classList.add('article-date-source');
+
+        const dateElement = document.createElement('p');
+        dateElement.innerHTML = `<span class="material-icons">event</span>${formatDate(pubDate)}`;
+        dateSourceElement.appendChild(dateElement);
+
+        const spacerElement = document.createElement('span');
+        spacerElement.classList.add('spacer');
+        spacerElement.innerHTML = '&nbsp;';
+        dateSourceElement.appendChild(spacerElement);
+
+        const sourceElement = document.createElement('p');
+        sourceElement.innerHTML = `<span class="material-icons">source</span>${source}`;
+        dateSourceElement.appendChild(sourceElement);
+
+        articleContent.appendChild(dateSourceElement);
+
         const titleElement = document.createElement('h2');
         titleElement.classList.add('article-title');
         titleElement.textContent = title || '';
         articleContent.appendChild(titleElement);
-
-        const dateElement = document.createElement('p');
-        dateElement.classList.add('article-date');
-        dateElement.innerHTML = `<span class="material-icons">event</span> Published on ${formatDate(pubDate)}` || '';
-        articleContent.appendChild(dateElement);
-
-        const sourceElement = document.createElement('p');
-        sourceElement.classList.add('article-source');
-        sourceElement.innerHTML = `<span class="material-icons">source</span> Source: ${source}` || '';
-        articleContent.appendChild(sourceElement);
 
         const descriptionElement = document.createElement('p');
         descriptionElement.classList.add('article-description');
@@ -185,18 +223,14 @@
     };
 
     const getImageURL = (item) => {
-      return item.getElementsByTagName('image')[0]?.getAttribute('url') || 
-             item.getElementsByTagName('enclosure')[0]?.getAttribute('url') ||
-             item.querySelector('media\\:content, content')?.getAttribute('url') ||
-             '';
+      const description = item.getElementsByTagName('description')[0]?.textContent || '';
+      const match = description.match(/<img\s+.*?src\s*=\s*['"]([^'"]+)['"].*?>/i);
+      return match ? match[1] : '';
     };
 
     const getSource = (item) => {
-      const creator = item.getElementsByTagName('dc:creator')[0];
-      if (creator && creator.childNodes[0]) {
-        return creator.childNodes[0].textContent.trim();
-      }
-      return '';
+      const creator = item.getElementsByTagName('dc:creator')[0]?.textContent || '';
+      return creator.trim();
     };
 
     const displayNewsArticles = async () => {
@@ -219,6 +253,10 @@
       const date = new Date(dateString);
       return date.toLocaleDateString(undefined, options);
     };
+
+    // Set the current date
+    const currentDateElement = document.getElementById('current-date');
+    currentDateElement.textContent = formatDate(new Date());
 
     displayNewsArticles();
   </script>
