@@ -17,7 +17,7 @@
     h1 {
       text-align: left;
       padding-top: 20px;
-      padding-left:20px;
+      padding-left: 20px;
       color: #FFFFFF;
       margin: 0;
       -webkit-app-region: drag;
@@ -60,6 +60,7 @@
 
     .article-date-source {
       display: flex;
+      justify-content: space-between;
       align-items: center;
       font-size: 12px;
       color: #9E9E9E;
@@ -73,8 +74,13 @@
       vertical-align: middle;
     }
 
-    .article-date-source .spacer {
-      margin-right: 8px;
+    .article-date {
+      margin-bottom: 4px;
+    }
+
+    .article-days-ago {
+      margin-top: 0;
+      margin-left: 19px;
     }
 
     .article-title {
@@ -94,7 +100,7 @@
       color: #1E88E5;
       display: inline-block;
     }
-    
+
     .current-date {
       color: #9E9E9E;
       font-size: 14px;
@@ -102,14 +108,12 @@
       margin-top: 0px;
       margin-left: 20px;
     }
+
   </style>
 
   <!-- Apple WebKit support -->
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
-  <!-- Theme color -->
-  <meta name="theme-color" content="#121212">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
   <!-- App Icon -->
   <link rel="apple-touch-icon" sizes="180x180" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689564176/apple-touch-icon_jq66yl.png">
@@ -172,13 +176,10 @@
         dateSourceElement.classList.add('article-date-source');
 
         const dateElement = document.createElement('p');
-        dateElement.innerHTML = `<span class="material-icons">event</span>${formatDate(pubDate)}`;
+        const formattedDate = formatDate(pubDate);
+        dateElement.classList.add('article-date');
+        dateElement.innerHTML = `<span class="material-icons">event</span>${formattedDate}`;
         dateSourceElement.appendChild(dateElement);
-
-        const spacerElement = document.createElement('span');
-        spacerElement.classList.add('spacer');
-        spacerElement.innerHTML = '&nbsp;';
-        dateSourceElement.appendChild(spacerElement);
 
         const sourceElement = document.createElement('p');
         sourceElement.innerHTML = `<span class="material-icons">source</span>${source}`;
@@ -241,6 +242,7 @@
         const feedItems = parseRSSData(rssData);
 
         const newsContainer = document.getElementById('news-container');
+        newsContainer.innerHTML = '';
 
         for (const item of feedItems) {
           newsContainer.appendChild(item);
@@ -251,14 +253,22 @@
     };
 
     const formatDate = (dateString) => {
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
       const date = new Date(dateString);
       return date.toLocaleDateString(undefined, options);
     };
 
+    const getDaysAgo = (dateString) => {
+      const today = new Date();
+      const date = new Date(dateString);
+      const diffInTime = today.getTime() - date.getTime();
+      const diffInDays = Math.floor(diffInTime / (1000 * 3600 * 24));
+      return diffInDays > 0 && diffInDays <= 7 ? `${diffInDays} ${diffInDays === 1 ? 'day' : 'days'} ago` : '';
+    };
+
     const displayCurrentDate = () => {
       const currentDateElement = document.getElementById('current-date');
-      const currentDate = new Date().toLocaleDateString();
+      const currentDate = formatDate(new Date().toISOString());
       currentDateElement.textContent = currentDate;
     };
 
