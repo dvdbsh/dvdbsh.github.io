@@ -2,16 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="format-detection" content="telephone=no">
-  <link rel="apple-touch-icon" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689457077/contacticon_pzou6m.png">
+  <meta name="theme-color" content="#006241">
+  <link rel="apple-touch-icon" sizes="180x180" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689631109/icon_otlva8.png">
   <link href="https://api.fontshare.com/v2/css?f[]=switzer@2,101,600,701,800,501,601,900,100,700,901,400,201,401,200,300,301,801,500,1&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/feather-icons@4.28.0"></script>
   <style>
     body {
       margin: 0;
-      font-family: 'Switzer', sans-serif;
+      font-family: 'Roboto', sans-serif;
       background-color: #f9f9f9;
     }
 
@@ -111,6 +112,35 @@
     .blank-space {
       height: 100px;
       background-color: #f9f9f9;
+    }
+
+    .install-prompt {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 9999;
+    }
+
+    .install-prompt-content {
+      flex-grow: 1;
+      margin-right: 10px;
+    }
+
+    .install-prompt-button {
+      background-color: #006241;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 12px;
+      cursor: pointer;
     }
   </style>
   <title>Partners</title>
@@ -254,13 +284,47 @@
     }
 
     document.addEventListener('DOMContentLoaded', initializeContacts);
+
+    // Installation prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      showInstallPrompt();
+    });
+
+    function showInstallPrompt() {
+      const popup = document.createElement('div');
+      popup.classList.add('install-prompt');
+
+      const content = document.createElement('div');
+      content.classList.add('install-prompt-content');
+      content.innerText = 'Add this app to your home screen for quick access!';
+
+      const installButton = document.createElement('button');
+      installButton.classList.add('install-prompt-button');
+      installButton.innerText = 'Install';
+      installButton.addEventListener('click', () => {
+        popup.remove();
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          deferredPrompt = null;
+        });
+      });
+
+      const dismissButton = document.createElement('button');
+      dismissButton.classList.add('install-prompt-button');
+      dismissButton.innerText = 'Dismiss';
+      dismissButton.addEventListener('click', () => {
+        popup.remove();
+      });
+
+      content.appendChild(installButton);
+      content.appendChild(dismissButton);
+      popup.appendChild(content);
+      document.body.appendChild(popup);
+    }
   </script>
-
-  <!-- Add the theme-color meta tag -->
-  <meta name="theme-color" content="#006241">
-
-  <!-- Add the viewport-fit meta tag -->
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 </head>
 <body>
   <div class="app-header">
