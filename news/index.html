@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>News Aggregator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <style>
+    /* Material Design Dark Mode styling */
+    body {
+      font-family: "Roboto", sans-serif;
+      background-color: #121212;
+      color: #FFFFFF;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: left;
+      padding: 20px;
+      color: #FFFFFF;
+      margin: 0;
+      -webkit-app-region: drag;
+    }
+
+    #news-container {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .article-card {
+      background-color: #212121;
+      border-radius: 4px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin: 10px;
+      width: 400px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .article-image {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-top-left-radius: 4px;
+      border-top-right-radius: 4px;
+    }
+
+    .article-content {
+      padding: 16px;
+    }
+
+    .article-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin: 10px 0;
+      color: #FFFFFF;
+    }
+
+    .article-date {
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #BDBDBD;
+    }
+
+    .article-source {
+      font-size: 14px;
+      color: #9E9E9E;
+      margin-bottom: 8px;
+    }
+
+    .article-description {
+      margin-bottom: 16px;
+      color: #FFFFFF;
+    }
+
+    .article-link {
+      text-decoration: none;
+      color: #1E88E5;
+      display: inline-block;
+    }
+  </style>
+
+  <!-- Apple WebKit support -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+  <!-- App Icon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="https://icon.kitchen/i/H4sIAAAAAAAAAzWPsQ6DMAxE%2F8Vdu0AAtawd%2BgNsVQdDnDRqICgQaIX49zoUpvjOd0%2FxAhPaQAOUC0j07%2BpFLUGp0A50BqWrb88SGmt69CNE67bP3BiIH5CkMNi4NI3r2OCtaSzBeob6IGiP0lAXU7W%2BH4IZjbPOJ5w4iaK4igsHNiuNVlYXIlVsYacZWGb5n0mfMXjWC4zHCDNOfMfe3nhJjkLAypXWyWDjlQ8mSe%2BMjL91MT5TDc%2F1B%2BTvUHYIAQAA">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="https://icon.kitchen/i/H4sIAAAAAAAAAzWPsQ6DMAxE%2F8Vdu0AAtawd%2BgNsVQdDnDRqICgQaIX49zoUpvjOd0%2FxAhPaQAOUC0j07%2BpFLUGp0A50BqWrb88SGmt69CNE67bP3BiIH5CkMNi4NI3r2OCtaSzBeob6IGiP0lAXU7W%2BH4IZjbPOJ5w4iaK4igsHNiuNVlYXIlVsYacZWGb5n0mfMXjWC4zHCDNOfMfe3nhJjkLAypXWyWDjlQ8mSe%2BMjL91MT5TDc%2F1B%2BTvUHYIAQAA">
+</head>
+<body>
+  <h1>News Aggregator</h1>
+  <div id="news-container"></div>
+
+  <script>
+    const rssFeedUrl = 'https://rss.app/feeds/_wzychKsCWii9zoSJ.xml';
+
+    const fetchRSSData = async () => {
+      try {
+        const response = await fetch(rssFeedUrl);
+        const data = await response.text();
+        return data;
+      } catch (error) {
+        console.error('Error fetching RSS data:', error);
+        return '';
+      }
+    };
+
+    const parseRSSData = (rssData) => {
+      const parser = new DOMParser();
+      const xmlDoc = parser.parseFromString(rssData, 'text/xml');
+      const items = xmlDoc.getElementsByTagName('item');
+
+      const feedItems = [];
+      for (let i = 0; i < items.length; i++) {
+        const title = items[i].getElementsByTagName('title')[0].textContent;
+        const descriptionNode = items[i].getElementsByTagName('description')[0];
+        const description = getDescriptionText(descriptionNode);
+        const link = items[i].getElementsByTagName('link')[0].textContent;
+        const pubDate = items[i].getElementsByTagName('pubDate')[0].textContent;
+        const source = getSource(items[i]) || '';
+
+        const articleCard = document.createElement('div');
+        articleCard.classList.add('article-card');
+
+        const articleImage = document.createElement('img');
+        articleImage.classList.add('article-image');
+        articleImage.src = getImageURL(items[i]) || 'placeholder.jpg';
+        articleCard.appendChild(articleImage);
+
+        const articleContent = document.createElement('div');
+        articleContent.classList.add('article-content');
+
+        const titleElement = document.createElement('h2');
+        titleElement.classList.add('article-title');
+        titleElement.textContent = title || '';
+        articleContent.appendChild(titleElement);
+
+        const dateElement = document.createElement('p');
+        dateElement.classList.add('article-date');
+        dateElement.innerHTML = `<span class="material-icons">event</span> Published on ${formatDate(pubDate)}` || '';
+        articleContent.appendChild(dateElement);
+
+        const sourceElement = document.createElement('p');
+        sourceElement.classList.add('article-source');
+        sourceElement.innerHTML = `<span class="material-icons">source</span> Source: ${source}` || '';
+        articleContent.appendChild(sourceElement);
+
+        const descriptionElement = document.createElement('p');
+        descriptionElement.classList.add('article-description');
+        descriptionElement.textContent = description || '';
+        articleContent.appendChild(descriptionElement);
+
+        const linkElement = document.createElement('a');
+        linkElement.classList.add('article-link');
+        linkElement.textContent = 'Read More';
+        linkElement.href = link || '';
+        linkElement.target = '_blank';
+        articleContent.appendChild(linkElement);
+
+        articleCard.appendChild(articleContent);
+        feedItems.push(articleCard);
+      }
+
+      return feedItems;
+    };
+
+    const getDescriptionText = (descriptionNode) => {
+      let descriptionText = '';
+      const childNodes = descriptionNode.childNodes;
+
+      for (let i = 0; i < childNodes.length; i++) {
+        const node = childNodes[i];
+        if (node.nodeType === Node.TEXT_NODE) {
+          descriptionText += node.textContent.trim();
+        }
+      }
+
+      return descriptionText;
+    };
+
+    const getImageURL = (item) => {
+      return item.getElementsByTagName('image')[0]?.getAttribute('url') || 
+             item.getElementsByTagName('enclosure')[0]?.getAttribute('url') ||
+             item.querySelector('media\\:content, content')?.getAttribute('url') ||
+             '';
+    };
+
+    const getSource = (item) => {
+      const creator = item.getElementsByTagName('dc:creator')[0];
+      if (creator && creator.childNodes[0]) {
+        return creator.childNodes[0].textContent.trim();
+      }
+      return '';
+    };
+
+    const displayNewsArticles = async () => {
+      try {
+        const rssData = await fetchRSSData();
+        const feedItems = parseRSSData(rssData);
+
+        const newsContainer = document.getElementById('news-container');
+
+        for (const item of feedItems) {
+          newsContainer.appendChild(item);
+        }
+      } catch (error) {
+        console.error('Error displaying news articles:', error);
+      }
+    };
+
+    const formatDate = (dateString) => {
+      const options = { year: 'numeric', month: 'long', day: 'numeric' };
+      const date = new Date(dateString);
+      return date.toLocaleDateString(undefined, options);
+    };
+
+    displayNewsArticles();
+  </script>
+</body>
+</html>
