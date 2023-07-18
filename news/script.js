@@ -23,7 +23,9 @@ const rssFeeds = [
   'https://www.cbc.ca/cmlink/rss-canada-london',
   'http://rss.cnn.com/rss/cnn_topstories.rss',
   'https://rss.nytimes.com/services/xml/rss/nyt/World.xml',
-  'https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml'
+  'https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml',
+  'https://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.topstories.rss',
+  'https://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.canada.rss',
   // Add more RSS feed URLs here
 ];
 
@@ -169,6 +171,10 @@ function getRSSLogo(feedURL) {
     'https://globalnews.ca/london/feed/': 'https://res.cloudinary.com/di8j84ent/image/upload/v1689558729/global_exvmu4.png',
     'https://www.cbc.ca/cmlink/rss-canada-london': 'https://res.cloudinary.com/di8j84ent/image/upload/v1689558729/cbc_sap98q.png',
     'http://rss.cnn.com/rss/cnn_topstories.rss': 'https://res.cloudinary.com/di8j84ent/image/upload/v1689702660/cnn-logo-red-png-3_d8zru4.png',
+    'https://rss.nytimes.com/services/xml/rss/nyt/World.xml': 'https://res.cloudinary.com/di8j84ent/image/upload/v1689708226/Symbol-New-York-Times_elp2yq.png',
+    'https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml': 'https://res.cloudinary.com/di8j84ent/image/upload/v1689708226/Symbol-New-York-Times_elp2yq.png',
+    'https://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.topstories.rss': 'https://res.cloudinary.com/di8j84ent/image/upload/v1689708296/Thestar.com_logo_dxawlb.svg',
+    'https://www.thestar.com/content/thestar/feed.RSSManagerServlet.articles.news.canada.rss': 'https://res.cloudinary.com/di8j84ent/image/upload/v1689708296/Thestar.com_logo_dxawlb.svg',
     // Add more logos for other feed URLs
   };
 
