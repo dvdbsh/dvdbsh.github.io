@@ -21,6 +21,9 @@ const rssFeeds = [
   'https://london.ctvnews.ca/rss/ctv-news-london-1.1073369',
   'https://globalnews.ca/london/feed/',
   'https://www.cbc.ca/cmlink/rss-canada-london',
+  'http://rss.cnn.com/rss/cnn_topstories.rss',
+  'https://rss.nytimes.com/services/xml/rss/nyt/World.xml',
+  'https://rss.nytimes.com/services/xml/rss/nyt/Politics.xml'
   // Add more RSS feed URLs here
 ];
 
@@ -49,6 +52,26 @@ function getSourceFromURL(url) {
   return urlObj.hostname;
 }
 
+function getArticleImageFromDescription(article) {
+  const description = article.description;
+  const regex = /<img[^>]+src="([^">]+)"/;
+  const match = description.match(regex);
+
+  if (match && match[1]) {
+    return `<img class="article-image" src="${match[1]}" alt="Article Image" onclick="window.open('${article.link}', '_blank')">`;
+  } else {
+    // Return a default image URL or a placeholder image if no image is available
+    return '<img class="article-image" src="https://res.cloudinary.com/di8j84ent/image/upload/v1689706706/placeholder_q2r1bj.png" alt="Article Image">';
+  }
+}
+
+function getArticleImageFromEnclosure(article) {
+  // Use the enclosure link for images from other sources
+  return article.enclosure
+    ? `<img class="article-image" src="${article.enclosure.link}" alt="Article Image" onclick="window.open('${article.link}', '_blank')">`
+    : '<img class="article-image" src="default_image_url.jpg" alt="Article Image">';
+}
+
 async function displayArticles() {
   const articlesList = document.getElementById('articles-list');
   articlesList.innerHTML = '';
@@ -64,7 +87,7 @@ async function displayArticles() {
     const sortedArticles = sortByDate(articles);
 
     sortedArticles.forEach((article, index) => {
-      if (displayedCards >= 21) {
+      if (displayedCards >= 27) {
         if (olderArticles.length < 20) {
           olderArticles.push(article);
         }
@@ -75,9 +98,15 @@ async function displayArticles() {
         const articleCard = document.createElement('div');
         articleCard.classList.add('card', 'article-card');
 
-        const articleImage = article.enclosure
-          ? `<img class="article-image" src="${article.enclosure.link}" alt="Article Image" onclick="window.open('${article.link}', '_blank')">`
-          : '';
+        let articleImage;
+        if (feedURL === 'https://www.cbc.ca/cmlink/rss-canada-london') {
+          // For CBC articles, get the image from the description
+          articleImage = getArticleImageFromDescription(article);
+        } else {
+          // For other sources, get the image from the enclosure
+          articleImage = getArticleImageFromEnclosure(article);
+        }
+
         const publishDate = formatPublishDate(article.pubDate);
         const source = getSourceFromURL(article.link);
 
@@ -86,7 +115,6 @@ async function displayArticles() {
                                  </div>
                                  <div class="card-content">
                                    <p class="article-title"><a href="${article.link}" target="_blank">${article.title}</a></p>
-                                   <p class="article-description">${article.description}</p>
                                    <div class="date-source">
                                      <p><i class="material-symbols-outlined">calendar_today</i> ${publishDate}</p>
                                      <p><i class="material-symbols-outlined">folder_open</i> ${source}</p>
@@ -112,7 +140,13 @@ async function displayArticles() {
     olderStoriesCard.classList.add('card', 'article-card');
 
     const olderArticlesList = olderArticles
-      .map((article) => `<li><i class="material-symbols-outlined">arrow_right_alt</i> <a href="${article.link}" target="_blank">${article.title}</a><br><span class="article-date">${formatPublishDate(article.pubDate)}</span><hr class="older"></li>`)
+      .map((article) => `<li>
+                          <i class="material-symbols-outlined">arrow_right_alt</i>
+                          <a href="${article.link}" target="_blank">${article.title}</a><br>
+                          <span class="article-date">${formatPublishDate(article.pubDate)}</span>
+                          <span class="article-source">(${getSourceFromURL(article.link)})</span>
+                          <hr class="older">
+                        </li>`)
       .join('');
 
     olderStoriesCard.innerHTML = `<div class="card-content">
