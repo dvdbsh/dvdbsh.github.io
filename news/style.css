@@ -1,17 +1,21 @@
-/* Dark Mode Styles */
-
+/* Material Design Dark Mode */
 body {
   background-color: #121212;
   color: #f9f9f9;
 }
 
-/* Custom CSS for cards */
+a {
+  color: #f9f9f9;
+}
+
 .article-card {
+  background-color: #1e1e1e;
+  color: #f9f9f9;
   margin: 0px;
   border-radius: 25px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   overflow: hidden;
-  background-color: #1f1f1f; /* Dark gray background color for cards */
+  position: relative; /* Added position relative for the article card */
 }
 
 .article-image {
@@ -24,30 +28,27 @@ body {
   font-size: 16px;
   font-weight: 500;
   padding-bottom: 10px;
-  color: #f9f9f9;
 }
 
 .article-description {
   font-size: 14px;
   display: -webkit-box;
-  -webkit-line-clamp: 2; /* Limit the description to 2 lines */
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: #c2c2c2;
 }
 
-/* Flexbox grid layout */
 .row {
   display: flex;
   flex-wrap: wrap;
 }
 
 .col {
-  flex: 33.33%; /* Three columns on desktop */
+  flex: 33.33%;
   max-width: 33.33%;
   padding: 10px;
-  margin-bottom: 10px; /* Adjust the margin to control the space between rows */
+  margin-bottom: 10px;
 }
 
 @media only screen and (max-width: 992px) {
@@ -64,7 +65,6 @@ body {
   }
 }
 
-/* Flexbox for date and source */
 .date-source {
   display: flex;
   justify-content: space-between;
@@ -74,20 +74,16 @@ body {
 .date-source p {
   margin: 0;
   font-size: 12px;
-  color: #c2c2c2;
 }
 
 .material-symbols-outlined {
   font-size: 11px;
-  color: #c2c2c2;
 }
 
-/* Additional styles */
 .card-content {
   padding: 10px;
 }
 
-/* "Older Stories" Card */
 #older-stories {
   width: 100%;
 }
@@ -95,14 +91,24 @@ body {
 .older-articles-list {
   padding-top: 0px;
   font-size: 14px;
-  list-style-type: disc; /* Add bullet points */
-  padding-left: 0px; /* Increase spacing between list items */
-}
-
-a {
-  color: #f9f9f9; /* Make all links white */
+  list-style-type: disc;
+  padding-left: 0px;
 }
 
 hr {
-  border: 0.5px solid #1f1f1f;
+  border: 0.5px solid #f9f9f9;
+}
+
+/* Style the RSS logo */
+.rss-logo {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 50px;
+  height: auto;
+  opacity: 0.8;
+  pointer-events: none;
+background-color:#ffffff;
+border-radius:50%;
+padding:5px;
 }

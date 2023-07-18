@@ -35,7 +35,6 @@ async function displayArticles() {
   const articlesList = document.getElementById('articles-list');
   articlesList.innerHTML = '';
 
-  // Create a row to contain the columns
   const row = document.createElement('div');
   row.classList.add('row');
 
@@ -52,7 +51,6 @@ async function displayArticles() {
           olderArticles.push(article);
         }
       } else {
-        // Create a column for each article card
         const col = document.createElement('div');
         col.classList.add('col');
 
@@ -80,12 +78,17 @@ async function displayArticles() {
         col.appendChild(articleCard);
         row.appendChild(col);
         displayedCards++;
+
+        // Create an RSS logo element
+        const rssLogo = document.createElement('img');
+        rssLogo.classList.add('rss-logo');
+        rssLogo.src = getRSSLogo(feedURL);
+        articleCard.appendChild(rssLogo); // Append the logo to the article card
       }
     });
   }
 
   if (olderArticles.length > 0) {
-    // Add "Older Stories" card with links to remaining articles
     const olderStoriesCard = document.createElement('div');
     olderStoriesCard.id = 'older-stories';
     olderStoriesCard.classList.add('card', 'article-card');
@@ -105,6 +108,19 @@ async function displayArticles() {
   }
 
   articlesList.appendChild(row);
+}
+
+function getRSSLogo(feedURL) {
+  // Define the RSS logos for each feed URL (customize this as needed)
+  const rssLogos = {
+    'https://london.ctvnews.ca/rss/ctv-news-london-1.1073369': 'https://res.cloudinary.com/di8j84ent/image/upload/v1689558729/ctv_hpjfw7.png',
+    'https://globalnews.ca/london/feed/': 'https://res.cloudinary.com/di8j84ent/image/upload/v1689558729/global_exvmu4.png',
+    'https://www.cbc.ca/cmlink/rss-canada-london': 'https://res.cloudinary.com/di8j84ent/image/upload/v1689558729/cbc_sap98q.png',
+    // Add more logos for other feed URLs
+  };
+
+  // Return the corresponding logo for the given feedURL
+  return rssLogos[feedURL] || 'default_rss_logo.png'; // Replace 'default_rss_logo.png' with a fallback logo URL
 }
 
 // Call the function to display the articles when the page loads
