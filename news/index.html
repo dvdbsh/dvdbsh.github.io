@@ -5,90 +5,16 @@
   <!-- Material Design CSS -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
-  <style>
-    /* Custom CSS for cards */
-    .article-card {
-      margin: 0px;
-      border-radius: 25px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      overflow: hidden;
-    }
+  <link rel="stylesheet" href="style.css"> <!-- Link to your custom CSS file -->
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
 
-    .article-image {
-      width: 100%;
-      height: auto;
-      cursor: pointer;
-    }
-
-    .article-title {
-      font-size: 16px; 
-      font-weight:500;
-      padding-bottom: 10px;
-    }
-
-    .article-description {
-      font-size: 14px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2; /* Limit the description to 2 lines */
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    /* Flexbox grid layout */
-    .row {
-      display: flex;
-      flex-wrap: wrap;
-    }
-
-    .col {
-      flex: 33.33%; /* Three columns on desktop */
-      max-width: 33.33%;
-      padding: 10px;
-      margin-bottom: 10px; /* Adjust the margin to control the space between rows */
-    }
-
-    @media only screen and (max-width: 992px) {
-      .col {
-        flex: 50%;
-        max-width: 50%;
-      }
-    }
-
-    @media only screen and (max-width: 600px) {
-      .col {
-        flex: 100%;
-        max-width: 100%;
-      }
-    }
-
-    /* Flexbox for date and source */
-    .date-source {
-      display: flex;
-      justify-content: space-between;
-      padding-top:15px;
-    }
-
-    .date-source p {
-      margin: 0;
-      font-size: 12px;
-    }
-
-    .material-symbols-outlined {
-      font-size: 11px;
-    }
-
-    /* Additional styles */
-    .card-content {
-      padding: 10px;
-    }
-
-    /* "Older Stories" Card */
-    #older-stories {
-      flex: 100%;
-      max-width: 100%;
-    }
-  </style>
+  <!-- App Icon and Favicon -->
+  <link rel="apple-touch-icon" sizes="180x180" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689564176/apple-touch-icon_jq66yl.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689564176/apple-touch-icon_jq66yl.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689564176/favicon_hwojbp.ico">
+  <link rel="manifest" href="/path/to/site.webmanifest">
 </head>
 <body>
   <h4 class="center-align">News Alligator</h4>
@@ -97,107 +23,6 @@
   <!-- Material Design JavaScript -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
-  <script>
-    // RSS feed URLs
-    const rssFeeds = [
-      'https://london.ctvnews.ca/rss/ctv-news-london-1.1073369',
-      'https://globalnews.ca/london/feed/',
-      'https://www.cbc.ca/cmlink/rss-canada-london',
-      // Add more RSS feed URLs here
-    ];
-
-    function fetchArticles(feedURL) {
-      return fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feedURL)}`)
-        .then((response) => response.json())
-        .then((data) => data.items)
-        .catch((error) => {
-          console.error(`Error fetching feed from ${feedURL}:`, error);
-          return [];
-        });
-    }
-
-    function sortByDate(articles) {
-      return articles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-    }
-
-    function formatPublishDate(dateString) {
-      const date = new Date(dateString);
-      const options = { year: 'numeric', month: 'long', day: 'numeric' };
-      return date.toLocaleDateString(undefined, options);
-    }
-
-    function getSourceFromURL(url) {
-      const urlObj = new URL(url);
-      return urlObj.hostname;
-    }
-
-    async function displayArticles() {
-      const articlesList = document.getElementById('articles-list');
-      articlesList.innerHTML = '';
-
-      // Create a row to contain the columns
-      const row = document.createElement('div');
-      row.classList.add('row');
-
-      let displayedCards = 0;
-
-      for (const feedURL of rssFeeds) {
-        const articles = await fetchArticles(feedURL);
-        const sortedArticles = sortByDate(articles);
-
-        sortedArticles.forEach((article, index) => {
-          if (displayedCards >= 12) {
-            return; // Exit loop after displaying 12 cards
-          }
-
-          // Create a column for each article card
-          const col = document.createElement('div');
-          col.classList.add('col');
-
-          const articleCard = document.createElement('div');
-          articleCard.classList.add('card', 'article-card');
-
-          const articleImage = article.enclosure ? `<img class="article-image" src="${article.enclosure.link}" alt="Article Image" onclick="window.open('${article.link}', '_blank')">` : '';
-          const publishDate = formatPublishDate(article.pubDate);
-          const source = getSourceFromURL(article.link);
-
-          articleCard.innerHTML = `<div class="card-image">
-                                     ${articleImage}
-                                   </div>
-                                   <div class="card-content">
-                                     <p class="article-title"><a href="${article.link}" target="_blank">${article.title}</a></p>
-                                     <p class="article-description">${article.description}</p>
-                                     <div class="date-source">
-                                       <p><i class="material-symbols-outlined">calendar_today</i> ${publishDate}</p>
-                                       <p><i class="material-symbols-outlined">folder_open</i> ${source}</p>
-                                     </div>
-                                   </div>`;
-
-          col.appendChild(articleCard);
-          row.appendChild(col);
-          displayedCards++;
-        });
-      }
-
-      if (displayedCards >= 12) {
-        // Add "Older Stories" card with remaining articles
-        const olderStoriesCard = document.createElement('div');
-        olderStoriesCard.id = 'older-stories';
-        olderStoriesCard.classList.add('card', 'article-card');
-        olderStoriesCard.innerHTML = `<div class="card-content">
-                                         <p class="article-title">Older Stories</p>
-                                         <div class="date-source">
-                                           ${rssFeeds.slice(1).map((feedURL) => `<p><a href="${feedURL}" target="_blank">${getSourceFromURL(feedURL)}</a></p>`).join('')}
-                                         </div>
-                                       </div>`;
-        row.appendChild(olderStoriesCard);
-      }
-
-      articlesList.appendChild(row);
-    }
-
-    // Call the function to display the articles when the page loads
-    displayArticles();
-  </script>
+  <script src="script.js"></script> <!-- Link to your custom JavaScript file -->
 </body>
 </html>
