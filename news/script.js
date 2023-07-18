@@ -123,5 +123,23 @@ function getRSSLogo(feedURL) {
   return rssLogos[feedURL] || 'default_rss_logo.png'; // Replace 'default_rss_logo.png' with a fallback logo URL
 }
 
+// Function to refresh the articles every 5 minutes
+function refreshArticles() {
+  // Call the displayArticles function to fetch and display new articles
+  displayArticles();
+}
+
 // Call the function to display the articles when the page loads
 displayArticles();
+
+// Function to display today's date
+function displayTodaysDate() {
+  // Your existing code for displaying today's date
+}
+
+// Call the function to display today's date when the page loads
+displayTodaysDate();
+
+// Auto-refresh the articles every 5 minutes (300,000 milliseconds)
+const refreshInterval = 300000; // 5 minutes in milliseconds
+setInterval(refreshArticles, refreshInterval);
