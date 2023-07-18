@@ -64,8 +64,8 @@ async function displayArticles() {
     const sortedArticles = sortByDate(articles);
 
     sortedArticles.forEach((article, index) => {
-      if (displayedCards >= 12) {
-        if (olderArticles.length < 5) {
+      if (displayedCards >= 21) {
+        if (olderArticles.length < 20) {
           olderArticles.push(article);
         }
       } else {
@@ -135,7 +135,6 @@ function getRSSLogo(feedURL) {
     'https://globalnews.ca/london/feed/': 'https://res.cloudinary.com/di8j84ent/image/upload/v1689558729/global_exvmu4.png',
     'https://www.cbc.ca/cmlink/rss-canada-london': 'https://res.cloudinary.com/di8j84ent/image/upload/v1689558729/cbc_sap98q.png',
     'http://rss.cnn.com/rss/cnn_topstories.rss': 'https://res.cloudinary.com/di8j84ent/image/upload/v1689702660/cnn-logo-red-png-3_d8zru4.png',
-    'https://feeds.abcnews.com/abcnews/topstories': 'https://res.cloudinary.com/di8j84ent/image/upload/v1689702634/2560px-ABC_News_logo_2021.svg_gvdywj.png',
     // Add more logos for other feed URLs
   };
 
