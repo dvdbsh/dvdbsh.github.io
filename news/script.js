@@ -94,7 +94,7 @@ async function displayArticles() {
     olderStoriesCard.classList.add('card', 'article-card');
 
     const olderArticlesList = olderArticles
-      .map((article) => `<li><i class="material-symbols-outlined">arrow_right_alt</i> <a href="${article.link}" target="_blank">${article.title}</a><br><span class="article-date">${formatPublishDate(article.pubDate)}</span><hr></li>`)
+      .map((article) => `<li><i class="material-symbols-outlined">arrow_right_alt</i> <a href="${article.link}" target="_blank">${article.title}</a><br><span class="article-date">${formatPublishDate(article.pubDate)}</span><hr class="older"></li>`)
       .join('');
 
     olderStoriesCard.innerHTML = `<div class="card-content">
