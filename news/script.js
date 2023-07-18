@@ -89,7 +89,7 @@ async function displayArticles() {
     const sortedArticles = sortByDate(articles);
 
     sortedArticles.forEach((article, index) => {
-      if (displayedCards >= 27) {
+      if (displayedCards >= 48) {
         if (olderArticles.length < 20) {
           olderArticles.push(article);
         }
