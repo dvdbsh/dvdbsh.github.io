@@ -1,3 +1,21 @@
+// Function to display today's date
+function displayTodaysDate() {
+  const todaysDate = new Date();
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  const formattedDate = todaysDate.toLocaleDateString(undefined, options);
+  const todaysDateElement = document.querySelector('.todays-date');
+  todaysDateElement.textContent = formattedDate;
+}
+
+// Function to refresh the articles every 5 minutes
+async function refreshArticles() {
+  // Call the displayArticles function to fetch and display new articles
+  await displayArticles();
+
+  // Refresh the today's date
+  displayTodaysDate();
+}
+
 // RSS feed URLs
 const rssFeeds = [
   'https://london.ctvnews.ca/rss/ctv-news-london-1.1073369',
@@ -123,23 +141,12 @@ function getRSSLogo(feedURL) {
   return rssLogos[feedURL] || 'default_rss_logo.png'; // Replace 'default_rss_logo.png' with a fallback logo URL
 }
 
-// Function to refresh the articles every 5 minutes
-function refreshArticles() {
-  // Call the displayArticles function to fetch and display new articles
-  displayArticles();
-}
-
 // Call the function to display the articles when the page loads
 displayArticles();
-
-// Function to display today's date
-function displayTodaysDate() {
-  // Your existing code for displaying today's date
-}
 
 // Call the function to display today's date when the page loads
 displayTodaysDate();
 
-// Auto-refresh the articles every 5 minutes (300,000 milliseconds)
+// Auto-refresh the articles and today's date every 5 minutes (300,000 milliseconds)
 const refreshInterval = 300000; // 5 minutes in milliseconds
 setInterval(refreshArticles, refreshInterval);
