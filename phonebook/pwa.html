@@ -28,8 +28,9 @@
     }
 
     .app-header h1 {
-      font-size: 40px;
-      font-weight: 600;
+      font-size: 35px;
+      font-weight: 500;
+      letter-spacing: 1px;
       margin: 0;
       padding-top: 20px;
     }
@@ -265,6 +266,14 @@
   }
 
   document.addEventListener('DOMContentLoaded', initializeContacts);
+  // Auto-refresh the page at a set interval (e.g., every 5 minutes)
+  const refreshInterval = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+  function autoRefreshPage() {
+    location.reload();
+  }
+
+  setInterval(autoRefreshPage, refreshInterval);
 
 </script>
 
