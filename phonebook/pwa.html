@@ -8,6 +8,7 @@
   <meta name="theme-color" content="#006241">
   <link rel="apple-touch-icon" sizes="180x180" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689457077/contacticon_pzou6m.png">
   <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
   <link rel="manifest" href="/manifest.json">
   <script src="https://unpkg.com/feather-icons@4.28.0"></script>
   <style>
@@ -111,7 +112,7 @@
       background-color: #f9f9f9;
     }
 
-    .install-prompt {
+    .custom-popup {
       position: fixed;
       bottom: 20px;
       left: 50%;
@@ -126,17 +127,20 @@
       z-index: 9999;
     }
 
-    .install-prompt-content {
+    .custom-popup-content {
       flex-grow: 1;
-      margin-right: 10px;
+      margin-right: 0px;
     }
 
-    .install-prompt-button {
+    .custom-popup-button {
       background-color: #006241;
+      width:20px;
+      height:20px;
       color: #fff;
       border: none;
-      border-radius: 4px;
-      padding: 8px 12px;
+      border-radius: 50%;
+      padding: 5px;
+      margin-left:10px;
       cursor: pointer;
     }
   </style>
@@ -154,90 +158,90 @@
     });
   }
 
-    // Set the contact's avatar using DiceBear API
-    function setContactAvatar(name, phoneNumber) {
-      const lastFourDigits = phoneNumber.slice(-4) + (phoneNumber);
-      const avatar = document.createElement('img');
-      avatar.classList.add('avatar');
-      avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${lastFourDigits}&scale=70&backgroundColor=1e3932,006241,00754a,d4e9e2&shapeColor=eed350,dd92c0,f0cdbc,d3705a,f0e0b0,4c9f87,4ca06f,c0d48b,dc714e,edc4c9,d3af5a,92d35a,d7c4ed,edd9c4,50eee8,437dc8`;
-      avatar.alt = 'avatar';
+  // Set the contact's avatar using DiceBear API
+  function setContactAvatar(name, phoneNumber) {
+    const lastFourDigits = phoneNumber.slice(-4) + (phoneNumber);
+    const avatar = document.createElement('img');
+    avatar.classList.add('avatar');
+    avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${lastFourDigits}&scale=70&backgroundColor=1e3932,006241,00754a,d4e9e2&shapeColor=eed350,dd92c0,f0cdbc,d3705a,f0e0b0,4c9f87,4ca06f,c0d48b,dc714e,edc4c9,d3af5a,92d35a,d7c4ed,edd9c4,50eee8,437dc8`;
+    avatar.alt = 'avatar';
 
-      return avatar;
-    }
+    return avatar;
+  }
 
-    // Create a contact item
-    function createContactItem(name, phoneNumber, position) {
-      const contactItem = document.createElement('li');
-      contactItem.classList.add('contact-item');
+  // Create a contact item
+  function createContactItem(name, phoneNumber, position) {
+    const contactItem = document.createElement('li');
+    contactItem.classList.add('contact-item');
 
-      const avatar = setContactAvatar(name, phoneNumber);
-      const contactInfo = document.createElement('div');
-      contactInfo.classList.add('contact-info');
+    const avatar = setContactAvatar(name, phoneNumber);
+    const contactInfo = document.createElement('div');
+    contactInfo.classList.add('contact-info');
 
-      const contactName = document.createElement('div');
-      contactName.classList.add('contact-name');
-      contactName.innerText = name;
+    const contactName = document.createElement('div');
+    contactName.classList.add('contact-name');
+    contactName.innerText = name;
 
-      const contactPosition = document.createElement('div');
-      contactPosition.classList.add('contact-position');
-      contactPosition.innerText = position;
+    const contactPosition = document.createElement('div');
+    contactPosition.classList.add('contact-position');
+    contactPosition.innerText = position;
 
-      const circleButtons = document.createElement('div');
-      circleButtons.classList.add('circle-buttons');
+    const circleButtons = document.createElement('div');
+    circleButtons.classList.add('circle-buttons');
 
-      const messageButton = document.createElement('a');
-      messageButton.classList.add('circle-button');
-      messageButton.classList.add('message');
-      messageButton.href = `sms:${phoneNumber}`;
-      const messageIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      messageIcon.setAttribute('data-feather', 'message-circle');
-      messageIcon.setAttribute('width', '24');
-      messageIcon.setAttribute('height', '24');
-      messageIcon.setAttribute('viewBox', '0 0 24 24');
-      messageIcon.innerHTML = '<circle cx="12" cy="12" r="10" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="8" y1="8" x2="8" y2="8" /><line x1="12" y1="8" x2="12" y2="8" /><line x1="16" y1="8" x2="16" y2="8" /><line x1="8" y1="16" x2="16" y2="16" />';
-      messageButton.appendChild(messageIcon);
+    const messageButton = document.createElement('a');
+    messageButton.classList.add('circle-button');
+    messageButton.classList.add('message');
+    messageButton.href = `sms:${phoneNumber}`;
+    const messageIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    messageIcon.setAttribute('data-feather', 'message-circle');
+    messageIcon.setAttribute('width', '24');
+    messageIcon.setAttribute('height', '24');
+    messageIcon.setAttribute('viewBox', '0 0 24 24');
+    messageIcon.innerHTML = '<circle cx="12" cy="12" r="10" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="8" y1="8" x2="8" y2="8" /><line x1="12" y1="8" x2="12" y2="8" /><line x1="16" y1="8" x2="16" y2="8" /><line x1="8" y1="16" x2="16" y2="16" />';
+    messageButton.appendChild(messageIcon);
 
-      const phoneButton = document.createElement('a');
-      phoneButton.classList.add('circle-button');
-      phoneButton.classList.add('phone');
-      phoneButton.href = `tel:${phoneNumber}`;
-      const phoneIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      phoneIcon.setAttribute('data-feather', 'phone');
-      phoneIcon.setAttribute('width', '24');
-      phoneIcon.setAttribute('height', '24');
-      phoneIcon.setAttribute('viewBox', '0 0 24 24');
-      phoneIcon.innerHTML = '<path d="M3 6c1.53-2.744 4.255-4.718 7.32-5.315C11.297.076 11.648 0 12 0c.352 0 .703.076 1.68.685C16.744 1.282 19.468 3.256 21 6H3zm-1 0v12h22V6H2zm12 2a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm-4 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm8 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm3 2h-2V8h2v2zm-4 0h-2V8h2v2zm-4 0H8V8h2v2zm-4 0H4V8h2v2zm-3 2h14a1 1 0 0 1 1 1v4H2v-4a1 1 0 0 1 1-1zm16 0h2v6h-2v-6z" />';
-      phoneButton.appendChild(phoneIcon);
+    const phoneButton = document.createElement('a');
+    phoneButton.classList.add('circle-button');
+    phoneButton.classList.add('phone');
+    phoneButton.href = `tel:${phoneNumber}`;
+    const phoneIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    phoneIcon.setAttribute('data-feather', 'phone');
+    phoneIcon.setAttribute('width', '24');
+    phoneIcon.setAttribute('height', '24');
+    phoneIcon.setAttribute('viewBox', '0 0 24 24');
+    phoneIcon.innerHTML = '<path d="M3 6c1.53-2.744 4.255-4.718 7.32-5.315C11.297.076 11.648 0 12 0c.352 0 .703.076 1.68.685C16.744 1.282 19.468 3.256 21 6H3zm-1 0v12h22V6H2zm12 2a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm-4 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm8 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm3 2h-2V8h2v2zm-4 0h-2V8h2v2zm-4 0H8V8h2v2zm-4 0H4V8h2v2zm-3 2h14a1 1 0 0 1 1 1v4H2v-4a1 1 0 0 1 1-1zm16 0h2v6h-2v-6z" />';
+    phoneButton.appendChild(phoneIcon);
 
-      circleButtons.appendChild(messageButton);
-      circleButtons.appendChild(phoneButton);
+    circleButtons.appendChild(messageButton);
+    circleButtons.appendChild(phoneButton);
 
-      contactInfo.appendChild(contactName);
-      contactInfo.appendChild(contactPosition);
-      contactItem.appendChild(avatar);
-      contactItem.appendChild(contactInfo);
-      contactItem.appendChild(circleButtons);
+    contactInfo.appendChild(contactName);
+    contactInfo.appendChild(contactPosition);
+    contactItem.appendChild(avatar);
+    contactItem.appendChild(contactInfo);
+    contactItem.appendChild(circleButtons);
 
-      return contactItem;
-    }
+    return contactItem;
+  }
 
-    // Group contacts by the first letter of their names
-    function groupContactsByLetter(contacts) {
-      const groups = {};
+  // Group contacts by the first letter of their names
+  function groupContactsByLetter(contacts) {
+    const groups = {};
 
-      contacts.forEach(contact => {
-        const firstLetter = contact.name.charAt(0).toUpperCase();
-        if (!groups[firstLetter]) {
-          groups[firstLetter] = [];
-        }
-        groups[firstLetter].push(contact);
-      });
+    contacts.forEach(contact => {
+      const firstLetter = contact.name.charAt(0).toUpperCase();
+      if (!groups[firstLetter]) {
+        groups[firstLetter] = [];
+      }
+      groups[firstLetter].push(contact);
+    });
 
-      return groups;
-    }
+    return groups;
+  }
 
-    function initializeContacts() {
-      const contacts = [
+  function initializeContacts() {
+    const contacts = [
         { name: 'Alphonsa', phoneNumber: '519-694-8450', position: 'Barista' },
         { name: 'Bethanie', phoneNumber: '226-377-8177', position: 'Barista' },
         { name: 'Cali', phoneNumber: '519-671-7736', position: 'Barista' },
@@ -263,77 +267,85 @@
         { name: 'Shabnam', phoneNumber: '1-437-679-4456', position: 'Barista' },
         { name: 'Shyan', phoneNumber: '226-927-5383', position: 'Barista' },
         { name: 'Steph', phoneNumber: '226-268-1704', position: 'Barista' }
-      ];
+    ];
 
       contacts.sort((a, b) => a.name.localeCompare(b.name));
 
-      const groupedContacts = groupContactsByLetter(contacts);
-      const contactList = document.getElementById('contact-list');
+    const groupedContacts = groupContactsByLetter(contacts);
+    const contactList = document.getElementById('contact-list');
 
-      for (const letter in groupedContacts) {
-        const section = document.createElement('div');
-        section.classList.add('contact-section');
+    for (const letter in groupedContacts) {
+      const section = document.createElement('div');
+      section.classList.add('contact-section');
 
-        const heading = document.createElement('div');
-        heading.classList.add('contact-section-heading');
-        heading.innerText = letter;
+      const heading = document.createElement('div');
+      heading.classList.add('contact-section-heading');
+      heading.innerText = letter;
 
-        const contacts = groupedContacts[letter];
+      const contacts = groupedContacts[letter];
 
-        contacts.forEach(contact => {
-          const contactItem = createContactItem(contact.name, contact.phoneNumber, contact.position);
-          section.appendChild(contactItem);
-        });
+      contacts.forEach(contact => {
+        const contactItem = createContactItem(contact.name, contact.phoneNumber, contact.position);
+        section.appendChild(contactItem);
+      });
 
-        section.insertBefore(heading, section.firstChild);
-        contactList.appendChild(section);
-      }
-
-      feather.replace();
+      section.insertBefore(heading, section.firstChild);
+      contactList.appendChild(section);
     }
 
-    document.addEventListener('DOMContentLoaded', initializeContacts);
+    feather.replace();
+  }
 
-    // Installation prompt
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      showInstallPrompt();
+  document.addEventListener('DOMContentLoaded', initializeContacts);
+
+  // Custom popup
+  function showCustomPopup() {
+    const popup = document.createElement('div');
+    popup.classList.add('custom-popup');
+
+    const content = document.createElement('div');
+    content.classList.add('custom-popup-content');
+    content.innerText = 'Add to your Home Screen';
+    content.style.display = 'flex';
+    content.style.alignItems = 'center';
+    content.style.justifyContent = 'center';
+    content.style.height = '100%';
+
+    const closeButton = document.createElement('i');
+    closeButton.classList.add('material-icons');
+    closeButton.classList.add('custom-popup-button');
+    closeButton.innerText = 'close';
+    closeButton.style.cursor = 'pointer';
+    closeButton.style.display = 'flex';
+    closeButton.style.alignItems = 'center';
+    closeButton.style.justifyContent = 'center';
+    closeButton.style.width = '20px';
+    closeButton.style.height = '20px';
+    closeButton.style.borderRadius = '50%';
+    closeButton.style.background = '#006241';
+    closeButton.style.color = '#fff';
+    closeButton.style.fontSize = '16px';
+    closeButton.style.padding = '5px';
+    closeButton.addEventListener('click', () => {
+      popup.remove();
+      // Store a flag in localStorage to indicate that the popup has been closed
+      localStorage.setItem('customPopupShown', 'true');
     });
 
-    function showInstallPrompt() {
-      const popup = document.createElement('div');
-      popup.classList.add('install-prompt');
+    content.appendChild(closeButton);
+    popup.appendChild(content);
+    document.body.appendChild(popup);
+  }
 
-      const content = document.createElement('div');
-      content.classList.add('install-prompt-content');
-      content.innerText = 'Add this app to your home screen for quick access!';
-
-      const installButton = document.createElement('button');
-      installButton.classList.add('install-prompt-button');
-      installButton.innerText = 'Install';
-      installButton.addEventListener('click', () => {
-        popup.remove();
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          deferredPrompt = null;
-        });
-      });
-
-      const dismissButton = document.createElement('button');
-      dismissButton.classList.add('install-prompt-button');
-      dismissButton.innerText = 'Dismiss';
-      dismissButton.addEventListener('click', () => {
-        popup.remove();
-      });
-
-      content.appendChild(installButton);
-      content.appendChild(dismissButton);
-      popup.appendChild(content);
-      document.body.appendChild(popup);
+  document.addEventListener('DOMContentLoaded', () => {
+    // Check if the custom popup should be shown
+    const customPopupShown = localStorage.getItem('customPopupShown');
+    if (!customPopupShown) {
+      showCustomPopup();
     }
-  </script>
+  });
+</script>
+
 
 </head>
 <body>
