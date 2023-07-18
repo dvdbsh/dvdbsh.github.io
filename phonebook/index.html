@@ -7,7 +7,9 @@
   <meta name="format-detection" content="telephone=no">
   <meta name="theme-color" content="#006241">
   <link rel="apple-touch-icon" sizes="180x180" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689457077/contacticon_pzou6m.png">
-  <link href="https://api.fontshare.com/v2/css?f[]=switzer@2,101,600,701,800,501,601,900,100,700,901,400,201,401,200,300,301,801,500,1&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="manifest" href="/manifest.json">
   <script src="https://unpkg.com/feather-icons@4.28.0"></script>
   <style>
     body {
@@ -18,23 +20,19 @@
 
     .app-header {
       display: flex;
-      align-items: flex-end;
-      padding-top: 8px;
-      padding-left:8px;
-      background-color: #f9f9f9;
+      align-items: center;
+      padding-top: 16px;
+      padding-left: 16px;
+      background-color: #006241;
+      color: #fff;
     }
 
     .app-header h1 {
-      font-size: 22px;
-      font-weight: 600;
-      margin-top: 50px;
-      padding: 0;
-    }
-
-    .app-header .title {
-      font-size: 40px;
-      font-weight: 700;
-      margin-left: 5px;
+      font-size: 35px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      margin: 0;
+      padding-top: 20px;
     }
 
     .contact-list {
@@ -45,17 +43,17 @@
 
     .contact-section-heading {
       font-size: 14px;
-      color:#555;
+      color: #555;
       font-weight: 600;
       padding: 10px;
-      background-color: #f2f0eb;
+      background-color: #f9f9f9;
     }
 
     .contact-item {
       display: flex;
       align-items: center;
       padding: 10px;
-      background-color: #f9f9f9;
+      background-color: #fff;
       border-bottom: 1px solid #f2f0eb;
       cursor: pointer;
     }
@@ -63,13 +61,18 @@
     .avatar {
       width: 60px;
       height: 60px;
-      border-radius: 8px;
+      border-radius: 50%;
       margin-right: 10px;
+    }
+
+    .contact-info {
+      flex-grow: 1;
     }
 
     .contact-name {
       font-size: 18px;
       font-weight: 500;
+      color: #222;
     }
 
     .contact-position {
@@ -79,31 +82,25 @@
     }
 
     .circle-buttons {
-      margin-left: auto;
       display: flex;
       align-items: center;
     }
 
     .circle-button {
-      width: 40px;
-      height: 40px;
+      width: 32px;
+      height: 32px;
       border-radius: 50%;
-      margin-left: 5px;
-      padding: 5px;
+      margin-left: 8px;
+      padding: 4px;
       cursor: pointer;
       display: flex;
       justify-content: center;
       align-items: center;
+      transition: background-color 0.2s;
     }
 
-    .circle-button.message {
+    .circle-button:hover {
       background-color: #f2f0eb;
-    }
-
-    .circle-button.phone {
-      background-color: #f2f0eb;
-      margin-right:10px;
-      margin-left:10px;
     }
 
     .circle-button svg {
@@ -115,122 +112,105 @@
       height: 100px;
       background-color: #f9f9f9;
     }
-
-    .install-prompt {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      z-index: 9999;
-    }
-
-    .install-prompt-content {
-      flex-grow: 1;
-      margin-right: 10px;
-    }
-
-    .install-prompt-button {
-      background-color: #006241;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      padding: 8px 12px;
-      cursor: pointer;
-    }
   </style>
   <title>Partners</title>
-  <script>
-    // Set the contact's avatar using DiceBear API
-    function setContactAvatar(name, phoneNumber) {
-      const lastFourDigits = phoneNumber.slice(-4) + (phoneNumber);
-      const avatar = document.createElement('img');
-      avatar.classList.add('avatar');
-      avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${lastFourDigits}&scale=70&backgroundColor=1e3932,006241,00754a,d4e9e2&shapeColor=eed350,dd92c0,f0cdbc,d3705a,f0e0b0,4c9f87,4ca06f,c0d48b,dc714e,edc4c9,d3af5a,92d35a,d7c4ed,edd9c4,50eee8,437dc8`;
-      avatar.alt = 'avatar';
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(registration => {
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch(error => {
+          console.error('Service Worker registration failed:', error);
+        });
+    });
+  }
 
-      return avatar;
-    }
+  // Set the contact's avatar using DiceBear API
+  function setContactAvatar(name, phoneNumber) {
+    const lastFourDigits = phoneNumber.slice(-4) + (phoneNumber);
+    const avatar = document.createElement('img');
+    avatar.classList.add('avatar');
+    avatar.src = `https://api.dicebear.com/6.x/thumbs/svg?seed=${lastFourDigits}&scale=70&backgroundColor=1e3932,006241,00754a,d4e9e2&shapeColor=eed350,dd92c0,f0cdbc,d3705a,f0e0b0,4c9f87,4ca06f,c0d48b,dc714e,edc4c9,d3af5a,92d35a,d7c4ed,edd9c4,50eee8,437dc8`;
+    avatar.alt = 'avatar';
 
-    // Create a contact item
-    function createContactItem(name, phoneNumber, position) {
-      const contactItem = document.createElement('li');
-      contactItem.classList.add('contact-item');
+    return avatar;
+  }
 
-      const avatar = setContactAvatar(name, phoneNumber);
-      const contactInfo = document.createElement('div');
-      contactInfo.classList.add('contact-info');
+  // Create a contact item
+  function createContactItem(name, phoneNumber, position) {
+    const contactItem = document.createElement('li');
+    contactItem.classList.add('contact-item');
 
-      const contactName = document.createElement('div');
-      contactName.classList.add('contact-name');
-      contactName.innerText = name;
+    const avatar = setContactAvatar(name, phoneNumber);
+    const contactInfo = document.createElement('div');
+    contactInfo.classList.add('contact-info');
 
-      const contactPosition = document.createElement('div');
-      contactPosition.classList.add('contact-position');
-      contactPosition.innerText = position;
+    const contactName = document.createElement('div');
+    contactName.classList.add('contact-name');
+    contactName.innerText = name;
 
-      const circleButtons = document.createElement('div');
-      circleButtons.classList.add('circle-buttons');
+    const contactPosition = document.createElement('div');
+    contactPosition.classList.add('contact-position');
+    contactPosition.innerText = position;
 
-      const messageButton = document.createElement('a');
-      messageButton.classList.add('circle-button');
-      messageButton.classList.add('message');
-      messageButton.href = `sms:${phoneNumber}`;
-      const messageIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      messageIcon.setAttribute('data-feather', 'message-circle');
-      messageIcon.setAttribute('width', '24');
-      messageIcon.setAttribute('height', '24');
-      messageIcon.setAttribute('viewBox', '0 0 24 24');
-      messageIcon.innerHTML = '<circle cx="12" cy="12" r="10" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="8" y1="8" x2="8" y2="8" /><line x1="12" y1="8" x2="12" y2="8" /><line x1="16" y1="8" x2="16" y2="8" /><line x1="8" y1="16" x2="16" y2="16" />';
-      messageButton.appendChild(messageIcon);
+    const circleButtons = document.createElement('div');
+    circleButtons.classList.add('circle-buttons');
 
-      const phoneButton = document.createElement('a');
-      phoneButton.classList.add('circle-button');
-      phoneButton.classList.add('phone');
-      phoneButton.href = `tel:${phoneNumber}`;
-      const phoneIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-      phoneIcon.setAttribute('data-feather', 'phone');
-      phoneIcon.setAttribute('width', '24');
-      phoneIcon.setAttribute('height', '24');
-      phoneIcon.setAttribute('viewBox', '0 0 24 24');
-      phoneIcon.innerHTML = '<path d="M3 6c1.53-2.744 4.255-4.718 7.32-5.315C11.297.076 11.648 0 12 0c.352 0 .703.076 1.68.685C16.744 1.282 19.468 3.256 21 6H3zm-1 0v12h22V6H2zm12 2a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm-4 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm8 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm3 2h-2V8h2v2zm-4 0h-2V8h2v2zm-4 0H8V8h2v2zm-4 0H4V8h2v2zm-3 2h14a1 1 0 0 1 1 1v4H2v-4a1 1 0 0 1 1-1zm16 0h2v6h-2v-6z" />';
-      phoneButton.appendChild(phoneIcon);
+    const messageButton = document.createElement('a');
+    messageButton.classList.add('circle-button');
+    messageButton.classList.add('message');
+    messageButton.href = `sms:${phoneNumber}`;
+    const messageIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    messageIcon.setAttribute('data-feather', 'message-circle');
+    messageIcon.setAttribute('width', '24');
+    messageIcon.setAttribute('height', '24');
+    messageIcon.setAttribute('viewBox', '0 0 24 24');
+    messageIcon.innerHTML = '<circle cx="12" cy="12" r="10" /><line x1="8" y1="12" x2="16" y2="12" /><line x1="8" y1="8" x2="8" y2="8" /><line x1="12" y1="8" x2="12" y2="8" /><line x1="16" y1="8" x2="16" y2="8" /><line x1="8" y1="16" x2="16" y2="16" />';
+    messageButton.appendChild(messageIcon);
 
-      circleButtons.appendChild(messageButton);
-      circleButtons.appendChild(phoneButton);
+    const phoneButton = document.createElement('a');
+    phoneButton.classList.add('circle-button');
+    phoneButton.classList.add('phone');
+    phoneButton.href = `tel:${phoneNumber}`;
+    const phoneIcon = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    phoneIcon.setAttribute('data-feather', 'phone');
+    phoneIcon.setAttribute('width', '24');
+    phoneIcon.setAttribute('height', '24');
+    phoneIcon.setAttribute('viewBox', '0 0 24 24');
+    phoneIcon.innerHTML = '<path d="M3 6c1.53-2.744 4.255-4.718 7.32-5.315C11.297.076 11.648 0 12 0c.352 0 .703.076 1.68.685C16.744 1.282 19.468 3.256 21 6H3zm-1 0v12h22V6H2zm12 2a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm-4 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm8 0a1 1 0 0 1 1 1 1 1 0 0 1-1 1 1 1 0 0 1-1-1 1 1 0 0 1 1-1zm3 2h-2V8h2v2zm-4 0h-2V8h2v2zm-4 0H8V8h2v2zm-4 0H4V8h2v2zm-3 2h14a1 1 0 0 1 1 1v4H2v-4a1 1 0 0 1 1-1zm16 0h2v6h-2v-6z" />';
+    phoneButton.appendChild(phoneIcon);
 
-      contactInfo.appendChild(contactName);
-      contactInfo.appendChild(contactPosition);
-      contactItem.appendChild(avatar);
-      contactItem.appendChild(contactInfo);
-      contactItem.appendChild(circleButtons);
+    circleButtons.appendChild(messageButton);
+    circleButtons.appendChild(phoneButton);
 
-      return contactItem;
-    }
+    contactInfo.appendChild(contactName);
+    contactInfo.appendChild(contactPosition);
+    contactItem.appendChild(avatar);
+    contactItem.appendChild(contactInfo);
+    contactItem.appendChild(circleButtons);
 
-    // Group contacts by the first letter of their names
-    function groupContactsByLetter(contacts) {
-      const groups = {};
+    return contactItem;
+  }
 
-      contacts.forEach(contact => {
-        const firstLetter = contact.name.charAt(0).toUpperCase();
-        if (!groups[firstLetter]) {
-          groups[firstLetter] = [];
-        }
-        groups[firstLetter].push(contact);
-      });
+  // Group contacts by the first letter of their names
+  function groupContactsByLetter(contacts) {
+    const groups = {};
 
-      return groups;
-    }
+    contacts.forEach(contact => {
+      const firstLetter = contact.name.charAt(0).toUpperCase();
+      if (!groups[firstLetter]) {
+        groups[firstLetter] = [];
+      }
+      groups[firstLetter].push(contact);
+    });
 
-    function initializeContacts() {
-      const contacts = [
+    return groups;
+  }
+
+  function initializeContacts() {
+    const contacts = [
         { name: 'Alphonsa', phoneNumber: '519-694-8450', position: 'Barista' },
         { name: 'Bethanie', phoneNumber: '226-377-8177', position: 'Barista' },
         { name: 'Cali', phoneNumber: '519-671-7736', position: 'Barista' },
@@ -256,87 +236,60 @@
         { name: 'Shabnam', phoneNumber: '1-437-679-4456', position: 'Barista' },
         { name: 'Shyan', phoneNumber: '226-927-5383', position: 'Barista' },
         { name: 'Steph', phoneNumber: '226-268-1704', position: 'Barista' }
-      ];
+    ];
 
-      contacts.sort((a, b) => a.name.localeCompare(b.name));
+    contacts.sort((a, b) => a.name.localeCompare(b.name));
 
-      const groupedContacts = groupContactsByLetter(contacts);
-      const contactList = document.getElementById('contact-list');
+    const groupedContacts = groupContactsByLetter(contacts);
+    const contactList = document.getElementById('contact-list');
 
-      for (const letter in groupedContacts) {
-        const section = document.createElement('div');
-        section.classList.add('contact-section');
+    for (const letter in groupedContacts) {
+      const section = document.createElement('div');
+      section.classList.add('contact-section');
 
-        const heading = document.createElement('div');
-        heading.classList.add('contact-section-heading');
-        heading.innerText = letter;
+      const heading = document.createElement('div');
+      heading.classList.add('contact-section-heading');
+      heading.innerText = letter;
 
-        const contacts = groupedContacts[letter];
+      const contacts = groupedContacts[letter];
 
-        contacts.forEach(contact => {
-          const contactItem = createContactItem(contact.name, contact.phoneNumber, contact.position);
-          section.appendChild(contactItem);
-        });
-
-        section.insertBefore(heading, section.firstChild);
-        contactList.appendChild(section);
-      }
-
-      feather.replace();
-    }
-
-    document.addEventListener('DOMContentLoaded', initializeContacts);
-
-    // Installation prompt
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      showInstallPrompt();
-    });
-
-    function showInstallPrompt() {
-      const popup = document.createElement('div');
-      popup.classList.add('install-prompt');
-
-      const content = document.createElement('div');
-      content.classList.add('install-prompt-content');
-      content.innerText = 'Add this app to your home screen for quick access!';
-
-      const installButton = document.createElement('button');
-      installButton.classList.add('install-prompt-button');
-      installButton.innerText = 'Install';
-      installButton.addEventListener('click', () => {
-        popup.remove();
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          deferredPrompt = null;
-        });
+      contacts.forEach(contact => {
+        const contactItem = createContactItem(contact.name, contact.phoneNumber, contact.position);
+        section.appendChild(contactItem);
       });
 
-      const dismissButton = document.createElement('button');
-      dismissButton.classList.add('install-prompt-button');
-      dismissButton.innerText = 'Dismiss';
-      dismissButton.addEventListener('click', () => {
-        popup.remove();
-      });
-
-      content.appendChild(installButton);
-      content.appendChild(dismissButton);
-      popup.appendChild(content);
-      document.body.appendChild(popup);
+      section.insertBefore(heading, section.firstChild);
+      contactList.appendChild(section);
     }
-  </script>
+
+    feather.replace();
+  }
+
+  document.addEventListener('DOMContentLoaded', initializeContacts);
+  // Auto-refresh the page at a set interval (e.g., every 5 minutes)
+  const refreshInterval = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+  function autoRefreshPage() {
+    location.reload();
+  }
+
+  setInterval(autoRefreshPage, refreshInterval);
+
+
+</script>
+
+
 </head>
 <body>
   <div class="app-header">
     <h1>
-      <span class="title">Partners</span>
+      <span class="title">Store Contacts</span>
     </h1>
   </div>
 
   <div class="contact-list" id="contact-list"></div>
 
   <div class="blank-space"></div>
+
 </body>
 </html>
