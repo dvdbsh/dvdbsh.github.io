@@ -28,10 +28,10 @@
     }
 
     .app-header h1 {
-      font-size: 30px;
+      font-size: 50px;
       font-weight: 600;
       margin: 0;
-      padding-top: 10px;
+      padding-top: 20px;
     }
 
     .contact-list {
@@ -58,8 +58,8 @@
     }
 
     .avatar {
-      width: 48px;
-      height: 48px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       margin-right: 10px;
     }
@@ -110,39 +110,6 @@
     .blank-space {
       height: 100px;
       background-color: #f9f9f9;
-    }
-
-    .custom-popup {
-      position: fixed;
-      bottom: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background-color: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 10px;
-      display: flex;
-      align-items: center;
-width:90%;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      z-index: 9999;
-    }
-
-    .custom-popup-content {
-      flex-grow: 1;
-      margin-right: 0px;
-    }
-
-    .custom-popup-button {
-      background-color: #006241;
-      width:20px;
-      height:20px;
-      color: #fff;
-      border: none;
-      border-radius: 50%;
-      padding: 5px;
-      margin-left:10px;
-      cursor: pointer;
     }
   </style>
   <title>Partners</title>
@@ -270,7 +237,7 @@ width:90%;
         { name: 'Steph', phoneNumber: '226-268-1704', position: 'Barista' }
     ];
 
-      contacts.sort((a, b) => a.name.localeCompare(b.name));
+    contacts.sort((a, b) => a.name.localeCompare(b.name));
 
     const groupedContacts = groupContactsByLetter(contacts);
     const contactList = document.getElementById('contact-list');
@@ -299,52 +266,6 @@ width:90%;
 
   document.addEventListener('DOMContentLoaded', initializeContacts);
 
-  // Custom popup
-  function showCustomPopup() {
-    const popup = document.createElement('div');
-    popup.classList.add('custom-popup');
-
-    const content = document.createElement('div');
-    content.classList.add('custom-popup-content');
-    content.innerText = 'Add to your Home Screen';
-    content.style.display = 'flex';
-    content.style.alignItems = 'center';
-    content.style.justifyContent = 'center';
-    content.style.height = '100%';
-
-    const closeButton = document.createElement('i');
-    closeButton.classList.add('material-icons');
-    closeButton.classList.add('custom-popup-button');
-    closeButton.innerText = 'close';
-    closeButton.style.cursor = 'pointer';
-    closeButton.style.display = 'flex';
-    closeButton.style.alignItems = 'center';
-    closeButton.style.justifyContent = 'center';
-    closeButton.style.width = '20px';
-    closeButton.style.height = '20px';
-    closeButton.style.borderRadius = '50%';
-    closeButton.style.background = '#006241';
-    closeButton.style.color = '#fff';
-    closeButton.style.fontSize = '16px';
-    closeButton.style.padding = '5px';
-    closeButton.addEventListener('click', () => {
-      popup.remove();
-      // Store a flag in localStorage to indicate that the popup has been closed
-      localStorage.setItem('customPopupShown', 'true');
-    });
-
-    content.appendChild(closeButton);
-    popup.appendChild(content);
-    document.body.appendChild(popup);
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-    // Check if the custom popup should be shown
-    const customPopupShown = localStorage.getItem('customPopupShown');
-    if (!customPopupShown) {
-      showCustomPopup();
-    }
-  });
 </script>
 
 
@@ -352,7 +273,7 @@ width:90%;
 <body>
   <div class="app-header">
     <h1>
-      <span class="title">Partners</span>
+      <span class="title">Store Contacts</span>
     </h1>
   </div>
 
