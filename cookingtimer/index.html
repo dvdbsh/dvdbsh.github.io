@@ -1,101 +1,273 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Cooking Timers</title>
-    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Source Sans Pro', sans-serif;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background-color: #162f2d;
-        }
+  <title>Timer</title>
+  <style>
+    body {
+      background-color:#162f2d;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1689896391/qSwqZwB5fvqzv7eBkOhkb-transformed_nanmcc.jpg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      filter: blur(3px); /* Apply a slight blur effect */
+      z-index: -1;
+    }    
 
-        .container {
-            background-color: #193633;
-            color: white;
-            text-align: center;
-            padding: 20px;
-            border-radius: 25px;
-        }
+    /* Custom styles for button 1 */
+    .timer-button-1 {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      font-size: 24px;
+      color: white;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1689894440/fish-svgrepo-com_yspwnk.svg');
+      background-size: 80%;
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: background-color 40s ease;
+      background-color: #197d35;
+    }
 
-        h1 {
-            margin: 0;
-        }
+    /* Custom styles for button 2 */
+    .timer-button-2 {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      font-size: 24px;
+      color: white;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1689894457/steak-svgrepo-com_twsxbu.svg');
+      background-size: 60%;
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: background-color 60s ease;
+      background-color: #197d35;
+    }
 
-        .grid-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-            text-align: center;
-            border: 20px solid #1f4340;
-            border-radius: 20px;
-            padding: 20px;
-        }
+    /* Custom styles for button 3 */
+    .timer-button-3 {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      font-size: 24px;
+      color: white;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1689894469/clown-fish-svgrepo-com_y7p0jl.svg');
+      background-size: 80%;
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: background-color 90s ease;
+      background-color: #197d35;
+    }
 
-        .grid-item {
-            margin: 10px;
-        }
+    /* Custom styles for button 4 */
+    .timer-button-4 {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      font-size: 24px;
+      color: white;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1689894482/squid-svgrepo-com_jzd5gg.svg');
+      background-size: 80%;
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: background-color 120s ease;
+      background-color: #197d35;
+    }
 
-        /* Style for Timer Buttons */
-        .timer-button {
-            padding: 10px 20px;
-            width: 100px;
-            height: 100px;
-            font-size: 16px;
-            background-color: #ddd;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+    .orange-button {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      font-size: 24px;
+      color: white;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-size: 80%;
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: background-color 120s ease;    
+      background-color: #b05037;
+    }
+    /* Custom styles for button 1 */
+    .orangetimer-button-1 {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      font-size: 24px;
+      color: white;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1689894440/fish-svgrepo-com_yspwnk.svg');
+      background-size: 80%;
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: background-color 40s ease;
+      background-color: #b05037;
+    }
 
-        /* Style for Active Timer Button */
-        .timer-button.active {
-            background-color: #4CAF50;
-            color: white;
-        }
+    /* Custom styles for button 2 */
+    .orangetimer-button-2 {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      font-size: 24px;
+      color: white;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1689894457/steak-svgrepo-com_twsxbu.svg');
+      background-size: 60%;
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: background-color 60s ease;
+      background-color: #b05037;
+    }
 
-        /* Style for Done Timer Button */
-        .timer-button.done {
-            background-color: orange;
-            color: white;
-        }
-    </style>
+    /* Custom styles for button 3 */
+    .orangetimer-button-3 {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      font-size: 24px;
+      color: white;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1689894469/clown-fish-svgrepo-com_y7p0jl.svg');
+      background-size: 80%;
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: background-color 90s ease;
+      background-color: #b05037;
+    }
+
+    /* Custom styles for button 4 */
+    .orangetimer-button-4 {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      font-size: 24px;
+      color: white;
+      border: none;
+      outline: none;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1689894482/squid-svgrepo-com_jzd5gg.svg');
+      background-size: 80%;
+      background-repeat: no-repeat;
+      background-position: center;
+      transition: background-color 120s ease;
+      background-color: #b05037;
+    }
+
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(2, 100px);
+      grid-gap: 20px;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <div class="grid-container">
-            <div class="grid-item">
-                <!-- Fish Timer Buttons -->
-                <button id="fishStartBtn" class="timer-button" onclick="startFishTimer()">START</button>
-                <p>Fish Time Left: <span id="fishTimeLeft"></span></p>
-            </div>
+  <div class="grid-container">
+    <button class="timer-button-1" data-time="40" onclick="startTimer(this)"></button>
+    <button class="timer-button-2" data-time="60" onclick="startTimer(this)"></button>
+    <button class="timer-button-3" data-time="90" onclick="startTimer(this)"></button>
+    <button class="timer-button-4" data-time="120" onclick="startTimer(this)"></button>
+  </div>
 
-            <div class="grid-item">
-                <!-- Meat Timer Buttons -->
-                <button id="meatStartBtn" class="timer-button" onclick="startMeatTimer()">START</button>
-                <p>Meat Time Left: <span id="meatTimeLeft"></span></p>
-            </div>
+  <script>
+    function startTimer(button) {
+      if (button.classList.contains("orange-button")) {
+        stopTimer(button);
+      } else {
+        button.classList.remove("timer-button-1", "timer-button-2", "timer-button-3", "timer-button-4");
+        button.classList.add("orange-button");
+        let remainingTime = parseInt(button.getAttribute("data-time"));
+        button.innerText = remainingTime;
 
-            <div class="grid-item">
-                <!-- Trophy Timer Buttons -->
-                <button id="trophyStartBtn" class="timer-button" onclick="startTrophyTimer()">START</button>
-                <p>Trophy Time Left: <span id="trophyTimeLeft"></span></p>
-            </div>
+        let interval = setInterval(function() {
+          remainingTime--;
+          button.innerText = remainingTime;
 
-            <div class="grid-item">
-                <!-- Monster Timer Buttons -->
-                <button id="monsterStartBtn" class="timer-button" onclick="startMonsterTimer()">START</button>
-                <p>Monster Time Left: <span id="monsterTimeLeft"></span></p>
-            </div>
-        </div>
-    </div>
+          if (remainingTime === 0) {
+            stopTimer(button, interval);
+            button.innerText = "✔️";
+          }
+        }, 1000);
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
-    <script src="script.js"></script>
+        // Save the interval reference as a custom attribute on the button
+        button.intervalRef = interval;
+      }
+    }
+
+    function stopTimer(button) {
+      clearInterval(button.intervalRef); // Stop the interval associated with this button
+      button.innerText = ''; // Clear the text
+      button.classList.remove("orange-button");
+      // Restore the original style class based on data-time attribute
+      const time = parseInt(button.getAttribute("data-time"));
+      if (time === 40) {
+        button.classList.add("timer-button-1");
+      } else if (time === 60) {
+        button.classList.add("timer-button-2");
+      } else if (time === 90) {
+        button.classList.add("timer-button-3");
+      } else if (time === 120) {
+        button.classList.add("timer-button-4");
+      }
+    }
+  </script>
 </body>
 </html>
