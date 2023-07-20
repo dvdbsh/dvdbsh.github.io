@@ -1,0 +1,144 @@
+html, body{
+	line-height: 1.0;
+	word-wrap: break-word;
+	overflow-x: hidden;
+	background-color: #d4e9e2;
+	color:#fff;
+	justify-content: center;
+	align-content: center;
+}
+
+#wrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	position: relative;
+	z-index: 2;
+	overflow: hidden;
+	padding: 2.5rem 2.5rem 2.5rem 2.5rem;
+}
+
+#main {
+	display: flex;
+	position: relative;
+	max-width: 365px;
+	z-index: 1;
+	align-items: center;
+	justify-content: center;
+	flex-grow: 0;
+	flex-shrink: 0;
+	text-align: left;
+	border-radius: 16px;
+	background-color: transparent;
+	box-shadow: 0 0 .5px 0 rgba(0,0,0,.14),0 1px 1px 0 rgba(0,0,0,.24);
+	margin: 2px
+}
+
+.inner {
+	position: relative;
+	z-index: 1;
+	border-radius: inherit
+}
+
+#container01 {
+	background-color: #1e3932;
+	border-radius: inherit;
+	padding: 25px;
+}
+
+#container02 {
+	background-color: #fff;
+	border-bottom-left-radius: inherit;
+	border-bottom-right-radius: inherit;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+#greeting {
+	font-family: "SodoSans";
+	line-height: 1.2;
+	font-size: 40px;
+	padding-top: 20px;
+	padding-bottom: 28px;
+	padding-left: 25px;
+	padding-right: 25px;
+
+}
+#today {
+	font-family: "SoDoSans";
+	line-height: 1.2;
+	font-weight: 600;
+	font-size: 24px;
+ 	padding-bottom: 20px;
+ 	padding-left: 25px;
+	padding-right: 25px;
+}
+
+#cheat {
+	color: #1e3932
+}
+
+table {
+	width: 100%;
+	font-family: "SoDoSans";
+	line-height: 2;
+	font-weight: 400;
+	font-size: 18px;
+}
+
+#t1 {
+	padding-left: 25px;
+	padding-right: 25px;
+	padding-bottom: 25px;
+}
+
+a {
+	outline: 0;
+}
+
+p {
+	text-align: center;
+	font-family: "Pike";
+	text-transform: uppercase;
+	font-size: 24px;
+	letter-spacing: 2px
+}
+
+@font-face {
+  	font-family: "Lander";
+  	src: url(https://sbuxdates.com/LanderGrande-SemiBold.otf) format("opentype");
+  	font-weight: 600;
+}
+@font-face {
+  	font-family: "SoDoSans";
+  	src: url(https://sbuxdates.com/SoDoSans-Regular.otf) format("opentype");
+  	font-weight: 400;
+}
+@font-face {
+  	font-family: "SoDoSans";
+  	src: url(https://sbuxdates.com/SoDoSans-SemiBold.otf) format("opentype");
+  	font-weight: 600;
+}
+@font-face {
+  	font-family: "SoDoSans";
+  	src: url(https://sbuxdates.com/SoDoSans-Bold.otf) format("opentype");
+  	font-weight: 800;
+}
+@font-face {
+  	font-family: "Pike";
+  	src: url(https://sbuxdates.com/Pike-Bold.otf) format("opentype");
+  	font-weight: 700;
+}
+
+@media (max-width: 480px) {
+ #wrapper {
+  padding: 0rem;
+ }
+
+@media (max-width: 360px) {
+ #wrapper {
+  padding: 0.5rem 0.5rem 0.5rem 0.5rem;
+ }

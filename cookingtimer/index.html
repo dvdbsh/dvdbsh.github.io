@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Cooking Timers</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Source Sans Pro', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #162f2d;
+        }
+
+        .container {
+            background-color: #193633;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            border-radius: 25px;
+        }
+
+        h1 {
+            margin: 0;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            text-align: center;
+            border: 20px solid #1f4340;
+            border-radius: 20px;
+            padding: 20px;
+        }
+
+        .grid-item {
+            margin: 10px;
+        }
+
+        /* Style for Timer Buttons */
+        .timer-button {
+            padding: 10px 20px;
+            width: 100px;
+            height: 100px;
+            font-size: 16px;
+            background-color: #ddd;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* Style for Active Timer Button */
+        .timer-button.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        /* Style for Done Timer Button */
+        .timer-button.done {
+            background-color: orange;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="grid-container">
+            <div class="grid-item">
+                <!-- Fish Timer Buttons -->
+                <button id="fishStartBtn" class="timer-button" onclick="startFishTimer()">START</button>
+                <p>Fish Time Left: <span id="fishTimeLeft"></span></p>
+            </div>
+
+            <div class="grid-item">
+                <!-- Meat Timer Buttons -->
+                <button id="meatStartBtn" class="timer-button" onclick="startMeatTimer()">START</button>
+                <p>Meat Time Left: <span id="meatTimeLeft"></span></p>
+            </div>
+
+            <div class="grid-item">
+                <!-- Trophy Timer Buttons -->
+                <button id="trophyStartBtn" class="timer-button" onclick="startTrophyTimer()">START</button>
+                <p>Trophy Time Left: <span id="trophyTimeLeft"></span></p>
+            </div>
+
+            <div class="grid-item">
+                <!-- Monster Timer Buttons -->
+                <button id="monsterStartBtn" class="timer-button" onclick="startMonsterTimer()">START</button>
+                <p>Monster Time Left: <span id="monsterTimeLeft"></span></p>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

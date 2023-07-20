@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flexible Card Grid</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/v1689813765/qFBIdM0bT2ncYaxZgGSMm-transformed_aw1fdk.jpg);
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      letter-spacing:0.5px;
+    }
+
+    .navbar {
+      width: 100%;     
+      font-family: 'Cabin', sans-serif;
+      color: white;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .navbar-logo img {
+      height: 140px;
+    }
+
+    .navbar-links {
+      display: flex;      
+      align-items: center;
+      padding-right: 20px;
+    }
+
+    .navbar-links a {
+      color: white;
+      text-decoration: none;
+      margin-left: 10px;
+      background-color: #3ca5c5;
+      padding: 10px;
+      border-radius: 20px;
+    }
+    
+    .grid-wrapper {
+      background: linear-gradient(to bottom, #011f35, #00051c);
+      background-attachment: fixed;
+      width: 100%;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .card-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      font-family: 'Montserrat', sans-serif;
+      color: #f9f9f9;
+      max-width: 80%;
+    }
+
+    .card {
+      flex: 1 0 48%;
+      margin-bottom: 0px;
+      border: 0px solid #ccc;
+      padding: 20px;
+    }
+
+    .card .content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .card .text {
+      flex: 1 0 50%;
+      padding: 20px;
+    }
+
+    .card .image-container {
+      flex: 1 0 40%;
+      height: 400px;
+      border-radius: 25px;
+      overflow: hidden;
+    }
+
+    .card .image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    @media (max-width: 767px) {
+      .card .content {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .card .text {
+        margin-bottom: 10px;
+      }
+
+      .card .image-container {
+        height: 200px;
+      }
+
+      .card:nth-child(2),
+      .card:nth-child(4) {
+        .content {
+          flex-direction: column-reverse;
+        }
+      }
+    }
+
+    .card h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 50px;
+      position: relative;
+      z-index:1;
+    }
+
+    .card h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: -10px;
+      width: 100%;
+      height: 12px;
+      border-bottom: 35px dotted #234562;
+      border-radius: 0px;
+      z-index:-1;
+    }
+
+    .card h2 {
+      font-family: 'Cabin', sans-serif;
+      font-size: 20px;
+    }
+
+    .card p {
+      font-family: 'Source Sans Pro', sans-serif;
+    }
+
+.hero-area {
+  background-color: rgba(60, 166, 197, 0.1);
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top:-144px;
+}
+
+.hero-text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: 900;
+  font-size: 100px;
+  color: white;
+  text-align: center;
+}
+
+.sub {
+  font-family: 'Cabin', sans-serif;
+  font-weight: 600;
+  font-size: 50px;
+  text-transform:uppercase;
+  vertical-align: middle;
+  background-color: #f9f9f9;
+  color: #3ca5c5;
+  padding: 8px;
+  margin-left: 5px;
+  border-radius: 20px;
+}
+
+.hero-content {
+  display: flex;
+  align-items: center;
+}
+
+    @media (max-width: 767px) {
+      .hero-text {
+        font-size: 60px;
+      }
+
+      .sub {
+        font-size: 30px;
+        padding: 8px;
+        margin-left: 5px;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="navbar">
+    <div class="navbar-logo">
+      <img src="https://riveroaks.definebody.com/wp-content/uploads/sites/13/2019/11/logo-new@2x-blue-circlesWhite.png" alt="Logo">
+    </div>
+    <div class="navbar-links">
+      <a href="#">Class Schedule</a>
+      <a href="#">Join Our Community</a>
+      <a href="#">Contact Us</a>
+    </div>
+  </div>
+<div class="hero-area">
+  <div class="hero-content">
+    <div class="hero-text">DEFINE</div>
+    <div class="sub">Oakley</div>
+  </div>
+</div>
+  <div class="grid-wrapper">
+  <div class="card-grid">
+    <div class="card">
+      <div class="content">
+        <div class="text">
+          <h1>Cycle</h1>
+          <h2>DEFINE REV</h2>
+          <p>Develop the energy you need to feel your best. Clear your mind and ride to the beat in our rhythm-based REV class. DEFINE REV helps you build a strong body and mind without sacrificing your joints.</p>
+        </div>
+        <div class="image-container">
+          <img src="https://defineoakley.com/wp-content/uploads/2022/12/Rev-min-e1671555040403.webp" alt="Cycle">
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="content">
+        <div class="image-container">
+          <img src="https://defineoakley.com/wp-content/uploads/2022/12/Body-min-scaled-e1671555065655-969x1024.webp" alt="Barre">
+        </div>
+        <div class="text">
+          <h1>Barre</h1>
+          <h2>DEFINE BODY</h2>
+          <p>Our rhythm-based DEFINE BODY class incorporates the science of pilates, yoga core strengthening & ballet in a balanced workout on the mat.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="content">
+        <div class="text">
+          <h1>Bounce</h1>
+          <h2>DEFINE BOUNCE</h2>
+          <p>Our DEFINE BOUNCE class is a high-intensity interval training (HIIT) on a personal trampoline combined with targeted barre work. Trampolines are 20% more cardio effective than treadmills and are 80% less stressful on your knees.</p>
+        </div>
+        <div class="image-container">
+          <img src="https://defineoakley.com/wp-content/uploads/2022/12/Bounce-2-min-e1671555089111.webp" alt="Bounce">
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="content">
+        <div class="image-container">
+          <img src="https://defineoakley.com/wp-content/uploads/2022/12/Yoga-min_1-e1671555112772.webp" alt="Flow">
+        </div>
+        <div class="text">
+          <h1>Flow</h1>
+          <h2>DEFINE FLOW</h2>
+          <p>Get all the best parts of pilates, yoga and ballet in one full-body class. Yogis and barre lovers alike adore this perfect blend of traditional yoga flow and DEFINE:Body movements in this 45-minute method. Our instructors will offer a stillness and rhythmic movement with body weight and resistance to bring strength and length to deep supportive muscles.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+ </div>
+</body>
+</html>

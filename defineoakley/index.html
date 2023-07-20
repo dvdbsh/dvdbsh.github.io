@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Flexible Card Grid</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Cabin:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: linear-gradient(to bottom, #011f35, #00051c);
+      margin: 0;
+      padding: 0;
+      color: #f9f9f9;
+      letter-spacing: 0.5px;
+    }
+
+    /* Center the grid on larger screens */
+    .card-grid {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      font-family: 'Montserrat', sans-serif;
+      max-width: 80%;
+      margin: 0 auto;
+    }
+
+    .card {
+      flex: 1 0 48%;
+      margin-bottom: 0px;
+      border: 0px solid #ccc;
+      padding: 20px;
+    }
+
+    .card .content {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+    }
+
+    .card .text {
+      flex: 1 0 50%;
+      padding: 20px;
+    }
+
+    .card .image-container {
+      flex: 1 0 40%;
+      height: 400px; /* Set the desired height for the images */
+      border-radius: 25px;
+      overflow: hidden; /* Ensure the image won't overflow from the container */
+    }
+
+    .card .image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover; /* Maintain the aspect ratio and cover the container */
+    }
+
+    /* Mobile styles */
+    @media (max-width: 767px) {
+      .card .content {
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .card .text {
+        margin-bottom: 10px;
+      }
+
+      .card .image-container {
+        height: 200px; /* Reduce the height for better mobile display */
+      }
+
+      /* Adjust the layout for the 2nd and 4th cards */
+      .card:nth-child(2),
+      .card:nth-child(4) {
+        .content {
+          flex-direction: column-reverse;
+        }
+      }
+    }
+
+    /* Other CSS styles using the fonts Cabin and Source Sans Pro */
+    .card h1 {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 50px;
+      position: relative;
+    }
+
+    .card h1::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: -10px;
+      width: 100%;
+      height: 12px;
+      border-bottom: 40px solid #234562;
+      border-radius:0px;
+      z-index:-1;
+    }
+
+    .card h2 {
+      font-family: 'Cabin', sans-serif;
+      font-size: 20px;
+      /* Rest of your styles */
+    }
+
+    .card p {
+      font-family: 'Source Sans Pro', sans-serif;
+      /* Rest of your styles */
+    }
+  </style>
+</head>
+<body>
+  <div class="card-grid">
+    <div class="card">
+      <div class="content">
+        <div class="text">
+          <h1>Cycle</h1>
+          <h2>DEFINE REV</h2>
+          <p>Develop the energy you need to feel your best. Clear your mind and ride to the beat in our rhythm-based REV class. DEFINE REV helps you build a strong body and mind without sacrificing your joints.</p>
+        </div>
+        <div class="image-container">
+          <img src="https://defineoakley.com/wp-content/uploads/2022/12/Rev-min-e1671555040403.webp" alt="Cycle">
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="content">
+        <div class="image-container">
+          <img src="https://defineoakley.com/wp-content/uploads/2022/12/Body-min-scaled-e1671555065655-969x1024.webp" alt="Barre">
+        </div>
+        <div class="text">
+          <h1>Barre</h1>
+          <h2>DEFINE BODY</h2>
+          <p>Our rhythm-based DEFINE BODY class incorporates the science of pilates, yoga core strengthening & ballet in a balanced workout on the mat.</p>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="content">
+        <div class="text">
+          <h1>Bounce</h1>
+          <h2>DEFINE BOUNCE</h2>
+          <p>Our DEFINE BOUNCE class is a high-intensity interval training (HIIT) on a personal trampoline combined with targeted barre work. Trampolines are 20% more cardio effective than treadmills and are 80% less stressful on your knees.</p>
+        </div>
+        <div class="image-container">
+          <img src="https://defineoakley.com/wp-content/uploads/2022/12/Bounce-2-min-e1671555089111.webp" alt="Bounce">
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="content">
+        <div class="image-container">
+          <img src="https://defineoakley.com/wp-content/uploads/2022/12/Yoga-min_1-e1671555112772.webp" alt="Flow">
+        </div>
+        <div class="text">
+          <h1>Flow</h1>
+          <h2>DEFINE FLOW</h2>
+          <p>Get all the best parts of pilates, yoga and ballet in one full-body class. Yogis and barre lovers alike adore this perfect blend of traditional yoga flow and DEFINE:Body movements in this 45-minute method. Our instructors will offer a stillness and rhythmic movement with body weight and resistance to bring strength and length to deep supportive muscles.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
