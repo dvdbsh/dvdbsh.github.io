@@ -43,6 +43,7 @@ function renderToday(){
 	document.getElementById("days3").innerHTML = addToday(3);
 	document.getElementById("days5").innerHTML = addToday(5);
 	document.getElementById("days7").innerHTML = addToday(7);
+	document.getElementById("days12").innerHTML = addToday(12);
 	document.getElementById("days14").innerHTML = addToday(14);
 	document.getElementById("days30").innerHTML = addToday(30);
 }
