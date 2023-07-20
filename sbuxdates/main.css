@@ -59,7 +59,7 @@ html, body{
 
 #greeting {
 	font-family: "SodoSans";
-text-align:center;
+	text-align:center;
 	line-height: 1.2;
 	font-size: 40px;
 	padding-top: 20px;
@@ -70,7 +70,7 @@ text-align:center;
 }
 #today {
 	font-family: "SoDoSans";
-text-align:center;
+	text-align:center;
 	line-height: 1.2;
 	font-weight: 600;
 	font-size: 24px;
