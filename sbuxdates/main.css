@@ -1,7 +1,6 @@
 html, body{
 	line-height: 1.0;
 	word-wrap: break-word;
-	overflow-x: hidden;
 	background-color: #d4e9e2;
 	color:#fff;
       display: flex;
@@ -9,6 +8,7 @@ html, body{
       align-items: center;
       height: 100vh;
       margin: 0;
+      overflow: hidden;
 }
 
 #wrapper {
