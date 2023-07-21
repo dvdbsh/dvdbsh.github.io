@@ -10,13 +10,13 @@ function renderToday(){
 	var h = currentTime.getHours();
 	var greet;
 		if (h >= 4 && h < 12)
-			greet = "☀️<br>Good Morning";
+			greet = "☀️<br><br>Good Morning";
 		else if (h >= 12 && h < 17)
-			greet = "☕️<br>Good Afternoon";
+			greet = "☕️<br><br>Good Afternoon";
 		else if (h >= 17 && h < 24)
-			greet = "🌙<br>Good Evening";
+			greet = "🌙<br><br>Good Evening";
 		else
-			greet = "😴<br>Go to sleep..";
+			greet = "😴<br><br>Go to sleep..";
 	document.getElementById("greeting").innerHTML = greet;
 	//Today
 	var myDate = new Date();
