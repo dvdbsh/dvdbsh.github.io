@@ -1,0 +1,24 @@
+{
+  "name": "Cooking Timer",
+  "short_name": "Timer",
+  "description": "A simple cooking timer app",
+  "icons": [
+    {
+      "src": "https://res.cloudinary.com/di8j84ent/image/upload/v1690128995/New_Project_-_2023-07-23T121618.521_ybqq6l.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://res.cloudinary.com/di8j84ent/image/upload/v1690128995/New_Project_-_2023-07-23T121618.521_ybqq6l.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#162f2d",
+  "theme_color": "#162f2d",
+  "orientation": "portrait",
+  "scope": "/",
+  "prefer_related_applications": false
+}
