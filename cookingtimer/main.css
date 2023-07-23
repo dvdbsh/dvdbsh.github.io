@@ -46,7 +46,7 @@ body::before {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1690115060/fish_kkxvlx.png');
+  background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1690130116/fish_1_jvxguu.png');
   background-size: 80%;
   background-repeat: no-repeat;
   background-position: center;
@@ -90,7 +90,7 @@ body::before {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1690115060/trophy_1_vrosck.png');
+  background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1690130116/trophy_3_yflfce.png');
   background-size: 80%;
   background-repeat: no-repeat;
   background-position: center;
@@ -156,7 +156,7 @@ body::before {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1690115060/fish_kkxvlx.png');
+  background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1690130116/fish_1_jvxguu.png');
   background-size: 80%;
   background-repeat: no-repeat;
   background-position: center;
@@ -200,7 +200,7 @@ body::before {
   display: flex;
   justify-content: center;
   align-items: center;
-  background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1690115060/trophy_1_vrosck.png');
+  background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1690130116/trophy_3_yflfce.png');
   background-size: 80%;
   background-repeat: no-repeat;
   background-position: center;
@@ -255,7 +255,7 @@ body::before {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-bottom: 60px;
+  padding-bottom: 80px;
 }
 
 @keyframes rotation {
@@ -269,12 +269,17 @@ body::before {
 
 footer {
   position: fixed;
-  font-family: arial;
+  font-family: Arial, sans-serif;
   bottom: 0;
   left: 0;
   width: 100%;
   text-align: center;
-  color: white;
+  color: #9d9d9d;
   font-size: 10px;
-  padding: 10px;
+  padding: 20px;
+}
+
+footer a {
+  color: #9d9d9d;
+  text-decoration: underline;
 }
