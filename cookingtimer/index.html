@@ -61,6 +61,7 @@
       background-position: center;
       transition: background-color 4s ease;
       background-color: #2c4545;
+      box-shadow: 4px 8px 0px 2px rgba(0, 0, 0, 0.1), -2px -4px 0px 5px rgba(0, 0, 0, 0.2);
     }
 
     /* Custom styles for button 2 */
@@ -82,6 +83,7 @@
       background-position: center;
       transition: background-color 4s ease;
       background-color: #2c4545;
+      box-shadow: 4px 8px 0px 2px rgba(0, 0, 0, 0.1), -2px -4px 0px 5px rgba(0, 0, 0, 0.2);
     }
 
     /* Custom styles for button 3 */
@@ -103,6 +105,7 @@
       background-position: center;
       transition: background-color 4s ease;
       background-color: #2c4545;
+      box-shadow: 4px 8px 0px 2px rgba(0, 0, 0, 0.1), -2px -4px 0px 5px rgba(0, 0, 0, 0.2);
     }
 
     /* Custom styles for button 4 */
@@ -124,6 +127,7 @@
       background-position: center;
       transition: background-color 4s ease;
       background-color: #2c4545;
+      box-shadow: 4px 8px 0px 2px rgba(0, 0, 0, 0.1), -2px -4px 0px 5px rgba(0, 0, 0, 0.2);
     }
 
     .orange-button {
@@ -144,6 +148,7 @@
       background-position: center;
       transition: background-color 120s ease;    
       background-color: #6a3c23;
+      box-shadow: 4px 8px 0px 2px rgba(0, 0, 0, 0.1), -2px -4px 0px 5px rgba(0, 0, 0, 0.2);
     }
     /* Custom styles for button 1 */
     .orangetimer-button-1 {
@@ -165,6 +170,7 @@
       background-position: center;
       transition: background-color 40s ease;
       background-color: #6a3c23;
+      box-shadow: 4px 8px 0px 2px rgba(0, 0, 0, 0.1), -2px -4px 0px 5px rgba(0, 0, 0, 0.2);
     }
 
     /* Custom styles for button 2 */
@@ -186,6 +192,7 @@
       background-position: center;
       transition: background-color 60s ease;
       background-color: #6a3c23;
+      box-shadow: 4px 8px 0px 2px rgba(0, 0, 0, 0.1), -2px -4px 0px 5px rgba(0, 0, 0, 0.2);
     }
 
     /* Custom styles for button 3 */
@@ -207,6 +214,7 @@
       background-position: center;
       transition: background-color 90s ease;
       background-color: #6a3c23;
+      box-shadow: 4px 8px 0px 2px rgba(0, 0, 0, 0.1), -2px -4px 0px 5px rgba(0, 0, 0, 0.2);
     }
 
     /* Custom styles for button 4 */
@@ -228,6 +236,7 @@
       background-position: center;
       transition: background-color 120s ease;
       background-color: #6a3c23;
+      box-shadow: 4px 8px 0px 2px rgba(0, 0, 0, 0.1), -2px -4px 0px 5px rgba(0, 0, 0, 0.2);
     }
 
     .rotate-image {
@@ -264,6 +273,17 @@ padding-bottom:60px;
         transform: rotate(360deg);
       }
     }
+      footer {
+      position: fixed;
+      font-family: arial;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size:10px;
+      padding: 10px;
+    }
   </style>
 </head>
 <body>
@@ -278,6 +298,10 @@ padding-bottom:60px;
       <button class="timer-button-4" data-time="120" onclick="startTimer(this)"></button>
     </div>
   </div>
+  
+    <footer>
+    Big shoutout to the awesome folks over at the original <i>Sea of Chefs</i> website for inspiring our cool timers. We've got these fantastic images from <a href="http://www.seaofthieves.com">www.seaofthieves.com</a>.<br>©Microsoft 2023. Microsoft, Rare, the Rare logo, and Sea of Thieves are trademarks of the Microsoft group of companies. Cheers! 🎉
+  </footer>
 
   <script>
     function startTimer(button) {
