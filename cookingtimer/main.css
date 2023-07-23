@@ -12,7 +12,10 @@ body {
   justify-content: center;
   align-items: center;
   margin: 0;
+  height:100%;
   overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: manipulation;
 }
 
 .background-image-container {
@@ -26,6 +29,7 @@ body {
   height: 100%;
   background-size: 150%;
   background-position: center;
+background-repeat:no-repeat;
   filter: blur(3px);
   z-index: -1;
 }
