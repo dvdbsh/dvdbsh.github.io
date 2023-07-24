@@ -89,10 +89,10 @@ padding-bottom:100px;
 
 .title {
   font-size:50px;
-  color:#ffffff;
+  color:#e8e6e0;
   padding:20px;
   letter-spacing:2px;
- text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5), -2px -4px 0px rgba(0, 0, 0, 0.3);
+ text-shadow: 5px 3px 0px rgba(0, 0, 0, 0.1), -2px -4px 0px rgba(0, 0, 0, 0.3);
 }
 
 .grid-container {
