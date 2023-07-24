@@ -60,12 +60,12 @@ body {
 }
 
 .wrapper {
-display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%; 
-padding-bottom:100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%; 
+  padding-bottom:100px;
 }
 
 .rotate-image {
@@ -196,15 +196,11 @@ padding-bottom:100px;
   background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1690157461/done_idfluy.png');
   background-size:cover;
   background-repeat:no-repeat;
-  background-color: transparent;
+  background-color: transparent
 }
 
 .footer {
-  position: fixed;
   font-family: Arial, sans-serif;
-  bottom: 0;
-  left: 0;
-  right: 0;
   text-align: center;
   color: #9d9d9d;
   font-size: 10px;
