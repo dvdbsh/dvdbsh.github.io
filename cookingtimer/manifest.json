@@ -1,6 +1,6 @@
 {
-  "name": "Galley Timer",
-  "short_name": "Galley Timer",
+  "name": "Galley Timers",
+  "short_name": "Galley Timers",
   "description": "A simple cooking timer app",
   "icons": [
     {
@@ -17,7 +17,7 @@
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#162f2d",
-  "theme_color": "#162f2d",
+  "theme_color": "#2e2317",
   "orientation": "portrait",
   "scope": "/",
   "prefer_related_applications": false
