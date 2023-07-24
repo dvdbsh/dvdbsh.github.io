@@ -25,7 +25,14 @@
 
   <div class="wrapper">
     <div class="rotate-image"></div>
-    <div class="title">Galley Timers</div>
+    <div class="title">
+<svg width="400" height="120" xmlns="http://www.w3.org/2000/svg">
+  <path id="titlepath" d="M50,100 Q200,20 350,100" />
+  <text>
+    <textPath xlink:href="#titlepath" text-anchor="middle" startOffset="50%" dy="-5" style="alignment-baseline: middle;">Galley Timers</textPath>
+  </text>
+</svg>
+</div>
 
     <div class="grid-container">
       <button class="timer-button-1" data-time="40" onclick="startTimer(this)"></button>
