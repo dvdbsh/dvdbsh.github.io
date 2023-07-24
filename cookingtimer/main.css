@@ -6,7 +6,7 @@
 }
 
 html, body {
-  height: 100%;
+  height: 95%;
 }
 
 body {
@@ -15,7 +15,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top:20px;
+  margin-top: env(safe-area-inset-top, 20px); /* Account for status bar height */
+  margin-bottom: env(safe-area-inset-bottom, 20px); /* Account for bottom safe area */
   overflow:hidden;
 }
 
