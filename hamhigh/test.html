@@ -1,49 +1,58 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Responsive Web Design</title>
+  <!-- Meta tags and title here -->
   <style>
-@font-face {
-  font-family: "SoDoSans";
-  src: url(https://sbuxdates.com/SoDoSans-Regular.otf) format("opentype");
-  font-weight: 400;
-}
+    @font-face {
+      font-family: "SoDoSans";
+      src: url(https://sbuxdates.com/SoDoSans-Regular.otf) format("opentype");
+      font-weight: 400;
+    }
 
-@font-face {
-  font-family: "SoDoSans";
-  src: url(https://sbuxdates.com/SoDoSans-SemiBold.otf) format("opentype");
-  font-weight: 600;
-}
+    @font-face {
+      font-family: "SoDoSans";
+      src: url(https://sbuxdates.com/SoDoSans-SemiBold.otf) format("opentype");
+      font-weight: 600;
+    }
 
+    @font-face {
+      font-family: "SoDoSans";
+      src: url(https://sbuxdates.com/SoDoSans-Bold.otf) format("opentype");
+      font-weight: 900;
+    }  
 @font-face {
-  font-family: "SoDoSans";
-  src: url(https://sbuxdates.com/SoDoSans-Bold.otf) format("opentype");
-  font-weight: 900;
-}  
+  font-family: "Pike";
+  src: url(https://sbuxdates.com/Pike-Bold.otf) format("opentype");
+  font-weight: 700;
+}    
+
     body {
       margin: 0;
       padding: 0;
       font-family: "SodoSans", sans-serif;
+      background-color:#c1dfd5;
     }
 
     header {
-      background-color: #333;
+      background-color: #1e3932;
       color: #fff;
-      padding: 15px;
-      height: 85px;
+      padding: 2rem;
+      height: 4rem; 
       display: flex;
+      justify-content: space-between; /* Logo on the left, links on the right */
       align-items: center;
-      justify-content: space-between;
     }
 
     .logo {
-      font-size: 24px;
+      font-size: 30px;
+      font-family: "Pike";
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .navigation {
       display: flex;
+      justify-content: flex-end; /* Push the links to the right */
       align-items: center;
     }
 
@@ -52,15 +61,21 @@
       text-decoration: none;
       margin-left: 20px;
     }
+    
+    .navigation a:hover {
+      color:#ffafba;
+      text-decoration:underline;
+      }
 
     .hero {
       background: linear-gradient(to bottom right, #007243, #43bd8b);
       background-size: cover;
       background-position: center;
-      height: calc(100vh - 115px);
+      height: calc(100vh - 8rem);
       display: flex;
       justify-content: center;
       align-items: center;
+      border-radius: 0 0 20px 20px;
     }
 
     .hero-content {
@@ -84,29 +99,80 @@
       margin: 20px 0;
       font-weight: 400;
     }
-    .hero-content h1 span.coffee {
-      color: #d19f4a;
-      font-weight: 900; /* Set the font weight to bold (900) */
+      .hero-content h1 span.coffee,
+      .hero-content h1 span.community,
+      .hero-content h1 span.inclusivity {
+        font-weight: 900; /* Set the font weight to bold (900) */
+      }
+    .main-content {
+      display: flex;
+      align-items: flex-start;
+      padding: 2rem;
     }
 
-    .hero-content h1 span.community {
-      color: #ffafba;
-      font-weight: 900; /* Set the font weight to bold (900) */
+    .home-1-images {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      width: 50%; /* Take 50% of the width */
     }
 
-    .hero-content h1 span.inclusivity {
-      color: #00c99a;
-      font-weight: 900; /* Set the font weight to bold (900) */
-    }    
+    .overlap-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      width: 20rem;
+    }
 
+    .overlap-image:nth-child(2) {
+      top: 160px;
+      left: 160px;
+      z-index: 2;
+    }
+
+    .home-1 {
+      width: 50%; /* Take 50% of the width */
+      margin-left: 2rem; /* Add some spacing between images and text */
+    }
+
+    /* Your other CSS styles */
     /* Media query for screens with a maximum width of 768px (adjust as needed) */
     @media only screen and (max-width: 768px) {
+      header {
+        flex-direction: column; /* Stack the logo on top of the links */
+        align-items: center;
+      }
+
+      .navigation {
+        margin-top: 10px; /* Add some spacing between the logo and links */
+        justify-content: center; /* Center the links horizontally */
+      }
+
+      .navigation a {
+        margin: 10px; /* Add some spacing between the links */
+      }
+
       .hero-content img {
-        width: 150px; /* You can adjust the size as needed */
+        width: 170px; /* You can adjust the size as needed */
       }
 
       .hero-content h1 {
-        font-size: 20px; /* Adjust the size as needed */
+        font-size: 35px; /* Adjust the size as needed */
+      }
+
+      .hero-content h1 span.coffee,
+      .hero-content h1 span.community,
+      .hero-content h1 span.inclusivity {
+        font-weight: 900; /* Set the font weight to bold (900) */
+      }
+
+      .home-1-images,
+      .home-1 {
+        width: 100%; /* Set both divs to full width in smaller screens */
+        margin: 0; /* Remove any margin for proper stacking */
       }
     }
 
@@ -126,12 +192,11 @@
 </head>
 <body>
   <header>
-    <div class="logo">Your Website Logo</div>
+    <div class="logo">Hamilton + Highbury Starbucks</div>
     <nav class="navigation">
-      <a href="#">Home</a>
-      <a href="#">About</a>
-      <a href="#">Services</a>
-      <a href="#">Contact</a>
+      <a href="#">Our Store</a>
+      <a href="#">Our Drinks</a>
+      <a href="#">Come Visit</a>
     </nav>
   </header>
   <div class="hero">
@@ -154,5 +219,16 @@
       </div>
     </div>
   </div>
+  <div class="main-content">
+    <div class="home-1-images">
+      <img class="overlap-image" src="https://res.cloudinary.com/di8j84ent/image/upload/v1690682865/331812723_941540590340826_3936525221857762741_n_1_kgy7qu.jpg" alt="Image 1">
+      <img class="overlap-image" src="https://res.cloudinary.com/di8j84ent/image/upload/v1690682865/350847938_280000537729132_6852521128925621331_n_bpk3bf.jpg" alt="Image 2">
+      <img class="overlap-image" src="https://res.cloudinary.com/di8j84ent/image/upload/v1690683811/333759484_174425295342044_8853126365399838274_n_yr43mk.jpg" alt="Image 3">
+    </div>
+    <div class="home-1">
+      Discover the heart of your neighborhood at our very own Starbucks cafe. Embrace the warm ambiance as you sit and unwind, or simply swing by for a swift and delightful drive-through experience. Your perfect coffee moment awaits!
+    </div>
+  </div>
+  <!-- The rest of your HTML code -->
 </body>
 </html>
