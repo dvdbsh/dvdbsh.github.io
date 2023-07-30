@@ -1,0 +1,225 @@
+@font-face {
+  font-family: "Lander";
+  src: url(https://sbuxdates.com/LanderGrande-SemiBold.otf) format("opentype");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "SoDoSans";
+  src: url(https://sbuxdates.com/SoDoSans-Regular.otf) format("opentype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "SoDoSans";
+  src: url(https://sbuxdates.com/SoDoSans-SemiBold.otf) format("opentype");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "SoDoSans";
+  src: url(https://sbuxdates.com/SoDoSans-Bold.otf) format("opentype");
+  font-weight: 900;
+}
+
+@font-face {
+  font-family: "Pike";
+  src: url(https://sbuxdates.com/Pike-Bold.otf) format("opentype");
+  font-weight: 700;
+}
+
+body {
+  margin: 0;
+  font-family: "SodoSans";
+  line-height: 1.6;
+  color: #030303;
+}
+
+header {
+  background-color: #007243;
+  color: #f3f3f3;
+  height: 7rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-family: "Pike";
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  text-align: center;
+  vertical-align: middle;
+  line-height: 0;
+}
+
+h1 {
+  letter-spacing: 0.2rem;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  font-family: "Pike";
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+}
+
+nav li {
+  margin-left: 1rem;
+}
+
+nav a {
+  color: #f3f3f3;
+  text-decoration: none;
+  padding: 0.5rem 1rem;
+}
+
+nav a:hover {
+  color: #007243;
+  background-color: #ffb5c0;
+}
+
+.hero {
+  background: linear-gradient(to bottom right, #007243, #43bd8b);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+  text-align: center;
+  position: relative;
+  height: calc(100vh - 7rem);
+  padding-top: 7rem; /* Add padding to avoid overlap with the header */
+}
+
+/* Noise Overlay */
+.hero-noise {
+  background-image: url('https://www.transparenttextures.com/patterns/noisy-net.png');
+  opacity: 0.5; /* Adjust opacity to control noise effect */
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 1; /* Position the noise element behind the .hero element */
+}
+
+.hero-content {
+  max-width: 800px;
+  z-index: 2;
+}
+
+.hero h1 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 400;
+  line-height: 3rem;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero-btn {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  background-color: #333;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.hero-btn:hover {
+  background-color: #555;
+}
+
+/* Flex Grid */
+.grid-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-top: 2rem;
+}
+
+.grid-item {
+  width: 48%;
+  margin-bottom: 1rem;
+}
+
+.grid-item img {
+  width: 100%;
+  display: block;
+}
+
+/* Add media query for responsiveness */
+@media screen and (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  nav {
+    margin-top: 1rem;
+  }
+
+  nav li {
+    margin: 0.5rem 0;
+  }
+
+  /* Adjust padding on the hero section for smaller screens */
+  .hero {
+    height: calc(100vh - 7rem); /* Adjust the height as needed for smaller screens */
+    padding-top: 7rem; /* Add padding to avoid overlap with the header */
+  }
+
+  /* Adjust the height of the header for smaller screens */
+  header {
+    height: 5rem;
+  }
+
+  /* Adjust the font size of the logo for smaller screens */
+  .logo {
+    font-size: 1.2rem;
+  }
+}
+
+/* Add media query for wider screens */
+@media screen and (min-width: 1200px) {
+  .grid-item {
+    width: 23%;
+  }
+}
+
+/* New styles for colored text */
+.hero h1 span.coffee {
+  color: #d19f4a;
+  font-weight: 900;
+}
+
+.hero h1 span.inclusivity {
+  color: #00c99a;
+  font-weight: 900;
+}
+
+.hero h1 span.community {
+  color: #ffafba;
+  font-weight: 900;
+}
+
+.hero_wrap {
+  position: relative;
+  overflow: hidden;
+}
