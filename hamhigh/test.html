@@ -1,5 +1,101 @@
-<table>
-<tr><td align="right">grid item</td><td align="left">grid item</td></tr>
-<tr><td colspan="2">h1</td>
-<tr><td align="right">grid item</td><td align="left">grid item</td></tr>
-</table>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Web Design</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 15px;
+      height: 85px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 24px;
+    }
+
+    .navigation {
+      display: flex;
+      align-items: center;
+    }
+
+    .navigation a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 20px;
+    }
+
+    .hero {
+      background-color: #f3f3f3;
+      background-image: url('path/to/your-hero-image.jpg');
+      background-size: cover;
+      background-position: center;
+      height: calc(100vh - 115px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-content {
+      text-align: center;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      max-width: 800px;
+      padding: 20px;
+    }
+
+    .hero-content img {
+      width: 200px;
+      max-width: 100%;
+    }
+
+    .hero-content h1 {
+      width: 100%;
+      text-align: center;
+      margin: 20px 0;
+    }
+
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">Your Website Logo</div>
+    <nav class="navigation">
+      <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Services</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+  <div class="hero">
+    <div class="hero-content">
+      <div>
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1690643574/1_2_jh6py0.png" alt="Image 1">
+      </div>
+      <div>
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1690643574/2_2_ldiich.png" alt="Image 2">
+      </div>
+      <h1>Where coffee, community & inclusivity intersect</h1>
+      <div>
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1690643574/3_2_mmj3zb.png" alt="Image 3">
+      </div>
+      <div>
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1690643574/4_2_k4iych.png" alt="Image 4">
+      </div>
+    </div>
+  </div>
+</body>
+</html>

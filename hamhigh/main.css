@@ -38,12 +38,12 @@ body {
 header {
   background-color: #007243;
   color: #f3f3f3;
-  height: 7rem;
+  height:60px;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  z-index: 2;
+  z-index: 999;
 }
 
 .container {
@@ -101,8 +101,8 @@ nav a:hover {
   color: #fff;
   text-align: center;
   position: relative;
-  height: calc(100vh - 7rem);
-  padding-top: 7rem; /* Add padding to avoid overlap with the header */
+  height: calc(100vh - 80px);
+  padding-top: 80px; /* Add padding to avoid overlap with the header */
 }
 
 /* Noise Overlay */
@@ -181,13 +181,13 @@ nav a:hover {
 
   /* Adjust padding on the hero section for smaller screens */
   .hero {
-    height: calc(100vh - 7rem); /* Adjust the height as needed for smaller screens */
-    padding-top: 7rem; /* Add padding to avoid overlap with the header */
+    height: calc(100vh - 10rem); /* Adjust the height as needed for smaller screens */
+    padding-top: 10rem; /* Add padding to avoid overlap with the header */
   }
 
   /* Adjust the height of the header for smaller screens */
   header {
-    height: 5rem;
+    height: 10rem;
   }
 
   /* Adjust the font size of the logo for smaller screens */
