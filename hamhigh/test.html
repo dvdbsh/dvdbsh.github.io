@@ -5,10 +5,27 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Responsive Web Design</title>
   <style>
+@font-face {
+  font-family: "SoDoSans";
+  src: url(https://sbuxdates.com/SoDoSans-Regular.otf) format("opentype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "SoDoSans";
+  src: url(https://sbuxdates.com/SoDoSans-SemiBold.otf) format("opentype");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "SoDoSans";
+  src: url(https://sbuxdates.com/SoDoSans-Bold.otf) format("opentype");
+  font-weight: 900;
+}  
     body {
       margin: 0;
       padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: "SodoSans", sans-serif;
     }
 
     header {
@@ -66,8 +83,46 @@
       width: 100%;
       text-align: center;
       margin: 20px 0;
+      font-weight: 400;
+    }
+    .hero-content h1 span.coffee {
+      color: #d19f4a;
+      font-weight: 900; /* Set the font weight to bold (900) */
     }
 
+    .hero-content h1 span.community {
+      color: #ffafba;
+      font-weight: 900; /* Set the font weight to bold (900) */
+    }
+
+    .hero-content h1 span.inclusivity {
+      color: #00c99a;
+      font-weight: 900; /* Set the font weight to bold (900) */
+    }    
+
+    /* Media query for screens with a maximum width of 768px (adjust as needed) */
+    @media only screen and (max-width: 768px) {
+      .hero-content img {
+        width: 150px; /* You can adjust the size as needed */
+      }
+
+      .hero-content h1 {
+        font-size: 20px; /* Adjust the size as needed */
+      }
+    }
+
+    /* Apply colors to specific words in the h1 element */
+    .hero-content h1 span.coffee {
+      color: #d19f4a;
+    }
+
+    .hero-content h1 span.community {
+      color: #ffafba;
+    }
+
+    .hero-content h1 span.inclusivity {
+      color: #00c99a;
+    }
   </style>
 </head>
 <body>
@@ -88,7 +143,10 @@
       <div>
         <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1690643574/2_2_ldiich.png" alt="Image 2">
       </div>
-      <h1>Where coffee, community & inclusivity intersect</h1>
+      <h1>
+        Where <span class="coffee">coffee</span>,
+        <span class="inclusivity">inclusivity</span> & <span class="community">community</span>, intersect
+      </h1>
       <div>
         <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1690643574/3_2_mmj3zb.png" alt="Image 3">
       </div>
