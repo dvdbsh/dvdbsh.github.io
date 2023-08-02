@@ -5,10 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Benefits Eligibility</title>
   <style>
+  @font-face {
+      font-family: "SoDoSans";
+      src: url(https://sbuxdates.com/SoDoSans-Regular.otf) format("opentype");
+      font-weight: 400;
+    }
+    
     body {
-      font-family: Arial, sans-serif;
+      font-family: SodoSans, sans-serif;
       margin: 0;
-      
+      font-size:0.8rem;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -20,8 +26,8 @@
     }
 
     table {
-      border: 3px solid #f6f6f6;
-	  margin: 20px auto;
+      border: 10px solid #f6f6f6;
+	  
       width: 100%;
     }
 
@@ -47,22 +53,25 @@
       border-top: none;
       border-left: none;
       border-right:none;
-      border-bottom: 1px solid #a6a6a6;
-      background-color: transparent;
+      border-bottom: 0px solid #a6a6a6;
+      background-color: #f6f6f6;
       margin-left: 7px;
       width:80px;
       height: 25px;
-      font-family: Arial, sans-serif;
-      font-size:18px;
+      font-family: SodoSans, sans-serif;
+      text-align: center;
     }
 
     @media screen and (max-width: 600px) {
       .table-container {
         width: 100%;
+        height: 100%;
       }
 
       table {
-        width: 95%;
+        width: 100%;
+        padding: 2px;
+        height: 100%;
       }
     }
   </style>
@@ -74,7 +83,7 @@
         <td valign="center"> 
           <div class="input-container">
             Your current hours worked
-            <input type="number" id="numberInput" class="input">
+            <input type="number" id="numberInput" class="input" placeholder="88">
           </div>
         </td>
         <td valign="center" align="center">
@@ -82,23 +91,23 @@
         </td>
       </tr>
       <tr>
-        <td valign="center" style="background-color:#f6f6f6;">Days remaining to qualify for next period</td>
+        <td valign="center" style="background-color:#f6f6f6;"><b>Days remaining to qualify for next period</b></td>
         <td valign="center" align="center" style="background-color:#f6f6f6;" id="daysLeftCell"></td>
       </tr>
       <tr>
-        <td valign="center">Calendar Quarter<br><small>This is the period you are currently working through</small></td>
+        <td valign="center"><b>Calendar Quarter</b><br><small>This is the period you are currently working through</small></td>
         <td valign="center" align="center">July - September</td>
       </tr>
       <tr>
-        <td valign="center" style="background-color:#f6f6f6;">Last day to qualify for next period<br><small>Last day to work that will count in the quarter toward benefits eligibility</small></td>
+        <td valign="center" style="background-color:#f6f6f6;"><b>Last day to qualify for next period</b><br><small>Last day to work that will count in the quarter toward benefits eligibility</small></td>
         <td valign="center" align="center" style="background-color:#f6f6f6;">September 17, 2023</td>
       </tr>
       <tr>
-        <td valign="center">These paid hours are the ones that count<br><small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small></td>
+        <td valign="center"><b>These paid hours are the ones that count</b><br><small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small></td>
         <td valign="center" align="center">July 14 and 28<br>August 11 and 25<br>September 8 and 22</td>
       </tr>
       <tr>
-        <td valign="center" style="background-color:#f6f6f6;">Last pay date in the quarter<br><small>You must have at least 240 total paid hours reflected on this pay stub to remain benefits eligible</small></td>
+        <td valign="center" style="background-color:#f6f6f6;"><b>Last pay date in the quarter</b><br><small>You must have at least 240 total paid hours reflected on this pay stub to remain benefits eligible</small></td>
         <td valign="center" align="center" style="background-color:#f6f6f6;" id="lastPayDateCell">September 22, 2023</td>
       </tr>
     </table>
