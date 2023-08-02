@@ -27,6 +27,7 @@
 
     table {
       border: 10px solid #f6f6f6;
+	  
       width: 100%;
     }
 
@@ -76,13 +77,6 @@
         overflow: hidden;
       }
     }
-
-    /* Prevent pinch-to-zoom on mobile */
-    document.addEventListener('touchmove', function (event) {
-      if (event.scale !== 1) {
-        event.preventDefault();
-      }
-    }, { passive: false });
   </style>
 </head>
 <body>
