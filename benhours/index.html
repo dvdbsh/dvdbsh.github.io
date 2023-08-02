@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Benefits Eligibility</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 10px;
+    }
+
+    table {
+      border: 3px solid #f6f6f6;
+      margin: 20px auto;
+    }
+
+    td {
+      padding: 10px;
+    }
+
+    td:nth-child(1) {
+      width: 60%;
+      background-color: #e6e6e6;
+    }
+
+    td:nth-child(2) {
+      background-color: #e6e6e6;
+    }
+
+
+
+    .input-container {
+      display: flex;
+      align-items: center;
+    }
+
+    .input {
+      border-top: none;
+      border-left: none;
+      border-right:none;
+      border-bottom: 1px solid #f6f6f6;
+      background-color: transparent;
+      margin-left: 5px;
+      width:80px;
+    }
+
+    @media screen and (max-width: 600px) {
+      table {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <table align="center">
+    <tr>
+      <td valign="center"> 
+        <div class="input-container">
+          Your current hours worked
+          <input type="number" id="numberInput" class="input">
+        </div>
+      </td>
+      <td valign="center" align="center">
+        <p id="differenceResult"></p>
+      </td>
+    </tr>
+    <tr>
+      <td valign="center" style="background-color:#f6f6f6;">Days remaining to qualify for next period</td>
+      <td valign="center" align="center" style="background-color:#f6f6f6;" id="daysLeftCell"></td>
+    </tr>
+    <tr>
+      <td valign="center">Calendar Quarter<br><small>This is the period you are currently working through</small></td>
+      <td valign="center" align="center">July - September</td>
+    </tr>
+    <tr>
+      <td valign="center" style="background-color:#f6f6f6;">Last day to qualify for next period<br><small>Last day to work that will count in the quarter toward benefits eligibility</small></td>
+      <td valign="center" align="center" style="background-color:#f6f6f6;">September 17, 2023</td>
+    </tr>
+    <tr>
+      <td valign="center">These paid hours are the ones that count<br><small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small></td>
+      <td valign="center" align="center">July 14 and 28<br>August 11 and 25<br>September 8 and 22</td>
+    </tr>
+    <tr>
+      <td valign="center" style="background-color:#f6f6f6;">Last pay date in the quarter<br><small>You must have at least 240 total paid hours reflected on this pay stub to remain benefits eligible</small></td>
+      <td valign="center" align="center" style="background-color:#f6f6f6;" id="lastPayDateCell">September 22, 2023</td>
+    </tr>
+  </table>
+
+  <script>
+    function updateDaysLeft() {
+      const targetDate = new Date("September 17, 2023").getTime();
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+      const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
+      document.getElementById("daysLeftCell").textContent = daysLeft + " days";
+    }
+
+    function updateDifferenceResult(enteredNumber) {
+      const difference = 240 - enteredNumber;
+      const result = difference >= 0 ? difference + " more hours needed" : "0";
+      document.getElementById("differenceResult").textContent = result;
+    }
+
+    document.getElementById("numberInput").addEventListener("input", function () {
+      const enteredNumber = parseFloat(this.value);
+      if (!isNaN(enteredNumber)) {
+        updateDifferenceResult(enteredNumber);
+      } else {
+        document.getElementById("differenceResult").textContent = "";
+      }
+    });
+
+    updateDaysLeft();
+  </script>
+</body>
+</html>
