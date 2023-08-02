@@ -14,7 +14,7 @@
     body {
       font-family: SodoSans, sans-serif;
       margin: 0;
-      font-size:0.8rem;
+      font-size: 0.8rem;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -27,7 +27,6 @@
 
     table {
       border: 10px solid #f6f6f6;
-	  
       width: 100%;
     }
 
@@ -52,11 +51,11 @@
     .input {
       border-top: none;
       border-left: none;
-      border-right:none;
+      border-right: none;
       border-bottom: 0px solid #a6a6a6;
       background-color: #f6f6f6;
       margin-left: 7px;
-      width:80px;
+      width: 80px;
       height: 25px;
       font-family: SodoSans, sans-serif;
       text-align: center;
@@ -66,14 +65,24 @@
       .table-container {
         width: 100%;
         height: 100vh;
+        display: block;
+        overflow: hidden;
       }
 
       table {
         width: 100%;
         padding: 2px;
         height: 100vh;
+        overflow: hidden;
       }
     }
+
+    /* Prevent pinch-to-zoom on mobile */
+    document.addEventListener('touchmove', function (event) {
+      if (event.scale !== 1) {
+        event.preventDefault();
+      }
+    }, { passive: false });
   </style>
 </head>
 <body>
