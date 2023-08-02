@@ -15,21 +15,30 @@
       font-family: SodoSans, sans-serif;
       margin: 0;
       font-size: 0.8rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       height: 100vh;
-      touch-action: none; /* Disable touch actions including zooming on mobile */
     }
 
     .table-container {
-      max-width: 600px;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column; /* Add this to stack elements vertically */
+      justify-content: space-between; /* Add this to create space between elements */
+      align-items: center;
+    }
+
+    .safe-area {
+      background-color: #f6f6f6; /* Background color for the safe area */
+      width: 100%;
+      height: 40px; /* Adjust this value to control the height of the safe area */
     }
 
     table {
       border: 10px solid #f6f6f6;
-	  
       width: 100%;
+      height: calc(100% - 40px); /* Subtract the height of the safe area */
+      box-sizing: border-box; /* Add this to ensure borders don't affect total dimensions */
+      table-layout: fixed; /* Add this to make the table fit its parent width */
     }
 
     td {
@@ -66,7 +75,7 @@
     @media screen and (max-width: 600px) {
       .table-container {
         width: 100%;
-        height: 100vh;
+        height: 100%;
         display: block;
         overflow: hidden;
       }
@@ -74,7 +83,7 @@
       table {
         width: 100%;
         padding: 2px;
-        height: 100vh;
+        height: 100%;
         overflow: hidden;
       }
     }
@@ -86,8 +95,8 @@
       <tr>
         <td valign="center"> 
           <div class="input-container">
-            Your current hours worked
-            <input type="number" id="numberInput" class="input" placeholder="88">
+            <b>Your current hours worked</b>
+            <input type="tel" id="numberInput" class="input" placeholder="91">
           </div>
         </td>
         <td valign="center" align="center">
@@ -114,8 +123,10 @@
         <td valign="center" style="background-color:#f6f6f6;"><b>Last pay date in the quarter</b><br><small>You must have at least 240 total paid hours reflected on this pay stub to remain benefits eligible</small></td>
         <td valign="center" align="center" style="background-color:#f6f6f6;" id="lastPayDateCell">September 22, 2023</td>
       </tr>
-    </table>
+     </table>
+    <div class="safe-area"></div>
   </div>
+
 
   <script>
     function updateDaysLeft() {
