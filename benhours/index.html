@@ -17,7 +17,7 @@
       padding: 0;
       font-size: 0.8rem;
       height: 100vh;
-      background-color: #d3d3d3;
+      background-color: #006241;
     }
 
     .table-container {
@@ -69,23 +69,20 @@
       text-align: center;
     }
 
-    @media screen and (min-width: 601px) {
-      .table-container {
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-      }
+@media screen and (max-width: 600px) {
+  .table-container {
+    height: calc(100vh - env(safe-area-inset-bottom)); /* Subtract the height of the address bar */
+    overflow-y: auto; /* Enable vertical scrolling if necessary */
+  }
 
-      table {
-        height: 80%;
-        width: 60%; /* Adjust the width for desktop layout */
-        max-width: 800px; /* Set a maximum width for larger screens if desired */
-      }
-    }
+  table {
+    height: auto; /* Adjust the height dynamically based on content */
+  }
+}
   </style>
 </head>
 <body>
-  <div class="table-container">
+<div class="table-container" id="tableContainer">
     <table align="center">
       <tr>
         <td valign="center"> 
@@ -118,6 +115,8 @@
         <td valign="center" style="background-color:#f6f6f6;"><b>Last pay date in the quarter</b><br><small>You must have at least 240 total paid hours reflected on this pay stub to remain benefits eligible</small></td>
         <td valign="center" align="center" style="background-color:#f6f6f6;" id="lastPayDateCell">September 22, 2023</td>
       </tr>
+      <tr>
+      <td valign="center" align="center" colspan="2"><small>All information sourced from Partner Hub.</td></tr>
      </table>
   </div>
   <script>
