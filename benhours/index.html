@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>Benefits Qualifications</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     @font-face {
       font-family: "SoDoSans";
@@ -12,14 +13,14 @@
       margin: 0;
       padding: 0;
       font-family: SodoSans, sans-serif;
-      font-size: 0.8rem;
+      font-size: 1rem; /* Use relative font size */
     }
 
     .container {
       display: flex;
       flex-wrap: wrap;
       max-width: 750px;
-      margin: 50px auto;
+      margin: 10px auto;
       padding: 10px;
       box-sizing: border-box;
     }
@@ -51,24 +52,39 @@
       border: none;
       background-color:#006241;
       color:#fff;
+      padding:10px;
+    }
+    .footer {
+      font-size: 0.8rem;
+      padding:20px;
+          }
+
+    /* Adjust layout for smaller screens */
+    @media screen and (max-width: 768px) {
+      .container {
+        margin: 0px auto;
+        padding: 0px;
+      }
+      .item {
+        flex-basis: 100%;
+      }
     }
 
+    /* Adjust layout for even smaller screens */
     @media screen and (max-width: 428px) {
-      .container {
-       margin: 0 auto;
-       }
       .item {
-        flex-basis: 50%;
+        padding: 15px;
       }
-      .header,
-      .footer {
-        flex-basis: 100%;
-      }      
+      .input {
+        width: 60px; /* Increase input size for better usability */
+      }
     }
+
     small {
       color: #494949;
     }  
-.input {
+
+    .input {
       border-top: none;
       border-left: none;
       border-right: none;
@@ -86,7 +102,7 @@
 <body>
   <div class="container">
     <div class="item header">
-      <b>Benefits Qualifications</b>
+      <h3>Benefits Qualifications</h3>
     </div>
     <div class="item" style="background-color: #f9f9f9;">
       <p><b>Your current hours worked</b> <input type="tel" id="numberInput" class="input" placeholder="91"></p>
@@ -121,7 +137,7 @@
     </div>
     <div class="item req center-text" style="background-color: #f9f9f9;" id="lastPayDateCell">September 22, 2023</div>
     <div class="item footer">
-      <b>All information has been sourced from Partner Hub.</b>
+      <b>All information has been sourced from Partner Hub.</b><br>Retail hourly partners can monitor their paid hours through their pay stubs on Partner Central. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
     </div>
   </div>
   <script>
