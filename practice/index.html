@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    /* Reset default margins and paddings */
+    body, h1, h2, h3, p, ul, li {
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Set up basic styling */
+    body {
+      font-family: Arial, sans-serif;
+    }
+
+    .header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: #333;
+      color: white;
+    }
+
+    .logo {
+      font-size: 24px;
+    }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+    }
+
+    nav li {
+      margin-right: 20px;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: white;
+    }
+
+    .hero {
+      background-color: #f0f0f0;
+      height: calc(100vh - 48px); /* Adjust for header height */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .flex-grid {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 20px;
+    }
+
+    .grid-item {
+      flex-basis: 100%;
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-direction: row-reverse; /* Alternate row direction */
+    }
+
+    .grid-item:nth-child(odd) {
+      flex-direction: row; /* Reset for odd rows */
+    }
+
+    .grid-item img {
+      max-width: 50%;
+      padding: 10px;
+    }
+
+    .grid-item p {
+      flex: 1;
+      padding: 10px;
+      background-color: #f0f0f0;
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+  </style>
+  <title>Your Responsive Website</title>
+</head>
+<body>
+  <header>
+    <div class="header-container">
+      <div class="logo">Your Logo</div>
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <div class="hero">
+    This is hero content.
+  </div>
+  <div class="flex-grid">
+    <!-- Flex grid content here -->
+    <div class="grid-item">
+      <img src="https://placehold.co/600x400" alt="Image 1">
+      <p>Text for Image 1</p>
+    </div>
+    <div class="grid-item">
+      <img src="https://placehold.co/600x400" alt="Image 2">
+      <p>Text for Image 2</p>
+    </div>
+    <!-- Repeat for the remaining rows -->
+  </div>
+  <footer>
+    <div class="footer-bar">Your Footer Content</div>
+  </footer>
+</body>
+</html>

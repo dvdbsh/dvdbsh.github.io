@@ -1,8 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    @font-face {
+  @font-face {
       font-family: "SoDoSans";
       src: url(https://sbuxdates.com/SoDoSans-Regular.otf) format("opentype");
       font-weight: 400;
@@ -25,60 +27,95 @@
       src: url(https://sbuxdates.com/Pike-Bold.otf) format("opentype");
       font-weight: 700;
     }
-
-    body {
+    /* Reset default margins and paddings */
+    body, h1, h2, h3, p, ul, li {
       margin: 0;
       padding: 0;
-      font-family: "SodoSans", sans-serif;
+    }
+
+    /* Set up basic styling */
+    body {
+      font-family: "SodoSans";
       background-color: #c1dfd5;
     }
 
-    header {
-      background-color: #1e3932;
-      color: #fff;
-      padding: 2rem;
-      height: 4rem;
+    .header-container {
       display: flex;
       justify-content: space-between;
       align-items: center;
+      padding: 10px 20px;
+      background-color: #1e3932;
+      color: white;
+      z-index: 999;
     }
 
     .logo {
-      font-size: 30px;
+      font-size: 24px;
       font-family: "Pike";
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
     }
 
-    .navigation {
+    nav ul {
+      list-style: none;
       display: flex;
-      justify-content: flex-end;
-      align-items: center;
     }
 
-    .navigation a {
-      color: #fff;
+    nav li {
+      margin-right: 20px;
+      letter-spacing: 0.5px;
+    }
+
+    nav a {
       text-decoration: none;
-      margin-left: 20px;
-    }
-
-    .navigation a:hover {
-      color: #ffafba;
-      text-decoration: underline;
+      color: white;
     }
 
     .hero {
       background: linear-gradient(to bottom right, #007243, #43bd8b);
-      background-size: cover;
-      background-position: center;
-      height: calc(100vh - 8rem);
+      height: calc(100vh - 48px); /* Adjust for header height */
       display: flex;
       justify-content: center;
       align-items: center;
-      border-radius: 0 0 20px 20px;
     }
 
-    .hero-content {
+    .flex-grid {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 20px;
+    }
+
+    .grid-item {
+      flex-basis: 100%;
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-direction: row-reverse; /* Alternate row direction */
+    }
+
+    .grid-item:nth-child(odd) {
+      flex-direction: row; /* Reset for odd rows */
+    }
+
+    .grid-item img {
+      width: 500px;
+      max-width: 500px;
+      padding: 10px;
+    }
+
+    .grid-item p {
+      flex: 1;
+      padding: 10px;
+      background-color: #f0f0f0;
+    }
+
+    footer {
+      background-color: #333;
+      color: white;
+      text-align: center;
+      padding: 10px;
+    }
+.hero-content {
       text-align: center;
       color: #fff;
       display: flex;
@@ -104,108 +141,42 @@
     .hero-content h1 span.community,
     .hero-content h1 span.inclusivity {
       font-weight: 900;
-    }
+    }    
+.hero h1 span.coffee {
+  color: #d19f4a;
+  font-weight: 900;
+}
 
-    .main-content {
-      display: flex;
-      align-items: flex-start;
-      padding: 2rem;
-    }
+.hero h1 span.inclusivity {
+  color: #00c99a;
+  font-weight: 900;
+}
 
-    .main-content-1 {
-      display: flex;
-      flex-wrap: wrap;
-    }
+.hero h1 span.community {
+  color: #ffafba;
+  font-weight: 900;
+}    
 
-    .main-content-1 div {
-      flex: 1;
-      min-width: 250px;
-      padding: 1rem;
-    }
-
-    @media only screen and (max-width: 768px) {
-      header {
+    @media screen and (max-width: 768px) {
+      .flex-grid .grid-item {
         flex-direction: column;
-        align-items: center;
-      }
-
-      .navigation {
-        margin-top: 10px;
-        justify-content: center;
-      }
-
-      .navigation a {
-        margin: 10px;
-      }
-
-      .hero-content img {
-        width: 170px;
-      }
-
-      .hero-content h1 {
-        font-size: 35px;
-      }
-
-      .hero-content h1 span.coffee,
-      .hero-content h1 span.community,
-      .hero-content h1 span.inclusivity {
-        font-weight: 900;
-      }
-
-      .hero-content {
-        padding: 10px;
-      }
-
-      .hero-content img {
-        width: 150px;
-      }
-
-      .home-1-images,
-      .home-1 {
-        width: 100%;
-        margin: 0;
-      }
-
-      .home-1-images img {
-        width: 100%;
-        border-radius: 20px;
-      }
-
-      .home-1 {
-      text-align: center;
-      display: flex;
-      align-items: center; /* Vertically center the content */
-    }
-
-      .main-content {
-        padding: 1rem;
-      }
-
-      .main-content-1 div {
-        flex: 1 1 100%;
-      }
-    }
-
-    @media only screen and (min-width: 769px) {
-      .home-1-images {
-        flex-direction: row;
-      }
-
-      .home-1-images img {
-        width: 100%;
-        border-radius: 20px;
       }
     }
   </style>
+  <title>Your Responsive Website</title>
 </head>
 <body>
   <header>
-    <div class="logo">Hamilton + Highbury Starbucks</div>
-    <nav class="navigation">
-      <a href="#">Our Store</a>
-      <a href="#">Our Drinks</a>
-      <a href="#">Come Visit</a>
-    </nav>
+    <div class="header-container">
+      <div class="logo">Hamilton + Highbury</div>
+      <nav>
+        <ul>
+          <li><a href="#">Our Store</a></li>
+          <li><a href="#">Our Drinks</a></li>
+          <li><a href="#">Come Visit</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
   <div class="hero">
     <div class="hero-content">
@@ -227,16 +198,21 @@
       </div>
     </div>
   </div>
-  <div class="main-content">
-    <div class="main-content-1">
-      <div class="home-1-images">
-        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1690682865/350847938_280000537729132_6852521128925621331_n_bpk3bf.jpg" alt="Image 1">
-       </div>
-      <div class="home-1">
-        Discover the heart of your neighborhood at our very own Starbucks cafe. Embrace the warm ambiance as you sit and unwind, or simply swing by for a swift and delightful drive-through experience. Your perfect coffee moment awaits!
-      </div>
+  <div class="flex-grid">
+    <!-- Flex grid content here -->
+    <div class="grid-item">
+      <img src="https://content-prod-live.cert.starbucks.com/binary/v2/asset/137-85023.jpg" alt="Image 1">
+      <p><figure data-behold-id="kLEF3Gy6xLJU6HyMzCWJ"></figure>
+<script src="https://w.behold.so/widget.js" type="module"></script></p>
     </div>
+    <div class="grid-item">
+      <img src="https://placehold.co/500" alt="Image 2">
+      <p>Text for Image 2</p>
+    </div>
+    <!-- Repeat for the remaining rows -->
   </div>
-  <!-- The rest of your HTML code -->
+  <footer>
+    <div class="footer-bar">Your Footer Content</div>
+  </footer>
 </body>
 </html>
