@@ -1,17 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;0,1000;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900;1,1000&display=swap" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
     <style>
         body {
             margin: 0;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
@@ -20,25 +24,81 @@
         }
 
         .time {
-            font-size: calc(10vw + 10vh); /* Scale with screen width and height */
+            font-size: calc(10vw + 10vh);
             color: #ededed;
             font-family: 'Nunito', sans-serif;
             font-weight: 600;
             letter-spacing: 6px;
             text-align: center;
+            cursor: pointer;
         }
 
         .seconds {
-            font-size: calc(2vw + 2vh); /* Scale with screen width and height */
+            font-size: calc(2vw + 2vh);
             vertical-align: super;
+        }
+
+        .brightness-slider {
+            display: none;
+            width: calc(20vw + 20vh);
+            max-width: 500px;
+            margin-top: 20px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: #111111;
+            height: 5px;
+            border-radius: 10px;
+            outline: none;
+        }
+
+        .brightness-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #252525;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        .brightness-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #252525;
+            border-radius: 50%;
+            cursor: pointer;
         }
     </style>
     <title>Clock</title>
 </head>
 <body>
     <div class="time" id="time"></div>
+    <input type="range" class="brightness-slider" id="brightnessSlider" min="1" max="100" step="1" value="100">
     <script>
-        // Request Wake Lock when the page is loaded
+        let isSliderVisible = false;
+
+        function toggleSliderVisibility() {
+            const slider = document.getElementById('brightnessSlider');
+            isSliderVisible = !isSliderVisible;
+            slider.style.display = isSliderVisible ? 'block' : 'none';
+        }
+
+        function updateTime() {
+            const currentTime = new Date();
+            const hours = (currentTime.getHours() % 12) || 12;
+            const minutes = currentTime.getMinutes().toString().padStart(2, '0');
+            const seconds = currentTime.getSeconds().toString().padStart(2, '0');
+
+            const formattedTime = `${hours}:${minutes}<span class="seconds">${seconds}</span>`;
+            document.getElementById('time').innerHTML = formattedTime;
+        }
+
+        function updateBrightness() {
+            const brightness = document.getElementById('brightnessSlider').value;
+            const timeDisplay = document.getElementById('time');
+            timeDisplay.style.opacity = brightness / 100;
+        }
+
         let wakeLock = null;
         async function requestWakeLock() {
             try {
@@ -48,21 +108,16 @@
             }
         }
 
-        function updateTime() {
-            const currentTime = new Date();
-            const hours = (currentTime.getHours() % 12) || 12; // Convert to 12-hour format
-            const minutes = currentTime.getMinutes();
-            const seconds = currentTime.getSeconds().toString().padStart(2, '0'); // Ensure 2-digit seconds
+        requestWakeLock();
+        updateTime();
 
-            const formattedTime = `${hours}:${minutes}<span class="seconds">${seconds}</span>`;
-            document.getElementById('time').innerHTML = formattedTime;
-        }
-
-        requestWakeLock(); // Request Wake Lock on page load
-        updateTime(); // Initial call
-
-        // Update time every second
         setInterval(updateTime, 1000);
+
+        const timeDisplay = document.getElementById('time');
+        timeDisplay.addEventListener('click', toggleSliderVisibility);
+
+        const brightnessSlider = document.getElementById('brightnessSlider');
+        brightnessSlider.addEventListener('input', updateBrightness);
     </script>
 </body>
 </html>
