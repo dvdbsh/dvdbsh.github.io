@@ -10,7 +10,15 @@ function addPlayers() {
         newRow.innerHTML = `
           <td>${playerName}</td>
           <td><input type="number" class="hole-score" min="0"></td>
-          <!-- ... other cells ... -->
+          <td><input type="number" class="hole-score" min="0"></td>
+          <td><input type="number" class="hole-score" min="0"></td>
+          <td><input type="number" class="hole-score" min="0"></td>
+          <td><input type="number" class="hole-score" min="0"></td>
+          <td><input type="number" class="hole-score" min="0"></td>
+          <td><input type="number" class="hole-score" min="0"></td>
+          <td><input type="number" class="hole-score" min="0"></td>
+          <td><input type="number" class="hole-score" min="0"></td>
+          <td><input type="number" class="hole-score" min="0"></td>
           <td class="total-cell">0</td>
         `;
         scorecardBody.appendChild(newRow);
