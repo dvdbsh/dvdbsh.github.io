@@ -17,6 +17,13 @@
       font-size: 1rem; /* Use relative font size */
       background: linear-gradient(to bottom, #c1dfd5, #f3f3f3);
     }
+    a {
+      color: #ffffff;
+      text-decoration: underline;
+      }
+    a:hover {
+      text-decoration: none;
+      }
 
     .container {
       display: flex;
@@ -88,19 +95,18 @@
     }  
 
     .input {
-      border-top: none;
-      border-left: none;
-      border-right: none;
-      border-bottom: 0px solid #006241;
+      border: 1px solid #006241;
+      border-radius: 50%;
       background-color: #f6f6f6;
       margin-left: 5px;
-      width: 80px;
+      width: 55px;
       height: 55px;
       font-family: SodoSans, sans-serif;
       color: #006241;
       text-align: center;
       content-align: center;
       font-size: 1.3rem;
+      font-weight: 800;
     }    
   </style>
 </head>
@@ -123,26 +129,26 @@
       <p><b>Calendar Quarter</b><br><small>This is the period you are currently working through</small></p>
     </div>
     <div class="item req center-text" style="background-color: #f9f9f9;">
-      <p>July - September</p>
+      <p>October - December 2023</p>
     </div>   
     <div class="item" style="background-color: #f9f9f9;">
       <p><b>Last day to qualify for next quarter</b><br><small>Last day to work that will count in the quarter toward benefits eligibility</small></p>
     </div>
     <div class="item req center-text" style="background-color: #f9f9f9;">
-      <p>September 17, 2023</p>
+      <p>December 24, 2023</p>
     </div>    
     <div class="item" style="background-color: #f9f9f9;">
       <p><b>These paid hours are the ones that count</b><br><small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small></p>
     </div>
     <div class="item req center-text" style="background-color: #f9f9f9;">
-      <p>July 14 and 28<br>August 11 and 25<br>September 8 and 22</p>
+      <p>October 6 and 20<br>November 3 and 17<br>December 1, 15 and 29</p>
     </div>  
     <div class="item" style="background-color: #f9f9f9;">
       <p><b>Last pay date in the quarter</b><br><small>You must have at least 240 total paid hours reflected on this pay stub to remain benefits eligible</small></p>
     </div>
-    <div class="item req center-text" style="background-color: #f9f9f9; padding-bottom: 20px;" id="lastPayDateCell">September 22, 2023</div>
+    <div class="item req center-text" style="background-color: #f9f9f9; padding-bottom: 20px;" id="lastPayDateCell">December 29, 2023</div>
     <div class="item footer">
-      <b>All information has been sourced from Partner Hub.</b><br>Retail hourly partners can monitor their paid hours through their pay stubs on Partner Central. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
+      <b>All information has been sourced from <a href="https://departments.starbucks.com/sites/benefits/en-us/canada/Pages/Eligibility.aspx">Partner Hub</a>.</b><br>Retail hourly partners can monitor their paid hours through their pay stubs on Partner Central. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
     </div>
   </div>
   <script>
