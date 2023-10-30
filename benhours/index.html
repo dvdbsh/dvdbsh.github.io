@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Benefits Qualifications</title>
+  <title>Hours Calculator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#006241">
   <style>
@@ -99,7 +99,7 @@
       border-radius: 15px;
       background-color: #f6f6f6;
       margin-left: 5px;
-      width: 55px;
+      width: 95px;
       height: 55px;
       font-family: SodoSans, sans-serif;
       color: #006241;
@@ -113,7 +113,7 @@
 <body>
   <div class="container">
     <div class="item header">
-      <h3>Benefits Qualifications</h3>
+      <h3>Benefits Hours Calculator</h3>
     </div>
     <div class="item" style="background-color: #f9f9f9;">
   <p><b>Your current hours worked</b> <input type="tel" id="numberInput" class="input" inputmode="decimal" placeholder="91"></p>
@@ -152,35 +152,39 @@
     </div>
   </div>
 <script>
-  function updateDaysLeft() {
-    const targetDate = new Date("December 24, 2023").getTime();
-    const now = new Date().getTime();
-    const difference = targetDate - now;
-    const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
-    const weeksLeft = Math.floor(daysLeft / 7); // Calculate weeks left
-    document.getElementById("daysLeftCell").innerHTML = daysLeft + " days<br>(" + weeksLeft + " weeks)";
+ function updateDaysLeft() {
+  const targetDate = new Date("December 24, 2023").getTime();
+  const now = new Date().getTime();
+  const difference = targetDate - now;
+  const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
+  const weeksLeft = Math.floor(daysLeft / 7); // Calculate weeks left
+  document.getElementById("daysLeftCell").innerHTML = daysLeft + " days<br>(" + weeksLeft + " weeks)";
 
-    // Calculate required hours
-    const enteredNumber = parseFloat(document.getElementById("numberInput").value);
-    if (!isNaN(enteredNumber)) {
-      const totalRequiredHours = 240 - enteredNumber;
-      const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft);
-
-      // Use <br> for line breaks within the innerHTML
-      document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed<br>(" + requiredHoursPerWeek + " more hours per week needed)<br><small>These numbers are rounded up to the nearest hour.</small>";
+  // Calculate required hours
+  const enteredNumber = parseFloat(document.getElementById("numberInput").value);
+  if (!isNaN(enteredNumber)) {
+    let totalRequiredHours = 240 - enteredNumber;
+    if (totalRequiredHours < 0) {
+      totalRequiredHours = 0; // Ensure the totalRequiredHours is not negative
     }
+    const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft);
+
+    // Use <br> for line breaks within the innerHTML
+    document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed<br>(" + requiredHoursPerWeek + " more hours per week needed)<br><small>These numbers are rounded up to the nearest hour.</small>";
   }
+}
 
-  document.getElementById("numberInput").addEventListener("input", function () {
-    const enteredNumber = parseFloat(this.value);
-    if (!isNaN(enteredNumber)) {
-      updateDaysLeft();
-    } else {
-      document.getElementById("differenceResult").textContent = "";
-    }
-  });
+document.getElementById("numberInput").addEventListener("input", function () {
+  const enteredNumber = parseFloat(this.value);
+  if (!isNaN(enteredNumber)) {
+    updateDaysLeft();
+  } else {
+    document.getElementById("differenceResult").textContent = "";
+  }
+});
 
-  updateDaysLeft();
+updateDaysLeft();
+
 </script>
 
 
