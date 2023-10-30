@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-  @font-face {
+    @font-face {
       font-family: "SoDoSans";
       src: url(https://sbuxdates.com/SoDoSans-Regular.otf) format("opentype");
       font-weight: 400;
@@ -27,6 +27,7 @@
       src: url(https://sbuxdates.com/Pike-Bold.otf) format("opentype");
       font-weight: 700;
     }
+
     /* Reset default margins and paddings */
     body, h1, h2, h3, p, ul, li {
       margin: 0;
@@ -59,16 +60,23 @@
     nav ul {
       list-style: none;
       display: flex;
+      gap: 8px;
     }
 
     nav li {
-      margin-right: 20px;
+      margin: 0px;
       letter-spacing: 0.5px;
+      text-align: center;
     }
 
     nav a {
       text-decoration: none;
       color: white;
+    }
+
+    nav a:hover {
+      text-decoration: none;
+      color: #43bd8b;
     }
 
     .hero {
@@ -103,10 +111,11 @@
       padding: 10px;
     }
 
-    .grid-item p {
+    .grid-item .paragraph-container {
       flex: 1;
       padding: 10px;
       background-color: #f0f0f0;
+      height: calc(100% - 40px);
     }
 
     footer {
@@ -115,7 +124,8 @@
       text-align: center;
       padding: 10px;
     }
-.hero-content {
+
+    .hero-content {
       text-align: center;
       color: #fff;
       display: flex;
@@ -141,29 +151,36 @@
     .hero-content h1 span.community,
     .hero-content h1 span.inclusivity {
       font-weight: 900;
-    }    
-.hero h1 span.coffee {
-  color: #d19f4a;
-  font-weight: 900;
-}
+    }
 
-.hero h1 span.inclusivity {
-  color: #00c99a;
-  font-weight: 900;
-}
+    .hero h1 span.coffee {
+      color: #d19f4a;
+      font-weight: 900;
+    }
 
-.hero h1 span.community {
-  color: #ffafba;
-  font-weight: 900;
-}    
+    .hero h1 span.inclusivity {
+      color: #00c99a;
+      font-weight: 900;
+    }
+
+    .hero h1 span.community {
+      color: #ffafba;
+      font-weight: 900;
+    }
 
     @media screen and (max-width: 768px) {
       .flex-grid .grid-item {
         flex-direction: column;
       }
+      nav ul {
+        gap: 12px;
+      }
+      nav li {
+        font-size: 14px;
+      }
     }
   </style>
-  <title>Your Responsive Website</title>
+  <title>Hamilton + Highbury</title>
 </head>
 <body>
   <header>
@@ -201,13 +218,18 @@
   <div class="flex-grid">
     <!-- Flex grid content here -->
     <div class="grid-item">
-      <img src="https://content-prod-live.cert.starbucks.com/binary/v2/asset/137-85023.jpg" alt="Image 1">
-      <p><figure data-behold-id="kLEF3Gy6xLJU6HyMzCWJ"></figure>
-<script src="https://w.behold.so/widget.js" type="module"></script></p>
+      <img src="https://globalassets.starbucks.com/digitalassets/products/at-home/SBX20230612_ThanksgivingBlend2023.jpg?impolicy=1by1_medium_630" alt="Image 1">
+      <div class="paragraph-container">
+        <p>"Picture a cup of coffee that's like a cozy, flavorful hug from the season itself – that's Starbucks Thanksgiving Blend® for you! It's a special blend that combines coffee beans from different parts of the world, like Sidama in Ethiopia, Sumatra, and Guatemala's Antigua region. Think of it as a culinary masterpiece, just like a chef's Thanksgiving dinner.</p>
+        <p>When you take a sip, it's like a delightful surprise. You'll taste hints of sweet candied pecans, the earthy touch of sage, and a bit of dried fig sweetness. It's a coffee experience that brings flavors from all over the world right to your taste buds. So, if you're looking for a coffee that's both special and comforting, give Starbucks Thanksgiving Blend® a try. It's like a warm hug from the season!</p>
+      </div>
     </div>
     <div class="grid-item">
-      <img src="https://placehold.co/500" alt="Image 2">
-      <p>Text for Image 2</p>
+      <img src="https://globalassets.starbucks.com/digitalassets/products/at-home/SBX20230612_4421_CasiCielo2023.jpg?impolicy=1by1_medium_630" alt="Image 2">
+      <div class="paragraph-container">
+        <p>Imagine sipping on a cup of coffee that's like a taste of paradise, right from the high-altitude farms of Guatemala's volcanic Antigua region. We're talking about our special single-origin Guatemala Casi Cielo® coffee – it's like the best of the best from one of our favorite coffee places.</p>
+        <p>This coffee is so unique because it's harvested only once a year. It's a bit like a rare treasure! When you take a sip, you'll experience a bright and smooth flavor, kind of like a burst of lemony freshness, mixed with the rich and comforting taste of dark cocoa. It's a coffee that's truly unforgettable and worth savoring. So, if you're up for a coffee adventure that's both lively and soothing, you don't want to miss out on Guatemala Casi Cielo®!</p>
+      </div>
     </div>
     <!-- Repeat for the remaining rows -->
   </div>

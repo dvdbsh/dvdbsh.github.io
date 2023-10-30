@@ -116,8 +116,8 @@
       <h3>Benefits Qualifications</h3>
     </div>
     <div class="item" style="background-color: #f9f9f9;">
-      <p><b>Your current hours worked</b> <input type="tel" id="numberInput" class="input" placeholder="91"></p>
-    </div>
+  <p><b>Your current hours worked</b> <input type="tel" id="numberInput" class="input" inputmode="decimal" placeholder="91"></p>
+</div>
     <div class="item req center-text" style="background-color: #f9f9f9;">
       <p id="differenceResult"></p>
     </div>
@@ -129,53 +129,60 @@
       <p><b>Calendar Quarter</b><br><small>This is the period you are currently working through</small></p>
     </div>
     <div class="item req center-text" style="background-color: #f9f9f9;">
-      <p>October - December 2023</p>
+      <p>October - December<br><small>2023</small></p>
     </div>   
     <div class="item" style="background-color: #f9f9f9;">
       <p><b>Last day to qualify for next quarter</b><br><small>Last day to work that will count in the quarter toward benefits eligibility</small></p>
     </div>
     <div class="item req center-text" style="background-color: #f9f9f9;">
-      <p>December 24, 2023</p>
+      <p>December 24<br><small>2023</small></p>
     </div>    
     <div class="item" style="background-color: #f9f9f9;">
       <p><b>These paid hours are the ones that count</b><br><small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small></p>
     </div>
     <div class="item req center-text" style="background-color: #f9f9f9;">
-      <p>October 6 and 20<br>November 3 and 17<br>December 1, 15 and 29</p>
+      <p>October 6 and 20<br>November 3 and 17<br>December 1, 15 and 29<br><small>2023</small></p>
     </div>  
     <div class="item" style="background-color: #f9f9f9;">
       <p><b>Last pay date in the quarter</b><br><small>You must have at least 240 total paid hours reflected on this pay stub to remain benefits eligible</small></p>
     </div>
-    <div class="item req center-text" style="background-color: #f9f9f9; padding-bottom: 20px;" id="lastPayDateCell">December 29, 2023</div>
+    <div class="item req center-text" style="background-color: #f9f9f9; padding-bottom: 20px;" id="lastPayDateCell">December 29<br><small>2023</small></div>
     <div class="item footer">
       <b>All information has been sourced from <a href="https://departments.starbucks.com/sites/benefits/en-us/canada/Pages/Eligibility.aspx">Partner Hub</a>.</b><br>Retail hourly partners can monitor their paid hours through their pay stubs on Partner Central. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
     </div>
   </div>
-  <script>
-    function updateDaysLeft() {
-      const targetDate = new Date("September 17, 2023").getTime();
-      const now = new Date().getTime();
-      const difference = targetDate - now;
-      const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
-      document.getElementById("daysLeftCell").textContent = daysLeft + " days";
+<script>
+  function updateDaysLeft() {
+    const targetDate = new Date("December 24, 2023").getTime();
+    const now = new Date().getTime();
+    const difference = targetDate - now;
+    const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
+    const weeksLeft = Math.floor(daysLeft / 7); // Calculate weeks left
+    document.getElementById("daysLeftCell").innerHTML = daysLeft + " days<br>(" + weeksLeft + " weeks)";
+
+    // Calculate required hours
+    const enteredNumber = parseFloat(document.getElementById("numberInput").value);
+    if (!isNaN(enteredNumber)) {
+      const totalRequiredHours = 240 - enteredNumber;
+      const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft);
+
+      // Use <br> for line breaks within the innerHTML
+      document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed<br>(" + requiredHoursPerWeek + " more hours per week needed)<br><small>These numbers are rounded up to the nearest hour.</small>";
     }
+  }
 
-    function updateDifferenceResult(enteredNumber) {
-      const difference = 240 - enteredNumber;
-      const result = difference >= 0 ? difference + " more hours needed" : "0";
-      document.getElementById("differenceResult").textContent = result;
+  document.getElementById("numberInput").addEventListener("input", function () {
+    const enteredNumber = parseFloat(this.value);
+    if (!isNaN(enteredNumber)) {
+      updateDaysLeft();
+    } else {
+      document.getElementById("differenceResult").textContent = "";
     }
+  });
 
-    document.getElementById("numberInput").addEventListener("input", function () {
-      const enteredNumber = parseFloat(this.value);
-      if (!isNaN(enteredNumber)) {
-        updateDifferenceResult(enteredNumber);
-      } else {
-        document.getElementById("differenceResult").textContent = "";
-      }
-    });
+  updateDaysLeft();
+</script>
 
-    updateDaysLeft();
-  </script>
+
 </body>
 </html>
