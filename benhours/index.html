@@ -14,16 +14,16 @@
       margin: 0;
       padding: 0;
       font-family: SodoSans, sans-serif;
-      font-size: 1rem; /* Use relative font size */
+      font-size: 1rem;
       background: linear-gradient(to bottom, #c1dfd5, #f3f3f3);
     }
     a {
       color: #ffffff;
       text-decoration: underline;
-      }
+    }
     a:hover {
       text-decoration: none;
-      }
+    }
 
     .container {
       display: flex;
@@ -34,24 +34,16 @@
       box-sizing: border-box;
     }
 
-    .item {
-      flex-basis: 50%;
+    /* New CSS styles for the card-like elements */
+    .card {
+      flex-basis: 100%;
       padding: 8px;
       box-sizing: border-box;
-      border-bottom: 0px solid #f0f0f0;
-      align-items: center;
-      justify-content: center;
-      text-align:center;
-    }
-
-    .req {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .req.center-text {
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      background: #fff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin: 10px;
       text-align: center;
     }
 
@@ -59,14 +51,15 @@
     .footer {
       flex-basis: 100%;
       border: none;
-      background-color:#006241;
-      color:#fff;
-      padding:10px;
+      background-color: #006241;
+      color: #fff;
+      padding: 10px;
+      border-radius: 10px;
     }
     .footer {
       font-size: 0.8rem;
-      padding:20px;
-          }
+      padding: 20px;
+    }
 
     /* Adjust layout for smaller screens */
     @media screen and (max-width: 768px) {
@@ -74,25 +67,25 @@
         margin: 0px auto;
         padding: 0px;
       }
-      .item {
+      .card {
         flex-basis: 100%;
       }
-
     }
 
     /* Adjust layout for even smaller screens */
     @media screen and (max-width: 428px) {
-      .item {
+      .card {
         padding: 15px;
       }
       .input {
-        width: 60px; /* Increase input size for better usability */
+        width: 60px;
       }
     }
 
-    small {
-      color: #494949;
-    }  
+small {
+  font-size: 0.7rem; /* You can adjust the value as needed */
+  color: #494949; /* Optionally, set a specific text color */
+}
 
     .input {
       border: 1px solid #006241;
@@ -107,86 +100,86 @@
       content-align: center;
       font-size: 1.3rem;
       font-weight: 800;
-    }    
+    }
   </style>
 </head>
 <body>
   <div class="container">
-    <div class="item header">
+    <div class="card header">
       <h3>Benefits Hours Calculator</h3>
     </div>
-    <div class="item" style="background-color: #f9f9f9;">
-  <p><b>Your current hours worked</b> <input type="tel" id="numberInput" class="input" inputmode="decimal" placeholder="91"></p>
-</div>
-    <div class="item req center-text" style="background-color: #f9f9f9;">
+
+    <!-- Wrap each "item" and its "requirement" in a card -->
+    <div class="card">
+      <p><b>Your current hours worked</b> <input type="tel" id="numberInput" class="input" inputmode="decimal" placeholder="91.25"></p>
+    
       <p id="differenceResult"></p>
     </div>
-    <div class="item" style="background-color: #f9f9f9;">
+
+    <div class="card">
       <p><b>Days remaining to qualify for next quarter</b></p>
+   
+      <p id="daysLeftCell"></p>
     </div>
-    <div class="item req center-text" style="background-color: #f9f9f9;" id="daysLeftCell"></div>
-    <div class="item" style="background-color: #f9f9f9;">
+
+    <div class="card">
       <p><b>Calendar Quarter</b><br><small>This is the period you are currently working through</small></p>
+
+      <p>October - December</p>
     </div>
-    <div class="item req center-text" style="background-color: #f9f9f9;">
-      <p>October - December<br><small>2023</small></p>
-    </div>   
-    <div class="item" style="background-color: #f9f9f9;">
+
+    <div class="card">
       <p><b>Last day to qualify for next quarter</b><br><small>Last day to work that will count in the quarter toward benefits eligibility</small></p>
+    
+      <p>December 24</p>
     </div>
-    <div class="item req center-text" style="background-color: #f9f9f9;">
-      <p>December 24<br><small>2023</small></p>
-    </div>    
-    <div class="item" style="background-color: #f9f9f9;">
+
+    <div class="card">
       <p><b>These paid hours are the ones that count</b><br><small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small></p>
+  
+      <p>October 6 and 20<br>November 3 and 17<br>December 1, 15 and 29</p>
     </div>
-    <div class="item req center-text" style="background-color: #f9f9f9;">
-      <p>October 6 and 20<br>November 3 and 17<br>December 1, 15 and 29<br><small>2023</small></p>
-    </div>  
-    <div class="item" style="background-color: #f9f9f9;">
+
+    <div class="card">
       <p><b>Last pay date in the quarter</b><br><small>You must have at least 240 total paid hours reflected on this pay stub to remain benefits eligible</small></p>
+      <p id="lastPayDateCell">December 29</p>
     </div>
-    <div class="item req center-text" style="background-color: #f9f9f9; padding-bottom: 20px;" id="lastPayDateCell">December 29<br><small>2023</small></div>
-    <div class="item footer">
+
+    <div class="card footer">
       <b>All information has been sourced from <a href="https://departments.starbucks.com/sites/benefits/en-us/canada/Pages/Eligibility.aspx">Partner Hub</a>.</b><br>Retail hourly partners can monitor their paid hours through their pay stubs on Partner Central. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
     </div>
   </div>
-<script>
- function updateDaysLeft() {
-  const targetDate = new Date("December 24, 2023").getTime();
-  const now = new Date().getTime();
-  const difference = targetDate - now;
-  const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
-  const weeksLeft = Math.floor(daysLeft / 7); // Calculate weeks left
-  document.getElementById("daysLeftCell").innerHTML = daysLeft + " days<br>(" + weeksLeft + " weeks)";
 
-  // Calculate required hours
-  const enteredNumber = parseFloat(document.getElementById("numberInput").value);
-  if (!isNaN(enteredNumber)) {
-    let totalRequiredHours = 240 - enteredNumber;
-    if (totalRequiredHours < 0) {
-      totalRequiredHours = 0; // Ensure the totalRequiredHours is not negative
+  <script>
+    function updateDaysLeft() {
+      const targetDate = new Date("December 24, 2023").getTime();
+      const now = new Date().getTime();
+      const difference = targetDate - now;
+      const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
+      const weeksLeft = Math.floor(daysLeft / 7);
+      document.getElementById("daysLeftCell").innerHTML = daysLeft + " days<br>(" + weeksLeft + " weeks)";
+
+      const enteredNumber = parseFloat(document.getElementById("numberInput").value);
+      if (!isNaN(enteredNumber)) {
+        let totalRequiredHours = 240 - enteredNumber;
+        if (totalRequiredHours < 0) {
+          totalRequiredHours = 0;
+        }
+        const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft);
+        document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed<br>(" + requiredHoursPerWeek + " more hours per week needed)<br><small>These numbers are rounded up to the nearest hour and are approximate.</small>";
+      }
     }
-    const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft);
 
-    // Use <br> for line breaks within the innerHTML
-    document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed<br>(" + requiredHoursPerWeek + " more hours per week needed)<br><small>These numbers are rounded up to the nearest hour.</small>";
-  }
-}
+    document.getElementById("numberInput").addEventListener("input", function () {
+      const enteredNumber = parseFloat(this.value);
+      if (!isNaN(enteredNumber)) {
+        updateDaysLeft();
+      } else {
+        document.getElementById("differenceResult").textContent = "";
+      }
+    });
 
-document.getElementById("numberInput").addEventListener("input", function () {
-  const enteredNumber = parseFloat(this.value);
-  if (!isNaN(enteredNumber)) {
     updateDaysLeft();
-  } else {
-    document.getElementById("differenceResult").textContent = "";
-  }
-});
-
-updateDaysLeft();
-
-</script>
-
-
+  </script>
 </body>
 </html>
