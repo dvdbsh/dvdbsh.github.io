@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <style>
+    @font-face {
+      font-family: "SoDoSans";
+      src: url(https://sbuxdates.com/SoDoSans-Regular.otf) format("opentype");
+      font-weight: 400;
+    }
+
+    @font-face {
+      font-family: "SoDoSans";
+      src: url(https://sbuxdates.com/SoDoSans-SemiBold.otf) format("opentype");
+      font-weight: 600;
+    }
+
+    @font-face {
+      font-family: "SoDoSans";
+      src: url(https://sbuxdates.com/SoDoSans-Bold.otf) format("opentype");
+      font-weight: 800;
+    }
+
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      border-radius: 8px;
+      padding: 20px;
+      width: 300px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .money {
+      font-family: "SoDoSans", sans-serif;
+      font-size: 24px;
+    }
+
+    .timer {
+      font-family: "SoDoSans", sans-serif;
+      font-size: 20px;
+    }
+
+    button {
+      font-family: "SoDoSans", sans-serif;
+      font-size: 18px;
+      margin: 10px 5px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="money">
+     $<span id="money">0.00</span>
+    </div>
+    <div class="timer">
+      <span id="timer">0:00:00</span>
+    </div>
+    <button id="startButton">Start</button>
+    <button id="stopButton">Stop</button>
+  </div>
+
+  <script>
+    let startTime, endTime, timerInterval;
+    let moneyEarned = 0;
+
+    const timerElement = document.getElementById("timer");
+    const moneyElement = document.getElementById("money");
+    const startButton = document.getElementById("startButton");
+    const stopButton = document.getElementById("stopButton");
+
+    startButton.addEventListener("click", startTimer);
+    stopButton.addEventListener("click", stopTimer);
+
+    function startTimer() {
+      if (timerInterval) return;
+
+      startTime = new Date().getTime();
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      endTime = new Date().getTime();
+      const elapsedTime = new Date(endTime - startTime);
+      timerElement.textContent = elapsedTime.toISOString().substr(11, 8);
+
+      // Calculate money earned based on your rate ($0.42 per minute)
+      const rate = 0.42;
+      const minutesWorked = elapsedTime.getMinutes();
+      const secondsWorked = elapsedTime.getSeconds();
+      moneyEarned = minutesWorked * rate + secondsWorked * (rate / 60);
+
+      moneyElement.textContent = moneyEarned.toFixed(2);
+    }
+
+    function stopTimer() {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+  </script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/service-worker.js')
+      .then((registration) => {
+        console.log('Service Worker registered with scope:', registration.scope);
+      })
+      .catch((error) => {
+        console.error('Service Worker registration failed:', error);
+      });
+  }
+</script>
+
+</body>
+</html>
