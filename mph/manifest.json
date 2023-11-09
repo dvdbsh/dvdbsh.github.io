@@ -8,7 +8,7 @@
   "theme_color": "#6a4181",
   "icons": [
     {
-      "src": "icon.png",
+      "src": "https://dvdbsh.github.io/mph/icon.png",
       "sizes": "200x200",
       "type": "image/png"
     }
