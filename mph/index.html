@@ -6,10 +6,12 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="theme-color" content="#6a4181">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Karla:wght@400;600&display=swap">
+  <script src="https://unpkg.com/@dotlottie/player-component@latest/dist/dotlottie-player.mjs" type="module"></script>
   <title>Time Tracker</title>
   <style>
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Karla', sans-serif;
       text-align: center;
       margin: 0;
       padding: 0;
@@ -30,7 +32,7 @@
     }
 
     #live-display {
-      font-size: 34px;
+      font-size: 50px;
       font-weight: 600;
       margin-top: 20px;
     }
@@ -55,12 +57,14 @@
 
     button {
       padding: 10px;
+      width: 65px;
+      height: 65px;
       font-size: 16px;
       margin: 10px;
       background-color: #6a4181;
       color: #fff;
       border: none;
-      border-radius: 5px;
+      border-radius: 50%;
       cursor: pointer;
     }
 
@@ -74,6 +78,21 @@
 
     #stats-card button:hover {
       background-color: #3c2449;
+    }
+
+    #confetti-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1000;
+    }
+
+    #confetti-animation {
+      width: 300px;
+      height: 300px;
+      margin: auto;
     }
   </style>
 </head>
@@ -118,6 +137,14 @@
         const totalMinutes = totalTime / (1000 * 60);
 
         document.getElementById('total-time').innerText = formatTime(totalMinutes);
+
+        // Show confetti overlay
+        document.getElementById('confetti-overlay').style.display = 'block';
+
+        // Play the confetti animation with delay
+        setTimeout(() => {
+          document.getElementById('confetti-animation').play();
+        }, 0);
       }
     }
 
@@ -136,53 +163,29 @@
     <button id="stop-btn" onclick="stopTimer()">Stop</button>
   </div>
 
+  <div id="confetti-overlay" style="display: none;">
+    <dotlottie-player id="confetti-animation" src="https://lottie.host/caeb9f93-0120-49d3-b93e-6bc9e4fb49b8/nZ6I0WqWoF.json" background="transparent" speed="1" style="width: 300px; height: 300px;"></dotlottie-player>
+  </div>
+
   <div id="stats-card">
     <div id="container">
-      <h2>What Did I Earn?</h2>
+      <h2>Your shift is over!</h2>
       <p>Total Earnings: $<span id="total-earnings">0.00</span></p>
       <p>Total Time Worked: <span id="total-time">0:00</span></p>
-      <button onclick="location.reload()">Start Over</button>
+      <button onclick="location.reload()">Reset</button>
     </div>
   </div>
-  <button onclick="installPWA()">Install PWA</button>
-
-<script>
-  let deferredPrompt;
-
-  window.addEventListener('beforeinstallprompt', (event) => {
-    event.preventDefault();
-    deferredPrompt = event;
-    // Show the install button
-    document.querySelector('button').style.display = 'block';
-  });
-
-  function installPWA() {
-    if (deferredPrompt) {
-      deferredPrompt.prompt();
-      deferredPrompt.userChoice.then((choiceResult) => {
-        if (choiceResult.outcome === 'accepted') {
-          console.log('User accepted the install prompt');
-        } else {
-          console.log('User dismissed the install prompt');
-        }
-        deferredPrompt = null;
-      });
-    }
-  }
-</script>
-
   
   <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js')
-      .then(registration => {
-        console.log('Service Worker registered with scope:', registration.scope);
-      })
-      .catch(error => {
-        console.error('Service Worker registration failed:', error);
-      });
-  }
-</script>
-
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(registration => {
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch(error => {
+          console.error('Service Worker registration failed:', error);
+        });
+    }
+  </script>
 </body>
 </html>
