@@ -1,15 +1,15 @@
 {
-  "name": "Money Timer",
-  "short_name": "Timer",
-  "description": "Track your earnings with a timer.",
-  "start_url": "/index.html",
+  "name": "Time Tracker",
+  "short_name": "Tracker",
+  "description": "Track your time and earnings",
+  "start_url": "/",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#3498db",
+  "background_color": "#6a4181",
+  "theme_color": "#6a4181",
   "icons": [
     {
       "src": "icon.png",
-      "sizes": "192x192",
+      "sizes": "200x200",
       "type": "image/png"
     }
   ]
