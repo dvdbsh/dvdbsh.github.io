@@ -1,0 +1,33 @@
+---
+layout: header
+---
+
+{{ content }}
+
+<!-- Footer Section -->
+<footer>
+    <p>&copy; 2024 Tomb Raider. All rights reserved.</p>
+</footer>
+
+<script>
+    // Add JavaScript functionality for dropdown menus
+    document.addEventListener("DOMContentLoaded", function () {
+        var dropdownHeaders = document.querySelectorAll('.dropdown-header');
+
+        dropdownHeaders.forEach(function (header) {
+            header.addEventListener('click', function () {
+                this.classList.toggle('active');
+
+                var dropdownContent = this.nextElementSibling;
+                if (dropdownContent.style.maxHeight) {
+                    dropdownContent.style.maxHeight = null;
+                } else {
+                    dropdownContent.style.maxHeight = dropdownContent.scrollHeight + "px";
+                }
+            });
+        });
+    });
+</script>
+</body>
+
+</html>
