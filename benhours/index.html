@@ -7,22 +7,25 @@
   <style>
     @font-face {
       font-family: "SoDoSans";
-      src: url(https://sbuxdates.com/SoDoSans-Regular.otf) format("opentype");
+      src: url(SoDoSans-Regular.otf) format("opentype");
       font-weight: 400;
     }  
+    
     body {
       margin: 0;
       padding: 0;
-      font-family: SodoSans, sans-serif;
+      font-family: "SoDoSans", sans-serif;
       font-size: 1rem;
       background: linear-gradient(to bottom, #c1dfd5, #f3f3f3);
-      background-repeat:no-repeat;
+      background-repeat: no-repeat;
       background-attachment: fixed;
     }
+    
     a {
       color: #ffffff;
       text-decoration: underline;
     }
+    
     a:hover {
       text-decoration: none;
     }
@@ -36,17 +39,21 @@
       box-sizing: border-box;
     }
 
-    /* New CSS styles for the card-like elements */
+    /* CSS styles for the card-like elements */
     .card {
-      flex-basis: 100%;
-      padding: 8px;
+      flex-basis: calc(50% - 20px);
+      padding: 20px;
       box-sizing: border-box;
       border: 1px solid #ddd;
-      border-radius: 10px;
+      border-radius: 20px;
       background: #fff;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
       margin: 10px;
       text-align: center;
+    }
+
+    .two-columns {
+      flex-basis: calc(100% - 20px);
     }
 
     .header,
@@ -56,38 +63,18 @@
       background-color: #006241;
       color: #fff;
       padding: 10px;
-      border-radius: 10px;
+      border-radius: 20px;
     }
+
     .footer {
       font-size: 0.8rem;
       padding: 20px;
     }
 
-    /* Adjust layout for smaller screens */
-    @media screen and (max-width: 768px) {
-      .container {
-        margin: 0px auto;
-        padding: 0px;
-      }
-      .card {
-        flex-basis: 100%;
-      }
+    small {
+      font-size: 0.7rem;
+      color: #494949;
     }
-
-    /* Adjust layout for even smaller screens */
-    @media screen and (max-width: 428px) {
-      .card {
-        padding: 15px;
-      }
-      .input {
-        width: 60px;
-      }
-    }
-
-small {
-  font-size: 0.7rem; /* You can adjust the value as needed */
-  color: #494949; /* Optionally, set a specific text color */
-}
 
     .input {
       border: 1px solid #006241;
@@ -96,7 +83,7 @@ small {
       margin-left: 5px;
       width: 95px;
       height: 55px;
-      font-family: SodoSans, sans-serif;
+      font-family: "SoDoSans", sans-serif;
       color: #006241;
       text-align: center;
       content-align: center;
@@ -111,43 +98,43 @@ small {
       <h3>Benefits Hours Calculator</h3>
     </div>
 
-    <!-- Wrap each "item" and its "requirement" in a card -->
-    <div class="card">
-      <p><b>Your current hours worked</b> <input type="tel" id="numberInput" class="input" inputmode="decimal" placeholder="91.25"></p>
-    
+    <!-- Cards for various information -->
+    <div class="two-columns card">
+      <h2>Your current hours worked</h2>
+      <p><input type="tel" id="numberInput" class="input" inputmode="decimal" placeholder="91.25"></p>
       <p id="differenceResult"></p>
     </div>
 
     <div class="card">
-      <p><b>Days remaining to qualify for next quarter</b></p>
-   
+      <h3>Days remaining to qualify for next quarter</h3>
       <p id="daysLeftCell"></p>
     </div>
 
     <div class="card">
-      <p><b>Calendar Quarter</b><br><small>This is the period you are currently working through</small></p>
-
+      <h3>Calendar Quarter</h3>
       <p>January - March</p>
+      <small>This is the period you are currently working through</small>
     </div>
 
     <div class="card">
-      <p><b>Last day to qualify for next quarter</b><br><small>Last day to work that will count in the quarter toward benefits eligibility</small></p>
-    
+      <h3>Last day to qualify for next quarter</h3>
       <p>March 17</p>
+      <small>Last day to work that will count in the quarter toward benefits eligibility</small>
     </div>
 
     <div class="card">
-      <p><b>These paid hours are the ones that count</b><br><small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small></p>
-  
-      <p>January 12 & 26<br>February 9 & 23<br>March 8 & 22</p>
-    </div>
-
-    <div class="card">
-      <p><b>Last pay date in the quarter</b><br><small>You must have at least 240 total paid hours reflected on this pay stub to remain benefits eligible</small></p>
+      <h3>Last pay date in the quarter</h3>
       <p id="lastPayDateCell">March 22</p>
+      <small>You must have at least 240 total paid hours reflected on this pay stub to remain benefits eligible</small>
     </div>
 
-    <div class="card footer">
+    <div class="two-columns card">
+      <h3>These paid hours are the ones that count</h3>
+      <p>January 12 & 26<br>February 9 & 23<br>March 8 & 22</p>
+      <small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small>
+    </div>
+
+    <div class="two-columns card footer">
       <b>All information has been sourced from <a href="https://retailstarbucks1com.sharepoint.com.rproxy.goskope.com/sites/benefits-can/sitepages/eligibility.aspx">Partner Hub</a>.</b><br>Retail hourly partners can monitor their paid hours through their pay stubs on Partner Central. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
     </div>
   </div>
@@ -167,9 +154,9 @@ small {
       if (totalRequiredHours < 0) {
         totalRequiredHours = 0;
       }
-      totalRequiredHours = Math.ceil(totalRequiredHours); // Round up to the nearest hour
-      const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft); // Round up to the nearest hour
-      document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed<br>(" + requiredHoursPerWeek + " more hours per week needed)<br><small>These numbers are rounded up to the nearest hour and are approximate.</small>";
+      totalRequiredHours = Math.ceil(totalRequiredHours);
+      const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft);
+      document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed<br>(" + requiredHoursPerWeek + " more hours per week needed)<p><small>These numbers are rounded up to the nearest hour and are approximate.</small>";
     }
   }
 
@@ -184,7 +171,6 @@ small {
 
   updateDaysLeft();
 </script>
-
 
 </body>
 </html>
