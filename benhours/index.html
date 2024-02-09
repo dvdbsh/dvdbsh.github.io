@@ -127,34 +127,34 @@ small {
     <div class="card">
       <p><b>Calendar Quarter</b><br><small>This is the period you are currently working through</small></p>
 
-      <p>October - December</p>
+      <p>January - March</p>
     </div>
 
     <div class="card">
       <p><b>Last day to qualify for next quarter</b><br><small>Last day to work that will count in the quarter toward benefits eligibility</small></p>
     
-      <p>December 24</p>
+      <p>March 17</p>
     </div>
 
     <div class="card">
       <p><b>These paid hours are the ones that count</b><br><small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small></p>
   
-      <p>October 6 and 20<br>November 3 and 17<br>December 1, 15 and 29</p>
+      <p>January 12 & 26<br>February 9 & 23<br>March 8 & 22</p>
     </div>
 
     <div class="card">
       <p><b>Last pay date in the quarter</b><br><small>You must have at least 240 total paid hours reflected on this pay stub to remain benefits eligible</small></p>
-      <p id="lastPayDateCell">December 29</p>
+      <p id="lastPayDateCell">March 22</p>
     </div>
 
     <div class="card footer">
-      <b>All information has been sourced from <a href="https://departments.starbucks.com/sites/benefits/en-us/canada/Pages/Eligibility.aspx">Partner Hub</a>.</b><br>Retail hourly partners can monitor their paid hours through their pay stubs on Partner Central. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
+      <b>All information has been sourced from <a href="https://retailstarbucks1com.sharepoint.com.rproxy.goskope.com/sites/benefits-can/sitepages/eligibility.aspx">Partner Hub</a>.</b><br>Retail hourly partners can monitor their paid hours through their pay stubs on Partner Central. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
     </div>
   </div>
 
 <script>
   function updateDaysLeft() {
-    const targetDate = new Date("December 24, 2023").getTime();
+    const targetDate = new Date("March 22, 2024").getTime();
     const now = new Date().getTime();
     const difference = targetDate - now;
     const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
