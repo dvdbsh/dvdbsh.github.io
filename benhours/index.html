@@ -4,12 +4,33 @@
   <title>Hours Calculator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#006241">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="icon.png">
   <style>
-    @font-face {
-      font-family: "SoDoSans";
-      src: url(SoDoSans-Regular.otf) format("opentype");
-      font-weight: 400;
-    }  
+@font-face {
+  font-family: 'SoDoSans';
+  font-weight: 400;
+  src: url('https://dvdbsh.github.io/benhours/SoDoSans-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'SoDoSans';
+  font-weight: 500; /* SemiBold */
+  src: url('https://dvdbsh.github.io/benhours/SoDoSans-SemiBold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'SoDoSans';
+  font-weight: 700; /* Bold */
+  src: url('https://dvdbsh.github.io/benhours/SoDoSans-Bold.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'SoDoSans';
+  font-weight: 300; /* Light */
+  src: url('https://dvdbsh.github.io/benhours/SoDoSans-Light.woff') format('woff');
+}
+ 
     
     body {
       margin: 0;
@@ -70,6 +91,10 @@
       font-size: 0.8rem;
       padding: 20px;
     }
+    h3		{
+    	font-size: 18px;
+        font-weight: 600;
+        }
 
     small {
       font-size: 0.7rem;
@@ -88,7 +113,7 @@
       text-align: center;
       content-align: center;
       font-size: 1.3rem;
-      font-weight: 800;
+      font-weight: 700;
     }
   </style>
 </head>
@@ -106,14 +131,14 @@
     </div>
 
     <div class="card">
-      <h3>Days remaining to qualify for next quarter</h3>
-      <p id="daysLeftCell"></p>
-    </div>
-
-    <div class="card">
       <h3>Calendar Quarter</h3>
       <p>January - March</p>
       <small>This is the period you are currently working through</small>
+    </div>
+
+	<div class="card">
+      <h3>Days left to qualify for next quarter</h3>
+      <p id="daysLeftCell"></p>
     </div>
 
     <div class="card">
@@ -135,13 +160,13 @@
     </div>
 
     <div class="two-columns card footer">
-      <b>All information has been sourced from <a href="https://retailstarbucks1com.sharepoint.com.rproxy.goskope.com/sites/benefits-can/sitepages/eligibility.aspx">Partner Hub</a>.</b><br>Retail hourly partners can monitor their paid hours through their pay stubs on <a href="http://partnercentral.starbucks.com">Partner Central</a>. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
+      <b>All information on this page has been sourced from <a href="https://retailstarbucks1com.sharepoint.com.rproxy.goskope.com/sites/benefits-can/sitepages/eligibility.aspx">Partner Hub</a>.</b><br>Retail hourly partners can monitor their paid hours through their pay stubs on Partner Central. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
     </div>
   </div>
 
 <script>
   function updateDaysLeft() {
-    const targetDate = new Date("March 22, 2024").getTime();
+    const targetDate = new Date("March 17, 2024").getTime();
     const now = new Date().getTime();
     const difference = targetDate - now;
     const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
