@@ -4,8 +4,6 @@
   <title>Hours Calculator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <meta name="theme-color" content="#006241">
-  <link rel="icon" type="image/png" href="favicon.png">
-  <link rel="apple-touch-icon" sizes="192x192" href="icon.png">
   <style>
 @font-face {
   font-family: 'SoDoSans';
@@ -30,7 +28,6 @@
   font-weight: 300; /* Light */
   src: url('https://dvdbsh.github.io/benhours/SoDoSans-Light.woff') format('woff');
 }
- 
     
     body {
       margin: 0;
@@ -54,7 +51,7 @@
     .container {
       display: flex;
       flex-wrap: wrap;
-      max-width: 750px;
+      max-width: 1200px;
       margin: 10px auto;
       padding: 10px;
       box-sizing: border-box;
@@ -63,7 +60,7 @@
     /* CSS styles for the card-like elements */
     .card {
       flex-basis: calc(50% - 20px);
-      padding: 20px;
+      padding: 10px;
       box-sizing: border-box;
       border: 1px solid #ddd;
       border-radius: 20px;
@@ -72,6 +69,7 @@
       margin: 10px;
       text-align: center;
     }
+    
 
     .two-columns {
       flex-basis: calc(100% - 20px);
@@ -91,10 +89,14 @@
       font-size: 0.8rem;
       padding: 20px;
     }
-    h3		{
-    	font-size: 18px;
-        font-weight: 600;
-        }
+    h2 {
+      margin: 10px;
+    }
+    h3 {
+      margin: 10px;
+      font-size: 18px;
+      font-weight: 600;
+    }
 
     small {
       font-size: 0.7rem;
@@ -131,18 +133,17 @@
     </div>
 
     <div class="card">
-      <h3>Calendar Quarter</h3>
+      <h3>Current Calendar Quarter</h3>
       <p>January - March</p>
-      <small>This is the period you are currently working through</small>
     </div>
 
-	<div class="card">
+    <div class="card">
       <h3>Days left to qualify for next quarter</h3>
       <p id="daysLeftCell"></p>
     </div>
 
     <div class="card">
-      <h3>Last day to qualify for next quarter</h3>
+      <h3>Last day for next quarter eligibility</h3>
       <p>March 17</p>
       <small>Last day to work that will count in the quarter toward benefits eligibility</small>
     </div>
@@ -150,7 +151,7 @@
     <div class="card">
       <h3>Last pay date in the quarter</h3>
       <p id="lastPayDateCell">March 22</p>
-      <small>You must have at least 240 total paid hours reflected on this pay stub to remain benefits eligible</small>
+      <small>You must have at least 240 total paid hours on this pay stub to remain eligible</small>
     </div>
 
     <div class="two-columns card">
@@ -160,7 +161,7 @@
     </div>
 
     <div class="two-columns card footer">
-      <b>All information on this page has been sourced from <a href="https://retailstarbucks1com.sharepoint.com.rproxy.goskope.com/sites/benefits-can/sitepages/eligibility.aspx">Partner Hub</a>.</b><br>Retail hourly partners can monitor their paid hours through their pay stubs on Partner Central. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
+      <b>All information has been sourced from <a href="https://retailstarbucks1com.sharepoint.com.rproxy.goskope.com/sites/benefits-can/sitepages/eligibility.aspx">Partner Hub</a>.</b><br>Retail hourly partners can monitor their paid hours through their pay stubs on <a href="https://partnercentral.starbucks.com/">Partner Central</a>. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
     </div>
   </div>
 
@@ -171,7 +172,7 @@
     const difference = targetDate - now;
     const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
     const weeksLeft = Math.floor(daysLeft / 7);
-    document.getElementById("daysLeftCell").innerHTML = daysLeft + " days<br>(" + weeksLeft + " weeks)";
+    document.getElementById("daysLeftCell").innerHTML = daysLeft + " days (" + weeksLeft + " weeks)";
 
     const enteredNumber = parseFloat(document.getElementById("numberInput").value);
     if (!isNaN(enteredNumber)) {
@@ -181,7 +182,7 @@
       }
       totalRequiredHours = Math.ceil(totalRequiredHours);
       const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft);
-      document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed<br>(" + requiredHoursPerWeek + " more hours per week needed)<p><small>These numbers are rounded up to the nearest hour and are approximate.</small>";
+      document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed (" + requiredHoursPerWeek + " more hours per week needed)<p><small>These numbers are rounded up to the nearest hour and are approximate.</small>";
     }
   }
 
@@ -196,6 +197,8 @@
 
   updateDaysLeft();
 </script>
+
+<!-- Made with coffee and love :) -->
 
 </body>
 </html>
