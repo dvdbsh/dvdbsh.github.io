@@ -1,204 +1,223 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Hours Calculator</title>
-	<meta name="apple-mobile-web-app-capable" content="yes">
-	<meta name="mobile-web-app-capable" content="yes">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-	<meta name="theme-color" content="#c1dfd5">
-	<style>
-@font-face {
-  font-family: 'SoDoSans';
-  font-weight: 400;
-  src: url('https://dvdbsh.github.io/benhours/SoDoSans-Regular.woff') format('woff');
-}
+    <title>Hours Calculator</title>
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+	<link rel="shortcut icon" type="image/x-icon" href="favicon.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+    <meta name="theme-color" content="#c1dfd5">
+    <style>
+        @font-face {
+            font-family: 'SoDoSans';
+            font-weight: 400;
+            src: url('https://dvdbsh.github.io/benhours/SoDoSans-Regular.woff') format('woff');
+        }
 
-@font-face {
-  font-family: 'SoDoSans';
-  font-weight: 500; /* SemiBold */
-  src: url('https://dvdbsh.github.io/benhours/SoDoSans-SemiBold.woff') format('woff');
-}
+        @font-face {
+            font-family: 'SoDoSans';
+            font-weight: 500; /* SemiBold */
+            src: url('https://dvdbsh.github.io/benhours/SoDoSans-SemiBold.woff') format('woff');
+        }
 
-@font-face {
-  font-family: 'SoDoSans';
-  font-weight: 700; /* Bold */
-  src: url('https://dvdbsh.github.io/benhours/SoDoSans-Bold.woff') format('woff');
-}
+        @font-face {
+            font-family: 'SoDoSans';
+            font-weight: 700; /* Bold */
+            src: url('https://dvdbsh.github.io/benhours/SoDoSans-Bold.woff') format('woff');
+        }
 
-@font-face {
-  font-family: 'SoDoSans';
-  font-weight: 300; /* Light */
-  src: url('https://dvdbsh.github.io/benhours/SoDoSans-Light.woff') format('woff');
-}
-    
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "SoDoSans", sans-serif;
-      font-size: 1rem;
-      background-color: #c1dfd5;
-    }
-    
-    a {
-      color: #ffffff;
-      text-decoration: underline;
-    }
-    
-    a:hover {
-      text-decoration: none;
-    }
+        @font-face {
+            font-family: 'SoDoSans';
+            font-weight: 300; /* Light */
+            src: url('https://dvdbsh.github.io/benhours/SoDoSans-Light.woff') format('woff');
+        }
 
-    .container {
-      display: flex;
-      flex-wrap: wrap;
-      max-width: 1200px;
-      margin: 10px auto;
-      padding: 10px;
-      box-sizing: border-box;
-    }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "SoDoSans", sans-serif;
+            font-size: 1rem;
+            background-color: #c1dfd5;
+        }
 
-    /* CSS styles for the card-like elements */
-    .card {
-      flex-basis: calc(50% - 20px);
-      padding: 10px;
-      box-sizing: border-box;
-      border: 1px solid #ddd;
-      border-radius: 20px;
-      background: #fff;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      margin: 10px;
-      text-align: center;
-    }
-    
+        a {
+            color: #ffffff;
+            text-decoration: underline;
+        }
 
-    .two-columns {
-      flex-basis: calc(100% - 20px);
-    }
+        a:hover {
+            text-decoration: none;
+        }
 
-    .header,
-    .footer {
-      flex-basis: 100%;
-      border: none;
-      background-color: #006241;
-      color: #fff;
-      padding: 10px;
-      border-radius: 20px;
-    }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 10px auto;
+            padding: 10px;
+            box-sizing: border-box;
+        }
 
-    .footer {
-      font-size: 0.8rem;
-      padding: 20px;
-    }
-    h2 {
-      margin: 10px;
-    }
-    h3 {
-      margin: 10px;
-      font-size: 1.2rem;
-      font-weight: 600;
-    }
+        /* CSS styles for the card-like elements */
+        .card {
+            flex-basis: calc(50% - 20px);
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 20px;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            text-align: center;
+        }
 
-    small {
-      font-size: 0.7rem;
-      color: #494949;
-    }
+        .two-columns {
+            flex-basis: calc(100% - 20px);
+        }
 
-    .input {
-      border: 1px solid #006241;
-      border-radius: 15px;
-      background-color: #f6f6f6;
-      margin-left: 5px;
-      width: 95px;
-      height: 55px;
-      font-family: "SoDoSans", sans-serif;
-      color: #006241;
-      text-align: center;
-      content-align: center;
-      font-size: 1.3rem;
-      font-weight: 700;
-    }
-	</style>
+        .header,
+        .footer {
+            flex-basis: 100%;
+            border: none;
+            background-color: #006241;
+            color: #fff;
+            padding: 10px;
+            border-radius: 20px;
+        }
+
+        .footer {
+            font-size: 0.8rem;
+            padding: 20px;
+        }
+
+        h2,
+        h3 {
+            margin: 10px;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        small {
+            margin-bottom: 0px;
+            font-size: 0.7rem;
+            color: #494949;
+        }
+
+        .input {
+            border: 1px solid #006241;
+            border-radius: 15px;
+            background-color: #f6f6f6;
+            margin-left: 5px;
+            width: 95px;
+            height: 55px;
+            font-family: "SoDoSans", sans-serif;
+            color: #006241;
+            text-align: center;
+            content-align: center;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        .section-divider {
+            width: 90%;
+            margin: 10px auto;
+            border-top: 1px solid #d7f7ed;
+        }
+
+        .footer .section-divider {
+            margin: 10px auto;
+            border-top: 1px solid #007850;
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <div class="card header">
-      <h3>Benefits Hours Calculator</h3>
+    <div class="container">
+        <div class="card header">
+            <h3>Benefits Hours Calculator</h3>
+        </div>
+
+        <!-- Cards for various information -->
+        <div class="two-columns card">
+            <h2>Your current hours worked</h2>
+            <p><input type="tel" id="numberInput" class="input" inputmode="decimal" placeholder="91.25"></p>
+            <p id="differenceResult"></p>
+        </div>
+
+        <div class="card">
+            <h3>Current calendar quarter</h3>
+            <p>January - March</p>
+        </div>
+
+        <div class="card">
+            <h3>Days left to qualify for next quarter</h3>
+            <p id="daysLeftCell"></p>
+        </div>
+
+        <div class="card">
+            <h3>Last day for eligibility</h3>
+            <p>March 17</p>
+            <div class="section-divider"></div>
+            <small>Last day to work that will count in the quarter toward benefits eligibility</small>
+        </div>
+
+        <div class="card">
+            <h3>Last pay date in the quarter</h3>
+            <p id="lastPayDateCell">March 22</p>
+            <div class="section-divider"></div>
+            <small>You must have at least 240 total paid hours on this pay stub to remain eligible</small>
+        </div>
+
+        <div class="two-columns card">
+            <h3>These paid hours are the ones that count</h3>
+            January 12 and 26<br>February 9 and 23<br>March 8 and 22
+            <div class="section-divider"></div>
+            <small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small>
+        </div>
+
+        <div class="two-columns card footer">
+            <b>All information has been sourced from Partner Hub.</b>
+            <div class="section-divider"></div>
+            Retail hourly partners can monitor their paid hours through their pay stubs on <a href="https://partnercentral.starbucks.com/">Partner Central</a>. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
+        </div>
     </div>
 
-    <!-- Cards for various information -->
-    <div class="two-columns card">
-      <h2>Your current hours worked</h2>
-      <p><input type="tel" id="numberInput" class="input" inputmode="decimal" placeholder="91.25"></p>
-      <p id="differenceResult"></p>
-    </div>
+    <script>
+        function updateDaysLeft() {
+            const targetDate = new Date("March 17, 2024").getTime();
+            const now = new Date().getTime();
+            const difference = targetDate - now;
+            const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
+            const weeksLeft = Math.floor(daysLeft / 7);
+            document.getElementById("daysLeftCell").innerHTML = daysLeft + " days (" + weeksLeft + " weeks)";
 
-    <div class="card">
-      <h3>Current Calendar Quarter</h3>
-      <p>January - March</p>
-    </div>
+            const enteredNumber = parseFloat(document.getElementById("numberInput").value);
+            if (!isNaN(enteredNumber)) {
+                let totalRequiredHours = 240 - enteredNumber;
+                if (totalRequiredHours < 0) {
+                    totalRequiredHours = 0;
+                }
+                totalRequiredHours = Math.ceil(totalRequiredHours);
+                const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft);
+                document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed (" + requiredHoursPerWeek + " more hours per week needed)<p><small>These numbers are rounded up to the nearest hour and are approximate.</small>";
+            }
+        }
 
-    <div class="card">
-      <h3>Days left to qualify for next quarter</h3>
-      <p id="daysLeftCell"></p>
-    </div>
+        document.getElementById("numberInput").addEventListener("input", function () {
+            const enteredNumber = parseFloat(this.value);
+            if (!isNaN(enteredNumber)) {
+                updateDaysLeft();
+            } else {
+                document.getElementById("differenceResult").textContent = "";
+            }
+        });
 
-    <div class="card">
-      <h3>Last day for eligibility</h3>
-      <p>March 17</p>
-      <small>Last day to work that will count in the quarter toward benefits eligibility</small>
-    </div>
+        updateDaysLeft();
+    </script>
 
-    <div class="card">
-      <h3>Last pay date in the quarter</h3>
-      <p id="lastPayDateCell">March 22</p>
-      <small>You must have at least 240 total paid hours on this pay stub to remain eligible</small>
-    </div>
-
-    <div class="two-columns card">
-      <h3>These paid hours are the ones that count</h3>
-      <p>January 12 & 26<br>February 9 & 23<br>March 8 & 22</p>
-      <small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small>
-    </div>
-
-    <div class="two-columns card footer">
-      <b>All information has been sourced from Partner Hub.</b><p>Retail hourly partners can monitor their paid hours through their pay stubs on <a href="https://partnercentral.starbucks.com/">Partner Central</a>. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
-    </div>
-  </div>
-
-<script>
-  function updateDaysLeft() {
-    const targetDate = new Date("March 17, 2024").getTime();
-    const now = new Date().getTime();
-    const difference = targetDate - now;
-    const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
-    const weeksLeft = Math.floor(daysLeft / 7);
-    document.getElementById("daysLeftCell").innerHTML = daysLeft + " days (" + weeksLeft + " weeks)";
-
-    const enteredNumber = parseFloat(document.getElementById("numberInput").value);
-    if (!isNaN(enteredNumber)) {
-      let totalRequiredHours = 240 - enteredNumber;
-      if (totalRequiredHours < 0) {
-        totalRequiredHours = 0;
-      }
-      totalRequiredHours = Math.ceil(totalRequiredHours);
-      const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft);
-      document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed (" + requiredHoursPerWeek + " more hours per week needed)<p><small>These numbers are rounded up to the nearest hour and are approximate.</small>";
-    }
-  }
-
-  document.getElementById("numberInput").addEventListener("input", function () {
-    const enteredNumber = parseFloat(this.value);
-    if (!isNaN(enteredNumber)) {
-      updateDaysLeft();
-    } else {
-      document.getElementById("differenceResult").textContent = "";
-    }
-  });
-
-  updateDaysLeft();
-</script>
-
-<!-- Made with coffee and love :) -->
-
+    <!-- Made with coffee and love :) -->
 </body>
 </html>
