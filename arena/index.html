@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+
+
+<title>Sarnia Laser Tag</title>
+<style>
+/* For WebKit browsers (e.g., Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: #000;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #44148f;
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #990099;
+}
+
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  body {
+    font-family: "Karla", sans-serif;
+    background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/v1707703235/staticscratch_ojlziw.png);
+	background-attachment: fixed;
+	background-size: cover;
+    background-color: #0a0a0a;
+    color: #fff;
+    margin: 0 10px 0 10px;
+  }
+  .header {
+    background: rgba(68, 20, 143, 0.3);
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0 0 20px 20px;
+}
+
+.footer {
+    background: rgba(68, 20, 143, 0.3);
+    color: #fff;
+    font-size: 0.8em;
+    text-align: center;
+    padding: 20px;
+    width: 100%;
+    border-radius: 20px 20px 0 0;
+}
+
+  .header img {
+    width: 250px;
+  }
+  nav ul {
+    list-style-type: none;
+    display: flex;
+  }
+  nav ul li {
+    margin-right: 20px;
+  }
+  nav ul li a {
+    color: #fff;
+    text-decoration: none;
+  }
+  nav ul li a:hover {
+    text-decoration: underline;
+  }
+  .content {
+    padding: 20px;
+  }
+.flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin: auto;
+  max-width: 1200px;
+  padding: 20px;
+}
+
+.flex-container:nth-child(odd) .flex-item:nth-child(1) {
+  order: 2;
+}
+
+.flex-container:nth-child(odd) .flex-item:nth-child(2) {
+  order: 1;
+}
+
+
+.flex-item {
+  position: relative;
+  flex: 0 0 50%;
+  padding: 20px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+}
+
+.flex-item img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
+  opacity: 0.7;
+  object-fit: cover;
+}
+
+.hero-div {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  text-align: center;
+}
+
+.hero-div h1	{
+  font-size: 4em;
+  font-weight: 800;
+}
+
+.hero-div p	{
+  font-size: 1.2em;
+  justify-content: center;
+  letter-spacing: 0.3px;
+}
+
+/* Styles for emojis */
+.cutout {
+  position: absolute;
+}
+
+.cutout img {
+  opacity: 1;
+    max-width: 100%;
+  height: auto;
+}
+
+.cutout.lasertag {
+  bottom: -40px;
+  left: -40px;
+  width: 280px;
+}
+
+.cutout.minigolf {
+  bottom: -10px;
+  left: -40px;
+  width: 260px;
+}
+
+.cutout.rockclimb {
+  bottom: 30px;
+  right: -20px;
+  width: 250px;
+}
+
+
+.cutout.sparkle {
+  top: 0%;
+  right: 8%;
+  width: 120px;
+  z-index: -1;
+  opacity: 0.7;
+}
+.cutout.dots {
+  top: 0%;
+  left: 10%;
+  width: 200px;
+  z-index: -1;
+  transform: rotate(180deg);
+  opacity: 0.8;
+}
+
+
+.flex-item-content {
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  border-radius: 20px;
+  flex: 1;
+  margin: 20px;
+}
+
+.flex-item-content p {
+  color: #ccc;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+.flex-item-content h1	{
+  font-size: 2.8em;
+  font-weight: 800;
+}
+
+h2 {
+  color: #fff;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+
+
+.footer p {
+  margin-bottom: 10px;
+}
+.wrapper {
+  max-width: 1200px;
+  width: 100%;
+  min-height: calc(100vh - 20px);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+.glow {
+  box-shadow: 
+    0 0 60px 0px rgba(68, 20, 143, 0.3); /* Shadow with third color */
+}
+
+
+
+
+@media only screen and (max-width: 768px) {
+  .flex-item {
+    flex: 0 0 100%; 
+  }
+
+  .flex-container:nth-child(odd) .flex-item:nth-child(1),
+  .flex-container:nth-child(odd) .flex-item:nth-child(2) {
+    order: initial;
+  }
+}
+
+
+</style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="header glow">
+    <div class="logo">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1692228829/The_Arena_Logo_pdltcc.svg" alt="Logo">
+    </div>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Services</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </div>
+
+  <div class="content">
+  <div class="flex-container hero-div">
+  <span class="cutout dots"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1707762640/memphis-texture-small_1_toawaj.png"></span>
+  <span class="cutout sparkle"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1707762938/3d-fluency-sparkling_kqk0yx.png"></span>  
+    <h1>Welcome to The Arena</h1>
+    <p>
+        Step into The Arena, where the thrill of laser tag, the challenge of rock climbing, and the joy of mini golf collide for an unforgettable experience. Get ready for non-stop excitement and fun in every corner. Come join us and let the adventure begin!
+    </p>
+          
+</div>
+    <div class="flex-container">
+     <div class="flex-item">
+        <img src="https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Laser tag hero image">
+        <span class="cutout lasertag"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707754053/lasertagcutout_1_efxbma.png"></span>
+      </div>
+      <div class="flex-item-content glow">
+        <h1>Laser Tag</h1>
+          <h2>Elevate Your Game!</h2>
+          <p>At our arena, we take laser tag to the next level by offering a two-storey playing space. Prepare to be amazed as you explore the multiple levels, corridors, and strategic vantage points that our arena has to offer. With two storeys of intense gameplay, you'll find yourself fully immersed in an adrenaline-pumping adventure like never before.</p>
+      </div>
+    </div>
+    <div class="flex-container">
+      <div class="flex-item">
+        <img src="https://images.unsplash.com/photo-1562563436-a73bab993173?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Rock climbing hero image">
+        <span class="cutout rockclimb"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707751796/rockclimbcutout_ywdudl.png"></span>
+      </div>
+      <div class="flex-item-content glow">
+        <h1>Rock Climb</h1>
+          <h2>Reach New Heights!</h2>
+          <p>Embark on an exhilarating adventure and test your skills with our challenging rock climbing wall, designed to push your limits and provide a thrilling experience. As you ascend the towering wall, each handhold and foothold presents a new obstacle to conquer, demanding strength, focus, and determination. Feel the adrenaline course through your veins as you reach new heights, overcoming challenges and celebrating personal achievements.</p>
+      </div>
+    </div>
+    <div class="flex-container">
+      <div class="flex-item">
+        <img src="https://images.unsplash.com/flagged/photo-1567400358593-9e6382752ea2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Mini golf hero image">
+        <span class="cutout minigolf"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707750820/golfballcutout_rpap3p.png"></span>
+      </div>
+      <div class="flex-item-content glow">
+        <h1>Mini Golf</h1>
+          <h2>Putt a Smile On!</h2>
+          <p>If you're looking for a more laid-back and leisurely activity, swing into a friendly round of mini golf. Engage in a delightful game that combines precision, strategy, and a dash of friendly competition. Navigate through the vibrant and creatively designed course, carefully maneuvering your way around obstacles, slopes, and tricky curves. Put your putting skills to the test as you aim for the elusive hole-in-one or engage in friendly banter with your companions as you laugh and enjoy the light-hearted atmosphere.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer glow">
+    <p>All prices are displayed without applicable taxes and are subject to change without notice. The Arena - Sarnia Laser Tag is a local, independently owned and run business. We thank you for your continued support and patronage.</p>© 2024 Robbie Bennett Holdings Inc.
+  </div>
+</div>
+
+</body>
+</html>

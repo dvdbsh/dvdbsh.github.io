@@ -1,0 +1,68 @@
+<?php
+include 'header.php';
+include 'news.php';
+
+// Pagination Configuration
+$articlesPerPage = 6;
+$totalArticles = count($newsArticles);
+$totalPages = ceil($totalArticles / $articlesPerPage);
+$currentPage = isset($_GET['page']) ? max(1, min($totalPages, $_GET['page'])) : 1;
+$startIndex = ($currentPage - 1) * $articlesPerPage;
+
+// Filter articles by tag if a tag is provided in the URL
+$filteredArticles = [];
+$tag = isset($_GET['tag']) ? $_GET['tag'] : '';
+if (!empty($tag)) {
+    $filteredArticles = array_filter($newsArticles, function($article) use ($tag) {
+        return in_array($tag, $article['tags']);
+    });
+}
+
+// If there are filtered articles, use them; otherwise, use paginated articles
+$displayedArticles = !empty($filteredArticles) ? $filteredArticles : array_slice($newsArticles, $startIndex, $articlesPerPage);
+?>
+
+<h2>Welcome to the Tomb Raider Website!</h2>
+<p><?php echo $websiteIntro; ?></p>
+
+<div class="section-header">News and Updates</div>
+
+<div class="flex-container">
+    <?php
+    $count = 0;
+    foreach ($displayedArticles as $article) {
+        echo '<div class="flex-item article">';
+        echo '<h3 class="article-heading">' . $article['title'] . '</h3>';
+        echo '<h4 class="article-subheading">' . $article['subtitle'] . '</h4>';
+        echo '<img src="' . $article['image'] . '" class="article-image">';
+        echo '<p class="article-text">' . $article['text'] . '</p>';
+    ?>
+        <div class="article-tags">
+    <?php
+        foreach ($article['tags'] as $tag) {
+            echo '<a href="?tag=' . urlencode($tag) . '" class="tag"><i class="bx bx-purchase-tag-alt" ></i>' . $tag . '</a>';
+        }
+    ?>
+        </div>
+    <?php
+        echo '<a href="#" class="read-more">Read more</a>';
+        echo '</div>';
+        $count++;
+    }
+    ?>
+</div>
+
+
+<!-- Pagination Links -->
+<div class="pagination">
+    <?php
+    for ($page = 1; $page <= $totalPages; $page++) {
+        $activeClass = ($page == $currentPage) ? 'active' : '';
+        echo '<a href="?page=' . $page . '" class="page-link ' . $activeClass . '">' . $page . '</a>';
+    }
+    ?>
+</div>
+
+<?php
+include 'footer.php';
+?>
