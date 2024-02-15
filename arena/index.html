@@ -35,13 +35,14 @@
 
 body {
   font-family: "Karla", sans-serif;
-  background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/v1707703235/staticscratch_ojlziw.png);
+  background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1707703235/staticscratch_ojlziw.png);
   background-attachment: fixed;
-  background-size: cover;
+  background-size: contain;
   background-color: #0a0a0a;
   color: #fff;
-  margin: 0 10px 0 10px;
+  margin: 0 10px; /* Removed the margin on the right and left */
 }
+
 
 .header {
   background: rgba(68, 20, 143, 0.3);
@@ -133,14 +134,17 @@ nav ul li a:hover {
 }
 
 .hero-div h1 {
-  font-size: 4em;
+  font-size: 5em;
   font-weight: 800;
+  text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.9);
 }
 
 .hero-div p {
-  font-size: 1.2em;
+  font-size: 1.3em;
+  font-weight: 600;
   justify-content: center;
   letter-spacing: 0.3px;
+  text-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
 }
 
 .cutout {
@@ -172,12 +176,16 @@ nav ul li a:hover {
 }
 
 .cutout.sparkle {
-  top: 0%;
-  right: 8%;
-  width: 120px;
+  position: absolute;
+  top: 20%;
+  right: 8%; /* Adjust as needed */
+  width: 160px;
   z-index: -1;
-  opacity: 0.7;
+  opacity: 1;
+  transform: translate(50%, -50%);
+  margin-top: 20px;
 }
+
 
 .cutout.dots {
   top: 0%;
@@ -228,6 +236,7 @@ h2 {
 
 .glow {
   box-shadow: 0 0 60px 0px rgba(68, 20, 143, 0.3);
+  overflow: hidden;
 }
 
 .full-nav {
@@ -274,8 +283,20 @@ h2 {
   cursor: pointer;
   font-size: 2em;
 }
+.break-mobile {
+  display: inline-block;
+}
+.break-mobile-one {
+  margin-right: 20px;
+}
 
 @media only screen and (max-width: 768px) {
+.content	{
+ padding: 0px;
+ }
+.flex-container	{
+	padding:10px;
+    }
   .flex-item {
     flex: 0 0 100%;
   }
@@ -312,6 +333,44 @@ h2 {
     justify-content: center;
     z-index: 999;
   }
+  .hero-div	h1	{
+  	font-size:4em;
+    }
+  .break-mobile {
+    display: block;
+  }
+  .break-mobile-one	{
+  	margin-right: 0px;
+    font-size: 3rem;
+    }
+.cutout.sparkle {
+  position: absolute;
+  top: 12%;
+  right: 20%; /* Adjust as needed */
+  width: 140px;
+  z-index: -1;
+  opacity: 1;
+  transform: translate(50%, -50%);
+  overflow: hidden;
+}
+.cutout.lasertag {
+  bottom: -10px;
+  left: 0px;
+  max-width: 160px;
+  overflow: hidden;
+}
+.cutout.minigolf {
+  bottom: -20px;
+  left: -10px;
+  max-width: 140px;
+}
+
+.cutout.rockclimb {
+  bottom: -30px;
+  right: -10px;
+  max-width: 140px;
+  overflow: hidden;
+}
 }
 
 </style>
@@ -326,41 +385,39 @@ h2 {
     <div class="full-nav">
       <nav>
         <ul>
-          <li><a href="#">Home</a></li>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Services</a></li>
-          <li><a href="#">Contact</a></li>
+          <li><a href="#">Activities</a></li>
+          <li><a href="#">Prices</a></li>
+          <li><a href="#">Book Online</a></li>
+          <li><a href="#">eGift Cards</a></li>
+          <li><a href="#">Contact Us</a></li>
         </ul>
       </nav>
     </div>
     <i class='bx bx-menu menu-icon' name='menu' onclick="toggleMobileNav()"></i>
-    
   </div>
   <div class="mobile-nav" id="mobileNav">
     <i class="bx bx-x-circle close-icon" onclick="toggleMobileNav()"></i>
     <nav>
       <ul>
-        <li><a href="#">Home</a></li>
-        <li><a href="#">About</a></li>
-        <li><a href="#">Services</a></li>
-        <li><a href="#">Contact</a></li>
+          <li><a href="#">Activities</a></li>
+          <li><a href="#">Prices</a></li>
+          <li><a href="#">Book Online</a></li>
+          <li><a href="#">eGift Cards</a></li>
+          <li><a href="#">Contact Us</a></li>
       </ul>
     </nav>
   </div>
   <div class="content">
 <div class="flex-container hero-div">
-  <span class="cutout dots"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1707762640/memphis-texture-small_1_toawaj.png"></span>
-  <span class="cutout sparkle"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1707762938/3d-fluency-sparkling_kqk0yx.png"></span>  
-    <h1>Welcome to The Arena</h1>
-    <p>
-        Step into The Arena, where the thrill of laser tag, the challenge of rock climbing, and the joy of mini golf collide for an unforgettable experience. Get ready for non-stop excitement and fun in every corner. Come join us and let the adventure begin!
-    </p>
-          
+  <span class="cutout dots"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707762640/memphis-texture-small_1_toawaj.png"></span>
+  <span class="cutout sparkle"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707762938/3d-fluency-sparkling_kqk0yx.png"></span>  
+  <h1><span class="break-mobile-one">Welcome to</span><span class="break-mobile">The Arena</span></h1>
+  <p>Step into The Arena, where the thrill of laser tag, the challenge of rock climbing, and the joy of mini golf collide for an unforgettable experience. Get ready for non-stop excitement and fun in every corner. Come join us and let the adventure begin!</p>         
 </div>
     <div class="flex-container">
      <div class="flex-item">
         <img src="https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Laser tag hero image">
-        <span class="cutout lasertag"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707754053/lasertagcutout_1_efxbma.png"></span>
+        <span class="cutout lasertag"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1708022580/lasertagcutout_1_1_zgth2d.png"></span>
       </div>
       <div class="flex-item-content glow">
         <h1>Laser Tag</h1>
@@ -371,7 +428,7 @@ h2 {
     <div class="flex-container">
       <div class="flex-item">
         <img src="https://images.unsplash.com/photo-1562563436-a73bab993173?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Rock climbing hero image">
-        <span class="cutout rockclimb"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707751796/rockclimbcutout_ywdudl.png"></span>
+        <span class="cutout rockclimb"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1708022581/rockclimbcutout_1_fy0nql.png"></span>
       </div>
       <div class="flex-item-content glow">
         <h1>Rock Climb</h1>
@@ -382,7 +439,7 @@ h2 {
     <div class="flex-container">
       <div class="flex-item">
         <img src="https://images.unsplash.com/flagged/photo-1567400358593-9e6382752ea2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Mini golf hero image">
-        <span class="cutout minigolf"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707750820/golfballcutout_rpap3p.png"></span>
+        <span class="cutout minigolf"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1708022580/golfballcutout_1_mg5un1.png"></span>
       </div>
       <div class="flex-item-content glow">
         <h1>Mini Golf</h1>
