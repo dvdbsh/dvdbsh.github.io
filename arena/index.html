@@ -3,11 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-
-
 <title>Sarnia Laser Tag</title>
 <style>
 /* For WebKit browsers (e.g., Chrome, Safari) */
@@ -28,60 +27,68 @@
   background: #990099;
 }
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  body {
-    font-family: "Karla", sans-serif;
-    background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/v1707703235/staticscratch_ojlziw.png);
-	background-attachment: fixed;
-	background-size: cover;
-    background-color: #0a0a0a;
-    color: #fff;
-    margin: 0 10px 0 10px;
-  }
-  .header {
-    background: rgba(68, 20, 143, 0.3);
-    color: #fff;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-radius: 0 0 20px 20px;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Karla", sans-serif;
+  background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/v1707703235/staticscratch_ojlziw.png);
+  background-attachment: fixed;
+  background-size: cover;
+  background-color: #0a0a0a;
+  color: #fff;
+  margin: 0 10px 0 10px;
+}
+
+.header {
+  background: rgba(68, 20, 143, 0.3);
+  color: #fff;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 0 0 20px 20px;
 }
 
 .footer {
-    background: rgba(68, 20, 143, 0.3);
-    color: #fff;
-    font-size: 0.8em;
-    text-align: center;
-    padding: 20px;
-    width: 100%;
-    border-radius: 20px 20px 0 0;
+  background: rgba(68, 20, 143, 0.3);
+  color: #fff;
+  font-size: 0.8em;
+  text-align: center;
+  padding: 20px;
+  width: 100%;
+  border-radius: 20px 20px 0 0;
 }
 
-  .header img {
-    width: 250px;
-  }
-  nav ul {
-    list-style-type: none;
-    display: flex;
-  }
-  nav ul li {
-    margin-right: 20px;
-  }
-  nav ul li a {
-    color: #fff;
-    text-decoration: none;
-  }
-  nav ul li a:hover {
-    text-decoration: underline;
-  }
-  .content {
-    padding: 20px;
-  }
+.header img {
+  width: 250px;
+}
+
+nav ul {
+  list-style-type: none;
+  display: flex;
+}
+
+nav ul li {
+  margin-right: 20px;
+}
+
+nav ul li a {
+  color: #fff;
+  text-decoration: none;
+}
+
+nav ul li a:hover {
+  text-decoration: underline;
+}
+
+.content {
+  padding: 20px;
+}
+
 .flex-container {
   display: flex;
   flex-wrap: wrap;
@@ -97,7 +104,6 @@
 .flex-container:nth-child(odd) .flex-item:nth-child(2) {
   order: 1;
 }
-
 
 .flex-item {
   position: relative;
@@ -126,25 +132,24 @@
   text-align: center;
 }
 
-.hero-div h1	{
+.hero-div h1 {
   font-size: 4em;
   font-weight: 800;
 }
 
-.hero-div p	{
+.hero-div p {
   font-size: 1.2em;
   justify-content: center;
   letter-spacing: 0.3px;
 }
 
-/* Styles for emojis */
 .cutout {
   position: absolute;
 }
 
 .cutout img {
   opacity: 1;
-    max-width: 100%;
+  max-width: 100%;
   height: auto;
 }
 
@@ -166,7 +171,6 @@
   width: 250px;
 }
 
-
 .cutout.sparkle {
   top: 0%;
   right: 8%;
@@ -174,6 +178,7 @@
   z-index: -1;
   opacity: 0.7;
 }
+
 .cutout.dots {
   top: 0%;
   left: 10%;
@@ -182,7 +187,6 @@
   transform: rotate(180deg);
   opacity: 0.8;
 }
-
 
 .flex-item-content {
   background-color: rgba(0, 0, 0, 0.1);
@@ -197,7 +201,8 @@
   line-height: 1.5;
   margin-bottom: 10px;
 }
-.flex-item-content h1	{
+
+.flex-item-content h1 {
   font-size: 2.8em;
   font-weight: 800;
 }
@@ -208,10 +213,10 @@ h2 {
   margin-bottom: 10px;
 }
 
-
 .footer p {
   margin-bottom: 10px;
 }
+
 .wrapper {
   max-width: 1200px;
   width: 100%;
@@ -220,25 +225,94 @@ h2 {
   display: flex;
   flex-direction: column;
 }
+
 .glow {
-  box-shadow: 
-    0 0 60px 0px rgba(68, 20, 143, 0.3); /* Shadow with third color */
+  box-shadow: 0 0 60px 0px rgba(68, 20, 143, 0.3);
 }
 
+.full-nav {
+  /* Add your styles for the full navigation here */
+}
 
+.mobile-nav {
+  display: none; /* Hide by default */
+}
 
+.mobile-nav ul {
+  list-style: none;
+  padding: 0;
+  margin: 0; /* Remove top margin */
+  display: flex; /* Change to flex */
+  flex-direction: column; /* Change to column */
+  align-items: center; /* Center items horizontally */
+}
+
+.mobile-nav ul li {
+  padding: 20px;
+  text-align: center;
+  width: 100%; /* Make list items full width */
+}
+
+.mobile-nav ul li a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 1.2em;
+}
+
+.mobile-nav ul li a:hover {
+  text-decoration: underline;
+}
+.menu-icon	{
+	display: none;
+}
+
+.close-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 2em;
+}
 
 @media only screen and (max-width: 768px) {
   .flex-item {
-    flex: 0 0 100%; 
+    flex: 0 0 100%;
   }
 
   .flex-container:nth-child(odd) .flex-item:nth-child(1),
   .flex-container:nth-child(odd) .flex-item:nth-child(2) {
     order: initial;
   }
-}
 
+  .full-nav {
+    display: none;
+  }
+  .menu-icon {
+    display: block;
+    color: #fff;
+    font-size: 2em;
+  }
+
+  .mobile-nav.active {
+    right: 0;
+  }
+
+  .mobile-nav {
+    display: flex; /* Show only on smaller screens */
+    position: fixed;
+    top: 0;
+    right: -300px;
+    width: 300px;
+    height: 100%;
+    background: rgba(68, 20, 143, 1);
+    transition: 0.5s ease;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+  }
+}
 
 </style>
 </head>
@@ -249,6 +323,21 @@ h2 {
     <div class="logo">
       <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1692228829/The_Arena_Logo_pdltcc.svg" alt="Logo">
     </div>
+    <div class="full-nav">
+      <nav>
+        <ul>
+          <li><a href="#">Home</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="#">Contact</a></li>
+        </ul>
+      </nav>
+    </div>
+    <i class='bx bx-menu menu-icon' name='menu' onclick="toggleMobileNav()"></i>
+    
+  </div>
+  <div class="mobile-nav" id="mobileNav">
+    <i class="bx bx-x-circle close-icon" onclick="toggleMobileNav()"></i>
     <nav>
       <ul>
         <li><a href="#">Home</a></li>
@@ -258,9 +347,8 @@ h2 {
       </ul>
     </nav>
   </div>
-
   <div class="content">
-  <div class="flex-container hero-div">
+<div class="flex-container hero-div">
   <span class="cutout dots"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1707762640/memphis-texture-small_1_toawaj.png"></span>
   <span class="cutout sparkle"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1707762938/3d-fluency-sparkling_kqk0yx.png"></span>  
     <h1>Welcome to The Arena</h1>
@@ -305,9 +393,18 @@ h2 {
   </div>
 
   <div class="footer glow">
+  
     <p>All prices are displayed without applicable taxes and are subject to change without notice. The Arena - Sarnia Laser Tag is a local, independently owned and run business. We thank you for your continued support and patronage.</p>© 2024 Robbie Bennett Holdings Inc.
   </div>
+  </div>
 </div>
+
+<script>
+  function toggleMobileNav() {
+    var mobileNav = document.getElementById('mobileNav');
+    mobileNav.classList.toggle('active');
+  }
+</script>
 
 </body>
 </html>
