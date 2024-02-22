@@ -19,16 +19,17 @@
 }
 
 html, body {
-  height: 100%;
+  height: 100vh;
 }
 
 body {
   font-family: 'Windlass', sans-serif;
+  background-size: cover;
   background-color: #162f2d;
   display: flex;
   justify-content: center;
   align-items: center;
-
+  height: 100vh;
   overflow:hidden;
 }
 
@@ -39,13 +40,13 @@ body {
   left: 0;
   right: 0;
   bottom: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   background-size: cover;
   background-position: center;
-  overflow:hidden;
   background-repeat: no-repeat;
   filter: blur(2px);
+  margin:0;
   z-index: -1;
 }
 
@@ -79,6 +80,7 @@ body {
   align-items: center;
       justify-content: center;
       height: 100vh;
+	  margin:auto;
 }
 
 .rotate-image {
@@ -88,7 +90,8 @@ body {
   background-size: 100%;
   background-repeat: no-repeat;
   margin-bottom: 0px;
-  margin-top:10px;
+  margin-top:20px;
+  z-index:2;
 }
 
 .timer-done-image {
@@ -104,8 +107,21 @@ body {
   color:#c9cfd5;
   letter-spacing:0.5px;
  text-shadow: 5px 3px 0px rgba(0, 0, 0, 0.1), -2px -4px 0px rgba(0, 0, 0, 0.3);
+ z-index: 2;
 }
-
+.top-bar	{
+	background-size: cover;
+	background-image:url(https://res.cloudinary.com/di8j84ent/image/upload/v1707789318/top-bar_tzdml3.svg);
+	background-repeat: repeat-x;
+	width:100vw;
+	height:200px;
+	position: absolute;
+	top:-80px;
+	left:0px;
+	margin:0px;
+	overflow:hidden;
+	z-index: 1;
+	}
 .grid-container {
   display: grid;
   grid-template-columns: repeat(2, 100px);
@@ -257,9 +273,7 @@ text {
   </style>
 <body>
 
-  <div class="background-image-container">
-    
-  </div>
+
 
   <div class="background-logo1">
     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707788769/fishbones_momum2.svg">
@@ -343,28 +357,28 @@ text {
       }
     }
 
-    document.addEventListener("DOMContentLoaded", function () {
-      const backgroundImages = [
-        "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1690134000/aacd2c5b-856f-4271-8638-e97897d94f2f_cfabdp.png",
-        "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1690134000/fc17438e-6265-4741-ab68-61fde1f5cb35_e15hw5.png",
-        "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1690133999/74d6028e-c0b0-42eb-b52e-0acac68aeb2d_looi56.png",
-        "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1690133999/1b3889f6-07cc-4b92-9bdf-b41302e803ac_ttqgi5.png", 
-        "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1690133998/a84b987d-23fa-4d69-95d0-8e2520fd0508_qhfmc2.png",
-        "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1690133997/8f10ab33-f3f1-4886-8bc4-b0b8020981e0_bj2rwc.png",
-        "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1689905205/f806a2e2-b7c2-4075-99ce-1206d3b389f8_rky2p0.png",
-		"https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707788382/b90720d3-ef6e-4283-80e9-6b04913f6ec7_qwoz8x.png",
-		"https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707788382/5a60ff0b-4d04-4423-9936-5db56ef4a31a_rfrgwu.png",
-		"https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707788382/da9aecf2-dfb8-4b3f-aa32-ff2ac3e956b3_vhpmbk.png",
-		"https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707788383/cddb41da-55ae-47d2-8444-0fe3bf6fdc5e_docbr0.png",
-		"https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707788383/e8bcc3ef-210e-4653-b362-949f4e13dd6f_pxgrmb.png"
-        // Add more background image URLs as needed
-      ];
+document.addEventListener("DOMContentLoaded", function () {
+  const backgroundImages = [
+    "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1690134000/aacd2c5b-856f-4271-8638-e97897d94f2f_cfabdp.png",
+    "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1690134000/fc17438e-6265-4741-ab68-61fde1f5cb35_e15hw5.png",
+    "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1690133999/74d6028e-c0b0-42eb-b52e-0acac68aeb2d_looi56.png",
+    "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1690133999/1b3889f6-07cc-4b92-9bdf-b41302e803ac_ttqgi5.png", 
+    "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1690133998/a84b987d-23fa-4d69-95d0-8e2520fd0508_qhfmc2.png",
+    "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1690133997/8f10ab33-f3f1-4886-8bc4-b0b8020981e0_bj2rwc.png",
+    "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1689905205/f806a2e2-b7c2-4075-99ce-1206d3b389f8_rky2p0.png",
+    "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707788382/b90720d3-ef6e-4283-80e9-6b04913f6ec7_qwoz8x.png",
+    "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707788382/5a60ff0b-4d04-4423-9936-5db56ef4a31a_rfrgwu.png",
+    "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707788382/da9aecf2-dfb8-4b3f-aa32-ff2ac3e956b3_vhpmbk.png",
+    "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707788383/cddb41da-55ae-47d2-8444-0fe3bf6fdc5e_docbr0.png",
+    "https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707788383/e8bcc3ef-210e-4653-b362-949f4e13dd6f_pxgrmb.png"
+    // Add more background image URLs as needed
+  ];
 
-      const randomIndex = Math.floor(Math.random() * backgroundImages.length);
-      const randomBackgroundImage = backgroundImages[randomIndex];
-      const backgroundImageContainer = document.querySelector(".background-image-container");
-      backgroundImageContainer.style.backgroundImage = `url(${randomBackgroundImage})`;
-    });
+  const randomIndex = Math.floor(Math.random() * backgroundImages.length);
+  const randomBackgroundImage = backgroundImages[randomIndex];
+  document.body.style.backgroundImage = `url(${randomBackgroundImage})`;
+});
+
   </script>
 
 </body>
