@@ -98,13 +98,7 @@ nav ul li a:hover {
   padding: 20px;
 }
 
-.flex-container:nth-child(odd) .flex-item:nth-child(1) {
-  order: 2;
-}
 
-.flex-container:nth-child(odd) .flex-item:nth-child(2) {
-  order: 1;
-}
 
 .flex-item {
   position: relative;
@@ -131,6 +125,10 @@ nav ul li a:hover {
   align-items: center;
   flex-direction: column;
   text-align: center;
+  flex-wrap: wrap;
+  margin: auto;
+  max-width: 1200px;
+  padding: 20px;  
 }
 
 .hero-div h1 {
@@ -184,6 +182,18 @@ nav ul li a:hover {
   opacity: 1;
   transform: translate(50%, -50%);
   margin-top: 20px;
+}
+
+.cutout.arrowdown {
+  position: absolute;
+  top: 8%;
+  right: 20%; /* Adjust as needed */
+  width: 130px;
+  z-index: 1;
+  opacity: 1;
+  transform: translate(50%, -50%);
+  margin-top: 20px;
+  overflow: hidden;
 }
 
 
@@ -289,6 +299,14 @@ h2 {
 .break-mobile-one {
   margin-right: 20px;
 }
+  .iframe-container {
+  margin-top: 20px;
+    width: 100%;
+    max-width: 1200px;
+    height: 720px;
+    overflow: hidden;
+    border-radius: 20px;
+  }
 
 @media only screen and (max-width: 768px) {
 .content	{
@@ -301,9 +319,8 @@ h2 {
     flex: 0 0 100%;
   }
 
-  .flex-container:nth-child(odd) .flex-item:nth-child(1),
-  .flex-container:nth-child(odd) .flex-item:nth-child(2) {
-    order: initial;
+.flex-container:nth-child(even) {
+    flex-direction: column-reverse; /* Reverse the order of flex items on smaller screens for even flex-container elements */
   }
 
   .full-nav {
@@ -353,22 +370,33 @@ h2 {
   transform: translate(50%, -50%);
   overflow: hidden;
 }
+.cutout.arrowdown {
+  position: absolute;
+  top: 8%;
+  right: 25%; /* Adjust as needed */
+  width: 130px;
+  z-index: 1;
+  opacity: 1;
+  transform: translate(50%, -50%);
+  margin-top: 20px;
+  overflow: hidden;
+}
 .cutout.lasertag {
   bottom: -10px;
-  left: 0px;
-  max-width: 160px;
+  left: -10px;
+  max-width: 250px;
   overflow: hidden;
 }
 .cutout.minigolf {
-  bottom: -20px;
+  bottom: -30px;
   left: -10px;
-  max-width: 140px;
+  max-width: 280px;
 }
 
 .cutout.rockclimb {
-  bottom: -30px;
-  right: -10px;
-  max-width: 140px;
+  bottom: -10px;
+  right: -20px;
+  max-width: 200px;
   overflow: hidden;
 }
 }
@@ -407,13 +435,16 @@ h2 {
       </ul>
     </nav>
   </div>
-  <div class="content">
-<div class="flex-container hero-div">
+  <section id="hero welcome">
+  <div class="hero-div">
   <span class="cutout dots"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707762640/memphis-texture-small_1_toawaj.png"></span>
   <span class="cutout sparkle"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1707762938/3d-fluency-sparkling_kqk0yx.png"></span>  
   <h1><span class="break-mobile-one">Welcome to</span><span class="break-mobile">The Arena</span></h1>
-  <p>Step into The Arena, where the thrill of laser tag, the challenge of rock climbing, and the joy of mini golf collide for an unforgettable experience. Get ready for non-stop excitement and fun in every corner. Come join us and let the adventure begin!</p>         
-</div>
+  <p>Step into The Arena, where the thrill of laser tag, the challenge of rock climbing, and the joy of mini golf collide for an unforgettable experience. Get ready for non-stop excitement and fun in every corner. Come join us and let the adventure begin!</p></div>
+  </section>
+
+  <div class="content">
+  <section id="activities">
     <div class="flex-container">
      <div class="flex-item">
         <img src="https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Laser tag hero image">
@@ -425,15 +456,15 @@ h2 {
           <p>At our arena, we take laser tag to the next level by offering a two-storey playing space. Prepare to be amazed as you explore the multiple levels, corridors, and strategic vantage points that our arena has to offer. With two storeys of intense gameplay, you'll find yourself fully immersed in an adrenaline-pumping adventure like never before.</p>
       </div>
     </div>
-    <div class="flex-container">
-      <div class="flex-item">
-        <img src="https://images.unsplash.com/photo-1562563436-a73bab993173?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Rock climbing hero image">
-        <span class="cutout rockclimb"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1708022581/rockclimbcutout_1_fy0nql.png"></span>
-      </div>
+    <div class="flex-container">      
       <div class="flex-item-content glow">
         <h1>Rock Climb</h1>
           <h2>Reach New Heights!</h2>
           <p>Embark on an exhilarating adventure and test your skills with our challenging rock climbing wall, designed to push your limits and provide a thrilling experience. As you ascend the towering wall, each handhold and foothold presents a new obstacle to conquer, demanding strength, focus, and determination. Feel the adrenaline course through your veins as you reach new heights, overcoming challenges and celebrating personal achievements.</p>
+      </div>
+      <div class="flex-item">
+        <img src="https://images.unsplash.com/photo-1562563436-a73bab993173?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Rock climbing hero image">
+        <span class="cutout rockclimb"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1708022581/rockclimbcutout_1_fy0nql.png"></span>
       </div>
     </div>
     <div class="flex-container">
@@ -447,6 +478,16 @@ h2 {
           <p>If you're looking for a more laid-back and leisurely activity, swing into a friendly round of mini golf. Engage in a delightful game that combines precision, strategy, and a dash of friendly competition. Navigate through the vibrant and creatively designed course, carefully maneuvering your way around obstacles, slopes, and tricky curves. Put your putting skills to the test as you aim for the elusive hole-in-one or engage in friendly banter with your companions as you laugh and enjoy the light-hearted atmosphere.</p>
       </div>
     </div>
+    </section>
+<section id="hero welcome">
+  <div class="hero-div">
+  <span class="cutout dots"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708874829/gleam-golden-magic-dots_umxxkn.png"></span>
+  <span class="cutout arrowdown"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708877655/3d-flame-yellow-arrow-sign-poiting-down_alw5hi.png"></span>  
+  <h1 style="z-index: 2;">Ready to go?</h1>
+  <p style="z-index: 2;">Every moment counts, so save your time and book online!</p>   <div class="iframe-container">
+   <iframe src="https://squareup.com/appointments/book/ubo4tlk6rwm1nl/3N7XM7GWRSW3E/start" width="100%" height="100%" frameborder="0"></iframe>
+  </div></div>
+  </section>    
   </div>
 
   <div class="footer glow">
