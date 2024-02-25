@@ -40,7 +40,7 @@ body {
   background-size: contain;
   background-color: #0a0a0a;
   color: #fff;
-  margin: 0 10px; /* Removed the margin on the right and left */
+  margin: 0 10px;
 }
 
 
@@ -127,6 +127,7 @@ nav ul li a:hover {
   text-align: center;
   flex-wrap: wrap;
   margin: auto;
+  margin-top: 20px;
   max-width: 1200px;
   padding: 20px;  
 }
@@ -186,16 +187,22 @@ nav ul li a:hover {
 
 .cutout.arrowdown {
   position: absolute;
-  top: 8%;
+  top: 18%;
   right: 20%; /* Adjust as needed */
   width: 130px;
   z-index: 1;
   opacity: 1;
   transform: translate(50%, -50%);
-  margin-top: 20px;
   overflow: hidden;
 }
 
+.cutout.tape1 {
+  position: absolute;
+  bottom: -15px;
+  left: -15px;
+  width: 130px;
+  z-index: 3; /* Increase the z-index to make sure it overlaps the iframe */
+}
 
 .cutout.dots {
   top: 0%;
@@ -307,6 +314,59 @@ h2 {
     overflow: hidden;
     border-radius: 20px;
   }
+  
+  .flex-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+.flex-grid-item {
+  flex: 0 0 calc(33.33% - 20px); /* Adjust the width of each item according to your design */
+  margin-bottom: 40px; /* Adjust the margin between items */
+ position: relative; /* Ensure positioning context for the pseudo-element */
+ text-align: center;
+}
+
+.flex-grid-item::before {
+  content: ''; /* Add a pseudo-element */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: -1; /* Ensure it's behind the actual content */
+}
+
+.flex-grid-item img {
+  width: 100%;
+  max-width: 150px;
+  border-radius: 20px;
+}
+
+.flex-grid-item-header {
+  font-size: 2.8em;
+  font-weight: 900;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.flex-grid-item-subheader {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.flex-grid-item-body {
+  color: #ccc;
+  line-height: 1.5;
+}
+
 
 @media only screen and (max-width: 768px) {
 .content	{
@@ -321,6 +381,21 @@ h2 {
 
 .flex-container:nth-child(even) {
     flex-direction: column-reverse; /* Reverse the order of flex items on smaller screens for even flex-container elements */
+  }
+    .flex-grid-item {
+    flex: 1 0 100%; /* Full width on mobile */
+  }
+
+  .flex-grid-item img {
+    float: left; /* Float images to the left */
+    width: 50%; /* Half the width of the container */
+    margin-right: 20px; /* Add some space between image and text */
+  }
+
+  .flex-grid-item-header,
+  .flex-grid-item-subheader,
+  .flex-grid-item-body {
+    width: 100%; /* Take up the remaining width */
   }
 
   .full-nav {
@@ -372,7 +447,7 @@ h2 {
 }
 .cutout.arrowdown {
   position: absolute;
-  top: 8%;
+  top: 10%;
   right: 25%; /* Adjust as needed */
   width: 130px;
   z-index: 1;
@@ -388,9 +463,9 @@ h2 {
   overflow: hidden;
 }
 .cutout.minigolf {
-  bottom: -30px;
+  bottom: -10px;
   left: -10px;
-  max-width: 280px;
+  max-width: 200px;
 }
 
 .cutout.rockclimb {
@@ -399,6 +474,7 @@ h2 {
   max-width: 200px;
   overflow: hidden;
 }
+
 }
 
 </style>
@@ -479,13 +555,61 @@ h2 {
       </div>
     </div>
     </section>
-<section id="hero welcome">
+    <section id="prices">
+  <div class="hero-div">
+   <h1>Our Prices</h1>
+  <p>Come enjoy a wide variety of options!</p>
+  </div>
+  </section>    
+  <div class="flex-grid">
+    <div class="flex-grid-item">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/minigolf-icon_guotkk.png" alt="Image 1">
+      <h2 class="flex-grid-item-header">$10</h2>
+      <h3 class="flex-grid-item-subheader">per person</h3>
+      <p class="flex-grid-item-body">One round 10-hole mini golf</p>
+    </div>
+    <div class="flex-grid-item">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/lasertag-icon_bin78v.png" style="transform: rotate(-15deg);" alt="Image 2">
+      <h2 class="flex-grid-item-header">$14</h2>
+      <h3 class="flex-grid-item-subheader">per person</h3>
+      <p class="flex-grid-item-body">20 minute game of laser tag</p>
+    </div>
+  <div class="flex-grid-item">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/lasertag-icon_bin78v.png" style="transform: rotate(-15deg);" alt="Image 2">
+      <h2 class="flex-grid-item-header">$16</h2>
+      <h3 class="flex-grid-item-subheader">per person</h3>
+      <p class="flex-grid-item-body">30 minute game of laser tag</p>
+    </div>
+<div class="flex-grid-item">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/climb-icon_zkqemf.png" alt="Image 3">
+      <h2 class="flex-grid-item-header">$16</h2>
+      <h3 class="flex-grid-item-subheader">per person</h3>
+      <p class="flex-grid-item-body">3 rock climbs</p>
+    </div>
+<div class="flex-grid-item">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/climb-icon_zkqemf.png" alt="Image 3">
+      <h2 class="flex-grid-item-header">$20</h2>
+      <h3 class="flex-grid-item-subheader">per person</h3>
+      <p class="flex-grid-item-body">30 minutes of rock climbing</p>
+    </div>
+<div class="flex-grid-item">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/climb-icon_zkqemf.png" alt="Image 3">
+      <h2 class="flex-grid-item-header">$25</h2>
+      <h3 class="flex-grid-item-subheader">per person</h3>
+      <p class="flex-grid-item-body">One hour of rock climbing</p>
+    </div>
+    <!-- Add more flex grid items as needed -->
+  </div>
+</section>
+<section id="bookonline">
   <div class="hero-div">
   <span class="cutout dots"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708874829/gleam-golden-magic-dots_umxxkn.png"></span>
   <span class="cutout arrowdown"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708877655/3d-flame-yellow-arrow-sign-poiting-down_alw5hi.png"></span>  
   <h1 style="z-index: 2;">Ready to go?</h1>
   <p style="z-index: 2;">Every moment counts, so save your time and book online!</p>   <div class="iframe-container">
-   <iframe src="https://squareup.com/appointments/book/ubo4tlk6rwm1nl/3N7XM7GWRSW3E/start" width="100%" height="100%" frameborder="0"></iframe>
+<div class="cutout tape1"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708880557/tape-png-44308_emn6kj.png"></div>
+<iframe src="https://squareup.com/appointments/book/ubo4tlk6rwm1nl/3N7XM7GWRSW3E/start" width="100%" height="100%" frameborder="0"></iframe>
+
   </div></div>
   </section>    
   </div>
