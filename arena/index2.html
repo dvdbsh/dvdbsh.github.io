@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+<title>Sarnia Laser Tag</title>
+<style>
+  body {
+    margin: 0;
+    font-family: "Karla", sans-serif;
+    background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/v1708892817/bg_gvxf4m.png);
+    background-size: contain;
+  }
+ .glow {
+  box-shadow: 0 0 60px 0px rgba(68, 20, 143, 0.3);
+  overflow: hidden;
+  color: #eee;
+  font-size: 18px;
+}
+  .container {
+    width: 100%;
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  .wrapper-filled {
+    width: calc(100% - 40px);
+    margin: 0;
+    background-color: #eee;
+    padding: 20px;
+  	color: #222;
+  }
+  .wrapper-unfilled {
+    width: calc(100% - 40px);
+    margin: 0;
+    padding: 20px;
+  }
+  .hero	{
+  	color: #eee;
+    font-size: 2em;
+    text-align: center;
+    text-shadow: 0px 0px 20px rgba(0, 0, 0, 0.9);
+    letter-spacing: 0.3px;
+    }
+   .hero h1	{
+   	font-weight: 800;
+    line-height: 65px;
+    color: #44148f;
+    }
+   .second-word {
+    transition: opacity 0.2s ease-in-out;
+    font-size: 1.3em;
+    color: #621dd1;
+  }
+  .content {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+  }
+  .content-filled {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+  }
+  header {
+    background-color: #333;
+    width: calc(100% - 40px);
+    max-width: 1200px;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    border-radius: 0 0 20px 20px;
+  }
+  header .logo {
+    max-width: 250px; /* Limit the width of the logo */
+    height: auto; spacing */
+  }
+  header .logo img {
+    width: 100%;
+    height: auto;
+  }
+  header nav {
+    display: flex;
+  }
+  header nav a {
+    color: #fff;
+    text-decoration: none;
+    margin-left: 20px;
+  }
+  main {
+    flex: 1;
+  }
+  footer {
+    background-color: #333;
+    width: calc(100% - 40px);
+    max-width: 1200px;
+    color: #fff;
+    text-align: center;
+    margin: 0 auto;
+    border-radius: 20px 20px 0 0;
+    padding: 20px;
+  }
+  
+ .flex-container {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 20px auto;
+  grid-gap: 20px;
+}
+.flex-container:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+.flex-item {
+  flex: 0 0 calc(50% - 10px); /* Adjust width to half of the container width */
+  box-sizing: border-box;
+  display: flex;
+  align-items: stretch;
+  justify-content: center; /* Center the content horizontally */
+  position: relative; /* Ensure relative positioning */
+}
+
+.flex-item img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 20px;
+  opacity: 0.5;
+  object-fit: cover;
+}
+
+.flex-item-content {
+  padding: 20px;
+  border-radius: 20px;
+  flex: 1; /* Allow text container to grow to fill available space */
+  width: 100%; /* Ensure content takes up the entire width */
+  background-color: rgba(0, 0, 0, 0.1);
+}
+.flex-item-content p {
+  color: #ccc;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+
+.flex-item-content h1 {
+  font-size: 2.8em;
+  font-weight: 800;
+  margin: 10px 0;
+}
+ .flex-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px;
+}
+
+.flex-grid-item {
+  flex: 0 0 calc(33.33% - 20px); /* Adjust the width of each item according to your design */
+  margin-bottom: 40px; /* Adjust the margin between items */
+ position: relative; /* Ensure positioning context for the pseudo-element */
+ text-align: center;
+}
+
+.flex-grid-item::before {
+  content: ''; /* Add a pseudo-element */
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  z-index: -1; /* Ensure it's behind the actual content */
+}
+
+.flex-grid-item img {
+  width: 100%;
+  max-width: 150px;
+  border-radius: 20px;
+}
+
+.flex-grid-item-header {
+  font-size: 2.8em;
+  font-weight: 900;
+  margin-top: 10px;
+  margin-bottom: 5px;
+  color: #222;
+}
+
+.flex-grid-item-subheader {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.flex-grid-item-body {
+  line-height: 1.5;
+}
+
+
+h2 {
+  color: #fff;
+  margin-top: 15px;
+  margin-bottom: 10px;
+}
+.cutout {
+  position: absolute;
+}
+
+.cutout img {
+  opacity: 1;
+  max-width: 100%;
+  height: auto;
+}
+
+.cutout.lasertag {
+  bottom: -40px;
+  left: -30px;
+  width: 280px;
+}
+
+.cutout.minigolf {
+  bottom: -10px;
+  left: -30px;
+  width: 260px;
+}
+
+.cutout.rockclimb {
+  bottom: -10px;
+  right: -20px;
+  width: 250px;
+}
+
+.cutout.sparkle {
+  position: absolute;
+  top: 20%;
+  right: 8%; /* Adjust as needed */
+  width: 160px;
+  z-index: -1;
+  opacity: 1;
+  transform: translate(50%, -50%);
+  margin-top: 20px;
+}
+
+.cutout.arrowdown {
+  position: absolute;
+  top: 18%;
+  right: 20%; /* Adjust as needed */
+  width: 130px;
+  z-index: 1;
+  opacity: 1;
+  transform: translate(50%, -50%);
+  overflow: hidden;
+}
+
+.cutout.tape1 {
+  position: absolute;
+  bottom: -15px;
+  left: -15px;
+  width: 130px;
+  z-index: 3; /* Increase the z-index to make sure it overlaps the iframe */
+}
+
+.cutout.dots {
+  top: 0%;
+  left: 10%;
+  width: 200px;
+  z-index: -1;
+  transform: rotate(180deg);
+  opacity: 0.8;
+}
+
+
+
+/* Media query for small screens */
+@media (max-width: 768px) {
+
+
+  .flex-item {
+    flex: 0 0 100%; /* Make items full width on small screens */
+    margin-bottom: 5px; /* Add margin between stacked items */
+  }
+
+  .flex-item img {
+    width: 100%; /* Ensure images take up the full width of the container */
+    height: auto;
+    border-radius: 20px;
+    object-fit: cover;
+  }
+
+  .flex-item-content {
+    width: calc(100% - 40px); /* Ensure content takes up the full width of the container */
+  }
+  
+.cutout.lasertag {
+  bottom: -10px;
+  right: -10px;
+  max-width: 250px;
+  overflow: hidden;
+}
+.cutout.minigolf {
+  bottom: -10px;
+  left: -10px;
+  max-width: 200px;
+}
+
+.cutout.rockclimb {
+  bottom: -10px;
+  right: 0px;
+  max-width: 200px;
+  overflow: hidden;
+}
+}
+
+ 
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1692228829/The_Arena_Logo_pdltcc.svg" alt="Logo">
+    </div>
+    <nav>
+      <a href="#">Link 1</a>
+      <a href="#">Link 2</a>
+      <a href="#">Link 3</a>
+    </nav>
+  </header>
+  <main>
+    <div class="wrapper-unfilled hero">
+      <div class="content">
+        <div id="rotatingText"><h1>Sarnia <span class="second-word">Plays</span> Here</h1></div>
+        <p>Discover The Arena, Sarnia's exclusive two-story laser tag destination. With laser tag, rock climbing, and mini golf, thrill-seekers find non-stop excitement here.</p>
+      </div>
+    </div>
+  
+    <div class="wrapper-unfilled">
+      <div class="content">
+        
+	  <section id="activities">
+    <div class="flex-container">
+     <div class="flex-item">
+        <img src="https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Laser tag hero image">
+        <span class="cutout lasertag"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1708022580/lasertagcutout_1_1_zgth2d.png"></span>
+      </div>
+      <div class="flex-item-content glow">
+        <h1>Laser Tag</h1>
+          <h2>Elevate Your Game!</h2>
+          <p>At our arena, we take laser tag to the next level by offering a two-storey playing space. Prepare to be amazed as you explore the multiple levels, corridors, and strategic vantage points that our arena has to offer. With two storeys of intense gameplay, you'll find yourself fully immersed in an adrenaline-pumping adventure like never before.</p>
+      </div>
+    </div>
+    <div class="flex-container">
+     <div class="flex-item">
+        <img src="https://images.unsplash.com/photo-1562563436-a73bab993173?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Rock climbing hero image">
+        <span class="cutout rockclimb"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1708022581/rockclimbcutout_1_fy0nql.png"></span>
+      </div>
+      <div class="flex-item-content glow">
+        <h1>Rock Climb</h1>
+          <h2>Reach New Heights!</h2>
+          <p>Embark on an exhilarating adventure and test your skills with our challenging rock climbing wall, designed to push your limits and provide a thrilling experience. As you ascend the towering wall, each handhold and foothold presents a new obstacle to conquer, demanding strength, focus, and determination. Feel the adrenaline course through your veins as you reach new heights, overcoming challenges and celebrating personal achievements.</p>
+      </div>
+     
+    </div>
+    <div class="flex-container">
+      <div class="flex-item">
+        <img src="https://images.unsplash.com/flagged/photo-1567400358593-9e6382752ea2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Mini golf hero image">
+        <span class="cutout minigolf"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1708022580/golfballcutout_1_mg5un1.png"></span>
+      </div>
+      <div class="flex-item-content glow">
+        <h1>Mini Golf</h1>
+          <h2>Putt a Smile On!</h2>
+          <p>If you're looking for a more laid-back and leisurely activity, swing into a friendly round of mini golf. Engage in a delightful game that combines precision, strategy, and a dash of friendly competition. Navigate through the vibrant and creatively designed course, carefully maneuvering your way around obstacles, slopes, and tricky curves. Put your putting skills to the test as you aim for the elusive hole-in-one or engage in friendly banter with your companions as you laugh and enjoy the light-hearted atmosphere.</p>
+      </div>
+    </div>
+    </section>    
+        
+      </div>
+    </div>
+    
+ <!-- pricing -->
+ 
+    <div class="wrapper-filled">
+      <div class="content-filled">
+
+<div class="flex-grid">
+    <div class="flex-grid-item">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/minigolf-icon_guotkk.png" alt="Image 1">
+      <h2 class="flex-grid-item-header">$10</h2>
+      <h3 class="flex-grid-item-subheader">per person</h3>
+      <p class="flex-grid-item-body">One round 10-hole mini golf</p>
+    </div>
+    <div class="flex-grid-item">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/lasertag-icon_bin78v.png" style="transform: rotate(-15deg);" alt="Image 2">
+      <h2 class="flex-grid-item-header">$14</h2>
+      <h3 class="flex-grid-item-subheader">per person</h3>
+      <p class="flex-grid-item-body">20 minute game of laser tag</p>
+    </div>
+  <div class="flex-grid-item">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/lasertag-icon_bin78v.png" style="transform: rotate(-15deg);" alt="Image 2">
+      <h2 class="flex-grid-item-header">$16</h2>
+      <h3 class="flex-grid-item-subheader">per person</h3>
+      <p class="flex-grid-item-body">30 minute game of laser tag</p>
+    </div>
+<div class="flex-grid-item">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/climb-icon_zkqemf.png" alt="Image 3">
+      <h2 class="flex-grid-item-header">$16</h2>
+      <h3 class="flex-grid-item-subheader">per person</h3>
+      <p class="flex-grid-item-body">3 rock climbs</p>
+    </div>
+<div class="flex-grid-item">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/climb-icon_zkqemf.png" alt="Image 3">
+      <h2 class="flex-grid-item-header">$20</h2>
+      <h3 class="flex-grid-item-subheader">per person</h3>
+      <p class="flex-grid-item-body">30 minutes of rock climbing</p>
+    </div>
+<div class="flex-grid-item">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/climb-icon_zkqemf.png" alt="Image 3">
+      <h2 class="flex-grid-item-header">$25</h2>
+      <h3 class="flex-grid-item-subheader">per person</h3>
+      <p class="flex-grid-item-body">One hour of rock climbing</p>
+    </div>
+    <!-- Add more flex grid items as needed -->
+  </div>
+
+      </div>
+    </div>
+    
+    <div class="wrapper-unfilled">
+      <div class="content">
+        <h1>Welcome to Our Website</h1>
+        <p>This is the content area. You can put your content here.</p>
+      </div>
+    </div>
+  </main>
+  <footer>
+    &copy; 2024 Your Company Name
+  </footer>
+</div>
+</body>
+<script>
+  const secondWords = ['Laughs', 'Vibes', 'Climbs', 'Putts', 'Smiles', 'Wins', 'Parties', 'Plays'];
+  let index = 0;
+
+  function rotateSecondWord() {
+      const secondWordElement = document.getElementById('secondWord');
+      secondWordElement.style.opacity = 0;
+      setTimeout(() => {
+          secondWordElement.textContent = secondWords[index];
+          secondWordElement.style.opacity = 1;
+          index = (index + 1) % secondWords.length;
+      }, 200); // Adjust the timing to match the transition duration
+  }
+
+  // Call rotateSecondWord every 2 seconds (adjust timing as needed)
+  setInterval(rotateSecondWord, 2000);
+</script>
+</html>
