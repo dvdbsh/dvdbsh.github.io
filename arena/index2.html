@@ -12,7 +12,7 @@
   body {
     margin: 0;
     font-family: "Karla", sans-serif;
-    background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/v1708892817/bg_gvxf4m.png);
+    background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708892817/bg_gvxf4m.png);
     background-size: contain;
   }
  .glow {
@@ -35,6 +35,22 @@
     padding: 20px;
   	color: #222;
   }
+  .divider-top	{
+    width: 100%;
+    height: 180px;
+    margin-bottom: -120px;
+    background-image:url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708988489/top_q57dio.png);
+    background-position: top;
+    background-size: contain;    
+    }
+  .divider-btm	{
+    width: 100%;
+    height: 180px;
+    margin-top: -120px;
+    background-image:url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708988489/btm_znsvhx.png);
+    background-position: bottom;
+    background-size: contain;    
+    }    
   .wrapper-unfilled {
     width: calc(100% - 40px);
     margin: 0;
@@ -170,17 +186,7 @@
  text-align: center;
 }
 
-.flex-grid-item::before {
-  content: ''; /* Add a pseudo-element */
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-size: contain;
-  background-repeat: no-repeat;
-  z-index: -1; /* Ensure it's behind the actual content */
-}
+
 
 .flex-grid-item img {
   width: 100%;
@@ -278,7 +284,11 @@ h2 {
   transform: rotate(180deg);
   opacity: 0.8;
 }
-
+.section-header	{
+	font-size: 5em;
+    font-weight: 900;
+    text-align: center;
+    }
 
 
 /* Media query for small screens */
@@ -291,8 +301,7 @@ h2 {
   }
 
   .flex-item img {
-    width: 100%; /* Ensure images take up the full width of the container */
-    height: auto;
+    width: 100%; 
     border-radius: 20px;
     object-fit: cover;
   }
@@ -300,6 +309,13 @@ h2 {
   .flex-item-content {
     width: calc(100% - 40px); /* Ensure content takes up the full width of the container */
   }
+  .flex-grid-item {
+  flex: 0 0 calc(50% - 20px); /* Adjust the width of each item according to your design */
+  margin-bottom: 40px; /* Adjust the margin between items */
+ position: relative; /* Ensure positioning context for the pseudo-element */
+ text-align: center;
+}
+
   
 .cutout.lasertag {
   bottom: -10px;
@@ -388,43 +404,43 @@ h2 {
     </div>
     
  <!-- pricing -->
- 
+ <div class="divider-top"></div>
     <div class="wrapper-filled">
       <div class="content-filled">
-
+<h1 class="section-header">Our Prices</h1>
 <div class="flex-grid">
     <div class="flex-grid-item">
-      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/minigolf-icon_guotkk.png" alt="Image 1">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/minigolf-icon_guotkk.png" alt="Image 1">
       <h2 class="flex-grid-item-header">$10</h2>
       <h3 class="flex-grid-item-subheader">per person</h3>
       <p class="flex-grid-item-body">One round 10-hole mini golf</p>
     </div>
     <div class="flex-grid-item">
-      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/lasertag-icon_bin78v.png" style="transform: rotate(-15deg);" alt="Image 2">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/lasertag-icon_bin78v.png" style="transform: rotate(-15deg); margin-top: -15px; margin-bottom: 15px;" alt="Image 2">
       <h2 class="flex-grid-item-header">$14</h2>
       <h3 class="flex-grid-item-subheader">per person</h3>
       <p class="flex-grid-item-body">20 minute game of laser tag</p>
     </div>
   <div class="flex-grid-item">
-      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/lasertag-icon_bin78v.png" style="transform: rotate(-15deg);" alt="Image 2">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/lasertag-icon_bin78v.png" style="transform: rotate(-15deg); margin-top: -15px; margin-bottom: 15px;" alt="Image 2">
       <h2 class="flex-grid-item-header">$16</h2>
       <h3 class="flex-grid-item-subheader">per person</h3>
       <p class="flex-grid-item-body">30 minute game of laser tag</p>
     </div>
 <div class="flex-grid-item">
-      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/climb-icon_zkqemf.png" alt="Image 3">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/climb-icon_zkqemf.png" alt="Image 3">
       <h2 class="flex-grid-item-header">$16</h2>
       <h3 class="flex-grid-item-subheader">per person</h3>
       <p class="flex-grid-item-body">3 rock climbs</p>
     </div>
 <div class="flex-grid-item">
-      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/climb-icon_zkqemf.png" alt="Image 3">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/climb-icon_zkqemf.png" alt="Image 3">
       <h2 class="flex-grid-item-header">$20</h2>
       <h3 class="flex-grid-item-subheader">per person</h3>
       <p class="flex-grid-item-body">30 minutes of rock climbing</p>
     </div>
 <div class="flex-grid-item">
-      <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708885911/climb-icon_zkqemf.png" alt="Image 3">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/climb-icon_zkqemf.png" alt="Image 3">
       <h2 class="flex-grid-item-header">$25</h2>
       <h3 class="flex-grid-item-subheader">per person</h3>
       <p class="flex-grid-item-body">One hour of rock climbing</p>
@@ -434,6 +450,8 @@ h2 {
 
       </div>
     </div>
+     <div class="divider-btm"></div>
+    
     
     <div class="wrapper-unfilled">
       <div class="content">
