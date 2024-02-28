@@ -148,7 +148,7 @@
   max-width: 100%;
   height: auto;
   border-radius: 20px;
-  opacity: 0.5;
+  opacity: 1;
   object-fit: cover;
 }
 
@@ -257,6 +257,35 @@ h2 {
   margin-top: 20px;
 }
 
+.cutout.yellowstar {
+  position: absolute;
+  top: 35%;
+  right: 25%; /* Adjust as needed */
+  width: 120px;
+  z-index: -1;
+  opacity: 0.7;
+  transform: translate(50%, -50%);
+  overflow: hidden;
+}
+.cutout.pinkstar {
+  position: absolute;
+  top: 45%;
+  right: 30%; /* Adjust as needed */
+  width: 120px;
+  z-index: -1;
+  opacity: 0.5;
+  transform: translate(50%, -50%);
+  overflow: hidden;
+}
+
+.cutout.dots {
+  top: 0%;
+  left: 10%;
+  width: 200px;
+  z-index: -1;
+  transform: rotate(180deg);
+  opacity: 0.8;
+}
 .cutout.arrowdown {
   position: absolute;
   top: 18%;
@@ -270,30 +299,50 @@ h2 {
 
 .cutout.tape1 {
   position: absolute;
-  bottom: -15px;
-  left: -15px;
+  bottom: -70px;
+  left: -10px;
   width: 130px;
-  z-index: 3; /* Increase the z-index to make sure it overlaps the iframe */
+  transform: rotate(-15deg);
 }
-
-.cutout.dots {
-  top: 0%;
-  left: 10%;
-  width: 200px;
-  z-index: -1;
-  transform: rotate(180deg);
-  opacity: 0.8;
-}
+  .iframe-container {
+  margin-top: 20px;
+    width: 100%;
+    max-width: 1200px;
+    height: 720px;
+    overflow: hidden;
+    border-radius: 20px;
+    z-index: 1;
+  }
 .section-header	{
 	font-size: 5em;
     font-weight: 900;
     text-align: center;
+    position: relative;
+    text-shadow: 0px 0px 20px rgba(238, 238, 238, 1);
+    line-height: 0.8em;
+    z-index: 99;
+    margin-bottom: 30px;
     }
+.section-header-unfilled {
+	font-size: 5em;
+    font-weight: 900;
+    text-align: center;
+    position: relative;
+    color: #eee;
+    text-shadow: 0px 0px 20px rgba(0, 0, 0, 1);
+    z-index: 99;
+    margin-bottom: 30px;
+    }    
 
 
 /* Media query for small screens */
 @media (max-width: 768px) {
-
+.section-header	{
+font-size: 4em;
+}
+.section-header-unfilled	{
+font-size: 4em;
+}
 
   .flex-item {
     flex: 0 0 100%; /* Make items full width on small screens */
@@ -318,23 +367,47 @@ h2 {
 
   
 .cutout.lasertag {
-  bottom: -10px;
+  bottom: -40px;
   right: -10px;
-  max-width: 250px;
+  max-width: 200px;
   overflow: hidden;
 }
 .cutout.minigolf {
-  bottom: -10px;
+  bottom: -40px;
   left: -10px;
-  max-width: 200px;
+  max-width: 180px;
 }
 
 .cutout.rockclimb {
-  bottom: -10px;
+  bottom: -30px;
   right: 0px;
-  max-width: 200px;
+  max-width: 180px;
   overflow: hidden;
 }
+.cutout.yellowstar {
+  position: absolute;
+  top: 25%;
+  right: 25%; /* Adjust as needed */
+  width: 120px;
+  z-index: -1;
+  opacity: 0.7;
+  transform: translate(50%, -50%);
+  overflow: hidden;
+}
+.cutout.pinkstar {
+  position: absolute;
+  top: 35%;
+  right: 25%; /* Adjust as needed */
+  width: 120px;
+  z-index: -1;
+  opacity: 0.5;
+  transform: translate(50%, -50%);
+  overflow: hidden;
+}
+.cutout.arrowdown {
+display:none;
+}
+
 }
 
  
@@ -366,8 +439,8 @@ h2 {
 	  <section id="activities">
     <div class="flex-container">
      <div class="flex-item">
-        <img src="https://images.unsplash.com/photo-1563089145-599997674d42?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Laser tag hero image">
-        <span class="cutout lasertag"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1708022580/lasertagcutout_1_1_zgth2d.png"></span>
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1694547159/tag_hero_jgjhtj.jpg" alt="Laser tag hero image">
+        <span class="cutout lasertag"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709147071/lasergun_ufir5k.png"></span>
       </div>
       <div class="flex-item-content glow">
         <h1>Laser Tag</h1>
@@ -377,8 +450,8 @@ h2 {
     </div>
     <div class="flex-container">
      <div class="flex-item">
-        <img src="https://images.unsplash.com/photo-1562563436-a73bab993173?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Rock climbing hero image">
-        <span class="cutout rockclimb"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1708022581/rockclimbcutout_1_fy0nql.png"></span>
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709147464/rockclimb_home_hero-min_indgab_17e9b62.jpg" alt="Rock climbing hero image">
+        <span class="cutout rockclimb"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709147072/climb_kxkwbi.png"></span>
       </div>
       <div class="flex-item-content glow">
         <h1>Rock Climb</h1>
@@ -389,8 +462,8 @@ h2 {
     </div>
     <div class="flex-container">
       <div class="flex-item">
-        <img src="https://images.unsplash.com/flagged/photo-1567400358593-9e6382752ea2?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="Mini golf hero image">
-        <span class="cutout minigolf"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1708022580/golfballcutout_1_mg5un1.png"></span>
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1693871034/minigolf_home_hero-min_y0ws0m.jpg" alt="Mini golf hero image">
+        <span class="cutout minigolf"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709147073/ball_etp64x.png"></span>
       </div>
       <div class="flex-item-content glow">
         <h1>Mini Golf</h1>
@@ -407,7 +480,7 @@ h2 {
  <div class="divider-top"></div>
     <div class="wrapper-filled">
       <div class="content-filled">
-<h1 class="section-header">Our Prices</h1>
+<div class="section-header">Our Prices<div class="cutout pinkstar"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709144846/flare-textured-pink-star-8_lmycni.png"></div></div>
 <div class="flex-grid">
     <div class="flex-grid-item">
       <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/minigolf-icon_guotkk.png" alt="Image 1">
@@ -455,8 +528,19 @@ h2 {
     
     <div class="wrapper-unfilled">
       <div class="content">
-        <h1>Welcome to Our Website</h1>
-        <p>This is the content area. You can put your content here.</p>
+
+<section id="bookonline">
+  <div class="section-header-unfilled">
+  <span class="cutout dots"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708874829/gleam-golden-magic-dots_umxxkn.png"></span>
+  <span class="cutout arrowdown"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708877655/3d-flame-yellow-arrow-sign-poiting-down_alw5hi.png"></span>  
+  Ready to go?
+  <div class="iframe-container">
+<div class="cutout tape1"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708880557/tape-png-44308_emn6kj.png"></div>
+<iframe src="https://squareup.com/appointments/book/ubo4tlk6rwm1nl/3N7XM7GWRSW3E/start" width="100%" height="100%" frameborder="0"></iframe>
+
+  </div></div>
+  </section>
+
       </div>
     </div>
   </main>
