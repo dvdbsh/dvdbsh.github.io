@@ -2,7 +2,14 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="shortcut icon" type="image/x-icon" href="https://res.cloudinary.com/di8j84ent/image/upload/v1709228921/favicon2_cefnb0.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="https://res.cloudinary.com/di8j84ent/image/upload/v1709228921/favicon_2023_dimp5x.png">
+    <meta name="theme-color" content="#44148f">
+
+
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +23,7 @@
     background-size: contain;
   }
  .glow {
-  box-shadow: 0 0 60px 0px rgba(68, 20, 143, 0.3);
+  box-shadow: 0 0 60px 0px rgba(20, 8, 142, 0.3);
   overflow: hidden;
   color: #eee;
   font-size: 18px;
@@ -146,11 +153,27 @@
 
 .flex-item img {
   max-width: 100%;
-  height: auto;
+  min-height: auto;
   border-radius: 20px;
   opacity: 1;
   object-fit: cover;
+  position: relative;
 }
+
+.flex-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(68, 20, 143, 0.3), rgba(153, 0, 153, 0.2)), url('https://www.transparenttextures.com/patterns/asfalt-light.png'); /* Replace 'path/to/grainy_texture.png' with the actual path to your grainy texture image */
+  border-radius: 20px;
+  z-index: 1; /* Increase z-index to position the overlay above the image */
+}
+
+
+
 
 .flex-item-content {
   padding: 20px;
@@ -231,19 +254,23 @@ h2 {
 .cutout.lasertag {
   bottom: -40px;
   left: -30px;
-  width: 280px;
+  width: 220px;
+  transform: rotate(-5deg);
+  z-index: 2;
 }
 
 .cutout.minigolf {
   bottom: -10px;
   left: -30px;
-  width: 260px;
+  width: 200px;
+  z-index: 2;
 }
 
 .cutout.rockclimb {
   bottom: -10px;
   right: -20px;
   width: 250px;
+  z-index: 2;
 }
 
 .cutout.sparkle {
@@ -289,7 +316,7 @@ h2 {
 .cutout.arrowdown {
   position: absolute;
   top: 18%;
-  right: 20%; /* Adjust as needed */
+  right: 15%; /* Adjust as needed */
   width: 130px;
   z-index: 1;
   opacity: 1;
@@ -367,21 +394,21 @@ font-size: 4em;
 
   
 .cutout.lasertag {
-  bottom: -40px;
-  right: -10px;
-  max-width: 160px;
+  bottom: -60px;
+  left: 0px;
+  max-width: 180px;
   overflow: hidden;
 }
 .cutout.minigolf {
   bottom: -40px;
-  left: -30px;
+  left: -10px;
   max-width: 140px;
 }
 
 .cutout.rockclimb {
   bottom: -70px;
   right: 0px;
-  max-width: 120px;
+  max-width: 190px;
   overflow: hidden;
 }
 .cutout.yellowstar {
@@ -439,8 +466,8 @@ display:none;
 	  <section id="activities">
     <div class="flex-container">
      <div class="flex-item">
-        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709219110/tag_xipwsk.jpg" alt="Laser tag hero image">
-        <span class="cutout lasertag"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709147071/lasergun_ufir5k.png"></span>
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709225769/lasertag_jpt91h.png" alt="Laser tag hero image">
+        <span class="cutout lasertag"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708022580/lasertagcutout_1_1_zgth2d.png"></span>
       </div>
       <div class="flex-item-content glow">
         <h1>Laser Tag</h1>
@@ -450,8 +477,8 @@ display:none;
     </div>
     <div class="flex-container">
      <div class="flex-item">
-        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709219109/climb_bqshvb.jpg" alt="Rock climbing hero image">
-        <span class="cutout rockclimb"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709147072/climb_kxkwbi.png"></span>
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709225770/rockclimb_lewzom.jpg" alt="Rock climbing hero image">
+        <span class="cutout rockclimb"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708022581/rockclimbcutout_1_fy0nql.png"></span>
       </div>
       <div class="flex-item-content glow">
         <h1>Rock Climb</h1>
@@ -462,8 +489,8 @@ display:none;
     </div>
     <div class="flex-container">
       <div class="flex-item">
-        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709220147/golf_1_a12azi.jpg" alt="Mini golf hero image">
-        <span class="cutout minigolf"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709147073/ball_etp64x.png"></span>
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709225770/golfing_grkeir.png" alt="Mini golf hero image">
+        <span class="cutout minigolf"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709226154/golf-tee_cmdccl.png"></span>
       </div>
       <div class="flex-item-content glow">
         <h1>Mini Golf</h1>
@@ -480,7 +507,7 @@ display:none;
  <div class="divider-top"></div>
     <div class="wrapper-filled">
       <div class="content-filled">
-<div class="section-header">Our Prices<div class="cutout pinkstar"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1709144846/flare-textured-pink-star-8_lmycni.png"></div></div>
+<div class="section-header">Our Prices<div class="cutout pinkstar"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1709144846/flare-textured-pink-star-8_lmycni.png"></div></div>
 <div class="flex-grid">
     <div class="flex-grid-item">
       <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/minigolf-icon_guotkk.png" alt="Image 1">
@@ -531,11 +558,11 @@ display:none;
 
 <section id="bookonline">
   <div class="section-header-unfilled">
-  <span class="cutout dots"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708874829/gleam-golden-magic-dots_umxxkn.png"></span>
-  <span class="cutout arrowdown"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708877655/3d-flame-yellow-arrow-sign-poiting-down_alw5hi.png"></span>  
+  <span class="cutout dots"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708874829/gleam-golden-magic-dots_umxxkn.png"></span>
+  <span class="cutout arrowdown"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708877655/3d-flame-yellow-arrow-sign-poiting-down_alw5hi.png"></span>  
   Ready to go?
   <div class="iframe-container">
-<div class="cutout tape1"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1708880557/tape-png-44308_emn6kj.png"></div>
+<div class="cutout tape1"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708880557/tape-png-44308_emn6kj.png"></div>
 <iframe src="https://squareup.com/appointments/book/ubo4tlk6rwm1nl/3N7XM7GWRSW3E/start" width="100%" height="100%" frameborder="0"></iframe>
 
   </div></div>
