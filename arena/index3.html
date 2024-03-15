@@ -64,6 +64,17 @@
             transition: background-color 0.3s ease;
             box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
         }
+        button {
+            background-color: #ff2b95;
+            color: #fff;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin: 10px;
+        }        
 
         .hero button:hover {
             background-color: #df2180;
@@ -197,20 +208,35 @@
         }
 
         .flex-grid-item-subheader {
-            font-size: 1.5em;
+            font-size: 1.2em;
             font-weight: bold;
             margin-bottom: 5px;
+            color: #222;
         }
 
         .flex-grid-item-body {
             line-height: 1.5;
         }
+        .flex-double {
+    flex: 0 0 calc(70% - 20px); /* Adjust width as needed */
+}
         .prices-grid	{
         	background-color: #eee;
             border-radius: 20px;
+            margin-bottom: 40px;
+            }
+        .burst-btm		{
+        	background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/v1710511742/flare-pink-texture-splash_idplds.png);
+            background-position: bottom;
+            background-repeat: no-repeat;
             }
         .section-header h1	{
         	font-size: 4em;
+            margin: 40px 0 10px 0;
+            }
+        .section-header h2	{
+        	font-size: 2em;
+            margin: 10px 0;
             }
 
         @media screen and (max-width: 768px) {
@@ -250,6 +276,9 @@
                 position: relative;
                 text-align: center;
             }
+.flex-double {
+        flex: 0 0 100%; /* Make it take up full width */
+    }            
         }
     </style>
 </head>
@@ -307,40 +336,72 @@
         </div>
     </div>
 </section>
-<div class="section-header"><h1>Prices</h1></div>
+<div class="section-header"><h1>Prices</h1><h2>Walk-In</h2></div>
 <section id="prices">
-    <div class="flex-grid prices-grid">
+<section id="prices-walkin">
+    <div class="flex-grid prices-grid burst-btm">
         <div class="flex-grid-item">
             <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/minigolf-icon_guotkk.png" alt="Price 1">
-            <h3 class="flex-grid-item-header">$20</h3>
-            <p class="flex-grid-item-subheader">Price 1 Description</p>
+            <h3 class="flex-grid-item-header">$10</h3>
+            <p class="flex-grid-item-subheader">One round 10-hole mini golf</p>
         </div>
         <div class="flex-grid-item">
-            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/lasertag-icon_bin78v.png" alt="Price 2">
-            <h3 class="flex-grid-item-header">$30</h3>
-            <p class="flex-grid-item-subheader">Price 2 Description</p>
+            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/lasertag-icon_bin78v.png" alt="Price 2" style="transform:rotate(-20deg); margin-top: -15px; margin-bottom: 15px;">
+            <h3 class="flex-grid-item-header">$14</h3>
+            <p class="flex-grid-item-subheader">20 minute game of laser tag</p>
         </div>
         <div class="flex-grid-item">
-            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/lasertag-icon_bin78v.png" alt="Price 3">
-            <h3 class="flex-grid-item-header">$40</h3>
-            <p class="flex-grid-item-subheader">Price 3 Description</p>
+            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/lasertag-icon_bin78v.png" alt="Price 3" style="transform:rotate(-20deg); margin-top: -15px; margin-bottom: 15px;">
+            <h3 class="flex-grid-item-header">$16</h3>
+            <p class="flex-grid-item-subheader">30 minute game of laser tag</p>
         </div>
         <div class="flex-grid-item">
             <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/climb-icon_zkqemf.png" alt="Price 4">
-            <h3 class="flex-grid-item-header">$50</h3>
-            <p class="flex-grid-item-subheader">Price 4 Description</p>
+            <h3 class="flex-grid-item-header">$16</h3>
+            <p class="flex-grid-item-subheader">3 rock climbs</p>
         </div>
         <div class="flex-grid-item">
             <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/climb-icon_zkqemf.png" alt="Price 5">
-            <h3 class="flex-grid-item-header">$60</h3>
-            <p class="flex-grid-item-subheader">Price 5 Description</p>
+            <h3 class="flex-grid-item-header">$20</h3>
+            <p class="flex-grid-item-subheader">30 minutes of rock climbs</p>
         </div>
         <div class="flex-grid-item">
             <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/climb-icon_zkqemf.png" alt="Price 6">
-            <h3 class="flex-grid-item-header">$70</h3>
-            <p class="flex-grid-item-subheader">Price 6 Description</p>
+            <h3 class="flex-grid-item-header">$25</h3>
+            <p class="flex-grid-item-subheader">One hour of rock climbs</p>
         </div>
     </div>
+</section>
+<div class="section-header"><h2>Group (6 people minimum)</h2></div>
+<section id="prices-group">
+    <div class="flex-grid prices-grid">
+        <div class="flex-grid-item">
+            <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/1_1_ickk6k.png" alt="Price 1">
+            <h3 class="flex-grid-item-header">$10</h3>
+            <p class="flex-grid-item-subheader">One round 10-hole mini golf</p>
+        </div>
+        <div class="flex-grid-item">
+            <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/2_1_wsn2gy.png" alt="Price 2">
+            <h3 class="flex-grid-item-header">$14</h3>
+            <p class="flex-grid-item-subheader">20 minute game of laser tag</p>
+        </div>
+        <div class="flex-grid-item">
+            <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514250/3_5_n1vkc6.png">
+            <h3 class="flex-grid-item-header">$16</h3>
+            <p class="flex-grid-item-subheader">30 minute game of laser tag</p>
+        </div>
+        <div class="flex-grid-item">
+            <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/4_1_cnthj0.png" alt="Price 4">
+            <h3 class="flex-grid-item-header">$16</h3>
+            <p class="flex-grid-item-subheader">3 rock climbs</p>
+        </div>
+        <div class="flex-grid-item flex-double">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710516020/group_viuias.png" alt="Price 5">
+    <h3 class="flex-grid-item-header">Hosting an Event?</h3>
+    <p class="flex-grid-item-subheader"><button>Reach out to us directly!</button></p>
+</div>
+    </div>
+</section>
 </section>
 </div>
 </body>
