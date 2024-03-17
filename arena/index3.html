@@ -73,7 +73,7 @@
             border-radius: 10px;
             cursor: pointer;
             transition: background-color 0.3s ease;
-            margin: 10px;
+            margin: 10px 0;
         }        
 
         .hero button:hover {
@@ -91,7 +91,7 @@
         .promo-item {
             flex: 1;
             padding: 20px;
-            background-color: #5e2388;
+            background-color: #44148f;
             border-radius: 10px;
         }
 
@@ -136,6 +136,11 @@
             justify-content: center;
             position: relative;
         }
+#reachout .flex-item-content {
+    align-items: flex-start;
+    padding-top: 0px;
+    margin: 0px;
+}
 
         .flex-item img {
             max-width: 100%;
@@ -145,7 +150,10 @@
             object-fit: cover;
             position: relative;
         }
-
+        
+#reachout .flex-item::before {
+    content: none; 
+}
         .flex-item::before {
             content: "";
             position: absolute;
@@ -176,6 +184,11 @@
             font-size: 2.8em;
             font-weight: 800;
             margin: 10px 0;
+        }
+		.flex-item-content h2 {
+            margin-top: 0px;
+            margin-bottom: 0px;
+            
         }
 
         .flex-grid {
@@ -228,11 +241,11 @@
             }
         .section-header h1	{
         	font-size: 4em;
-            margin: 40px 0 10px 0;
+            margin: 60px 0 10px 0;
             }
         .section-header h2	{
         	font-size: 2em;
-            margin: 10px 0;
+            margin: 20px 0;
             }
            .flex-grid-item.flex-double {
     flex: 0 0 100% !important; /* Make it take up full width */
@@ -241,6 +254,54 @@
             .group-prices-grid .flex-grid-item {
         flex: 0 0 calc(50% - 20px); /* Each item takes up 50% of the space */
     }
+     .business-hours {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      font-size: 0.7em;
+    }
+    .business-hour {
+      flex-basis: calc(16.666% - 20px); /* 6 columns with increased spacing */
+      border: 2px solid #2a0c5a;
+      color: #fff;
+      border-radius: 15px;
+      padding: 5px;
+      margin-bottom: 10px;
+      text-align: center;
+      margin-top: 10px;
+      background: linear-gradient(to bottom, #2a0c5a 50%, transparent 50%);
+      overflow: hidden;
+    }
+    
+    /* Highlight class for the current day */
+    .highlight {
+      border: 2px solid #5ce253;
+      background: linear-gradient(to bottom, #5ce253 50%, transparent 50%);
+      overflow: hidden;
+    }
+
+    /* Add this CSS rule to change the text color of the highlighted day */
+    .business-hour.highlight b {
+      color: #44148f;
+      font-weight: 800;
+    }
+    /* Add this CSS rule to style the flex container in the "Reach Out" section */
+#reachout .flex-container {
+    display: flex;
+}
+
+/* Adjust the width of the flex items within the "Reach Out" section */
+#reachout .flex-item {
+    flex: 0 0 30%; /* 30% width for the image */
+    max-width: 30%; /* Ensure a maximum width of 30% */
+}
+
+/* Adjust the width of the content within the flex items */
+#reachout .flex-item-content {
+    flex: 1; /* Take up remaining space */
+}
+
+
 
         @media screen and (max-width: 768px) {
             .hero {
@@ -285,6 +346,18 @@
     }         
     .group-prices-grid .flex-grid-item {
         flex: 0 0 100%; /* Each item takes up 100% of the space */
+    }
+     .business-hour {
+        flex-basis: calc(50% - 20px); /* 2 columns with increased spacing */
+      }
+        #reachout .flex-container {
+        flex-direction: column;
+    }
+    
+    #reachout .flex-item,
+    #reachout .flex-item-content {
+        flex: 0 0 100%;
+        max-width: 100%;
     }
         }
     </style>
@@ -343,7 +416,7 @@
         </div>
     </div>
 </section>
-<div class="section-header"><h1>Prices</h1><h2>Walk-In</h2></div>
+<div class="section-header"><h1>Our Prices</h1><h2>Walk-In Prices</h2></div>
 <section id="prices">
 <section id="prices-walkin">
     <div class="flex-grid prices-grid colour-noise">
@@ -379,7 +452,7 @@
         </div>
     </div>
 </section>
-<div class="section-header"><h2>Group (6 people minimum)</h2></div>
+<div class="section-header"><h2>Group Prices<br><small style="font-size: 0.7em;">(6 people minimum)</small></h2></div>
 <section id="prices-group">
     <div class="flex-grid prices-grid colour-noise group-prices-grid">
         <div class="flex-grid-item">
@@ -410,19 +483,82 @@
     </div>
 </section>
 </section>
+<section id="reachout">
 <div class="section-header"><h1>Reach Out</h1></div>
 <section id="activities">
     <div class="flex-container">
         <div class="flex-item">
-            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1695052586/New_Project_13_nzr2xh.jpg" alt="Laser tag hero image">
+            <a href="https://www.google.com/maps/dir/42.9802491,-81.2037244/1886+London+Line,+Sarnia,+ON+N7W+1B3/@42.9321471,-83.1115738,8z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x882583f032715077:0xdf8f3cb05927e5!2m2!1d-82.3151737!2d42.9853351?entry=ttu">
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1695052586/New_Project_13_nzr2xh.jpg" alt="Image" border="0">
+      </a>
         </div>
         <div class="flex-item-content">
             <h2>Ready to Visit?</h2>
-            <p>            
-We'd love to see you! Be sure to visit us during our business hours!</p>
+            <p>We'd love to see you! Be sure to visit us during our business hours!</p>
+<div class="business-hours">
+          <div class="business-hour sunday">
+            <p><b>SUN</b></p>
+            <p>11AM - 7PM</p>
+          </div>
+          <div class="business-hour montuesday">
+            <p><b>MON + TUES</b></p>
+            <p>Closed</p>
+          </div>
+          <div class="business-hour wednesday">
+            <p><b>WED</b></p>
+            <p>4PM - 8PM</p>
+          </div>
+          <div class="business-hour thursday">
+            <p><b>THURS</b></p>
+            <p>4PM - 8PM</p>
+          </div>
+          <div class="business-hour friday">
+            <p><b>FRI</b></p>
+            <p>4PM - 10PM</p>
+          </div>
+          <div class="business-hour saturday">
+            <p><b>SAT</b></p>
+            <p>12PM - 10PM</p>
+          </div>
+       </div>
+       <p>Sarnia Laser Tag - The Arena<br>1886 London Line, Sarnia, ON N7W 1B3<br>(519) 542-1001</p>
+       <a href="tel:+5195421001"><button>Call Us</button></a> or <button>Send us an e-mail</button>
         </div>
     </div>
 </div>
+</section>
 </div>
 </body>
+<script>
+  // Get the current day (0 for Sunday, 1 for Monday, etc.)
+const currentDay = new Date().getDay();
+
+// Define the mapping of days to the corresponding business hour div classes
+const dayToClassMapping = {
+  0: "sunday",
+  1: "monday",
+  2: "tuesday",
+  3: "wednesday",
+  4: "thursday",
+  5: "friday",
+  6: "saturday",
+};
+
+// Determine the class name for the current day's business hour div
+let dayClassName = dayToClassMapping[currentDay];
+
+// If today is Monday or Tuesday, and they share the same div, set the class name to "monday"
+if (currentDay === 1 || currentDay === 2) {
+  dayClassName = "montuesday";
+}
+
+// Select the corresponding business hour div based on the class name
+const businessHourDiv = document.querySelector(`.business-hour.${dayClassName}`);
+
+// Add the "highlight" class to the current day's business hour div
+if (businessHourDiv) {
+  businessHourDiv.classList.add("highlight");
+}
+
+</script>
 </html>
