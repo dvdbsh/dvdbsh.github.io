@@ -38,7 +38,7 @@
         justify-content: center;
         align-items: center;
         margin-bottom: -60px;
-        text-shadow: 0px 5px 15px rgba(0, 0, 0, 0.7);
+        text-shadow: 0px 5px 10px rgba(0, 0, 0, 1);
     }
     .hero h1 {
         font-size: 4rem;
@@ -63,7 +63,7 @@
         border-radius: 10px;
         cursor: pointer;
         transition: background-color 0.3s ease;
-        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.8);
     }
     button {
         background-color: #ff2b95;
@@ -75,14 +75,17 @@
         font-size: 1.2rem;
         border-radius: 10px;
         cursor: pointer;
-        transition: background-color 0.3s ease;
         margin: 10px 0;
+        border: 2px solid #3a312a;
+        box-shadow: 5px 5px 0px rgba(0, 0, 0, 1);
     }
     button:hover {
-        background-color: #df2180;
+        background-color: #44148f;
+        border: 2px solid #3a312a;
     }
     .hero button:hover {
-        background-color: #df2180;
+        background-color: #44148f;
+        border: none;
     }
     .button-outline {
         background-color: transparent;
@@ -92,9 +95,11 @@
         font-family: "Roboto Mono", monospace;
         font-optical-sizing: auto;
         font-size: 0.8em;
+        box-shadow: none;
     } 
     .button-outline:hover {
         background-color: #ff2b95;
+        border: 2px solid #ff2b95;
         color: #eee;
     }
     .promo {
@@ -238,10 +243,26 @@
     .section-header h1 {
         font-size: 4em;
         margin: 60px 0 10px 0;
-    }
+        font-weight: 800;
+        font-family: "Roboto Mono", monospace;
+    	text-shadow:
+        -2px -2px 0 #050505,
+         2px -2px 0 #050505,
+        -2px  2px 0 #050505,
+         2px  2px 0 #050505,
+         5px 5px 0 #44148f;
+         }
     .section-header h2 {
         font-size: 2em;
         margin: 20px 0;
+        font-weight: 800;
+        font-family: "Roboto Mono", monospace;
+    	text-shadow:
+        -2px -2px 0 #050505,
+         2px -2px 0 #050505,
+        -2px  2px 0 #050505,
+         2px  2px 0 #050505,
+         3px 3px 0 #ff2b95;
     }
     .flex-grid-item.flex-double {
         flex: 0 0 100% !important;
@@ -429,7 +450,7 @@
         </div>
     </div>
 </section>
-<div class="section-header"><h2>Group Prices<br><small style="font-size: 0.7em;">(6 people minimum)</small></h2></div>
+<div class="section-header"><h2>Group Prices <small style="font-size: 0.7em;">(6 people minimum)</small></h2></div>
 <section id="prices-group">
     <div class="flex-grid prices-grid colour-noise group-prices-grid">
         <div class="flex-grid-item">
@@ -499,7 +520,7 @@
           </div>
        </div>
        <p>Sarnia Laser Tag - The Arena<br>1886 London Line, Sarnia, ON N7W 1B3</p>
-        <a href="tel: (519) 542-1001"><button class="button button-outline"><i class='bx bx-phone'></i> Call Us</button></a> or <button class="button button-outline"><i class='bx bx-envelope'></i> E-mail Us</button>
+        <a href="tel: (519) 542-1001"><button class="button button-outline"><i class='bx bx-phone'></i> Call Us</button></a> &nbsp;or&nbsp; <button class="button button-outline"><i class='bx bx-envelope'></i> E-mail Us</button>
         </div>
     </div>
 </div>
