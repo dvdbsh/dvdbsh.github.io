@@ -4,363 +4,340 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Arena - Laser Tag, Rock Climb, Mini Golf</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Karla', sans-serif;
-            font-size: 1.2em;
-            margin: 0;
-            padding: 0;
-            background-color: #050505;
-            background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708892817/bg_gvxf4m.png);
-            background-size: contain;
-            color: #fff;
-        }
-        .mainwrap	{
-        	max-width: 1200px;
-            margin: auto;
-            padding: 20px;
-            }
+    <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+    
 
-        .hero {
-            background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1710287681/New_Project_-_2024-03-12T195417.674_z1ydqp.png'); /* Replace 'hero-background.jpg' with your actual image */
-            background-size: cover;
-            background-position: bottom;
-            text-align: center;
-            padding: 50px 20px;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            margin-bottom: -60px;
-             text-shadow: 0px 5px 15px rgba(0, 0, 0, 0.7);
-        }
-
-        .hero h1 {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            margin-top: 0px;
-            font-weight: 900;
-        }
-
-        .hero p {
-            font-size: 1.8rem;
-            margin-bottom: 40px;
-            margin-top: 20px;
-            font-weight: 800;
-        }
-
-        .hero button {
-            background-color: #ff2b95;
-            color: #fff;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
-        }
-        button {
-            background-color: #ff2b95;
-            color: #fff;
-            border: none;
-            padding: 15px 30px;
-            font-size: 1.2rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin: 10px 0;
-        }        
-
-        .hero button:hover {
-            background-color: #df2180;
-        }
-
-        .promo {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-around;
-            padding: 20px;
-            gap: 20px;
-        }
-
-        .promo-item {
-            flex: 1;
-            padding: 20px;
-            background-color: #44148f;
-            border-radius: 10px;
-        }
-
-        .promo-item {
-            position: relative;
-        }
-
-        .promo-item::before {
-            content: '\2605'; /* Sparkle emoji */
-            position: absolute;
-            top: 5px;
-            right: 15px;
-            font-size: 3rem;
-            color: gold; /* Adjust color as desired */
-        }
-
-        .promo-item h3 {
-            color: #ff2b95;
-        }
-
-        .promo-item p {
-            color: #fff;
-        }
-
-        /* Flex Grid */
-        .flex-container {
-            display: flex;
-            flex-wrap: wrap;
-            margin: 20px auto;
-            grid-gap: 20px;
-        }
-
-        .flex-container:nth-child(even) {
-            flex-direction: row-reverse;
-        }
-
-        .flex-item {
-            flex: 0 0 calc(50% - 10px);
-            box-sizing: border-box;
-            display: flex;
-            align-items: stretch;
-            justify-content: center;
-            position: relative;
-        }
-#reachout .flex-item-content {
-    align-items: flex-start;
-    padding-top: 0px;
-    margin: 0px;
-}
-
-        .flex-item img {
-            max-width: 100%;
-            min-height: auto;
-            border-radius: 20px;
-            opacity: 1;
-            object-fit: cover;
-            position: relative;
-        }
-        
-#reachout .flex-item::before {
-    content: none; 
-}
-        .flex-item::before {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(rgba(68, 20, 143, 0.3), rgba(153, 0, 153, 0.2)), url('https://www.transparenttextures.com/patterns/asfalt-light.png');
-            border-radius: 20px;
-            z-index: 1;
-        }
-
-        .flex-item-content {
-            padding: 20px;
-            border-radius: 20px;
-            flex: 1;
-            width: 100%;
-            background-color: rgba(0, 0, 0, 0.1);
-        }
-
-        .flex-item-content p {
-            color: #ccc;
-            line-height: 1.5;
-            margin-bottom: 10px;
-        }
-
-        .flex-item-content h1 {
-            font-size: 2.8em;
-            font-weight: 800;
-            margin: 10px 0;
-        }
-		.flex-item-content h2 {
-            margin-top: 0px;
-            margin-bottom: 0px;
-            
-        }
-
-        .flex-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            margin: auto;
-            padding: 20px;
-        }
-
-        .flex-grid-item {
-            flex: 0 0 calc(33.33% - 20px);
-            margin-bottom: 40px;
-            position: relative;
-            text-align: center;
-        }
-
-        .flex-grid-item img {
-            width: 100%;
-            max-width: 150px;
-            border-radius: 20px;
-        }
-
-        .flex-grid-item-header {
-            font-size: 2.8em;
-            font-weight: 900;
-            margin-top: 10px;
-            margin-bottom: 5px;
-            color: #222;
-        }
-
-        .flex-grid-item-subheader {
-            font-size: 1.2em;
-            font-weight: bold;
-            margin-bottom: 5px;
-            color: #222;
-        }
-
-        .flex-grid-item-body {
-            line-height: 1.5;
-        }
-        .prices-grid	{
-        	background-color: #eee;
-            border-radius: 20px;
-            margin-bottom: 40px;
-            }
-        .colour-noise		{
-        	background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/v1710517602/colour-noise_t4ay5b.png);
-            background-repeat: repeat-y;
-            }
-        .section-header h1	{
-        	font-size: 4em;
-            margin: 60px 0 10px 0;
-            }
-        .section-header h2	{
-        	font-size: 2em;
-            margin: 20px 0;
-            }
-           .flex-grid-item.flex-double {
-    flex: 0 0 100% !important; /* Make it take up full width */
-}
-
-            .group-prices-grid .flex-grid-item {
-        flex: 0 0 calc(50% - 20px); /* Each item takes up 50% of the space */
+<style>
+    body {
+        font-family: 'Karla', sans-serif;
+        font-size: 1.2em;
+        margin: 0;
+        padding: 0;
+        background-color: #050505;
+        background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708892817/bg_gvxf4m.png);
+        background-size: contain;
+        color: #fff;
     }
-     .business-hours {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      font-size: 0.7em;
+    .mainwrap {
+        max-width: 1200px;
+        margin: auto;
+        padding: 20px;
+    }
+    .hero {
+        background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1710287681/New_Project_-_2024-03-12T195417.674_z1ydqp.png');
+        background-size: cover;
+        background-position: bottom;
+        text-align: center;
+        padding: 50px 20px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: -60px;
+        text-shadow: 0px 5px 15px rgba(0, 0, 0, 0.7);
+    }
+    .hero h1 {
+        font-size: 4rem;
+        margin-bottom: 20px;
+        margin-top: 0px;
+        font-weight: 900;
+    }
+    .hero p {
+        font-size: 1.8rem;
+        margin-bottom: 40px;
+        margin-top: 20px;
+        font-weight: 800;
+    }
+    .hero button {
+        background-color: #ff2b95;
+        font-family: "Roboto Mono", monospace;
+        font-optical-sizing: auto;
+        color: #fff;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1.2rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.5);
+    }
+    button {
+        background-color: #ff2b95;
+        font-family: "Roboto Mono", monospace;
+        font-optical-sizing: auto;
+        color: #fff;
+        border: none;
+        padding: 15px 30px;
+        font-size: 1.2rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin: 10px 0;
+    }
+    button:hover {
+        background-color: #df2180;
+    }
+    .hero button:hover {
+        background-color: #df2180;
+    }
+    .button-outline {
+        background-color: transparent;
+        border: 2px solid #ff2b95;
+        color: #ff2b95;
+        padding: 10px;
+        font-family: "Roboto Mono", monospace;
+        font-optical-sizing: auto;
+        font-size: 0.8em;
+    } 
+    .button-outline:hover {
+        background-color: #ff2b95;
+        color: #eee;
+    }
+    .promo {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        padding: 20px;
+        gap: 20px;
+    }
+    .promo-item {
+        flex: 1;
+        padding: 20px;
+        background-color: #44148f;
+        border-radius: 10px;
+        position: relative;
+    }
+    .promo-item::before {
+        content: '\2605';
+        position: absolute;
+        top: 5px;
+        right: 15px;
+        font-size: 3rem;
+        color: gold;
+    }
+    .promo-item h3 {
+        color: #ff2b95;
+    }
+    .promo-item p {
+        color: #fff;
+    }
+    .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+        margin: 20px auto;
+        grid-gap: 20px;
+    }
+    .flex-container:nth-child(even) {
+        flex-direction: row-reverse;
+    }
+    .flex-item {
+        flex: 0 0 calc(50% - 10px);
+        box-sizing: border-box;
+        display: flex;
+        align-items: stretch;
+        justify-content: center;
+        position: relative;
+    }
+    #reachout .flex-item-content {
+        align-items: flex-start;
+        padding-top: 0px;
+        margin: 0px;
+    }
+    .flex-item img {
+        max-width: 100%;
+        min-height: auto;
+        border-radius: 20px;
+        opacity: 1;
+        object-fit: cover;
+        position: relative;
+    }
+    #reachout .flex-item::before {
+        content: none; 
+    }
+    .flex-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(rgba(68, 20, 143, 0.3), rgba(153, 0, 153, 0.2)), url('https://www.transparenttextures.com/patterns/asfalt-light.png');
+        border-radius: 20px;
+        z-index: 1;
+    }
+    .flex-item-content {
+        padding: 20px;
+        border-radius: 20px;
+        flex: 1;
+        width: 100%;
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+    .flex-item-content p {
+        color: #ccc;
+        line-height: 1.5;
+        margin-bottom: 10px;
+    }
+    .flex-item-content h1 {
+        font-size: 2.8em;
+        font-weight: 800;
+        margin: 10px 0;
+    }
+    .flex-item-content h2 {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    .flex-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin: auto;
+        padding: 20px;
+    }
+    .flex-grid-item {
+        flex: 0 0 calc(33.33% - 20px);
+        margin-bottom: 40px;
+        position: relative;
+        text-align: center;
+    }
+    .flex-grid-item img {
+        width: 100%;
+        max-width: 150px;
+        border-radius: 20px;
+    }
+    .flex-grid-item-header {
+        font-size: 2.8em;
+        font-weight: 900;
+        margin-top: 10px;
+        margin-bottom: 5px;
+        color: #222;
+    }
+    .flex-grid-item-subheader {
+        font-size: 1.2em;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #222;
+    }
+    .flex-grid-item-body {
+        line-height: 1.5;
+
+
+    }
+    .prices-grid {
+        background-color: #eee;
+        border-radius: 20px;
+        margin-bottom: 40px;
+    }
+    .colour-noise {
+        background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/v1710517602/colour-noise_t4ay5b.png);
+        background-repeat: repeat-y;
+    }
+    .section-header h1 {
+        font-size: 4em;
+        margin: 60px 0 10px 0;
+    }
+    .section-header h2 {
+        font-size: 2em;
+        margin: 20px 0;
+    }
+    .flex-grid-item.flex-double {
+        flex: 0 0 100% !important;
+    }
+    .group-prices-grid .flex-grid-item {
+        flex: 0 0 calc(50% - 20px);
+    }
+    .business-hours {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        font-size: 0.9em;
     }
     .business-hour {
-      flex-basis: calc(16.666% - 20px); /* 6 columns with increased spacing */
-      border: 2px solid #2a0c5a;
-      color: #fff;
-      border-radius: 15px;
-      padding: 5px;
-      margin-bottom: 10px;
-      text-align: center;
-      margin-top: 10px;
-      background: linear-gradient(to bottom, #2a0c5a 50%, transparent 50%);
-      overflow: hidden;
+        flex-basis: calc(16.666% - 20px);
+        border: 2px solid #2a0c5a;
+        color: #fff;
+        border-radius: 15px;
+        padding: 5px;
+        margin-bottom: 10px;
+        text-align: center;
+        margin-top: 10px;
+        background: linear-gradient(to bottom, #2a0c5a 50%, transparent 50%);
+        overflow: hidden;
     }
-    
-    /* Highlight class for the current day */
     .highlight {
-      border: 2px solid #5ce253;
-      background: linear-gradient(to bottom, #5ce253 50%, transparent 50%);
-      overflow: hidden;
+        border: 2px solid #5ce253;
+        background: linear-gradient(to bottom, #5ce253 50%, transparent 50%);
+        overflow: hidden;
     }
-
-    /* Add this CSS rule to change the text color of the highlighted day */
     .business-hour.highlight b {
-      color: #44148f;
-      font-weight: 800;
+        color: #44148f;
+        font-weight: 800;
     }
-    /* Add this CSS rule to style the flex container in the "Reach Out" section */
-#reachout .flex-container {
-    display: flex;
-}
-
-/* Adjust the width of the flex items within the "Reach Out" section */
-#reachout .flex-item {
-    flex: 0 0 30%; /* 30% width for the image */
-    max-width: 30%; /* Ensure a maximum width of 30% */
-}
-
-/* Adjust the width of the content within the flex items */
-#reachout .flex-item-content {
-    flex: 1; /* Take up remaining space */
-}
-
-
-
-        @media screen and (max-width: 768px) {
-            .hero {
-                padding: 50px 20px 20px;
-                height: calc(100vh - 50px);
-                margin-bottom: 0px;
-            }
-
-            .promo {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .promo-item {
-                width: calc(100% - 40px);
-            }
-
-            .flex-item {
-                flex: 0 0 100%;
-                margin-bottom: 5px;
-            }
-
-            .flex-item img {
-                width: 100%;
-                border-radius: 20px;
-                object-fit: cover;
-            }
-
-            .flex-item-content {
-                width: calc(100% - 40px);
-            }
-            
-			
-            .flex-grid-item {
-        		flex: 0 0 100%; /* Each item takes up 100% of the space */
-                margin-bottom: 40px;
-                position: relative;
-                text-align: center;
-            }
-.flex-double {
-        flex: 0 0 100%; /* Make it take up full width */
-    }         
-    .group-prices-grid .flex-grid-item {
-        flex: 0 0 100%; /* Each item takes up 100% of the space */
+    #reachout .flex-container {
+        display: flex;
     }
-     .business-hour {
-        flex-basis: calc(50% - 20px); /* 2 columns with increased spacing */
-      }
-        #reachout .flex-container {
-        flex-direction: column;
+    #reachout .flex-item {
+        flex: 0 0 30%;
+        max-width: 30%;
     }
-    
-    #reachout .flex-item,
     #reachout .flex-item-content {
-        flex: 0 0 100%;
-        max-width: 100%;
+        flex: 1;
     }
+    @media screen and (max-width: 768px) {
+        .hero {
+            padding: 50px 20px 20px;
+            height: calc(100vh - 50px);
+            margin-bottom: 0px;
         }
-    </style>
+        .promo {
+            flex-direction: column;
+            align-items: center;
+        }
+        .promo-item {
+            width: calc(100% - 40px);
+        }
+        .flex-item {
+            flex: 0 0 100%;
+            margin-bottom: 5px;
+        }
+        .flex-item img {
+            width: 100%;
+            border-radius: 20px;
+            object-fit: cover;
+        }
+        .flex-item-content {
+            width: calc(100% - 40px);
+        }
+        .flex-grid-item {
+            flex: 0 0 100%;
+            margin-bottom: 40px;
+            position: relative;
+            text-align: center;
+        }
+        .flex-double {
+            flex: 0 0 100%;
+        }
+        .group-prices-grid .flex-grid-item {
+            flex: 0 0 100%;
+        }
+        .business-hour {
+            flex-basis: calc(50% - 20px);
+        }
+        #reachout .flex-container {
+            flex-direction: column;
+        }
+        #reachout .flex-item,
+        #reachout .flex-item-content {
+            flex: 0 0 100%;
+            max-width: 100%;
+        }
+    }
+</style>
+
+
 </head>
 <body>
 <div class="hero">
@@ -495,7 +472,7 @@
         <div class="flex-item-content">
             <h2>Ready to Visit?</h2>
             <p>We'd love to see you! Be sure to visit us during our business hours!</p>
-<div class="business-hours">
+        <div class="business-hours">
           <div class="business-hour sunday">
             <p><b>SUN</b></p>
             <p>11AM - 7PM</p>
@@ -521,8 +498,8 @@
             <p>12PM - 10PM</p>
           </div>
        </div>
-       <p>Sarnia Laser Tag - The Arena<br>1886 London Line, Sarnia, ON N7W 1B3<br>(519) 542-1001</p>
-       <a href="tel:+5195421001"><button>Call Us</button></a> or <button>Send us an e-mail</button>
+       <a href="tel: (519) 542-1001"><button class="button button-outline"><i class='bx bx-phone'></i> Call Us</button></a> or <button class="button button-outline"><i class='bx bx-envelope'></i> E-mail Us</button>
+       <p>Sarnia Laser Tag - The Arena<br>1886 London Line, Sarnia, ON N7W 1B3</p>
         </div>
     </div>
 </div>
