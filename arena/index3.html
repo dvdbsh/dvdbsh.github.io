@@ -27,7 +27,7 @@
         padding: 20px;
     }
     .hero {
-        background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1710287681/New_Project_-_2024-03-12T195417.674_z1ydqp.png');
+        background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1710287681/New_Project_-_2024-03-12T195417.674_z1ydqp.png');
         background-size: cover;
         background-position: bottom;
         text-align: center;
@@ -41,19 +41,31 @@
         text-shadow: 0px 5px 10px rgba(0, 0, 0, 1);
     }
     .hero h1 {
-        font-size: 4rem;
+        font-size: 4.2rem;
         margin-bottom: 20px;
         margin-top: 0px;
         font-weight: 900;
+        text-shadow:
+        -2px -2px 0 #050505,
+         2px -2px 0 #050505,
+        -2px  2px 0 #050505,
+         2px  2px 0 #050505,
+         5px 5px 0 #050505;
     }
     .hero p {
-        font-size: 1.8rem;
+        font-size: 2.5rem;
         margin-bottom: 40px;
         margin-top: 20px;
         font-weight: 800;
+        text-shadow:
+        -2px -2px 0 #050505,
+         2px -2px 0 #050505,
+        -2px  2px 0 #050505,
+         2px  2px 0 #050505,
+         5px 5px 0 #050505;        
     }
     .hero button {
-        background-color: #ff2b95;
+        background-color: #ff68b5;
         font-family: "Roboto Mono", monospace;
         font-optical-sizing: auto;
         color: #fff;
@@ -62,11 +74,12 @@
         font-size: 1.2rem;
         border-radius: 10px;
         cursor: pointer;
-        transition: background-color 0.3s ease;
-        box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.8);
+        margin: 10px 0;
+        border: 2px solid #000;
+        box-shadow: 5px 5px 0px rgba(0, 0, 0, 1);
     }
     button {
-        background-color: #ff2b95;
+        background-color: #ff68b5;
         font-family: "Roboto Mono", monospace;
         font-optical-sizing: auto;
         color: #fff;
@@ -80,17 +93,17 @@
         box-shadow: 5px 5px 0px rgba(0, 0, 0, 1);
     }
     button:hover {
-        background-color: #44148f;
+        background-color: #9723C9;
         border: 2px solid #3a312a;
     }
     .hero button:hover {
-        background-color: #44148f;
-        border: none;
+		background-color: #9723C9;
+        border: 2px solid #3a312a;
     }
     .button-outline {
         background-color: transparent;
-        border: 2px solid #ff2b95;
-        color: #ff2b95;
+        border: 2px solid #ff68b5;
+        color: #ff68b5;
         padding: 10px;
         font-family: "Roboto Mono", monospace;
         font-optical-sizing: auto;
@@ -98,8 +111,8 @@
         box-shadow: none;
     } 
     .button-outline:hover {
-        background-color: #ff2b95;
-        border: 2px solid #ff2b95;
+        background-color: #ff68b5;
+        border: 2px solid #ff68b5;
         color: #eee;
     }
     .promo {
@@ -112,9 +125,11 @@
     .promo-item {
         flex: 1;
         padding: 20px;
-        background-color: #44148f;
+        background-color: #9723C9;
         border-radius: 10px;
         position: relative;
+        border: 2px solid #000;
+        box-shadow: 5px 5px 0px rgba(0, 0, 0, 1);
     }
     .promo-item::before {
         content: '\2605';
@@ -125,7 +140,7 @@
         color: gold;
     }
     .promo-item h3 {
-        color: #ff2b95;
+        color: #ff68b5;
     }
     .promo-item p {
         color: #fff;
@@ -159,6 +174,8 @@
         opacity: 1;
         object-fit: cover;
         position: relative;
+                border: 2px solid #000;
+        box-shadow: 5px 5px 0px rgba(0, 0, 0, 1);
     }
     #reachout .flex-item::before {
         content: none; 
@@ -188,26 +205,24 @@
     .flex-item-content h1 {
         font-size: 2.8em;
         font-weight: 800;
-        font-family: "Space Mono", monospace;
     	text-shadow:
         -2px -2px 0 #050505,
          2px -2px 0 #050505,
         -2px  2px 0 #050505,
          2px  2px 0 #050505,
-         3px 3px 0 #ff2b95;
+         3px 3px 0 #050505;
         margin: 10px 0;
     }
     .flex-item-content h2 {
         margin-top: 0px;
         margin-bottom: 0px;
         font-weight: 800;
-        font-family: "Space Mono", monospace;
     	text-shadow:
         -2px -2px 0 #050505,
          2px -2px 0 #050505,
         -2px  2px 0 #050505,
          2px  2px 0 #050505,
-         3px 3px 0 #5ce253;
+         3px 3px 0 #050505;
     }
     .flex-grid {
         display: flex;
@@ -237,7 +252,13 @@
     .flex-grid-item-subheader {
         font-size: 1.2em;
         font-weight: bold;
-        margin-bottom: 5px;
+        margin-bottom: 0px;
+        color: #222;
+    }
+    #reviews .flex-grid-item-subheader {
+        font-size: 1em;
+        font-weight: bold;
+        margin-bottom: 0px;
         color: #222;
     }
     .flex-grid-item-body {
@@ -258,25 +279,23 @@
         font-size: 4em;
         margin: 60px 0 10px 0;
         font-weight: 800;
-        font-family: "Space Mono", monospace;
     	text-shadow:
         -2px -2px 0 #050505,
          2px -2px 0 #050505,
         -2px  2px 0 #050505,
          2px  2px 0 #050505,
-         5px 5px 0 #44148f;
+         3px 3px 0 #050505;
          }
     .section-header h2 {
         font-size: 2em;
         margin: 20px 0;
         font-weight: 800;
-        font-family: "Space Mono", monospace;
     	text-shadow:
         -2px -2px 0 #050505,
          2px -2px 0 #050505,
         -2px  2px 0 #050505,
          2px  2px 0 #050505,
-         3px 3px 0 #ff2b95;
+         3px 3px 0 #050505;
     }
     .flex-grid-item.flex-double {
         flex: 0 0 100% !important;
@@ -292,23 +311,29 @@
     }
     .business-hour {
         flex-basis: calc(16.666% - 20px);
-        border: 2px solid #2a0c5a;
+        border: 2px solid #000;
+        box-shadow: 5px 5px 0px rgba(0, 0, 0, 1);
         color: #fff;
         border-radius: 15px;
         padding: 5px;
         margin-bottom: 10px;
         text-align: center;
         margin-top: 10px;
-        background: linear-gradient(to bottom, #2a0c5a 50%, transparent 50%);
+        background: linear-gradient(to bottom, #9723c9 50%, #eee 50%);
         overflow: hidden;
     }
+    .business-hour b	{
+    	color: #eee;
+        }    
+    .business-hour p	{
+    	color: #090909;
+        }
     .highlight {
-        border: 2px solid #5ce253;
-        background: linear-gradient(to bottom, #5ce253 50%, transparent 50%);
+        background: linear-gradient(to bottom, #d4d853 50%, #eee 50%);
         overflow: hidden;
     }
     .business-hour.highlight b {
-        color: #44148f;
+        color: #9723C9;
         font-weight: 800;
     }
     #reachout .flex-container {
@@ -469,9 +494,14 @@
         </div>
     </div>
 </section>
-<div class="section-header"><h2>Group Prices<br><small style="font-size: 0.7em;">(6 people minimum)</small></h2></div>
+<div class="section-header"><h2>Group Prices</h2></div>
 <section id="prices-group">
     <div class="flex-grid prices-grid colour-noise group-prices-grid">
+    <div class="flex-grid-item flex-double">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710516020/group_viuias.png" alt="Price 5">
+    <h3 class="flex-grid-item-header">Keep in mind</h3>
+    <p class="flex-grid-item-subheader">Groups must have 6 people minimum. Pricing is per person.</p>
+</div>    
         <div class="flex-grid-item">
             <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/1_1_ickk6k.png" alt="Price 1">
             <h3 class="flex-grid-item-header">$10</h3>
@@ -493,12 +523,23 @@
             <p class="flex-grid-item-subheader">3 rock climbs</p>
         </div>
         <div class="flex-grid-item flex-double">
-    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710516020/group_viuias.png" alt="Price 5">
     <h3 class="flex-grid-item-header">Hosting an Event?</h3>
     <p class="flex-grid-item-subheader"><button>Reach out to us directly!</button></p>
 </div>
     </div>
 </section>
+</section>
+<section id="reviews">
+    <div class="flex-grid prices-grid colour-noise group-prices-grid">
+    <div class="flex-grid-item flex-double">
+    <p class="flex-grid-item-subheader">"A perfect family day out! Laser tag, rock climbing, and mini golf – something for everyone!"<br>- Sarah K.</p>
+</div>
+</div>
+    <div class="flex-grid prices-grid colour-noise group-prices-grid">
+    <div class="flex-grid-item flex-double">
+<p class="flex-grid-item-subheader">"Rock climber's paradise! Varied walls, helpful staff, and fun extras like laser tag."<br>- Alex M.</p>
+</div>
+</div>
 </section>
 <section id="reachout">
 <div class="section-header"><h1>Reach Out</h1></div>
