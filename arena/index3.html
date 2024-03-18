@@ -6,8 +6,8 @@
     <title>The Arena - Laser Tag, Rock Climb, Mini Golf</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     
 
 <style>
@@ -179,7 +179,6 @@
         border-radius: 20px;
         flex: 1;
         width: 100%;
-        background-color: rgba(0, 0, 0, 0.1);
     }
     .flex-item-content p {
         color: #ccc;
@@ -189,11 +188,26 @@
     .flex-item-content h1 {
         font-size: 2.8em;
         font-weight: 800;
+        font-family: "Space Mono", monospace;
+    	text-shadow:
+        -2px -2px 0 #050505,
+         2px -2px 0 #050505,
+        -2px  2px 0 #050505,
+         2px  2px 0 #050505,
+         3px 3px 0 #ff2b95;
         margin: 10px 0;
     }
     .flex-item-content h2 {
         margin-top: 0px;
         margin-bottom: 0px;
+        font-weight: 800;
+        font-family: "Space Mono", monospace;
+    	text-shadow:
+        -2px -2px 0 #050505,
+         2px -2px 0 #050505,
+        -2px  2px 0 #050505,
+         2px  2px 0 #050505,
+         3px 3px 0 #5ce253;
     }
     .flex-grid {
         display: flex;
@@ -244,7 +258,7 @@
         font-size: 4em;
         margin: 60px 0 10px 0;
         font-weight: 800;
-        font-family: "Roboto Mono", monospace;
+        font-family: "Space Mono", monospace;
     	text-shadow:
         -2px -2px 0 #050505,
          2px -2px 0 #050505,
@@ -256,7 +270,7 @@
         font-size: 2em;
         margin: 20px 0;
         font-weight: 800;
-        font-family: "Roboto Mono", monospace;
+        font-family: "Space Mono", monospace;
     	text-shadow:
         -2px -2px 0 #050505,
          2px -2px 0 #050505,
@@ -455,7 +469,7 @@
         </div>
     </div>
 </section>
-<div class="section-header"><h2>Group Prices <small style="font-size: 0.7em;">(6 people minimum)</small></h2></div>
+<div class="section-header"><h2>Group Prices<br><small style="font-size: 0.7em;">(6 people minimum)</small></h2></div>
 <section id="prices-group">
     <div class="flex-grid prices-grid colour-noise group-prices-grid">
         <div class="flex-grid-item">
@@ -532,6 +546,17 @@
 </section>
 </div>
 </body>
+<svg width="0" height="0" style="position:absolute;" aria-hidden="true">
+  <filter id="noiseFilter">
+    <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="noise" />
+    <feColorMatrix type="saturate" values="0" result="grayscaleNoise" />
+    <feColorMatrix type="matrix" values="0 0 0 0 0
+                                           0 0 0 0 0
+                                           0 0 0 0 0
+                                           0 0 0 1 0" in="grayscaleNoise" />
+    <feComposite in="SourceGraphic" in2="noise" operator="in" />
+  </filter>
+</svg>
 <script>
   // Get the current day (0 for Sunday, 1 for Monday, etc.)
 const currentDay = new Date().getDay();
