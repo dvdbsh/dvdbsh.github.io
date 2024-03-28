@@ -7,7 +7,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&family=Noto+Emoji:wght@300..700&family=Public+Sans:ital,wght@0,100..900;1,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap" rel="stylesheet">
     
 
 <style>
@@ -152,9 +152,9 @@
         grid-gap: 20px;
         border-radius: 20px;
         border: 2px solid #000;
-        box-shadow: 5px 5px 0px #741f99;
+        box-shadow: 10px 10px 0px #741f99;
         background-color: #eee;
-        color: #090909;
+        color: #222;
         overflow: hidden;
     }
     .flex-container:nth-child(even) {
@@ -173,6 +173,17 @@
         padding-top: 0px;
         margin: 0px;
     }
+    #reachout .flex-item img {
+        max-width: 90%;
+        min-height: auto;
+        margin: 10px;
+        opacity: 1;
+        object-fit: cover;
+        position: relative;
+        border: 2px solid #000;
+        border-radius: 50%;
+
+    }    
     .flex-item img {
         max-width: 100%;
         min-height: auto;
@@ -194,18 +205,15 @@
         left: 0;
         width: 100%;
         height: 100%;
-        
-        border-radius: 20px;
         z-index: 1;
     }
     .flex-item-content {
         padding: 20px;
-        border-radius: 20px;
         flex: 1;
         width: 100%;
     }
     .flex-item-content p {
-        color: #090909;
+        color: #222;
         line-height: 1.5;
         margin-bottom: 10px;
     }
@@ -215,8 +223,6 @@
         margin: 10px 0;
     }
     .flex-item-content h2 {
-        margin-top: 0px;
-        margin-bottom: 0px;
         font-weight: 800;
     }
     .flex-grid {
@@ -265,8 +271,8 @@
         border-radius: 10px;
         position: relative;
         border: 2px solid #000;
-        box-shadow: 5px 5px 0px #741f99;
-		color: #090909;
+        box-shadow: 10px 10px 0px #741f99;
+		color: #222;
     }
     .review-item img {
     width: 80px; /* Adjust the width as needed */
@@ -294,6 +300,7 @@
         background-color: #eee;
         border-radius: 20px;
         margin-bottom: 40px;
+        box-shadow: 5px 5px 0px #741f99;
     }
     .colour-noise {
         background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/v1710517602/colour-noise_t4ay5b.png);
@@ -308,7 +315,7 @@
          2px -2px 0 #050505,
         -2px  2px 0 #050505,
          2px  2px 0 #050505,
-         4px 4px 0 #741f99;
+         7px 7px 0 #741f99;
          }
     .section-header h2 {
         font-size: 2em;
@@ -319,11 +326,10 @@
          2px -2px 0 #050505,
         -2px  2px 0 #050505,
          2px  2px 0 #050505,
-         4px 4px 0 #741f99;
+         5px 5px 0 #741f99;
     }
     .flex-grid-item.flex-double {
         flex: 0 0 100% !important;
-		margin-bottom: 0px;
     }
     .group-prices-grid .flex-grid-item {
         flex: 0 0 calc(50% - 20px);
@@ -337,9 +343,8 @@
     .business-hour {
         flex-basis: calc(16.666% - 20px);
         border: 2px solid #000;
-        box-shadow: 5px 5px 0px #741f99;
         color: #fff;
-        border-radius: 15px;
+        border-radius: 20px;
         padding: 5px;
         margin-bottom: 10px;
         text-align: center;
@@ -351,7 +356,7 @@
     	color: #eee;
         }    
     .business-hour p	{
-    	color: #090909;
+    	color: #222;
         }
     .highlight {
         background: linear-gradient(to bottom, #d4d853 50%, #eee 50%);
@@ -372,17 +377,80 @@
         flex: 1;
     }
     .round-tag	{
-        background-color: #c4a1ff;
+        background-color: #eee;
         font-weight: 800;
         font-family: "Karla";
-        color: #fff;
-        padding: 15px 30px;
-        font-size: 3.2em;
-        border-radius: 20px;
-        margin: 20px 0;
-        border: 3px solid #000;
-        box-shadow: 5px 5px 0px #eee;
+        color: #222;
+        padding: 15px 15px 30px 15px;
+        margin-bottom: -25px;        
+        font-size: 1.8em !important;
+        border-radius: 20px 20px 0px 0px;
+        box-shadow: 5px 5px 0px #741f99;
+        max-width: 350px;
+        max-height: 125px;
+        display: flex;
+        align-items: top;
         	}
+.contact-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    float: left;
+    margin-right: 20px;
+    border: 2px solid #000;
+    object-fit: cover;
+    object-position: center;
+}
+.marquee {
+	display: flex;
+    align-items: center;
+  overflow: hidden;
+  white-space: nowrap;
+  box-sizing: border-box;
+  user-select: none;
+  background-color: #90ee90;
+  color: #000;
+  padding: 10px 0 12px 0;
+  font-family: "Roboto Mono", monospace;
+  font-optical-sizing: auto;
+  font-size: 0.8em;
+  border-top: 4px solid #90ee90;
+  border-bottom: 4px solid #90ee90;
+  box-shadow: inset 0 2px #000, inset 0 -2px #000;
+}
+.marqueemoji	{
+	font-family: "Noto Emoji", sans-serif;
+    font-weight: 800;
+    font-size: 1.2em;
+    color: #000;
+    }
+
+
+.marquee__content {
+  display: inline-block;
+  animation: scroll infinite linear;
+  animation-duration: calc(60s / var(--speed-modifier, 1));
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+
+/* Accessibility: Hide duplicated content from screen readers */
+[aria-hidden="true"] {
+  visibility: hidden;
+}
+
+
+
+
+         
     @media screen and (max-width: 768px) {
         .hero {
             padding: 50px 20px 20px;
@@ -437,10 +505,6 @@
     	.section-header h2 {
     		font-size: 2em;
     	}
-        .round-tag	{
-        	font-size: 2.8em;
-            text-align: center;
-            }
          .reviews {
             flex-direction: column;
             align-items: center;
@@ -448,6 +512,10 @@
         .review-item {
             width: calc(100% - 40px);
         }
+        .round-tag	{
+        	font-size: 1em;
+        	max-width: 80%;
+            }
 </style>
 
 
@@ -487,7 +555,7 @@
     </div>
 </div>
 <div class="mainwrap">
-<div class="round-tag">Activities</div>
+<div class="section-header"><h1>Activities!</h1></div>
 <section id="activities">
     <div class="flex-container colour-noise">
         <div class="flex-item">
@@ -520,7 +588,8 @@
         </div>
     </div>
 </section>
-<div class="section-header"><h1>Our Prices</h1><h2>Walk-In Prices</h2></div>
+
+<div class="section-header"><h1>Our Prices</h1></div><div class="round-tag colour-noise">Walk-In Prices</div>
 <section id="prices">
 <section id="prices-walkin">
     <div class="flex-grid prices-grid colour-noise">
@@ -556,7 +625,7 @@
         </div>
     </div>
 </section>
-<div class="section-header"><h2>Group Prices</h2></div>
+<div class="round-tag colour-noise">Group Prices</div>
 <section id="prices-group">
     <div class="flex-grid prices-grid colour-noise group-prices-grid">
     <div class="flex-grid-item flex-double">
@@ -591,6 +660,15 @@
     </div>
 </section>
 </section>
+
+</div>
+<div class="marquee">
+  <div class="marquee__content">
+<span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span><span>Sarnia Plays Here</span><span class="marqueemoji"> ✨ </span>
+  </div>
+</div>
+<div class="mainwrap">
+
 <section id="reviews">
 <div class="section-header"><h1>People Are Talking!</h1></div>
 <div class="reviews">
@@ -612,14 +690,9 @@
 </div>
 </section>
 <section id="reachout">
-<div class="section-header"><h1>Reach Out</h1></div>
-<section id="activities">
-    <div class="flex-container">
-        <div class="flex-item">
-            <a href="https://www.google.com/maps/dir/42.9802491,-81.2037244/1886+London+Line,+Sarnia,+ON+N7W+1B3/@42.9321471,-83.1115738,8z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x882583f032715077:0xdf8f3cb05927e5!2m2!1d-82.3151737!2d42.9853351?entry=ttu">
-        <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1695052586/New_Project_13_nzr2xh.jpg" alt="Image" border="0">
-      </a>
-        </div>
+<div class="section-header"><h1>Come Have Some Fun!</h1></div>
+    <div class="flex-container colour-noise">
+
         <div class="flex-item-content">
             <h2>Ready to Visit?</h2>
             <p>We'd love to see you! Be sure to visit us during our business hours!</p>
@@ -649,9 +722,11 @@
             <p>12PM - 10PM</p>
           </div>
        </div>
-       <p>Sarnia Laser Tag - The Arena<br>1886 London Line, Sarnia, ON N7W 1B3</p>
+               
+       <p><a href="https://www.google.com/maps/dir/42.9802491,-81.2037244/1886+London+Line,+Sarnia,+ON+N7W+1B3/@42.9321471,-83.1115738,8z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x882583f032715077:0xdf8f3cb05927e5!2m2!1d-82.3151737!2d42.9853351?entry=ttu"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1695052586/New_Project_13_nzr2xh.jpg" alt="Contact Image" class="contact-image"></a>Sarnia Laser Tag - The Arena<br>1886 London Line, Sarnia, ON N7W 1B3</p>
         <a href="tel: (519) 542-1001"><button class="button button-outline"><i class='bx bx-phone'></i> Call Us</button></a> &nbsp;or&nbsp; <button class="button button-outline"><i class='bx bx-envelope'></i> E-mail Us</button>
         </div>
+          
     </div>
 </div>
 </section>
