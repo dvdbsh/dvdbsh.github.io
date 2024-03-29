@@ -16,7 +16,6 @@
         font-size: 1.2em;
         margin: 0;
         padding: 0;
-        background-color: #000;
         background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708892817/bg_gvxf4m.png);
         background-size: contain;
         color: #fff;
@@ -27,10 +26,10 @@
         padding: 20px;
     }
     .hero {
-        background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1711658329/hero-stickies_sbvmej.png');
-        background-size: cover;
-        background-position: center;
-        text-align: center;
+		background:url('https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1711658329/hero-stickies_sbvmej.png'), linear-gradient(to bottom, #9723c9 0%, transparent 100%);
+		background-size: cover;
+		background-position: center;
+		text-align: center;
         padding: 50px 20px;
         height: 100vh;
         display: flex;
@@ -128,7 +127,7 @@
         border-radius: 10px;
         position: relative;
         border: 2px solid #000;
-        box-shadow: 10px 10px 0px #741f99;
+        box-shadow: 7px 7px 0px #741f99;
     }
     .promo-item::before {
         content: '\2605';
@@ -151,7 +150,7 @@
         grid-gap: 20px;
         border-radius: 20px;
         border: 2px solid #000;
-        box-shadow: 10px 10px 0px #741f99;
+        box-shadow: 7px 7px 0px #741f99;
         background-color: #eee;
         color: #222;
         overflow: hidden;
@@ -270,7 +269,7 @@
         border-radius: 10px;
         position: relative;
         border: 2px solid #000;
-        box-shadow: 10px 10px 0px #741f99;
+        box-shadow: 7px 7px 0px #741f99;
 		color: #222;
     }
     .review-item img {
@@ -299,7 +298,7 @@
         background-color: #eee;
         border-radius: 20px;
         margin-bottom: 40px;
-        box-shadow: 10px 10px 0px #741f99;
+        box-shadow: 7px 7px 0px #741f99;
     }
     .colour-noise {
         background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/v1710517602/colour-noise_t4ay5b.png);
@@ -452,7 +451,9 @@
          
     @media screen and (max-width: 768px) {
         .hero {
-        	background-image:url(https://res.cloudinary.com/di8j84ent/image/upload/v1711675153/hero-stickies-p_nmlq4h.png);
+        	background:url(https://res.cloudinary.com/di8j84ent/image/upload/v1711675153/hero-stickies-p_nmlq4h.png), linear-gradient(to bottom, #9723c9 0%, transparent 100%);
+            background-size: cover;
+			background-position: center;
             padding: 50px 20px 20px;
             height: calc(100vh - 50px);
             margin-bottom: 0px;
