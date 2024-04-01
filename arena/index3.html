@@ -70,7 +70,7 @@
         border: none;
         padding: 15px 30px;
         font-size: 1.2rem;
-        border-radius: 10px;
+        border-radius: 0px;
         cursor: pointer;
         margin: 20px 0;
         border: 2px solid #000;
@@ -84,7 +84,7 @@
         border: none;
         padding: 15px 30px;
         font-size: 1.2rem;
-        border-radius: 10px;
+        border-radius: 0px;
         cursor: pointer;
         margin: 10px 0;
         border: 2px solid #090909;
@@ -124,7 +124,7 @@
         flex: 1;
         padding: 20px;
         background-color: #2b27ac;
-        border-radius: 10px;
+        border-radius: 0px;
         position: relative;
         border: 2px solid #000;
         box-shadow: 7px 7px 0px #741f99;
@@ -148,7 +148,7 @@
         flex-wrap: wrap;
         margin: 40px auto;
         grid-gap: 20px;
-        border-radius: 20px;
+        border-radius: 0px;
         border: 2px solid #000;
         box-shadow: 7px 7px 0px #741f99;
         background-color: #eee;
@@ -239,7 +239,7 @@
     .flex-grid-item img {
         width: 100%;
         max-width: 150px;
-        border-radius: 20px;
+        border-radius: 0px;
     }
     .flex-grid-item-header {
         font-size: 2.8em;
@@ -266,7 +266,7 @@
         flex: 1;
         padding: 20px;
         background-color: #eee;
-        border-radius: 10px;
+        border-radius: 0px;
         position: relative;
         border: 2px solid #000;
         box-shadow: 7px 7px 0px #741f99;
@@ -296,14 +296,47 @@
     }
     .prices-grid {
         background-color: #eee;
-        border-radius: 20px;
+        border-radius: 0px;
         margin-bottom: 40px;
         box-shadow: 7px 7px 0px #741f99;
+        border: 2px solid #000;
     }
     .colour-noise {
         background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/v1710517602/colour-noise_t4ay5b.png);
         background-repeat: repeat-y;
     }
+    .section-header {
+  white-space: nowrap;
+  overflow-x: hidden;
+  overflow-y: auto;
+  font-size: 4em;
+  font-weight: 800;
+  font-family: "Karla";
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.section-header span {
+  color: #090909;
+  text-shadow: 
+    -1px -1px 0 #eee,  
+     1px -1px 0 #eee,
+    -1px  1px 0 #eee,
+     1px  1px 0 #eee;
+  margin-right: 20px;
+}
+
+.section-header .filled {
+  color: #eee;
+  text-shadow:
+        -2px -2px 0 #050505,
+         2px -2px 0 #050505,
+        -2px  2px 0 #050505,
+         2px  2px 0 #050505,
+         4px 4px 0 #741f99;
+         
+}
     .section-header h1 {
         font-size: 4em;
         margin: 60px 0 10px 0;
@@ -342,7 +375,7 @@
         flex-basis: calc(16.666% - 20px);
         border: 2px solid #000;
         color: #fff;
-        border-radius: 20px;
+        border-radius: 0px;
         padding: 5px;
         margin-bottom: 10px;
         text-align: center;
@@ -378,16 +411,18 @@
         background-color: #eee;
         font-weight: 800;
         font-family: "Karla";
+        font-size: 3.2em;
         color: #222;
-        padding: 15px 15px 30px 15px;
-        margin-bottom: -25px;        
-        font-size: 1.8em !important;
-        border-radius: 20px 20px 0px 0px;
-        box-shadow: 10px 10px 0px #741f99;
-        max-width: 350px;
-        max-height: 125px;
+        padding: 20px;
+        border: 2px solid #000;
+        box-shadow: 7px 7px 0px #741f99;
+        max-width: 380px;
+        height: 80px;
         display: flex;
-        align-items: top;
+        align-items: center;
+        justify-content: center;
+        transform: rotate(-1deg);
+        margin: 40px auto;
         	}
 .contact-image {
     width: 140px;
@@ -500,6 +535,10 @@
             flex: 0 0 100%;
             max-width: 100%;
         }
+        .section-header	{
+        	font-size: 2em;
+            }
+         
         .section-header h1 {
         	font-size: 2.8em;
             text-shadow:
@@ -525,8 +564,7 @@
             width: calc(100% - 40px);
         }
         .round-tag	{
-        	font-size: 1em;
-        	max-width: 80%;
+        	font-size: 2.7em;
             }
 </style>
 
@@ -567,7 +605,23 @@
     </div>
 </div>
 <div class="mainwrap">
-<div class="section-header"><h1>Activities!</h1></div>
+</div>
+<div class="section-header">
+
+  <span>Activities</span>
+  <span>Activities</span>
+  <span>Activities</span>
+  <span>Activities</span>
+  <span>Activities</span>
+  <span class="filled">Activities</span>
+  <span>Activities</span>
+  <span>Activities</span>
+  <span>Activities</span>
+  <span>Activities</span>
+  <span>Activities</span>
+
+</div>
+<div class="mainwrap">
 <section id="activities">
     <div class="flex-container colour-noise">
         <div class="flex-item">
@@ -601,8 +655,26 @@
     </div>
 </section>
 
-<div class="section-header"><h1>Our Prices</h1></div><div class="round-tag colour-noise">Walk-In Prices</div>
 <section id="prices">
+</div>
+<div class="section-header">
+
+  <span>Walk-In Prices</span>
+  <span>Walk-In Prices</span>
+  <span>Walk-In Prices</span>
+  <span>Walk-In Prices</span>
+  <span>Walk-In Prices</span>
+  <span class="filled">Walk-In Prices</span>
+  <span>Walk-In Prices</span>
+  <span>Walk-In Prices</span>
+  <span>Walk-In Prices</span>
+  <span>Walk-In Prices</span>
+  <span>Walk-In Prices</span>
+
+</div>
+<div class="mainwrap">
+
+
 <section id="prices-walkin">
     <div class="flex-grid prices-grid colour-noise">
         <div class="flex-grid-item">
@@ -637,7 +709,24 @@
         </div>
     </div>
 </section>
-<div class="round-tag colour-noise">Group Prices</div>
+</div>
+<div class="section-header">
+
+  <span>Group Prices</span>
+  <span>Group Prices</span>
+  <span>Group Prices</span>
+  <span>Group Prices</span>
+  <span>Group Prices</span>
+  <span class="filled">Group Prices</span>
+  <span>Group Prices</span>
+  <span>Group Prices</span>
+  <span>Group Prices</span>
+  <span>Group Prices</span>
+  <span>Group Prices</span>
+
+</div>
+<div class="mainwrap">
+
 <section id="prices-group">
     <div class="flex-grid prices-grid colour-noise group-prices-grid">
     <div class="flex-grid-item flex-double">
@@ -682,7 +771,25 @@
 <div class="mainwrap">
 
 <section id="reviews">
-<div class="section-header"><h1>People Are Talking!</h1></div>
+</div>
+<div class="section-header">
+
+  <span>Reviews Are In</span>
+  <span>Reviews Are In</span>
+  <span>Reviews Are In</span>
+  <span>Reviews Are In</span>
+  <span>Reviews Are In</span>
+  <span class="filled">Reviews Are In</span>
+  <span>Reviews Are In</span>
+  <span>Reviews Are In</span>
+  <span>Reviews Are In</span>
+  <span>Reviews Are In</span>
+  <span>Reviews Are In</span>
+
+</div>
+<div class="mainwrap">
+
+
 <div class="reviews">
     <div class="review-item colour-noise">
     <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1711046008/review_kate_dvyqqq.png">
@@ -702,11 +809,28 @@
 </div>
 </section>
 <section id="reachout">
-<div class="section-header"><h1>Come Have Some Fun!</h1></div>
+</div>
+<div class="section-header">
+
+  <span>Ready To Visit?</span>
+  <span>Ready To Visit?</span>
+  <span>Ready To Visit?</span>
+  <span>Ready To Visit?</span>
+  <span>Ready To Visit?</span>
+  <span class="filled">Ready To Visit?</span>
+  <span>Ready To Visit?</span>
+  <span>Ready To Visit?</span>
+  <span>Ready To Visit?</span>
+  <span>Ready To Visit?</span>
+  <span>Ready To Visit?</span>
+
+</div>
+<div class="mainwrap">
+
     <div class="flex-container colour-noise">
 
         <div class="flex-item-content">
-            <h2>Ready to Visit?</h2>
+            <h2>Come have some fun!</h2>
             <p>We'd love to see you! Be sure to visit us during our business hours!</p>
         <div class="business-hours">
           <div class="business-hour sunday">
@@ -736,7 +860,7 @@
        </div>
                
        <p><a href="https://www.google.com/maps/dir/42.9802491,-81.2037244/1886+London+Line,+Sarnia,+ON+N7W+1B3/@42.9321471,-83.1115738,8z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x882583f032715077:0xdf8f3cb05927e5!2m2!1d-82.3151737!2d42.9853351?entry=ttu"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1695052586/New_Project_13_nzr2xh.jpg" alt="Contact Image" class="contact-image"></a>Sarnia Laser Tag - The Arena<br>1886 London Line, Sarnia, ON N7W 1B3</p>
-        <a href="tel: (519) 542-1001"><button class="button button-outline"><i class='bx bx-phone'></i> Call Us</button></a> &nbsp;&nbsp; <button class="button button-outline"><i class='bx bx-envelope'></i> E-mail Us</button>
+        <a href="tel: (519) 542-1001"><button class="button button-outline"><i class='bx bx-phone'></i> Call</button></a> &nbsp;&nbsp; <button class="button button-outline"><i class='bx bx-envelope'></i> E-mail</button>
         </div>
           
     </div>
