@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Arena - Laser Tag, Rock Climbing, Mini Golf</title>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style type="text/css">
+    	h1, h2, h3 {
+        	font-family: 'Karla', sans-serif;
+        }
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: 'Karla', sans-serif;
+            max-width: 1200px;
+            margin: auto;
+            background-color: #f0f0f5;
+            background-image:url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712341159/speckle_xbmvak.jpg);
+            background-size: contain;
+            color: #333;
+        }
+        .container {
+            padding: 20px;
+        }
+        .hero {
+            text-align: center;
+            background-color: #44148f;
+            color: white;
+            padding: 50px 20px;
+        }
+        .hero h1 {
+            font-size: 2.5rem;
+        }
+        .hero p {
+            font-size: 1.2rem;
+        }
+        .hero button {
+            font-family: 'Roboto Mono', monospace;
+            font-size: 1rem;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .welcome {
+            text-align: center;
+        }
+        .welcome h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+        }
+        .welcome p {
+            font-weight: bold;
+            letter-spacing: 0.10rem;
+            font-family: 'Roboto Mono', monospace;
+            background-color: #fff;
+        }
+        .activities {
+            display: flex;
+            justify-content: space-around;
+            padding: 0px;
+            margin-bottom: 40px;
+        }
+        .activity {
+            flex: 1 1 auto;
+            width: calc(100% / 3);
+            margin: 10px;
+            padding: 20px 20px;
+            background: #fff;
+            border: 2px solid #090909;
+            box-shadow: 7px 7px 0px #090909;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .activity img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            border: 2px solid #090909;
+        }
+        .activity div.text-content {
+            flex: 1;
+        }
+        .activity h3, .activity p {
+            margin: 0;
+            font-size: 1rem;
+        }
+        .activity p {
+            font-family: 'Roboto Mono', monospace;
+            padding: 0px;
+        }
+        .activity h3 {
+            margin: 10px;
+            font-size: 1.9rem;
+            font-weight: 800;
+        }
+        .pricing {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .price-category {
+            width: calc(50% - 60px);
+            background: #fff;
+            margin-bottom: 20px;
+            border: 2px solid #090909;
+            box-shadow: 7px 7px 0px #090909;
+            border-radius: 8px;
+            padding: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+        .price-item, .group-package {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 15px;
+            width: calc(50% - 10px);
+        }
+        .double {
+        	width: calc(100% - 10px)
+            }
+        .double h1 {
+        	display: flex;
+        	font-size: 3rem;
+            justify-content: center;
+            margin: 10px 0 40px 0;
+            font-family: "Karla";
+        }
+        .price-item img, .group-package img {
+            width: 100px;
+            height: 100px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        .price-item, .group-package > div {
+            text-align: center;
+            font-family: 'Roboto Mono', monospace;
+        }
+       .testimonials {
+            display: flex;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        .testimonial {
+            flex: 1 1 auto;
+            width: 300px;
+            margin: 10px;
+            padding: 20px;
+            background: #fff;
+            border: 2px solid #090909;
+            box-shadow: 7px 7px 0px #090909;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .testimonial img {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            border-radius: 50%;
+        }
+        .hours {
+            background-color: #5a4fcf;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        .threepath {
+            width: 70%;
+            margin: auto;
+        }
+        .onepath {
+        	display: none;
+        }
+        .squiggle {
+        	display: none;
+        }
+        .highlight-yellow {
+            position: relative;
+            display: inline-block;
+            padding: 5px 15px;
+            z-index: 1;
+            line-height: 0.8;
+        }
+
+        .highlight-yellow::before {
+            content: "";
+            background-color: #edf763;
+            position: absolute;
+            border-radius: 2px;
+            z-index: -1;
+            top: 35%;
+            left: 0;
+            right: 0;
+            height: 35%;
+            transform: rotate(-0.5deg);
+            overflow: hidden;
+        }
+        .highlight-pink {
+            position: relative;
+            display: inline-block;
+            padding: 5px 15px;
+            z-index: 1;
+            line-height: 0.8;
+        }
+
+        .highlight-pink::before {
+            content: "";
+            background-color: #ffb0db;
+            position: absolute;
+            border-radius: 2px;
+            z-index: -1;
+            top: 35%;
+            left: 0;
+            right: 0;
+            height: 35%;
+            transform: rotate(0.5deg);
+        }   
+        .highlight-pink-text {
+        	color: #ff78c3;
+            font-weight: bold;
+        }       
+        .highlight-blue {
+            position: relative;
+            display: inline-block;
+            padding: 5px 15px;
+            z-index: 1;
+            line-height: 0.8;
+        }
+        .highlight-blue::before {
+            content: "";
+            background-color: #84ecba;
+            position: absolute;
+            border-radius: 2px;
+            z-index: -1;
+            top: 35%;
+            left: 0;
+            right: 0;
+            height: 35%;
+            transform: rotate(-0.3deg);
+        }
+        .highlight-blue-text {
+        	color: #34d487;
+            font-weight: bold;
+        }   
+        .highlight-purple-text {
+        	color: #8b40ff;
+            font-weight: bold;
+        }        
+        @media (max-width: 768px) {
+            .welcome h1 {
+                font-size: 2.5rem;
+                font-weight: 800;
+            }        
+            .activities {
+                flex-direction: column;
+            }
+            .activity {
+                width: auto;
+            }
+            .pricing, .price-category {
+                width: 100%;
+            }
+            .price-item, .group-package {
+                width: 100%;
+            }
+            .testimonials {
+                flex-direction: column;
+            }
+
+            .testimonial {
+                width: auto;
+            }
+            .threepath {
+            	display: none;
+            }
+            .onepath {
+            	display: flex;
+            	width: 70%;
+                margin: auto;
+                justify-content: center;
+            }
+            .squiggle {
+            	display: flex;
+            	width: 70%;
+                margin: auto;
+                justify-content: center;
+           }
+           .rev {
+           	transform: rotate(180deg);
+           }            
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <section class="hero">
+            <h1>Welcome to The Arena</h1>
+            <p>Adventure Awaits!</p>
+            <button>Book Now</button>
+        </section>
+        <section class="welcome">
+            <h1 class="highlight-yellow">Welcome Adventurers</h1>
+         <p>Dive into a vibe where adventure meets chill at our go-to spot. Feel the rush with <span class="highlight-pink-text">laser tag</span> - think multi-level mazes with epic hideouts and sniper spots up for grabs. Take on our <span class="highlight-blue-text">rock climbing</span> wall to level up your grit and flex those climbing skills. Or, switch it up with some chill <span class="highlight-purple-text">mini golf</span> action, where quirky courses await your mastery. Whether you're here to amp up the adrenaline or kick back, we’ve got your escapade covered. Get ready for a day that’s anything but ordinary.</p>
+        </section>
+		<div class="threepath">
+
+        </div>
+        	<div class="onepath">
+        
+        	</div>
+        <section class="activities">
+            <div class="activity laser">
+                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1694547159/tag_hero_jgjhtj.jpg" alt="Laser Tag">
+                <div class="text-content">
+                    <h3>Laser Tag</h3>
+                    <p>At our arena, we take laser tag to the next level by offering a <span class="highlight-pink-text">two-storey</span> playing space. Prepare to be amazed as you explore the multiple levels, corridors, and strategic vantage points that our arena has to offer. With two storeys of <span class="highlight-pink-text">intense gameplay</span>, you'll find yourself fully immersed in an adrenaline-pumping adventure like never before.</p>
+                </div>
+            </div>
+				<div class="squiggle">
+            
+            	</div>
+            <div class="activity rockclimb">
+                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1693871034/rockclimb_home_hero-min_indgab.jpg" alt="Rock Climbing">
+                <div class="text-content">
+                    <h3 class="highlight">Rock Climbing</h3>
+                    <p>Embark on an exhilarating journey up our challenging rock climbing wall. Designed to test your limits, each handhold and foothold becomes an obstacle to conquer, requiring <span class="highlight-blue-text">strength, focus, and determination</span>. Feel the adrenaline surge as you ascend, overcoming challenges and reaching new heights, marking personal achievements with every climb.</p>
+                </div>
+            </div>
+				<div class="squiggle rev">
+
+            	</div>
+            <div class="activity">
+                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1693871034/minigolf_home_hero-min_y0ws0m.jpg" alt="Mini Golf">
+                <div class="text-content">
+                    <h3 class="highlight">Mini Golf</h3>
+                    <p>For a relaxed, fun activity, dive into a round of mini golf. This game blends precision, strategy, and light-hearted competition. Tackle our vibrant, creatively designed course, weaving through obstacles and mastering tricky curves. Test your putting skills and chase that <span class="highlight-purple-text">hole-in-one</span>, all while enjoying friendly banter and laughter in a cheerful atmosphere.</p>
+                </div>
+            </div>
+        </section>
+        <section class="pricing">
+            <div class="price-category">
+            <div class="double"><h1><span class="highlight-blue">Walk-In Prices</h1></span></div>
+                <div class="price-item">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/minigolf-icon_guotkk.png" alt="Item">
+                    <div>
+                        <p><h3>Laser Tag:</h3> $20 per game</p>
+                        <p>Thrilling battles await with the latest laser tech.</p>
+                    </div>
+                </div>
+                <div class="price-item">
+                    <img src="https://placehold.co/100x100" alt="Item">
+                    <div>
+                        <p><strong>Laser Tag:</strong> $20 per game</p>
+                        <p>Thrilling battles await with the latest laser tech.</p>
+                    </div>
+                </div>
+                <div class="price-item">
+                    <img src="https://placehold.co/100x100" alt="Item">
+                    <div>
+                        <p><strong>Laser Tag:</strong> $20 per game</p>
+                        <p>Thrilling battles await with the latest laser tech.</p>
+                    </div>
+                </div>                
+                <div class="price-item">
+                    <img src="https://placehold.co/100x100" alt="Item">
+                    <div>
+                        <p><strong>Laser Tag:</strong> $20 per game</p>
+                        <p>Thrilling battles await with the latest laser tech.</p>
+                    </div>
+                </div>
+                <div class="price-item">
+                    <img src="https://placehold.co/100x100" alt="Item">
+                    <div>
+                        <p><strong>Laser Tag:</strong> $20 per game</p>
+                        <p>Thrilling battles await with the latest laser tech.</p>
+                    </div>
+                </div>
+                <div class="price-item">
+                    <img src="https://placehold.co/100x100" alt="Item">
+                    <div>
+                        <p><strong>Laser Tag:</strong> $20 per game</p>
+                        <p>Thrilling battles await with the latest laser tech.</p>
+                    </div>
+                </div>                   
+                <!-- Add additional Walk-In price items here -->
+            </div>
+            <div class="price-category">
+            <div class="double"><h1><span class="highlight-pink">Group Prices</span></h1></div>
+                <div class="group-package double">
+                    <img src="https://placehold.co/100x100" alt="Package">
+                    <div>
+                        <h2>Keep In Mind</h2>
+                        <p>Groups must have 6 people minimum. Pricing is per person.</p>
+                    </div>
+                </div>            
+                <div class="group-package">
+                    <img src="https://placehold.co/100x100" alt="Package">
+                    <div>
+                        <p><strong>Family Fun Pack:</strong> $60</p>
+                            2 games of Laser Tag<br>
+                            1 hour of Rock Climbing<br>
+                            2 rounds of Mini Golf<br>                        
+                    </div>
+                </div>
+                <div class="group-package">
+                    <img src="https://placehold.co/100x100" alt="Package">
+                    <div>
+                        <p><strong>Family Fun Pack:</strong> $60</p>
+                            2 games of Laser Tag<br>
+                            1 hour of Rock Climbing<br>
+                            2 rounds of Mini Golf<br>
+                    </div>
+                </div>
+                <div class="group-package">
+                    <img src="https://placehold.co/100x100" alt="Package">
+                    <div>
+                        <p><strong>Family Fun Pack:</strong> $60</p>
+                        <ul>
+                            <li>2 games of Laser Tag</li>
+                            <li>1 hour of Rock Climbing</li>
+                            <li>2 rounds of Mini Golf</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="group-package">
+                    <img src="https://placehold.co/100x100" alt="Package">
+                    <div>
+                        <p><strong>Family Fun Pack:</strong> $60</p>
+                        <ul>
+                            <li>2 games of Laser Tag</li>
+                            <li>1 hour of Rock Climbing</li>
+                            <li>2 rounds of Mini Golf</li>
+                        </ul>
+                    </div>
+                </div>                
+                <!-- Add additional Group Packages here -->
+            </div>
+        </section>
+        <section class="testimonials">
+            <div class="testimonial">
+                <img src="https://placehold.co/100x100" alt="Customer Review">
+                <p>"An amazing experience for all ages. Highly recommend the laser tag!"</p>
+            </div>
+                        <div class="testimonial">
+                <img src="https://placehold.co/100x100" alt="Customer Review">
+                <p>"An amazing experience for all ages. Highly recommend the laser tag!"</p>
+            </div>
+                        <div class="testimonial">
+                <img src="https://placehold.co/100x100" alt="Customer Review">
+                <p>"An amazing experience for all ages. Highly recommend the laser tag!"</p>
+            </div>
+        </section>
+        <section class="hours">
+            <h5>Hours of Operation</h5>
+            <p>Monday - Friday: 10am - 9pm</p>
+            <p>Saturday - Sunday: 9am - 11pm</p>
+        </section>
+    </div>
+</body>
+</html>
