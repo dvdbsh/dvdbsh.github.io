@@ -208,9 +208,8 @@
     transform: rotate(-1deg);
 }        
         .hours {
-            background-color: #5a4fcf;
             color: white;
-            padding: 20px;
+            padding: 0px;
             text-align: center;
         }
         .threepath {
@@ -291,10 +290,63 @@
         	color: #34d487;
             font-weight: bold;
         }   
+        .highlight-purple {
+            position: relative;
+            display: inline-block;
+            padding: 5px 15px;
+            z-index: 1;
+            line-height: 0.8;
+        }
+
+        .highlight-purple::before {
+            content: "";
+            background-color: #be95ff;
+            position: absolute;
+            border-radius: 2px;
+            z-index: -1;
+            top: 35%;
+            left: 0;
+            right: 0;
+            height: 35%;
+            transform: rotate(0.5deg);
+        }         
         .highlight-purple-text {
         	color: #8b40ff;
             font-weight: bold;
-        }        
+        }
+   .business-hours {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        font-size: 0.9em;
+    }
+    .business-hour {
+        flex-basis: calc(16.666% - 20px);
+        border: 2px solid #090909;
+        box-shadow: 5px 5px 0px #090909;
+        color: #fff;
+        border-radius: 8px;
+        padding: 5px;
+        margin-bottom: 10px;
+        text-align: center;
+        margin-top: 10px;
+        background: linear-gradient(to bottom, #84ecba 50%, #fff 50%);
+        overflow: hidden;
+    }
+    .business-hour b	{
+    	color: #333;
+        }    
+    .business-hour p	{
+    	color: #333;
+        }
+    .highlight {
+        background: linear-gradient(to bottom, #edf763 50%, #fff 50%);
+        overflow: hidden;
+    }
+    .business-hour.highlight b {
+        color: #333;
+        font-weight: 800;
+    }        
         @media (max-width: 768px) {
   .hero {
     flex-direction: column;
@@ -304,9 +356,7 @@
     width: 100%;
     margin: auto;
   }
-  .hero img {
-    display: none;
-  }        
+       
             .welcome h1 {
                 font-size: 2.5rem;
                 font-weight: 800;
@@ -352,6 +402,9 @@
 		   .double h1 {
             	text-align: center;
             }
+    .business-hour {
+        flex-basis: calc(50% - 20px);
+    }            
         }
     </style>
 </head>
@@ -379,7 +432,7 @@
             <div class="activity laser">
                 <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1694547159/tag_hero_jgjhtj.jpg" alt="Laser Tag">
                 <div class="text-content">
-                    <h3>Laser Tag</h3>
+                    <h3 class="highlight-pink">Laser Tag</h3>
                     <p>At our arena, we take laser tag to the next level by offering a <span class="highlight-pink-text">two-storey</span> playing space. Prepare to be amazed as you explore the multiple levels, corridors, and strategic vantage points that our arena has to offer. With two storeys of <span class="highlight-pink-text">intense gameplay</span>, you'll find yourself fully immersed in an adrenaline-pumping adventure like never before.</p>
                 </div>
             </div>
@@ -389,7 +442,7 @@
             <div class="activity rockclimb">
                 <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1693871034/rockclimb_home_hero-min_indgab.jpg" alt="Rock Climbing">
                 <div class="text-content">
-                    <h3 class="highlight">Rock Climbing</h3>
+                    <h3 class="highlight-blue">Rock Climbing</h3>
                     <p>Embark on an exhilarating journey up our challenging rock climbing wall. Designed to test your limits, each handhold and foothold becomes an obstacle to conquer, requiring <span class="highlight-blue-text">strength, focus, and determination</span>. Feel the adrenaline surge as you ascend, overcoming challenges and reaching new heights, marking personal achievements with every climb.</p>
                 </div>
             </div>
@@ -399,7 +452,7 @@
             <div class="activity">
                 <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1693871034/minigolf_home_hero-min_y0ws0m.jpg" alt="Mini Golf">
                 <div class="text-content">
-                    <h3 class="highlight">Mini Golf</h3>
+                    <h3 class="highlight-purple">Mini Golf</h3>
                     <p>For a relaxed, fun activity, dive into a round of mini golf. This game blends precision, strategy, and light-hearted competition. Tackle our vibrant, creatively designed course, weaving through obstacles and mastering tricky curves. Test your putting skills and chase that <span class="highlight-purple-text">hole-in-one</span>, all while enjoying friendly banter and laughter in a cheerful atmosphere.</p>
                 </div>
             </div>
@@ -535,11 +588,78 @@
 </div>
 
         </section>
+         <section class="hero">
+
+  <div class="text">
+            <h1 class="highlight-yellow">Ready to Visit?</h1>
+         <p>We're over the moon with excitement at the thought of welcoming you! Our doors are open wide during our business hours. Navigate your way through the stars and drop by!</p>
+  </div>
+  <div class="image">
+    <!-- Replace the src with your image link -->
+    <a href="https://www.google.com/maps/dir/42.9802491,-81.2037244/1886+London+Line,+Sarnia,+ON+N7W+1B3/@42.9321471,-83.1115738,8z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x882583f032715077:0xdf8f3cb05927e5!2m2!1d-82.3151737!2d42.9853351?entry=ttu" target="_blank"><img src="https://res.cloudinary.com/di8j84ent/image/upload/v1712845028/map_2_k1jpgv.png" alt="Business Location Map" border="0"></a>
+  </div>
+
+        </section>
         <section class="hours">
-            <h5>Hours of Operation</h5>
-            <p>Monday - Friday: 10am - 9pm</p>
-            <p>Saturday - Sunday: 9am - 11pm</p>
+<div class="business-hours">
+          <div class="business-hour sunday">
+            <p><b>SUN</b></p>
+            <p>11AM - 7PM</p>
+          </div>
+          <div class="business-hour montuesday">
+            <p><b>MON + TUES</b></p>
+            <p>Closed</p>
+          </div>
+          <div class="business-hour wednesday">
+            <p><b>WED</b></p>
+            <p>4PM - 8PM</p>
+          </div>
+          <div class="business-hour thursday">
+            <p><b>THURS</b></p>
+            <p>4PM - 8PM</p>
+          </div>
+          <div class="business-hour friday">
+            <p><b>FRI</b></p>
+            <p>4PM - 10PM</p>
+          </div>
+          <div class="business-hour saturday">
+            <p><b>SAT</b></p>
+            <p>12PM - 10PM</p>
+          </div>
+       </div>
         </section>
     </div>
 </body>
+<script>
+  // Get the current day (0 for Sunday, 1 for Monday, etc.)
+const currentDay = new Date().getDay();
+
+// Define the mapping of days to the corresponding business hour div classes
+const dayToClassMapping = {
+  0: "sunday",
+  1: "monday",
+  2: "tuesday",
+  3: "wednesday",
+  4: "thursday",
+  5: "friday",
+  6: "saturday",
+};
+
+// Determine the class name for the current day's business hour div
+let dayClassName = dayToClassMapping[currentDay];
+
+// If today is Monday or Tuesday, and they share the same div, set the class name to "monday"
+if (currentDay === 1 || currentDay === 2) {
+  dayClassName = "montuesday";
+}
+
+// Select the corresponding business hour div based on the class name
+const businessHourDiv = document.querySelector(`.business-hour.${dayClassName}`);
+
+// Add the "highlight" class to the current day's business hour div
+if (businessHourDiv) {
+  businessHourDiv.classList.add("highlight");
+}
+
+</script>
 </html>
