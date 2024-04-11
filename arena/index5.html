@@ -15,10 +15,9 @@
             font-family: 'Karla', sans-serif;
             max-width: 1200px;
             margin: auto;
-            background-color: #f0f0f5;
-            background-image:url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712349469/speckle-purple_vz1ytn.jpg);
+            background-color: #d0a4e1;
+            background-image:url(https://res.cloudinary.com/di8j84ent/image/upload/v1712875922/speckle-purple_1_xsvxxk.jpg);
             background-size: contain;
-			background-color: #e5d5ff;
             color: #333;
         }
         .container {
@@ -35,7 +34,7 @@
   width: 50%;
 }
 
-.hero h1 {
+.hero .text h1 {
   font-size: 3.2em;
 }
 
@@ -43,7 +42,7 @@
   font-size: 1.2em;
   font-family: 'Roboto Mono', monospace;
   font-weight: bold;
-  background-color: #e5d5ff;
+  background-color: #d0a4e1;
 }
 
 .hero .image {
@@ -78,7 +77,7 @@
             font-weight: bold;
             letter-spacing: 0.10rem;
             font-family: 'Roboto Mono', monospace;
-            background-color: #e5d5ff;
+            background-color: #d0a4e1;
         }
         .activities {
             display: flex;
@@ -154,8 +153,7 @@
             font-family: "Karla";
         }
         .price-item img, .group-package img {
-            width: 100px;
-            height: 100px;
+            width: 120px;
             margin-bottom: 10px;
             border-radius: 8px;
         }
@@ -264,7 +262,7 @@
             transform: rotate(0.5deg);
         }   
         .highlight-pink-text {
-        	color: #ff78c3;
+        	color: #e052a1;
             font-weight: bold;
         }       
         .highlight-blue {
@@ -276,7 +274,7 @@
         }
         .highlight-blue::before {
             content: "";
-            background-color: #84ecba;
+            background-color: #6cf7f3;
             position: absolute;
             border-radius: 2px;
             z-index: -1;
@@ -287,7 +285,7 @@
             transform: rotate(-0.3deg);
         }
         .highlight-blue-text {
-        	color: #34d487;
+        	color: #3292e0;
             font-weight: bold;
         }   
         .highlight-purple {
@@ -330,14 +328,16 @@
         margin-bottom: 10px;
         text-align: center;
         margin-top: 10px;
-        background: linear-gradient(to bottom, #84ecba 50%, #fff 50%);
+        background: linear-gradient(to bottom, #6cf7f3 50%, #fff 50%);
         overflow: hidden;
     }
     .business-hour b	{
     	color: #333;
+        font-family: 'Karla';
         }    
     .business-hour p	{
     	color: #333;
+        font-family: 'Roboto Mono', monospace;
         }
     .highlight {
         background: linear-gradient(to bottom, #edf763 50%, #fff 50%);
@@ -356,6 +356,9 @@
     width: 100%;
     margin: auto;
   }
+  .hero .text h1 {
+  	font-size: 2.5rem;
+    }
        
             .welcome h1 {
                 font-size: 2.5rem;
@@ -406,6 +409,11 @@
         flex-basis: calc(50% - 20px);
     }            
         }
+@media (max-width: 340px) {
+  .hero .text h1 {
+  	font-size: 2rem;
+    }
+    }
     </style>
 </head>
 <body>
@@ -460,99 +468,107 @@
         <section class="pricing">
             <div class="price-category">
             <div class="double"><h1><span class="highlight-blue">Walk-In Prices</h1></span></div>
+            
                 <div class="price-item">
-                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/minigolf-icon_guotkk.png" alt="Item">
-                    <div>
-                        <p><h3>Laser Tag:</h3> $20 per game</p>
-                        <p>Thrilling battles await with the latest laser tech.</p>
-                    </div>
-                </div>
-                <div class="price-item">
-                    <img src="https://placehold.co/100x100" alt="Item">
-                    <div>
-                        <p><strong>Laser Tag:</strong> $20 per game</p>
-                        <p>Thrilling battles await with the latest laser tech.</p>
-                    </div>
-                </div>
-                <div class="price-item">
-                    <img src="https://placehold.co/100x100" alt="Item">
-                    <div>
-                        <p><strong>Laser Tag:</strong> $20 per game</p>
-                        <p>Thrilling battles await with the latest laser tech.</p>
-                    </div>
-                </div>                
-                <div class="price-item">
-                    <img src="https://placehold.co/100x100" alt="Item">
-                    <div>
-                        <p><strong>Laser Tag:</strong> $20 per game</p>
-                        <p>Thrilling battles await with the latest laser tech.</p>
-                    </div>
-                </div>
-                <div class="price-item">
-                    <img src="https://placehold.co/100x100" alt="Item">
-                    <div>
-                        <p><strong>Laser Tag:</strong> $20 per game</p>
-                        <p>Thrilling battles await with the latest laser tech.</p>
-                    </div>
-                </div>
-                <div class="price-item">
-                    <img src="https://placehold.co/100x100" alt="Item">
-                    <div>
-                        <p><strong>Laser Tag:</strong> $20 per game</p>
-                        <p>Thrilling battles await with the latest laser tech.</p>
-                    </div>
-                </div>                   
-                <!-- Add additional Walk-In price items here -->
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/minigolf-icon_guotkk.png" alt="Mini Golf">
+    <div>
+        <h3>Mini Golf</h3>
+        <p><strong>$10 per person</strong></p>
+        <p>One round 10-hole mini golf</p>
+    </div>
+</div>
+
+<div class="price-item">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/lasertag-icon_bin78v.png" alt="Laser Tag" style="transform: rotate(-25deg);">
+    <div>
+        <h3>Laser Tag</h3>
+        <p><strong>$14 per person</strong></p>
+        <p>20 minute game of laser tag</p>
+    </div>
+</div>
+
+<div class="price-item">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/lasertag-icon_bin78v.png" alt="Laser Tag" style="transform: rotate(-25deg);">
+    <div>
+        <h3>Laser Tag</h3>
+        <p><strong>$16 per person</strong></p>
+        <p>30 minute game of laser tag</p>
+    </div>
+</div>
+
+<div class="price-item">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710517090/climb-icon_zkqemf_uzo7mc.png" alt="Rock Climbing">
+    <div>
+        <h3>Rock Climbing</h3>
+        <p><strong>$16 per person</strong></p>
+        <p>3 rock climbs</p>
+    </div>
+</div>
+
+<div class="price-item">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710517090/climb-icon_zkqemf_uzo7mc.png" alt="Rock Climbing">
+    <div>
+        <h3>Rock Climbing</h3>
+        <p><strong>$20 per person</strong></p>
+        <p>30 minutes of rock climbs</p>
+    </div>
+</div>
+
+<div class="price-item">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710517090/climb-icon_zkqemf_uzo7mc.png" alt="Rock Climbing">
+    <div>
+        <h3>Rock Climbing</h3>
+        <p><strong>$25 per person</strong></p>
+        <p>One hour of rock climbs</p>
+    </div>
+</div>
+
             </div>
             <div class="price-category">
             <div class="double"><h1><span class="highlight-pink">Group Prices</span></h1></div>
                 <div class="group-package double">
-                    <img src="https://placehold.co/100x100" alt="Package">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710516020/group_viuias.png" alt="Package">
                     <div>
                         <h2>Keep In Mind</h2>
                         <p>Groups must have 6 people minimum. Pricing is per person.</p>
                     </div>
                 </div>            
-                <div class="group-package">
-                    <img src="https://placehold.co/100x100" alt="Package">
-                    <div>
-                        <p><strong>Family Fun Pack:</strong> $60</p>
-                            2 games of Laser Tag<br>
-                            1 hour of Rock Climbing<br>
-                            2 rounds of Mini Golf<br>                        
-                    </div>
-                </div>
-                <div class="group-package">
-                    <img src="https://placehold.co/100x100" alt="Package">
-                    <div>
-                        <p><strong>Family Fun Pack:</strong> $60</p>
-                            2 games of Laser Tag<br>
-                            1 hour of Rock Climbing<br>
-                            2 rounds of Mini Golf<br>
-                    </div>
-                </div>
-                <div class="group-package">
-                    <img src="https://placehold.co/100x100" alt="Package">
-                    <div>
-                        <p><strong>Family Fun Pack:</strong> $60</p>
-                        <ul>
-                            <li>2 games of Laser Tag</li>
-                            <li>1 hour of Rock Climbing</li>
-                            <li>2 rounds of Mini Golf</li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="group-package">
-                    <img src="https://placehold.co/100x100" alt="Package">
-                    <div>
-                        <p><strong>Family Fun Pack:</strong> $60</p>
-                        <ul>
-                            <li>2 games of Laser Tag</li>
-                            <li>1 hour of Rock Climbing</li>
-                            <li>2 rounds of Mini Golf</li>
-                        </ul>
-                    </div>
-                </div>                
+<div class="group-package">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/1_1_ickk6k.png" alt="Package 1">
+    <div>
+        <h3>Package 1</h3>
+        <p><strong>$22 per person</strong></p>
+        <p>- Two 20 minute games of laser tag</p>
+    </div>
+</div>
+
+<div class="group-package">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/2_1_wsn2gy.png" alt="Package 2">
+    <div>
+        <h3>Package 2</h3>
+        <p><strong>$28 per person</strong></p>
+        <p>- Two 20 minute games of laser tag<br>- Two rock climbs</p>
+    </div>
+</div>
+
+<div class="group-package">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514250/3_5_n1vkc6.png" alt="Package 3">
+    <div>
+        <h3>Package 3</h3>
+        <p><strong>$28 per person</strong></p>
+        <p>- Two 20 minute games of laser tag<br>- One round of 10-hole mini golf</p>
+    </div>
+</div>
+
+<div class="group-package">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/4_1_cnthj0.png" alt="Package 4">
+    <div>
+        <h3>Package 4</h3>
+        <p><strong>$32 per person</strong></p>
+        <p>- One 20 minute game of laser tag<br>- Two rock climbs<br>- One round of 10-hole mini golf</p>
+    </div>
+</div>
+                
                 <!-- Add additional Group Packages here -->
             </div>
         </section>
