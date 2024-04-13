@@ -6,168 +6,173 @@
     <title>The Arena - Laser Tag, Rock Climbing, Mini Golf</title>
     <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style type="text/css">
-    	h1, h2, h3 {
-        	font-family: 'Karla', sans-serif;
-        }
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Karla', sans-serif;
-            max-width: 1200px;
-            margin: auto;
-            background-color: #d0a4e1;
-            background-image:url(https://res.cloudinary.com/di8j84ent/image/upload/v1712875922/speckle-purple_1_xsvxxk.jpg);
-            background-size: contain;
-            color: #333;
-        }
-        .container {
-            padding: 20px;
-        }
+    h1, h2, h3 {
+    font-family: 'Karla', sans-serif;
+}
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Karla', sans-serif;
+    max-width: 1200px;
+    margin: auto;
+	background-image: 
+    url('https://res.cloudinary.com/di8j84ent/image/upload/v1713040364/speckle-purple_qj5l6x.png'),
+    linear-gradient(
+        to bottom,
+        #e1a4d0, /* Pastel Pink */
+        #e1a4a4, /* Pastel Red */
+        #e1b9a4, /* Pastel Orange */
+        #e1d6a4, /* Pastel Yellow */
+        #a4e1b9, /* Pastel Green */
+        #a4e1d6, /* Pastel Cyan */
+        #a4c6e1, /* Pastel Blue */
+        #d0a4e1, /* Pastel Lavender */
+        #c6a4e1  /* Pastel Magenta */
+    ); /* Bottom layer: Gradient */
+background-size: fit; /* This will cover the entire element with both the image and the gradient */
+    color: #333;
+}
+.container {
+    padding: 20px;
+}
 .hero {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
 }
-
 .hero .text {
-  width: 50%;
+    width: 50%;
 }
-
 .hero .text h1 {
-  font-size: 3.2em;
+    font-size: 3.2em;
 }
-
 .hero p {
-  font-size: 1.2em;
-  font-family: 'Roboto Mono', monospace;
-  font-weight: bold;
-  background-color: #d0a4e1;
+    font-size: 1.2em;
+    font-family: 'Roboto Mono', monospace;
+    font-weight: bold;
 }
-
 .hero .image {
-  width: 50%;
-  display: flex;
-  justify-content: right;
+    width: 50%;
+    display: flex;
+    justify-content: right;
 }
-
 .hero img {
-  max-width: 100%;
-  height: auto;
+    max-width: 100%;
+    height: auto;
 }
-
 .hero button {
-  font-family: 'Roboto Mono', monospace;
-  font-size: 1rem;
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
-  border: none;
-  cursor: pointer;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: #ffb0db;
+    color: white;
+    border: 2px solid #090909;
+    box-shadow: 7px 7px 0px #090909;
+    cursor: pointer;
 }
-
-        .welcome {
-            text-align: center;
-        }
-        .welcome h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
-        }
-        .welcome p {
-            font-weight: bold;
-            letter-spacing: 0.10rem;
-            font-family: 'Roboto Mono', monospace;
-            background-color: #d0a4e1;
-        }
-        .activities {
-            display: flex;
-            justify-content: space-around;
-            padding: 0px;
-            margin-bottom: 40px;
-        }
-        .activity {
-            flex: 1 1 auto;
-            width: calc(100% / 3);
-            margin: 10px;
-            padding: 20px 20px;
-            background: #fff;
-            border: 2px solid #090909;
-            box-shadow: 7px 7px 0px #090909;
-            border-radius: 8px;
-            text-align: center;
-        }
-        .activity img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-            border: 2px solid #090909;
-        }
-        .activity div.text-content {
-            flex: 1;
-        }
-        .activity h3, .activity p {
-            margin: 0;
-            font-size: 1rem;
-        }
-        .activity p {
-            font-family: 'Roboto Mono', monospace;
-            padding: 0px;
-        }
-        .activity h3 {
-            margin: 10px;
-            font-size: 1.9rem;
-            font-weight: 800;
-        }
-        .pricing {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
-        .price-category {
-            width: calc(50% - 60px);
-            background: #fff;
-            margin-bottom: 20px;
-            border: 2px solid #090909;
-            box-shadow: 7px 7px 0px #090909;
-            border-radius: 8px;
-            padding: 20px;
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-        }
-        .price-item, .group-package {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            margin-bottom: 15px;
-            width: calc(50% - 10px);
-        }
-        .double {
-        	width: calc(100% - 10px)
-            }
-        .double h1 {
-        	display: flex;
-        	font-size: 3rem;
-            justify-content: center;
-            margin: 10px 0 40px 0;
-            font-family: "Karla";
-        }
-        .price-item img, .group-package img {
-            width: 120px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-        }
-        .price-item, .group-package > div {
-            text-align: center;
-            font-family: 'Roboto Mono', monospace;
-        }
+.full-width {
+	width: 100% !important;
+    align-items: center;
+    text-align: center;
+}
+.circle {
+	padding: 50px;
+	border-radius: 50%;
+	border: 2px dashed #090909;
+}
+.welcome {
+    text-align: center;
+}
+.welcome h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-top: 0px;
+}
+.welcome p {
+    font-weight: bold;
+    letter-spacing: 0.10rem;
+    font-family: 'Roboto Mono', monospace;
+    background-color: #d0a4e1;
+}
+.activities {
+    display: flex;
+    justify-content: space-around;
+    padding: 0px;
+    margin-bottom: 40px;
+}
+.activity {
+    flex: 1 1 auto;
+    width: calc(100% / 3);
+    margin: 10px;
+    padding: 20px 20px;
+    background: #fff;
+    border: 2px solid #090909;
+    box-shadow: 7px 7px 0px #090909;
+    border-radius: 8px;
+    text-align: center;
+}
+.activity img {
+    width: 100%;
+    height: auto;
+    border-radius: 8px;
+    border: 2px solid #090909;
+}
+.activity div.text-content {
+    flex: 1;
+}
+.activity h3, .activity p {
+    margin: 0;
+    font-size: 1rem;
+}
+.activity h3 {
+    margin: 10px;
+    font-size: 1.9rem;
+    font-weight: 800;
+}
+.activity p {
+    font-family: 'Roboto Mono', monospace;
+    padding: 0px;
+}
+.pricing {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.price-category {
+    width: calc(50% - 60px);
+    background: #fff;
+    margin-bottom: 20px;
+    border: 2px solid #090909;
+    box-shadow: 7px 7px 0px #090909;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+.price-item, .group-package {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+    width: calc(50% - 10px);
+}
+.price-item img, .group-package img {
+    width: 120px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+.price-item, .group-package > div {
+    text-align: center;
+    font-family: 'Roboto Mono', monospace;
+}
 .testimonials {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around; /* Adjusted to manage spacing dynamically */
     padding: 20px;
 }
-
 .testimonial {
     flex: 0 0 calc(25% - 20px); /* Adjust the width to accommodate 4 items per row accounting for margin */
     margin: 10px;
@@ -180,9 +185,8 @@
     font-family: 'Roboto Mono', monospace;
 }
 .testimonial h3 {
-	margin-bottom: 0px;
-    }
-
+    margin-bottom: 0px;
+}
 .testimonial img {
     width: 80px;
     height: 80px;
@@ -191,229 +195,252 @@
     border: 2px solid #090909;
 }
 .pink {
-	background-color: #ffb0db;
-    }
+    background-color: #ffb0db;
+}
 .blue {
-	background-color: #3292e0;
-    }
+    background-color: #3292e0;
+}
 .yellow {
-	background-color: #edf763;
-    }
-.testimonial:nth-child(odd) {
+    background-color: #edf763;
+}
+.righttilt {
     transform: rotate(1deg);
 }        
-.testimonial:nth-child(even) {
+.lefttilt {
     transform: rotate(-1deg);
-}        
-        .hours {
-            color: white;
-            padding: 0px;
-            text-align: center;
-        }
-        .threepath {
-            width: 70%;
-            margin: auto;
-        }
-        .onepath {
-        	display: none;
-        }
-        .squiggle {
-        	display: none;
-        }
-        .highlight-yellow {
-            position: relative;
-            display: inline-block;
-            padding: 5px 15px;
-            z-index: 1;
-            line-height: 0.8;
-        }
-
-        .highlight-yellow::before {
-            content: "";
-            background-color: #edf763;
-            position: absolute;
-            border-radius: 2px;
-            z-index: -1;
-            top: 35%;
-            left: 0;
-            right: 0;
-            height: 35%;
-            transform: rotate(-0.5deg);
-            overflow: hidden;
-        }
-        .highlight-pink {
-            position: relative;
-            display: inline-block;
-            padding: 5px 15px;
-            z-index: 1;
-            line-height: 0.8;
-        }
-
-        .highlight-pink::before {
-            content: "";
-            background-color: #ffb0db;
-            position: absolute;
-            border-radius: 2px;
-            z-index: -1;
-            top: 35%;
-            left: 0;
-            right: 0;
-            height: 35%;
-            transform: rotate(0.5deg);
-        }   
-        .highlight-pink-text {
-        	color: #e052a1;
-            font-weight: bold;
-        }       
-        .highlight-blue {
-            position: relative;
-            display: inline-block;
-            padding: 5px 15px;
-            z-index: 1;
-            line-height: 0.8;
-        }
-        .highlight-blue::before {
-            content: "";
-            background-color: #3292e0;
-            position: absolute;
-            border-radius: 2px;
-            z-index: -1;
-            top: 35%;
-            left: 0;
-            right: 0;
-            height: 35%;
-            transform: rotate(-0.3deg);
-        }
-        .highlight-blue-text {
-        	color: #3292e0;
-            font-weight: bold;
-        }   
-        .highlight-purple {
-            position: relative;
-            display: inline-block;
-            padding: 5px 15px;
-            z-index: 1;
-            line-height: 0.8;
-        }
-
-        .highlight-purple::before {
-            content: "";
-            background-color: #be95ff;
-            position: absolute;
-            border-radius: 2px;
-            z-index: -1;
-            top: 35%;
-            left: 0;
-            right: 0;
-            height: 35%;
-            transform: rotate(0.5deg);
-        }         
-        .highlight-purple-text {
-        	color: #8b40ff;
-            font-weight: bold;
-        }
-   .business-hours {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-between;
-        font-size: 0.9em;
-    }
-    .business-hour {
-        flex-basis: calc(16.666% - 20px);
-        border: 2px solid #090909;
-        box-shadow: 5px 5px 0px #090909;
-        color: #fff;
-        border-radius: 8px;
-        padding: 5px;
-        margin-bottom: 10px;
-        text-align: center;
-        margin-top: 10px;
-        background: linear-gradient(to bottom, #6cf7f3 50%, #fff 50%);
-        overflow: hidden;
-    }
-    .business-hour b	{
-    	color: #333;
-        font-family: 'Karla';
-        }    
-    .business-hour p	{
-    	color: #333;
-        font-family: 'Roboto Mono', monospace;
-        }
-    .highlight {
-        background: linear-gradient(to bottom, #edf763 50%, #fff 50%);
-        overflow: hidden;
-    }
-    .business-hour.highlight b {
-        color: #333;
-        font-weight: 800;
-    }        
-        @media (max-width: 768px) {
-  .hero {
-    flex-direction: column;
+}
+.hours {
+    color: white;
+    padding: 0px;
     text-align: center;
-  }
-  .hero .text, .hero .image {
-    width: 100%;
+}
+.threepath {
+    width: 70%;
     margin: auto;
-  }
-  .hero .text h1 {
-  	font-size: 2.5rem;
+}
+.squiggle-right {
+	width: 70%;
+	margin: auto;
+	transform: scaleX(-1);
+	}
+.onepath {
+    display: none;
+}
+.squiggle {
+    display: none;
+}
+.straightpath {
+	display: none;
+}
+.highlight-yellow {
+    position: relative;
+    display: inline-block;
+    padding: 5px 15px;
+    z-index: 1;
+    line-height: 0.8;
+}
+.highlight-yellow::before {
+    content: "";
+    background-color: #edf763;
+    position:absolute;
+    border-radius: 2px;
+    z-index: -1;
+    top: 35%;
+    left: 0;
+    right: 0;
+    height: 35%;
+    transform: rotate(-0.5deg);
+    overflow: hidden;
+}
+.highlight-pink {
+    position: relative;
+    display: inline-block;
+    padding: 5px 15px;
+    z-index: 1;
+    line-height: 0.8;
+}
+.highlight-pink::before {
+    content: "";
+    background-color: #ffb0db;
+    position:absolute;
+    border-radius: 2px;
+    z-index: -1;
+    top: 35%;
+    left: 0;
+    right: 0;
+    height: 35%;
+    transform: rotate(0.5deg);
+}
+.highlight-pink-text {
+    color: #e052a1;
+    font-weight: bold;
+}
+.highlight-blue {
+    position: relative;
+    display: inline-block;
+    padding: 5px 15px;
+    z-index: 1;
+    line-height: 0.8;
+}
+.highlight-blue::before {
+    content: "";
+    background-color: #8ac2d9;
+    position:absolute;
+    border-radius: 2px;
+    z-index: -1;
+    top: 35%;
+    left: 0;
+    right: 0;
+    height: 35%;
+    transform: rotate(-0.3deg);
+}
+.highlight-blue-text {
+    color: #3292e0;
+    font-weight: bold;
+}
+.highlight-purple {
+    position:relative;
+    display:inline-block;
+    padding:5px 15px;
+    z-index:1;
+    line-height:0.8;
+}
+.highlight-purple::before {
+    content: "";
+    background-color: #be95ff;
+    position:absolute;
+    border-radius:2px;
+    z-index:-1;
+    top:35%;
+    left:0;
+    right:0;
+    height:35%;
+    transform:rotate(0.5deg);
+}
+.highlight-purple-text {
+    color: #8b40ff;
+    font-weight: bold;
+}
+.business-hours {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    font-size: 0.9em;
+}
+.business-hour {
+    flex-basis: calc(16.666% - 20px);
+    border: 2px solid #090909;
+    box-shadow: 5px 5px 0px #090909;
+    color: #fff;
+    border-radius: 8px;
+    padding: 5px;
+    margin-bottom: 10px;
+    text-align: center;
+    margin-top: 10px;
+    background: linear-gradient(to bottom, #6cf7f3 50%, #fff 50%);
+    overflow: hidden;
+}
+.business-hour b {
+    color: #333;
+    font-family: 'Karla';
+}
+.business-hour p {
+    color: #333;
+    font-family: 'Roboto Mono', monospace;
+}
+.highlight {
+    background: linear-gradient(to bottom, #edf763 50%, #fff 50%);
+    overflow: hidden;
+}
+.business-hour.highlight b {
+    color: #333;
+    font-weight: 800;
+}
+.double {
+	width: calc(100% - 10px)
+}
+.double h1 {
+    display: flex;
+    font-size: 3rem;
+    justify-content: center;
+    margin: 10px 0 40px 0;
+    font-family: "Karla";
+        }
+@media (max-width: 768px) {
+    .hero {
+        flex-direction: column;
+        text-align: center;
     }
-       
-            .welcome h1 {
-                font-size: 2.5rem;
-                font-weight: 800;
-            }        
-            .activities {
-                flex-direction: column;
-            }
-            .activity {
-                width: auto;
-            }
-            .pricing, .price-category {
-                width: 100%;
-            }
-            .price-item, .group-package {
-                width: 100%;
-            }
-            .testimonials {
-                flex-direction: column;
-            }
-
-            .testimonial {
-                width: auto;
-                margin-bottom: 40px;
-            }
-            .threepath {
-            	display: none;
-            }
-            .onepath {
-            	display: flex;
-            	width: 70%;
-                margin: auto;
-                justify-content: center;
-            }
-            .squiggle {
-            	display: flex;
-            	width: 70%;
-                margin: auto;
-                justify-content: center;
-           }
-           .rev {
-				transform: rotate(180deg);
-           }
-		   .double h1 {
-            	text-align: center;
-            }
+    .hero .text, .hero .image {
+        width: 100%;
+        margin: auto;
+    }
+    .hero .text h1 {
+        font-size: 2.5rem;
+    }
+    .welcome h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+    }
+    .activities {
+        flex-direction: column;
+    }
+    .activity {
+        width: auto;
+    }
+    .pricing, .price-category {
+        width: 100%;
+    }
+    .price-item, .group-package {
+        width: 100%;
+    }
+    .testimonials {
+        flex-direction: column;
+    }
+    .testimonial {
+        width: auto;
+        margin-bottom: 40px;
+    }
+    .threepath {
+        display: none;
+    }
+    .onepath {
+        display: flex;
+        width: 70%;
+        margin: auto;
+        justify-content: center;
+    }
+    .squiggle {
+        display: flex;
+        width: 70%;
+        margin: auto;
+        justify-content: center;
+    }
+	.squiggle-right {
+		display: none;
+	}
+	.straightpath {
+        display: flex;
+        width: 70%;
+        margin: auto;
+        justify-content: center;
+    }	
+    .rev {
+        transform: rotate(180deg);
+    }
+    .double h1 {
+        text-align: center;
+    }
     .business-hour {
         flex-basis: calc(50% - 20px);
-    }            
-        }
+    }
+}
 @media (max-width: 340px) {
-  .hero .text h1 {
-  	font-size: 2rem;
+    .hero .text h1 {
+        font-size: 2rem;
     }
-    }
+}
+
     </style>
 </head>
 <body>
@@ -431,11 +458,11 @@
 
         </section>
 		<div class="threepath">
-
+			<img src="threepath.svg">
         </div>
-        	<div class="onepath">
-        
-        	</div>
+        <div class="onepath">
+			<img src="onepath.svg">
+        </div>
         <section class="activities">
             <div class="activity laser">
                 <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1694547159/tag_hero_jgjhtj.jpg" alt="Laser Tag">
@@ -444,9 +471,9 @@
                     <p>At our arena, we take laser tag to the next level by offering a <span class="highlight-pink-text">two-storey</span> playing space. Prepare to be amazed as you explore the multiple levels, corridors, and strategic vantage points that our arena has to offer. With two storeys of <span class="highlight-pink-text">intense gameplay</span>, you'll find yourself fully immersed in an adrenaline-pumping adventure like never before.</p>
                 </div>
             </div>
-				<div class="squiggle">
-            
-            	</div>
+			<div class="squiggle">
+				<img src="squiggle.svg">
+            </div>
             <div class="activity rockclimb">
                 <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1693871034/rockclimb_home_hero-min_indgab.jpg" alt="Rock Climbing">
                 <div class="text-content">
@@ -455,7 +482,7 @@
                 </div>
             </div>
 				<div class="squiggle rev">
-
+					<img src="squiggle.svg">
             	</div>
             <div class="activity">
                 <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1693871034/minigolf_home_hero-min_y0ws0m.jpg" alt="Mini Golf">
@@ -524,6 +551,9 @@
 </div>
 
             </div>
+		<div class="squiggle rev">
+			<img src="squiggle.svg">
+        </div>
             <div class="price-category">
             <div class="double"><h1><span class="highlight-pink">Group Prices</span></h1></div>
                 <div class="group-package double">
@@ -572,39 +602,52 @@
                 <!-- Add additional Group Packages here -->
             </div>
         </section>
+		<div class="squiggle-right">
+			<img src="squiggle-right.svg">
+		</div>
+        <section class="hero circle">
+
+  		<div class="text full-width">
+            <h1 class="highlight-yellow" style="margin-top: 0;">Hosting an Event?</h1>
+			<br>
+            <button>Reach out to us directly!</button>
+        </div>
+        </section>
         <section class="testimonials">
-<div class="testimonial">
+<div class="testimonial righttilt">
     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442347/marcus.svg" class="yellow" alt="Customer Review">
     <p>"Exhilarating rock climbing experience! Challenging routes and incredibly supportive staff made my first climb unforgettable. Can't wait to tackle more climbs." <h3>Marcus W.</h3></p>
 </div>
-
-<div class="testimonial">
+		<div class="straightpath">
+			<img src="straightpath.svg">
+		</div>
+<div class="testimonial lefttilt">
     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/priya.svg" class="pink" alt="Customer Review">
     <p>"My son's mini golf birthday party was exceptional. The value-packed package, thoughtful staff, and creative courses offered a memorable day that was also easy on the budget." <h3>Priya R.</h3></p>
 </div>
 
-<div class="testimonial">
+<div class="testimonial righttilt">
     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/alex.svg" class="blue" alt="Customer Review">
     <p>"Laser tag at The Arena is a blast! Multi-level play areas and strategic gameplay had us feeling like we were in another world. Eager for our next match!" <h3>Alex G.</h3></p>
 </div>
 
-<div class="testimonial">
+<div class="testimonial lefttilt">
     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442346/jenna.svg" class="blue" alt="Customer Review">
     <p>"The office team building at the laser tag was a hit. Engaging, strategic, and full of energy, it was an ideal outing. Great for team spirit!" <h3>Jenna K</h3></p>
 </div>
 
-<div class="testimonial">
+<div class="testimonial righttilt">
     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442344/sophia.svg" class="yellow" alt="Customer Review">
     <p>"Hosting my son's laser tag birthday was seamless and offered great value. Everything ran smoothly thanks to the attentive staff, making for an unforgettable day." <h3>Sophia M.</h3></p>
 </div>
 
-<div class="testimonial">
+<div class="testimonial lefttilt">
     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/darren.svg" class="pink" alt="Customer Review">
     <p>"The mini golf adventure exceeded expectations! Creative, challenging, and perfect for a fun day out. A truly unique experience we'll definitely revisit." <h3>Darren L.</h3></p>
 </div>
 
         </section>
-         <section class="hero">
+        <section class="hero">
 
   <div class="text">
             <h1 class="highlight-yellow">Ready to Visit?</h1>
