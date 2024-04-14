@@ -13,7 +13,6 @@ body, html {
     margin: 0;
     padding: 0;
     font-family: 'Karla', sans-serif;
-    max-width: 1200px;
     margin: auto;
 	background-image: 
     url('https://res.cloudinary.com/di8j84ent/image/upload/v1713040364/speckle-purple_qj5l6x.png'),
@@ -73,6 +72,7 @@ background-size: fit; /* This will cover the entire element with both the image 
     border: 2px solid #090909;
     box-shadow: 7px 7px 0px #090909;
     cursor: pointer;
+    margin: 20px;
 }
 .full-width {
 	width: 100% !important;
@@ -83,6 +83,7 @@ background-size: fit; /* This will cover the entire element with both the image 
 	padding: 50px;
 	border-radius: 50%;
 	border: 2px dashed #090909;
+    margin: 20px;
 }
 .welcome {
     text-align: center;
@@ -197,6 +198,32 @@ background-size: fit; /* This will cover the entire element with both the image 
     border-radius: 50%;
     border: 2px solid #090909;
 }
+@keyframes wiggle-lefttilt {
+  0%, 100% {
+    transform: rotate(-1deg);
+  }
+  50% {
+    transform: rotate(1deg);
+  }
+}
+
+@keyframes wiggle-righttilt {
+  0%, 100% {
+    transform: rotate(1deg);
+  }
+  50% {
+    transform: rotate(-1deg);
+  }
+}
+
+.testimonial.lefttilt:hover {
+  animation: wiggle-lefttilt 0.5s ease-in-out infinite;
+}
+
+.testimonial.righttilt:hover {
+  animation: wiggle-righttilt 0.5s ease-in-out infinite;
+}
+
 .pink {
     background-color: #ffb0db;
 }
@@ -369,35 +396,28 @@ background-size: fit; /* This will cover the entire element with both the image 
     margin: 10px 0 40px 0;
     font-family: "Karla";
         }
-.full-width-ribbon-container {
-    width: calc(100vw - 17px);
-    position: relative;
-    left: 50%;
-    right: 50%;
-    transform: translateX(-50%);
-    margin-bottom: 40px;    
-}
 
 .ribbon {
   background-color: #be95ff;
   white-space: nowrap;
   overflow: hidden;
+  transform: translateY(-50%);
   padding: 10px 0;
   text-align: center;
   border-top: 2px solid #090909;
   border-bottom: 2px solid #090909;
   box-shadow: 0px 7px 0px #090909;
-  width: calc(100vw);
+  margin: 40px 0;
+
 }
 .ribbontext {
-font-family: 'Roboto Mono', monospace;
   display: inline-block;
-  font-size: 1.2em;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 1px;
+  font-size: 1.2em;
   color: #eee;
-}        
+}
 @media (max-width: 768px) {
     .hero {
         flex-direction: column;
@@ -466,6 +486,7 @@ font-family: 'Roboto Mono', monospace;
     .business-hour {
         flex-basis: calc(50% - 20px);
     }
+	
 }
 @media (max-width: 340px) {
     .hero .text h1 {
@@ -524,11 +545,11 @@ font-family: 'Roboto Mono', monospace;
                 </div>
             </div>
         </section>
- <div class="full-width-ribbon-container">        
-<div class="ribbon">
-  <div class="ribbontext">Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here •</div>
-</div>
-</div>
+	</div>
+		<div class="ribbon">
+			<div class="ribbontext">Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here •</div>
+		</div>
+	<div class="container">
         <section class="pricing">
             <div class="price-category">
             <div class="double"><h1><span class="highlight-blue">Walk-In Prices</h1></span></div>
