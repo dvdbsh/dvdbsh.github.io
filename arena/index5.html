@@ -33,7 +33,10 @@ background-size: fit; /* This will cover the entire element with both the image 
     color: #333;
 }
 .container {
-    padding: 20px;
+  position: relative; /* Make container the positioning context for the ribbon */
+  max-width: 1200px;
+  margin: auto;
+  padding: 20px; /* You can adjust padding as needed */
 }
 .hero {
     display: flex;
@@ -366,6 +369,35 @@ background-size: fit; /* This will cover the entire element with both the image 
     margin: 10px 0 40px 0;
     font-family: "Karla";
         }
+.full-width-ribbon-container {
+  width: calc(100vw - 17px);
+  position: relative;
+  left: 50%;
+  right: 50%;
+  transform: translateX(-50%);
+  margin-bottom: 40px;
+  
+}
+
+.ribbon {
+  background-color: #be95ff;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 10px 0;
+  text-align: center;
+  border-top: 2px solid #090909;
+  border-bottom: 2px solid #090909;
+  box-shadow: 0px 7px 0px #090909;
+}
+.ribbontext {
+font-family: 'Roboto Mono', monospace;
+  display: inline-block;
+  font-size: 1.2em;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #eee;
+}        
 @media (max-width: 768px) {
     .hero {
         flex-direction: column;
@@ -492,6 +524,11 @@ background-size: fit; /* This will cover the entire element with both the image 
                 </div>
             </div>
         </section>
+ <div class="full-width-ribbon-container">        
+<div class="ribbon">
+  <div class="ribbontext">Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here • Sarnia Plays Here •</div>
+</div>
+</div>
         <section class="pricing">
             <div class="price-category">
             <div class="double"><h1><span class="highlight-blue">Walk-In Prices</h1></span></div>
@@ -625,22 +662,30 @@ background-size: fit; /* This will cover the entire element with both the image 
     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/priya.svg" class="pink" alt="Customer Review">
     <p>"My son's mini golf birthday party was exceptional. The value-packed package, thoughtful staff, and creative courses offered a memorable day that was also easy on the budget." <h3>Priya R.</h3></p>
 </div>
-
+		<div class="straightpath rev">
+			<img src="straightpath.svg">
+		</div>
 <div class="testimonial righttilt">
     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/alex.svg" class="blue" alt="Customer Review">
     <p>"Laser tag at The Arena is a blast! Multi-level play areas and strategic gameplay had us feeling like we were in another world. Eager for our next match!" <h3>Alex G.</h3></p>
 </div>
-
+		<div class="straightpath">
+			<img src="straightpath.svg">
+		</div>
 <div class="testimonial lefttilt">
     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442346/jenna.svg" class="blue" alt="Customer Review">
     <p>"The office team building at the laser tag was a hit. Engaging, strategic, and full of energy, it was an ideal outing. Great for team spirit!" <h3>Jenna K</h3></p>
 </div>
-
+		<div class="straightpath rev">
+			<img src="straightpath.svg">
+		</div>
 <div class="testimonial righttilt">
     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442344/sophia.svg" class="yellow" alt="Customer Review">
     <p>"Hosting my son's laser tag birthday was seamless and offered great value. Everything ran smoothly thanks to the attentive staff, making for an unforgettable day." <h3>Sophia M.</h3></p>
 </div>
-
+		<div class="straightpath">
+			<img src="straightpath.svg">
+		</div>
 <div class="testimonial lefttilt">
     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/darren.svg" class="pink" alt="Customer Review">
     <p>"The mini golf adventure exceeded expectations! Creative, challenging, and perfect for a fun day out. A truly unique experience we'll definitely revisit." <h3>Darren L.</h3></p>
@@ -720,5 +765,13 @@ if (businessHourDiv) {
   businessHourDiv.classList.add("highlight");
 }
 
+</script>
+<script>
+window.addEventListener('scroll', function() {
+  const scrollPosition = window.pageYOffset;
+  const ribbonText = document.querySelector('.ribbontext');
+  // Modify the translation based on scroll, making the text movement more apparent.
+  ribbonText.style.transform = `translateX(${-scrollPosition * 0.2}px)`;
+});
 </script>
 </html>
