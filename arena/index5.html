@@ -217,11 +217,11 @@ background-size: fit; /* This will cover the entire element with both the image 
 }
 
 .testimonial.lefttilt:hover {
-  animation: wiggle-lefttilt 0.5s ease-in-out infinite;
+  animation: wiggle-lefttilt 1s ease-in-out infinite;
 }
 
 .testimonial.righttilt:hover {
-  animation: wiggle-righttilt 0.5s ease-in-out infinite;
+  animation: wiggle-righttilt 1s ease-in-out infinite;
 }
 
 .pink {
@@ -785,6 +785,33 @@ const businessHourDiv = document.querySelector(`.business-hour.${dayClassName}`)
 if (businessHourDiv) {
   businessHourDiv.classList.add("highlight");
 }
+
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  // Define the observer
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        // Apply animation based on initial tilt
+        entry.target.style.animationName = entry.target.classList.contains('lefttilt') ? 'wiggle-lefttilt' : 'wiggle-righttilt';
+        entry.target.style.animationDuration = '1s';
+        entry.target.style.animationIterationCount = 'infinite';
+        entry.target.style.animationTimingFunction = 'ease-in-out';
+      } else {
+        // Remove animation when not in view
+        entry.target.style.animationName = 'none';
+      }
+    });
+  }, {
+    threshold: 0.5  // Trigger when 50% of the element is visible
+  });
+
+  // Observe each testimonial element
+  document.querySelectorAll('.testimonial').forEach(testimonial => {
+    observer.observe(testimonial);
+  });
+});
 
 </script>
 <script>
