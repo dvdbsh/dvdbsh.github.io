@@ -5,8 +5,8 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-	<link rel="shortcut icon" type="image/x-icon" href="favicon.png">
-	<link rel="apple-touch-icon" sizes="180x180" href="icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
     <meta name="theme-color" content="#c1dfd5">
     <style>
         @font-face {
@@ -148,8 +148,8 @@
         </div>
 
         <div class="card">
-            <h3>Current calendar quarter</h3>
-            <p>January - March</p>
+            <h3 id="quarterTitle"></h3>
+            <p id="quarterDates"></p>
         </div>
 
         <div class="card">
@@ -159,21 +159,21 @@
 
         <div class="card">
             <h3>Last day for eligibility</h3>
-            <p>March 17</p>
+            <p id="lastEligibilityDate"></p>
             <div class="section-divider"></div>
             <small>Last day to work that will count in the quarter toward benefits eligibility</small>
         </div>
 
         <div class="card">
             <h3>Last pay date in the quarter</h3>
-            <p id="lastPayDateCell">March 22</p>
+            <p id="lastPayDateCell"></p>
             <div class="section-divider"></div>
             <small>You must have at least 240 total paid hours on this pay stub to remain eligible</small>
         </div>
 
         <div class="two-columns card">
             <h3>These paid hours are the ones that count</h3>
-            January 12 and 26<br>February 9 and 23<br>March 8 and 22
+            <p id="paidHours"></p>
             <div class="section-divider"></div>
             <small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small>
         </div>
@@ -185,39 +185,122 @@
         </div>
     </div>
 
-    <script>
-        function updateDaysLeft() {
-            const targetDate = new Date("March 17, 2024").getTime();
-            const now = new Date().getTime();
-            const difference = targetDate - now;
-            const daysLeft = Math.ceil(difference / (1000 * 60 * 60 * 24));
-            const weeksLeft = Math.floor(daysLeft / 7);
-            document.getElementById("daysLeftCell").innerHTML = daysLeft + " days (" + weeksLeft + " weeks)";
-
-            const enteredNumber = parseFloat(document.getElementById("numberInput").value);
-            if (!isNaN(enteredNumber)) {
-                let totalRequiredHours = 240 - enteredNumber;
-                if (totalRequiredHours < 0) {
-                    totalRequiredHours = 0;
-                }
-                totalRequiredHours = Math.ceil(totalRequiredHours);
-                const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft);
-                document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed (" + requiredHoursPerWeek + " more hours per week needed)<p><small>These numbers are rounded up to the nearest hour and are approximate.</small>";
+<script>
+    function updateQuarterInfo() {
+        const now = new Date().getTime();
+        const quarters = [
+            {
+                title: "January - March",
+                startDate: new Date("January 12, 2024").getTime(),
+                endDate: new Date("March 22, 2024").getTime(),
+                lastEligibilityDate: "March 17, 2024",
+                lastPayDate: "March 22, 2024",
+                paidHours: "January 12 and 26<br>February 9 and 23<br>March 8 and 22"
+            },
+            {
+                title: "April - June",
+                startDate: new Date("April 5, 2024").getTime(),
+                endDate: new Date("June 28, 2024").getTime(),
+                lastEligibilityDate: "June 23, 2024",
+                lastPayDate: "June 28, 2024",
+                paidHours: "April 5 and 19<br>May 3, 17 and 31<br>June 14 and 28"
+            },
+            {
+                title: "July - September",
+                startDate: new Date("July 12, 2024").getTime(),
+                endDate: new Date("September 20, 2024").getTime(),
+                lastEligibilityDate: "September 15, 2024",
+                lastPayDate: "September 20, 2024",
+                paidHours: "July 12 and 26<br>August 9 and 23<br>September 6 and 20"
+            },
+            {
+                title: "October - December",
+                startDate: new Date("October 6, 2023").getTime(),
+                endDate: new Date("December 29, 2023").getTime(),
+                lastEligibilityDate: "December 24, 2023",
+                lastPayDate: "December 29, 2023",
+                paidHours: "October 6 and 20<br>November 3 and 17<br>December 1, 15 and 29"
             }
+        ];
+
+        let currentQuarter = quarters.find(quarter => now >= quarter.startDate && now <= quarter.endDate);
+
+        if (!currentQuarter) {
+            currentQuarter = quarters[quarters.length - 1]; // Default to the last quarter if none matches
         }
 
-        document.getElementById("numberInput").addEventListener("input", function () {
-            const enteredNumber = parseFloat(this.value);
-            if (!isNaN(enteredNumber)) {
-                updateDaysLeft();
-            } else {
-                document.getElementById("differenceResult").textContent = "";
+        document.getElementById("quarterTitle").innerHTML = "Current calendar quarter";
+        document.getElementById("quarterDates").innerHTML = currentQuarter.title;
+        document.getElementById("lastEligibilityDate").innerHTML = currentQuarter.lastEligibilityDate;
+        document.getElementById("lastPayDateCell").innerHTML = currentQuarter.lastPayDate;
+        document.getElementById("paidHours").innerHTML = currentQuarter.paidHours;
+
+        const difference = currentQuarter.endDate - now;
+        const daysLeft = Math.ceil((new Date(currentQuarter.lastEligibilityDate).getTime() - now) / (1000 * 60 * 60 * 24));
+        const weeksLeft = Math.floor(daysLeft / 7);
+        if (daysLeft > 0) {
+            document.getElementById("daysLeftCell").innerHTML = daysLeft + " days (" + weeksLeft + " weeks)";
+        } else {
+            document.getElementById("daysLeftCell").innerHTML = "No days left";
+        }
+    }
+
+    function updateDaysLeft() {
+        const enteredNumber = parseFloat(document.getElementById("numberInput").value);
+        if (!isNaN(enteredNumber)) {
+            let totalRequiredHours = 240 - enteredNumber;
+            if (totalRequiredHours < 0) {
+                totalRequiredHours = 0;
             }
-        });
+            totalRequiredHours = Math.ceil(totalRequiredHours);
 
-        updateDaysLeft();
-    </script>
+            const now = new Date().getTime();
+            const quarters = [
+                {
+                    startDate: new Date("January 12, 2024").getTime(),
+                    endDate: new Date("March 22, 2024").getTime(),
+                },
+                {
+                    startDate: new Date("April 5, 2024").getTime(),
+                    endDate: new Date("June 28, 2024").getTime(),
+                },
+                {
+                    startDate: new Date("July 12, 2024").getTime(),
+                    endDate: new Date("September 20, 2024").getTime(),
+                },
+                {
+                    startDate: new Date("October 6, 2023").getTime(),
+                    endDate: new Date("December 29, 2023").getTime(),
+                }
+            ];
 
-    <!-- Made with coffee and love :) -->
+            let currentQuarter = quarters.find(quarter => now >= quarter.startDate && now <= quarter.endDate);
+            if (!currentQuarter) {
+                currentQuarter = quarters[quarters.length - 1]; // Default to the last quarter if none matches
+            }
+
+            const difference = currentQuarter.endDate - now;
+            const weeksLeft = Math.floor(difference / (1000 * 60 * 60 * 24 * 7));
+            const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft);
+            document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed (" + requiredHoursPerWeek + " more hours per week needed)<p><small>These numbers are rounded up to the nearest hour and are approximate.</small>";
+        }
+    }
+
+    document.getElementById("numberInput").addEventListener("input", function () {
+        const enteredNumber = parseFloat(this.value);
+        if (!isNaN(enteredNumber)) {
+            updateDaysLeft();
+        } else {
+            document.getElementById("differenceResult").textContent = "";
+        }
+    });
+
+    updateQuarterInfo();
+    updateDaysLeft();
+</script>
+
+
+
+    <!-- Made with coffee by David :) -->
 </body>
 </html>
