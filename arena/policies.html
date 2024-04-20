@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Respect in the Workplace Policy - The Arena</title>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap" rel="stylesheet">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        body {
+            font-family: 'Karla', sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background: #f4f4f4;
+            color: #333;
+        }
+        .header, .important {
+            color: #44148f;
+        }
+        .toggleHeader {
+            cursor: pointer;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 5px;
+            background-color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .content {
+            display: none;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fff;
+            margin-bottom: 20px;
+        }
+        .bx {
+            font-size: 32px;
+            color: #333;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+    <div class="toggleHeader" onclick="toggleVisibility('workplacePolicy', this)">
+        <h2 class="header">Respect in the Workplace Policy</h2>
+        <i class='bx bx-down-arrow-circle' id="arrow-workplacePolicy"></i>
+    </div>
+    <div id="workplacePolicy" class="content">
+        <h2>Purpose</h2>
+        <p>The Arena is committed to providing a workplace where all employees are treated with dignity and <span class="important">respect</span>. We aim to create an environment that promotes teamwork, productivity, and mutual respect. This policy outlines expectations for all employees to contribute to a positive workplace and specifies the standard of behavior expected in interactions.</p>
+
+        <h2>Scope</h2>
+        <p>This policy applies to all employees of The Arena, including full-time, part-time, temporary staff, and contractors. It encompasses all forms of communication including verbal, written, electronic, and non-verbal interactions.</p>
+
+        <h2>Policy Statement</h2>
+        <h3>Professionalism and Respect</h3>
+        <p>All employees are expected to conduct themselves professionally and courteously in all interactions at the workplace and any work-related functions. Respectful communication is essential. Employees must refrain from using derogatory, offensive, or inappropriate language. Discussions should remain constructive, and feedback should be delivered thoughtfully, focusing on tasks and behaviors rather than personal attributes.</p>
+
+        <h3>Appropriate Language</h3>
+        <p>Inappropriate language, including but not limited to cursing, vulgar expressions, derogatory remarks, or slurs against any individual or group, is strictly prohibited. Jokes or comments about race, ethnicity, religion, gender, disability, sexual orientation, or any other protected characteristic will not be tolerated. Employees must avoid language that is intimidating, harassing, or harmful.</p>
+
+        <h3>Conflict Resolution</h3>
+        <p>Employees are encouraged to resolve conflicts respectfully and professionally. Seek assistance from a supervisor if conflicts escalate or if you feel unable to resolve them directly. Supervisors are responsible for intervening in conflicts and ensuring that they are addressed equitably and according to company policies.</p>
+
+        <h3>Reporting Violations</h3>
+        <p>Any employee who feels they have been subjected to language or behavior that violates this policy should report the incident to their supervisor or Human Resources immediately. The Arena ensures that all complaints will be investigated promptly and confidentially. Retaliation against any employee for reporting harassment or discrimination is strictly prohibited and will result in disciplinary action.</p>
+
+        <h2>Enforcement</h2>
+        <p>Violations of this policy will be taken seriously and may result in disciplinary action, up to and including termination of employment.</p>
+
+        <h2>Commitment</h2>
+        <p>The Arena is committed to enforcing this policy consistently and professionally. We believe that a respectful workplace is key to our success and expect all employees to adhere to these principles.</p>
+    </div>
+
+
+<div class="toggleHeader" onclick="toggleVisibility('attendancePolicy', this)">
+    <h2 class="header">Attendance Policy</h2>
+    <i class='bx bx-down-arrow-circle' id="arrow-attendancePolicy"></i>
+</div>
+<div id="attendancePolicy" class="content">
+    <h2>Purpose</h2>
+    <p>The purpose of the Attendance Policy at The Arena is to ensure a consistent and fair approach to managing the attendance of all employees. Reliable attendance is crucial in maintaining a productive work environment and delivering exceptional customer service.</p>
+
+    <h2>Scope</h2>
+    <p>This policy applies to all employees of The Arena, regardless of position or duration of employment. It covers all aspects of attendance, including punctuality, absenteeism, and the management of leave requests.</p>
+
+    <h2>Policy Statement</h2>
+    <h3>Expectations and Requirements</h3>
+    <p>Employees are expected to adhere to their scheduled work hours. Punctuality and regular attendance are essential to maintain team efficiency and service quality.</p>
+    <h3>Procedures for Absence</h3>
+    <p>All absences must be reported to a supervisor as early as possible, but no later than one hour before the start of the scheduled shift. For planned absences, employees are required to submit a leave request form at least two weeks in advance, subject to approval based on business needs.</p>
+    <h3>Consequences of Unexcused Absences</h3>
+    <p>Repeated unexcused absences may lead to disciplinary action, up to and including termination of employment. Employees are encouraged to communicate openly with their supervisors to avoid potential misunderstandings and penalties.</p>
+</div>
+
+
+    <script>
+        function toggleVisibility(sectionId, header) {
+            var content = document.getElementById(sectionId);
+            var arrow = document.getElementById('arrow-' + sectionId);
+            var allContents = document.querySelectorAll('.content');
+            var allArrows = document.querySelectorAll('.bx');
+
+            allContents.forEach(function(otherContent) {
+                if (otherContent !== content) {
+                    otherContent.style.display = 'none';
+                }
+            });
+
+            allArrows.forEach(function(otherArrow) {
+                if (otherArrow !== arrow) {
+                    otherArrow.className = 'bx bx-down-arrow-circle';
+                }
+            });
+
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                arrow.className = 'bx bx-up-arrow-circle';
+            } else {
+                content.style.display = 'none';
+                arrow.className = 'bx bx-down-arrow-circle';
+            }
+        }
+    </script>
+</body>
+</html>
