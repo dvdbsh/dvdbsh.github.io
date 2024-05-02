@@ -70,6 +70,22 @@ background-size: 100%;
 .main img {
     animation: float 5s ease-in-out infinite;
 }
+.button {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: #990099;
+    color: white;
+    border: 2px solid #090909;
+    border-radius: 8px;
+    box-shadow: 7px 7px 0px #090909;
+    cursor: pointer;
+    margin: 20px;
+}
+.button:hover {
+	background-color: #44148f;
+    transform: ease(1s);
+    }
 .hero button {
     font-family: 'Roboto Mono', monospace;
     font-size: 1rem;
