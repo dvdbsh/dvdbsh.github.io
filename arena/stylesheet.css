@@ -113,6 +113,10 @@ background-size: 100%;
 	border: 2px dashed #eee;
     margin: 20px;
 }
+.custom-check {
+    color: #ed6e7a;
+    font-weight: bold;
+}
 .welcome {
     text-align: center;
 }
