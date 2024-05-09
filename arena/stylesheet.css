@@ -465,6 +465,8 @@ a:hover {
         .toggleHeader {
             cursor: pointer;
 			border-bottom: 2px solid #090909;
+            width: 100%;
+            max-width: 600px;
 
             padding: 0px;
             margin-bottom: 5px;
@@ -475,7 +477,8 @@ a:hover {
         .faqcontent {
             display: none;
             padding: 10px;
-
+            width: 100%;
+            max-width: 600px;
             margin-bottom: 20px;
         }
         .bx {
