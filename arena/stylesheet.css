@@ -11,12 +11,13 @@ body, html {
     color: #eee;
 }
 a {
-	color: #990099;
+	color: #ffb0db;
 	text-decoration: underline;
 }
 a:hover {
-	color: #990099;
+	color: #ffb0db;
 	text-decoration: none;
+	font-weight: bold;
 }
 .container {
   position: relative; /* Make container the positioning context for the ribbon */
@@ -466,7 +467,7 @@ a:hover {
             cursor: pointer;
 			border-bottom: 2px solid #090909;
             width: 100%;
-            max-width: 600px;
+            max-width: 1000px;
 
             padding: 0px;
             margin-bottom: 5px;
@@ -478,10 +479,10 @@ a:hover {
             display: none;
             padding: 10px;
             width: 100%;
-            max-width: 600px;
+            max-width: 1000px;
             margin-bottom: 20px;
         }
-        .bx {
+        .faqbx {
             font-size: 32px;
             color: #eee;
             vertical-align: middle;
