@@ -10,6 +10,14 @@ body, html {
 	background-size: 100%;
     color: #eee;
 }
+a {
+	color: #990099;
+	text-decoration: underline;
+}
+a:hover {
+	color: #990099;
+	text-decoration: none;
+}
 .container {
   position: relative; /* Make container the positioning context for the ribbon */
   max-width: 1200px;
@@ -451,6 +459,30 @@ body, html {
   align-items: right;
   text-align: right;
 } 
+        .header, .important {
+            color: #eee;
+        }
+        .toggleHeader {
+            cursor: pointer;
+			border-bottom: 2px solid #090909;
+
+            padding: 0px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .faqcontent {
+            display: none;
+            padding: 10px;
+
+            margin-bottom: 20px;
+        }
+        .bx {
+            font-size: 32px;
+            color: #eee;
+            vertical-align: middle;
+        }
 
 @media (max-width: 768px) {
     .hero {
