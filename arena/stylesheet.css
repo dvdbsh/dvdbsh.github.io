@@ -482,6 +482,12 @@ a:hover {
             max-width: 650px;
             margin-bottom: 20px;
         }
+        .faqcontent p {
+        	font-family: Roboto Mono;
+            }
+        .faqcontent h2 {
+        	font-family: Roboto Mono;
+            }
         .faqbx {
             font-size: 32px;
             color: #eee;
