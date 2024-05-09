@@ -300,6 +300,10 @@ a:hover {
 .straightpath {
 	display: none;
 }
+.arrow-down {
+    width: 70%;
+    margin: auto;
+}
 .highlight-yellow {
     position: relative;
     display: inline-block;
