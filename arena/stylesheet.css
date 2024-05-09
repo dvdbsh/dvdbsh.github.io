@@ -6,15 +6,8 @@ body, html {
     padding: 0;
     font-family: 'Karla', sans-serif;
     margin: auto;
-	background-image: 
-    linear-gradient(
-        to bottom,
-        #44148f,
-        #1f0942,
-        #0c041a,
-        #44148f
-    );
-background-size: 100%;
+	background-color: #44148f;
+	background-size: 100%;
     color: #eee;
 }
 .container {
