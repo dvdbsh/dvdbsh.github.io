@@ -304,6 +304,10 @@ a:hover {
     width: 70%;
     margin: auto;
 }
+.arrow-down img {
+    width: 70%;
+    margin: auto;
+}
 .highlight-yellow {
     position: relative;
     display: inline-block;
