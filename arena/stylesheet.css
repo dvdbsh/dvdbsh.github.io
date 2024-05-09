@@ -454,6 +454,10 @@ background-size: 100%;
   font-size: 1.2em;
   color: #eee;
 }
+.right {
+  align-items: right;
+  text-align: right;
+} 
 
 @media (max-width: 768px) {
     .hero {
@@ -527,6 +531,10 @@ background-size: 100%;
     .business-hour {
         flex-basis: calc(50% - 20px);
     }
+	.right {
+		align-items: center;
+		text-align: center;
+} 
 	
 }
 @media (max-width: 340px) {
