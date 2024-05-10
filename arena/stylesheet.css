@@ -70,10 +70,11 @@ a:hover {
 }
 	.weeklydeals-lg {
     	display: flex;
-    	width: 90%;
+    	width: 80%;
     	justify-content: center;
     	align-items: center;
     	margin: auto;
+		margin-top: 20px;
 		}
 	.weeklydeals-sm {
     	display: none;
@@ -90,9 +91,6 @@ a:hover {
     animation: float 5s ease-in-out infinite;
 }
 .button {
-    display: flex;
-    align-items: center;   /* Vertical alignment */
-    justify-content: center; /* Horizontal alignment */
     font-family: 'Roboto Mono', monospace;
     font-size: 1rem;
     padding: 10px 20px;
@@ -103,15 +101,7 @@ a:hover {
     box-shadow: 7px 7px 0px #090909;
     cursor: pointer;
     margin: 20px;
-    text-decoration: none;  /* Remove underline from link */
 }
-
-.button i {
-    margin-right: 5px;  /* Adds spacing between icon and text */
-    vertical-align: middle; /* Helps align icons that are slightly off-center */
-}
-
-
 .button:hover {
 	background-color: #44148f;
     transform: ease(1s);
