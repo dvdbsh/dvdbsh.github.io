@@ -103,7 +103,14 @@ a:hover {
     box-shadow: 7px 7px 0px #090909;
     cursor: pointer;
     margin: 20px;
+    text-decoration: none;  /* Remove underline from link */
 }
+
+.button i {
+    margin-right: 5px;  /* Adds spacing between icon and text */
+    vertical-align: middle; /* Helps align icons that are slightly off-center */
+}
+
 
 .button:hover {
 	background-color: #44148f;
