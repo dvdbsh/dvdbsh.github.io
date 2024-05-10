@@ -68,6 +68,16 @@ a:hover {
     margin-top: 40px;
     border-radius: 0 0 40px 0;
 }
+	.weeklydeals-lg {
+    	display: flex;
+    	width: 90%;
+    	justify-content: center;
+    	align-items: center;
+    	margin: auto;
+		}
+	.weeklydeals-sm {
+    	display: none;
+        }
 @keyframes float {
     0%, 100% {
         transform: translateY(0);
@@ -430,9 +440,6 @@ a:hover {
 .business-hour img {
 	width: 80%;
 }
-.weekly-deals {
-	flex-basis: calc(33.33% - 20px) !important;
-}
 .business-hour b {
     color: #333;
     font-family: 'Karla';
@@ -595,6 +602,16 @@ a:hover {
 		align-items: center;
 		text-align: center;
 } 
+	.weeklydeals-sm {
+    	display: flex;
+    	width: 90%;
+    	justify-content: center;
+    	align-items: center;
+    	margin: auto;
+		}
+	.weeklydeals-lg {
+    	display: none;
+        }
 	
 }
 @media (max-width: 340px) {
