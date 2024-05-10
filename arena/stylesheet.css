@@ -61,6 +61,13 @@ a:hover {
     padding: 20px;
     margin-top: 20px;
 }
+    .weekly img {
+	width: 100%;
+    max-width: 300px !important;
+    padding: 20px;
+    margin-top: 40px;
+    border-radius: 0 0 40px 0;
+}
 @keyframes float {
     0%, 100% {
         transform: translateY(0);
@@ -419,6 +426,12 @@ a:hover {
     margin-top: 10px;
     background: linear-gradient(to bottom, #6cf7f3 50%, #fff 50%);
     overflow: hidden;
+}
+.business-hour img {
+	width: 80%;
+}
+.weekly-deals {
+	flex-basis: calc(33.33% - 20px) !important;
 }
 .business-hour b {
     color: #333;
