@@ -90,6 +90,9 @@ a:hover {
     animation: float 5s ease-in-out infinite;
 }
 .button {
+    display: flex;
+    align-items: center;   /* Vertical alignment */
+    justify-content: center; /* Horizontal alignment */
     font-family: 'Roboto Mono', monospace;
     font-size: 1rem;
     padding: 10px 20px;
@@ -101,6 +104,7 @@ a:hover {
     cursor: pointer;
     margin: 20px;
 }
+
 .button:hover {
 	background-color: #44148f;
     transform: ease(1s);
