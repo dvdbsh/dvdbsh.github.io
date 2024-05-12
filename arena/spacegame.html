@@ -9,7 +9,8 @@
         body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
         canvas {
             display: block;
-            background-color: #44148f;
+            background-color: #330a76;
+            background-image: url(https://www.transparenttextures.com/patterns/stardust.png);
             margin: auto;
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -69,7 +70,7 @@
         planetImgs.forEach(img => img.onload = imageLoaded);
 
         spaceshipImg.src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475408/spaceship-sprite_w3gb6f.svg';
-        wiggleImg.src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715522991/wiggle-sprite_fkel7a.svg';
+        wiggleImg.src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715536531/wiggle_znkcd5.svg';
         planetImgs[0].src = 'https://res.cloudinary.com/di8j84ent/image/upload/v1715475420/planet3-sprite_xrlzg6.png';
         planetImgs[1].src = 'https://res.cloudinary.com/di8j84ent/image/upload/v1715475427/planet1-sprite_jjv5jp.png';
         planetImgs[2].src = 'https://res.cloudinary.com/di8j84ent/image/upload/v1715475424/planet2-sprite_hlvcbm.png';
@@ -170,7 +171,7 @@
         }
 
         function drawBorders() {
-            const patternHeight = 20;
+            const patternHeight = 30;
             const patternRepeat = Math.ceil(canvas.width / wiggleImg.width) + 1;
             scrollOffset = (scrollOffset - 2) % wiggleImg.width;
 
