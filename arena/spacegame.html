@@ -1,13 +1,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Flap</title>
     <style>
         canvas {
             display: block;
             background-color: #44148f; /* Set the background color */
             margin: 0 auto;
         }
-        #restartButton {
+        #startButton, #restartButton {
             display: none;
             position: absolute;
             left: 50%;
@@ -17,17 +20,30 @@
             padding: 10px;
             cursor: pointer;
         }
+        #instructions {
+            display: none;
+            position: absolute;
+            width: 100%;
+            text-align: center;
+            top: 40%;
+            font-size: 20px;
+            color: white;
+        }
     </style>
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
+    <div id="instructions">Press SPACE to make the spaceship jump. Avoid the planets to score points!</div>
+    <button id="startButton">Start Game</button>
     <button id="restartButton">Restart Game</button>
     <script>
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         canvas.width = 800;
         canvas.height = 600;
+        const startButton = document.getElementById('startButton');
         const restartButton = document.getElementById('restartButton');
+        const instructions = document.getElementById('instructions');
 
         const spaceshipImg = new Image();
         spaceshipImg.src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475408/spaceship-sprite_w3gb6f.svg';
@@ -44,7 +60,7 @@
             return img;
         });
 
-        let spaceship, planets, frame, score, gameOver;
+        let spaceship, planets, frame, score, gameOver, lastPlanetX;
 
         function init() {
             spaceship = { x: 100, y: canvas.height / 2, vy: 0 };
@@ -52,8 +68,15 @@
             frame = 0;
             score = 0;
             gameOver = false;
+            lastPlanetX = 0;
             gameLoop();
+            startButton.style.display = 'none';
             restartButton.style.display = 'none';
+            instructions.style.display = 'none';
+        }
+
+        function startGame() {
+            init();
         }
 
         document.addEventListener('keydown', (e) => {
@@ -62,6 +85,7 @@
             }
         });
 
+        startButton.addEventListener('click', startGame);
         restartButton.addEventListener('click', init);
 
         function drawSpaceship() {
@@ -84,18 +108,24 @@
         }
 
         function updatePlanets() {
-            if (frame % 180 === 0) {
+            if (frame % 100 === 0) { // More frequent planets
                 const size = Math.random() * 0.5 + 0.5; // Random size multiplier between 0.5 and 1.0
                 const y = Math.random() * (canvas.height - (size * 50));
+                const x = canvas.width;
                 planets.push({
-                    x: canvas.width,
+                    x: x,
                     y,
                     img: planetImgs[Math.floor(Math.random() * planetImgs.length)],
                     size: size
                 });
+                lastPlanetX = x;
             }
             planets.forEach(planet => {
                 planet.x -= 2;
+                if (planet.x + (planet.size * 50) < spaceship.x && planet.x + (planet.size * 50) > lastPlanetX) {
+                    score++;
+                    lastPlanetX = planet.x;
+                }
             });
             planets = planets.filter(planet => planet.x + (planet.size * 50) > 0);
         }
@@ -136,7 +166,14 @@
             restartButton.style.display = 'block';
         }
 
-        spaceshipImg.onload = init;
+        function showStartScreen() {
+            instructions.style.display = 'block';
+            startButton.style.display = 'block';
+            ctx.fillStyle = '#44148f';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+        }
+
+        spaceshipImg.onload = showStartScreen;
     </script>
 </body>
 </html>
