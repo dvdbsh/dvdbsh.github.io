@@ -28,21 +28,23 @@
             color: #eee;
             border-radius: 8px;
             box-shadow: 7px 7px 0px #090909;
+			font-family: 'Roboto Mono';
         }
         #instructions {
             display: none;
             position: absolute;
             width: 100%;
             text-align: center;
-            top: 40%;
+            top: 30%;
             font-size: 20px;
             color: white;
+			font-family: 'Roboto Mono';
         }
     </style>
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
-    <div id="instructions">Tap to make the spaceship jump. Avoid the planets to score points!</div>
+    <div id="instructions">Click or tap to make the spaceship fly!<p>Avoid the planets to score points!</div>
     <button id="startButton">Start Game</button>
     <button id="restartButton">Restart Game</button>
     <script>
@@ -100,20 +102,11 @@
 
         startButton.addEventListener('click', startGame);
         restartButton.addEventListener('click', init);
-        document.addEventListener('keydown', handleKeypress);
-        canvas.addEventListener('touchstart', handleTouchStart);
-
-        function handleKeypress(e) {
-            if (e.code === 'Space' && !gameOver) {
-                spaceship.vy = -5;
-            }
-        }
-
-        function handleTouchStart() {
+        canvas.addEventListener('click', function() {
             if (!gameOver) {
                 spaceship.vy = -5;
             }
-        }
+        });
 
         function startGame() {
             init();
