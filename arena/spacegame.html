@@ -32,6 +32,9 @@
             box-shadow: 7px 7px 0px #090909;
 			font-family: 'Roboto Mono';
         }
+        #startButton:hover, #restartButton:hover {
+        	background-color: #44148f;
+            }
         #instructions {
             display: none;
             position: absolute;
@@ -50,174 +53,184 @@
     <div id="instructions"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475408/spaceship-sprite_w3gb6f.svg" height="60px"><p>Click or tap to make the spaceship fly!<p>Avoid the planets to score points!</div>
     <button id="startButton">Start Game</button>
     <button id="restartButton">Restart Game</button>
-    <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const spaceshipImg = new Image();
-        const wiggleImg = new Image();
-        const planetImgs = [
-            new Image(), new Image(), new Image(),
-            new Image(), new Image(), new Image()  // Additional planets
-        ];
-        let imagesLoaded = 0;
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const spaceshipImg = new Image();
+    const wiggleImg = new Image();
+    const planetImgs = [
+        new Image(), new Image(), new Image(),
+        new Image(), new Image(), new Image()  // Additional planets
+    ];
+    let imagesLoaded = 0;
 
-        function imageLoaded() {
-            imagesLoaded++;
-            if (imagesLoaded === 8) { // Including spaceship, wiggle, and six planets
-                showStartScreen();
-            }
+    function imageLoaded() {
+        imagesLoaded++;
+        if (imagesLoaded === 8) { // Including spaceship, wiggle, and six planets
+            showStartScreen();
         }
+    }
 
-        spaceshipImg.onload = wiggleImg.onload = imageLoaded;
-        planetImgs.forEach(img => img.onload = imageLoaded);
+    spaceshipImg.onload = wiggleImg.onload = imageLoaded;
+    planetImgs.forEach(img => img.onload = imageLoaded);
 
-        spaceshipImg.src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475408/spaceship-sprite_w3gb6f.svg';
-        wiggleImg.src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715536531/wiggle_znkcd5.svg';
-        planetImgs[0].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475420/planet3-sprite_xrlzg6.png';
-        planetImgs[1].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475427/planet1-sprite_jjv5jp.png';
-        planetImgs[2].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475424/planet2-sprite_hlvcbm.png';
-        planetImgs[3].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523872/planet4-sprite_wkahed.png';
-        planetImgs[4].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523868/planet5-sprite_s6xhyf.png';
-        planetImgs[5].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523865/planet6-sprite_agttqs.png';
+    spaceshipImg.src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475408/spaceship-sprite_w3gb6f.svg';
+    wiggleImg.src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715536531/wiggle_znkcd5.svg';
+    planetImgs[0].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475420/planet3-sprite_xrlzg6.png';
+    planetImgs[1].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475427/planet1-sprite_jjv5jp.png';
+    planetImgs[2].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475424/planet2-sprite_hlvcbm.png';
+    planetImgs[3].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523872/planet4-sprite_wkahed.png';
+    planetImgs[4].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523868/planet5-sprite_s6xhyf.png';
+    planetImgs[5].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523865/planet6-sprite_agttqs.png';
 
-        let spaceship, planets, frame, score, gameOver, scrollOffset = 0;
-        const spaceshipWidth = 60;
-        const spaceshipHeight = 30;
+    let spaceship, planets, frame, score, gameOver, scrollOffset = 0;
+    const spaceshipWidth = 60;
+    const spaceshipHeight = 30;
+    const borderHeight = 25; // Height of the wiggle border at the top and bottom
 
-        function init() {
-            spaceship = { x: 100, y: canvas.height / 2, vy: 0 };
-            planets = [];
-            frame = 0;
-            score = 0;
-            gameOver = false;
-            scrollOffset = 0;
-            gameLoop();
-            startButton.style.display = 'none';
-            restartButton.style.display = 'none';
-            instructions.style.display = 'none';
+    function init() {
+        spaceship = { x: 100, y: (canvas.height - 2 * borderHeight) / 2 + borderHeight, vy: 0 };
+        planets = [];
+        frame = 0;
+        score = 0;
+        gameOver = false;
+        scrollOffset = 0;
+        gameLoop();
+        startButton.style.display = 'none';
+        restartButton.style.display = 'none';
+        instructions.style.display = 'none';
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        drawBorders();
+    }
+
+    startButton.addEventListener('click', startGame);
+    restartButton.addEventListener('click', init);
+    canvas.addEventListener('click', function() {
+        if (!gameOver) {
+            spaceship.vy = -5;
         }
+    });
 
-        window.addEventListener('resize', resizeCanvas);
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+    function startGame() {
+        init();
+    }
+
+    function drawSpaceship() {
+        ctx.drawImage(spaceshipImg, spaceship.x, spaceship.y, spaceshipWidth, spaceshipHeight);
+    }
+
+    function updateSpaceship() {
+    spaceship.vy += 0.1;  // Gravity effect
+    spaceship.y += spaceship.vy;
+
+    // Check for collision with the top and bottom borders
+    if (spaceship.y < borderHeight || spaceship.y > canvas.height - spaceshipHeight - borderHeight) {
+        endGame();  // Call end game function if collision occurs
+    }
+}
+
+    function drawPlanets() {
+        planets.forEach(planet => {
+            const size = planet.size * 50;
+            ctx.drawImage(planet.img, planet.x, planet.y, size, size);
+        });
+    }
+
+    function updatePlanets() {
+        if (frame % 100 === 0) {
+            const size = Math.random() * 0.5 + 0.5;
+            const y = Math.random() * ((canvas.height - 2 * borderHeight) - (size * 50)) + borderHeight;
+            planets.push({
+                x: canvas.width,
+                y,
+                img: planetImgs[Math.floor(Math.random() * planetImgs.length)],
+                size: size,
+                passed: false
+            });
         }
-
-        startButton.addEventListener('click', startGame);
-        restartButton.addEventListener('click', init);
-        canvas.addEventListener('click', function() {
-            if (!gameOver) {
-                spaceship.vy = -5;
+        planets.forEach(planet => {
+            planet.x -= 2;
+            if (!planet.passed && planet.x + planet.size * 50 < spaceship.x) {
+                planet.passed = true;
+                score++;
             }
         });
+        planets = planets.filter(planet => planet.x + planet.size * 50 > 0);
+    }
 
-        function startGame() {
-            init();
-        }
-
-        function drawSpaceship() {
-            ctx.drawImage(spaceshipImg, spaceship.x, spaceship.y, spaceshipWidth, spaceshipHeight);
-        }
-
-        function updateSpaceship() {
-            spaceship.vy += 0.1;
-            spaceship.y += spaceship.vy;
-            if (spaceship.y > canvas.height - spaceshipHeight || spaceship.y < 0) {
+    function checkCollision() {
+        planets.forEach(planet => {
+            const size = planet.size * 50;
+            if (spaceship.x < planet.x + size && spaceship.x + spaceshipWidth > planet.x &&
+                spaceship.y < planet.y + size && spaceship.y + spaceshipHeight > planet.y &&
+                planet.y > borderHeight && planet.y + size < canvas.height - borderHeight) {
                 endGame();
             }
-        }
+        });
+    }
 
-        function drawPlanets() {
-            planets.forEach(planet => {
-                const size = planet.size * 50;
-                ctx.drawImage(planet.img, planet.x, planet.y, size, size);
-            });
-        }
+    function scoreDisplay() {
+        ctx.fillStyle = 'white';
+        ctx.font = '24px Roboto Mono';
+        const scorePositionY = 50;  
+        ctx.fillText(`Score: ${score}`, 20, scorePositionY);
+    }
 
-        function updatePlanets() {
-            if (frame % 100 === 0) {
-                const size = Math.random() * 0.5 + 0.5;
-                const y = Math.random() * (canvas.height - (size * 50));
-                planets.push({
-                    x: canvas.width,
-                    y,
-                    img: planetImgs[Math.floor(Math.random() * planetImgs.length)],
-                    size: size,
-                    passed: false
-                });
-            }
-            planets.forEach(planet => {
-                planet.x -= 2;
-                if (!planet.passed && planet.x + planet.size * 50 < spaceship.x) {
-                    planet.passed = true;
-                    score++;
-                }
-            });
-            planets = planets.filter(planet => planet.x + planet.size * 50 > 0);
-        }
 
-        function checkCollision() {
-            planets.forEach(planet => {
-                const size = planet.size * 50;
-                if (spaceship.x < planet.x + size && spaceship.x + spaceshipWidth > planet.x &&
-                    spaceship.y < planet.y + size && spaceship.y + spaceshipHeight > planet.y) {
-                    endGame();
-                }
-            });
-        }
+    function drawBorders() {
+        const patternHeight = 25;
+        const patternRepeat = Math.ceil(canvas.width / wiggleImg.width) + 1;
+        scrollOffset = (scrollOffset - 3) % wiggleImg.width;
 
-        function scoreDisplay() {
-            ctx.fillStyle = 'white';
-            ctx.font = '24px Roboto Mono';
-            ctx.fillText(`Score: ${score}`, 20, 30);
-        }
-
-        function drawBorders() {
-            const patternHeight = 30;
-            const patternRepeat = Math.ceil(canvas.width / wiggleImg.width) + 1;
-            scrollOffset = (scrollOffset - 2) % wiggleImg.width;
-
+        ctx.save();
+        ctx.translate(scrollOffset, 0);
+        for (let i = -1; i < patternRepeat; i++) {
+            ctx.drawImage(wiggleImg, i * wiggleImg.width, 0, wiggleImg.width, patternHeight);
             ctx.save();
-            ctx.translate(scrollOffset, 0);
-            for (let i = -1; i < patternRepeat; i++) {
-                ctx.drawImage(wiggleImg, i * wiggleImg.width, 0, wiggleImg.width, patternHeight);
-                ctx.save();
-                ctx.scale(1, -1);
-                ctx.drawImage(wiggleImg, i * wiggleImg.width, -canvas.height, wiggleImg.width, patternHeight);
-                ctx.restore();
-            }
+            ctx.scale(1, -1);
+            ctx.drawImage(wiggleImg, i * wiggleImg.width, -canvas.height, wiggleImg.width, patternHeight);
             ctx.restore();
         }
+        ctx.restore();
+    }
 
-        function gameLoop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawBorders();
-            drawSpaceship();
-            updateSpaceship();
-            drawPlanets();
-            updatePlanets();
-            checkCollision();
-            scoreDisplay();
-            frame++;
-            if (!gameOver) {
-                requestAnimationFrame(gameLoop);
-            }
-        }
+    function gameLoop() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBorders();  // Ensure borders are drawn in each frame
+    drawSpaceship();
+    updateSpaceship();
+    drawPlanets();
+    updatePlanets();
+    checkCollision();
+    scoreDisplay();
+    frame++;
+    if (!gameOver) {
+        requestAnimationFrame(gameLoop);
+    }
+}
 
-        function endGame() {
-            gameOver = true;
-            ctx.fillText("Game Over!", canvas.width / 2 - 50, canvas.height / 2);
-            restartButton.style.display = 'block';
-        }
+    function endGame() {
+        gameOver = true;
+        ctx.fillText("Game Over!", canvas.width / 2 - 50, canvas.height / 2);
+        restartButton.style.display = 'block';
+    }
 
-        function showStartScreen() {
-            instructions.style.display = 'block';
-            startButton.style.display = 'block';
-            ctx.fillStyle = '#44148f';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-        }
-        window.onload = resizeCanvas;
+function showStartScreen() {
+    ctx.fillStyle = '#44148f';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    drawBorders();  // Draw the borders on the start screen
+    instructions.style.display = 'block';
+    startButton.style.display = 'block';
+}
 
-    </script>
+    window.onload = resizeRef = resizeCanvas;
+
+</script>
+
 </body>
 </html>
