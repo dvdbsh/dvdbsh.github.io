@@ -76,9 +76,6 @@ a:hover {
     	margin: auto;
 		margin-top: 20px;
 		}
-	.weeklydeals-sm {
-    	display: none;
-        }
 @keyframes float {
     0%, 100% {
         transform: translateY(0);
@@ -603,17 +600,14 @@ a:hover {
 		align-items: center;
 		text-align: center;
 } 
-	.weeklydeals-sm {
+	.weeklydeals-lg {
     	display: flex;
     	width: 100%;
     	justify-content: center;
     	align-items: center;
     	margin: auto;
 		}
-	.weeklydeals-lg {
-    	display: none;
-        }
-	
+
 }
 @media (max-width: 340px) {
     .hero .text h1 {
