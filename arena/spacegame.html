@@ -10,7 +10,8 @@
         canvas {
             display: block;
             background-color: #330a76;
-            background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/v1715537430/New_Project_drz6fh.svg);
+            background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715547645/stars_pbpskq.gif);
+            background-size: 50%;
             margin: auto;
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -36,16 +37,17 @@
             position: absolute;
             width: 100%;
             text-align: center;
-            top: 30%;
+            top: 20%;
             font-size: 20px;
             color: white;
 			font-family: 'Roboto Mono';
+            z-index: 2;
         }
     </style>
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
-    <div id="instructions">Click or tap to make the spaceship fly!<p>Avoid the planets to score points!</div>
+    <div id="instructions"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475408/spaceship-sprite_w3gb6f.svg" height="60px"><p>Click or tap to make the spaceship fly!<p>Avoid the planets to score points!</div>
     <button id="startButton">Start Game</button>
     <button id="restartButton">Restart Game</button>
     <script>
@@ -71,12 +73,12 @@
 
         spaceshipImg.src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475408/spaceship-sprite_w3gb6f.svg';
         wiggleImg.src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715536531/wiggle_znkcd5.svg';
-        planetImgs[0].src = 'https://res.cloudinary.com/di8j84ent/image/upload/v1715475420/planet3-sprite_xrlzg6.png';
-        planetImgs[1].src = 'https://res.cloudinary.com/di8j84ent/image/upload/v1715475427/planet1-sprite_jjv5jp.png';
-        planetImgs[2].src = 'https://res.cloudinary.com/di8j84ent/image/upload/v1715475424/planet2-sprite_hlvcbm.png';
-        planetImgs[3].src = 'https://res.cloudinary.com/di8j84ent/image/upload/v1715523872/planet4-sprite_wkahed.png';
-        planetImgs[4].src = 'https://res.cloudinary.com/di8j84ent/image/upload/v1715523868/planet5-sprite_s6xhyf.png';
-        planetImgs[5].src = 'https://res.cloudinary.com/di8j84ent/image/upload/v1715523865/planet6-sprite_agttqs.png';
+        planetImgs[0].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475420/planet3-sprite_xrlzg6.png';
+        planetImgs[1].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475427/planet1-sprite_jjv5jp.png';
+        planetImgs[2].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475424/planet2-sprite_hlvcbm.png';
+        planetImgs[3].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523872/planet4-sprite_wkahed.png';
+        planetImgs[4].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523868/planet5-sprite_s6xhyf.png';
+        planetImgs[5].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523865/planet6-sprite_agttqs.png';
 
         let spaceship, planets, frame, score, gameOver, scrollOffset = 0;
         const spaceshipWidth = 60;
