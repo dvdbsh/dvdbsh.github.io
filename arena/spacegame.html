@@ -46,11 +46,22 @@
 			font-family: 'Roboto Mono';
             z-index: 2;
         }
+        @keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-20px);
+    }
+}
+        .float img {
+	animation: float 3s ease-in-out infinite;
+}
     </style>
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
-    <div id="instructions"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475408/spaceship-sprite_w3gb6f.svg" height="60px"><p>Click or tap to make the spaceship fly!<p>Avoid the planets to score points!</div>
+    <div id="instructions"><div class="float"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475408/spaceship-sprite_w3gb6f.svg" height="60px" ></div><p>Click or tap to make the spaceship fly!<p>Avoid the planets to score points!</div>
     <button id="startButton">Start Game</button>
     <button id="restartButton">Restart Game</button>
 <script>
@@ -85,7 +96,7 @@
 
     let spaceship, planets, frame, score, gameOver, scrollOffset = 0;
     const spaceshipWidth = 60;
-    const spaceshipHeight = 30;
+    const spaceshipHeight = 42;
     const borderHeight = 25; // Height of the wiggle border at the top and bottom
 
     function init() {
