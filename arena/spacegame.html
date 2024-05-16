@@ -17,14 +17,15 @@
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
         }
-        #startButton, #restartButton, #shareButton {
+        #startButton, #restartButton {
             display: none;
             position: absolute;
             left: 50%;
+            top: 70%;
             transform: translate(-50%, -50%);
             font-size: 20px;
             font-weight: bold;
-            padding: 10px;
+            padding: 15px;
             cursor: pointer;
             border: 3px solid #eee;
             background-color: transparent;
@@ -32,18 +33,9 @@
             border-radius: 8px;
             font-family: 'Roboto Mono';
         }
-        #startButton:hover, #restartButton:hover, #shareButton:hover {
+        #startButton:hover, #restartButton:hover {
             border: 3px solid #ff4a8b;
             color: #ff4a8b;
-        }
-        #startButton {
-            top: 68%;
-        }
-        #restartButton {
-            top: 60%;
-        }
-        #shareButton {
-            top: 70%; /* Position below the restart button */
         }
         #instructions {
             display: none;
@@ -52,7 +44,7 @@
             max-width: 600px; /* Optional: Add a max-width for larger screens */
             box-sizing: border-box; /* Include padding in the width */
             text-align: center;
-            top: 30%;
+            top: 20%;
             left: 50%;
             transform: translateX(-50%);
             font-size: 20px;
@@ -76,9 +68,6 @@
             #instructions {
                 font-size: 16px;
             }
-            #startButton, #restartButton, #shareButton {
-            	font-size: 16px;
-                }
         }
     </style>
 </head>
@@ -87,7 +76,6 @@
     <div id="instructions"><div class="float"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475408/spaceship-sprite_w3gb6f.svg" height="60px" ></div><p>Click or tap to make the spaceship fly!<p>Avoid the planets to score points!</div>
     <button id="startButton">Start Game</button>
     <button id="restartButton">Restart Game</button>
-    <button id="shareButton">Share</button>
 <script>
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
@@ -134,7 +122,6 @@
         gameLoop();
         startButton.style.display = 'none';
         restartButton.style.display = 'none';
-        shareButton.style.display = 'none';
         instructions.style.display = 'none';
     }
 
@@ -147,20 +134,6 @@
 
     startButton.addEventListener('click', startGame);
     restartButton.addEventListener('click', init);
-    shareButton.addEventListener('click', function() {
-        if (navigator.share) {
-            navigator.share({
-                title: 'Space Flap',
-                text: 'Check out this cool game!',
-                url: window.location.href
-            }).then(() => {
-                console.log('Thanks for sharing!');
-            }).catch(console.error);
-        } else {
-            // Fallback for browsers that do not support the Web Share API
-            alert('Web Share API is not supported in your browser. Please copy the link manually.');
-        }
-    });
     canvas.addEventListener('click', function() {
         if (!gameOver) {
             spaceship.vy = -5;
@@ -293,7 +266,6 @@
         ctx.fillText(`Score: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
 
         restartButton.style.display = 'block';
-        shareButton.style.display = 'block';
     }
 
     function showStartScreen() {
