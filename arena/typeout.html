@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            font-family: 'Roboto Mono', monospace;
+            font-weight: 500;
+            color: #eee;
+            background-color: #050110;
+            background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715551523/stars2_ogze9l.gif);
+            background-size: 50%;
+        }
+        .typecontainer {
+            text-align: left;
+            font-size: 11vw;
+            width: 100%;
+            height: 100%;
+            max-width: 1000px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            line-height: 1.2; /* Default line-height */
+        }
+        .fixed-container {
+            display: inline-block;
+            width: 9ch;
+            white-space: nowrap;
+            overflow: hidden;
+            vertical-align: top;
+        }
+        .changing-word {
+            display: inline-block;
+            border-right: 8px solid #eee;
+            padding-right: 10px;
+            animation: blink 1.12s step-end infinite;
+            font-weight: 700;
+        }
+        @keyframes blink {
+            from, to {
+                border-color: transparent;
+            }
+            50% {
+                border-color: #eee;
+            }
+        }
+        @media (max-width: 600px) {
+            body {
+                justify-content: center;
+                align-items: center;
+                height: 1000px;
+            }
+            .typecontainer {
+                font-size: 18vw; /* Increase font size on smaller screens */
+                line-height: 1.5; /* Increase line-height for more vertical space */
+                text-align: center; /* Center text on smaller screens */
+                align-items: center; /* Center items within the container */
+                height: 100%; /* Ensure it takes full height */
+                justify-content: space-around; /* Distribute space evenly */
+            }
+            .typecontainer > div {
+                height: calc(33.333% - 20px); /* Ensure each section takes 1/3 height */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+            }
+            .fixed-container {
+                width: 12ch; /* Adjust width for smaller screens */
+            }
+        }
+   </style>
+</head>
+<body>
+    <div class="typecontainer">
+        <div>Sarnia</div>
+        <div class="fixed-container">
+            <div class="changing-word">Plays</div>
+        </div>
+        <div>Here</div>
+    </div>
+    <script>
+        const words = ["Plays", "Parties", "Wins", "Climbs", "Putts", "Loves it"];
+        const changingWordElement = document.querySelector('.changing-word');
+        let wordIndex = 0;
+        let isDeleting = false;
+        let text = '';
+        let typingSpeed = 150;
+        let pauseBetweenWords = 2000;
+        let pauseBetweenDelete = 500;
+
+        function type() {
+            const currentWord = words[wordIndex];
+            if (isDeleting) {
+                text = currentWord.substring(0, text.length - 1);
+            } else {
+                text = currentWord.substring(0, text.length + 1);
+            }
+
+            changingWordElement.textContent = text;
+
+            if (!isDeleting && text === currentWord) {
+                setTimeout(() => isDeleting = true, pauseBetweenWords);
+            } else if (isDeleting && text === '') {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % words.length;
+                setTimeout(type, pauseBetweenDelete);
+                return;
+            }
+
+            setTimeout(type, isDeleting ? typingSpeed / 2 : typingSpeed);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            type();
+        });
+    </script>
+</body>
+</html>
