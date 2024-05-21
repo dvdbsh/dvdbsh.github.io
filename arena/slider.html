@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link href="https://fonts.googleapis.com/css2?family=Karla:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet">
+    <title>Scroll Animation</title>
+    <style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        height: 150%;
+        font-family: 'Karla', sans-serif;
+        color: #eee;
+        font-weight: 900;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .scroll-container {
+        position: relative;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        background-color: #44148f;
+    }
+
+    .message {
+        position: relative;
+        font-size: 3.5rem;
+        text-align: center;
+        white-space: nowrap;
+        z-index: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .text-left, .text-right {
+        display: inline-block;
+        width: 450px;
+    }
+
+    .giftcard {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 410px;
+        border-radius: 25px;
+        transition: transform 0.5s ease;
+        z-index: 2;
+        image-rendering: -webkit-optimize-contrast; /* Chrome, Safari */
+        image-rendering: crisp-edges; /* Firefox */
+    }
+
+    .bounce-left {
+        transform: translateX(-500px) translateY(-50%);
+    }
+
+    .bounce-right {
+        transform: translateX(0) translateY(-50%);
+    }
+    </style>
+</head>
+<body>
+    <div class="scroll-container">
+        <div class="message">
+            <span class="text-left">from bored</span>
+            <span class="text-right">to busy</span>
+            <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1689283549/Giftcards/giftcard_06_e1rldk.png" alt="Gift Card" class="giftcard">
+        </div>
+    </div>
+    <script>
+    window.addEventListener('scroll', function() {
+        const giftcard = document.querySelector('.giftcard');
+        const scrollPosition = window.scrollY || window.pageYOffset;
+        const windowHeight = window.innerHeight;
+
+        if (scrollPosition > windowHeight / 3) {
+            giftcard.classList.add('bounce-left');
+            giftcard.classList.remove('bounce-right');
+        } else {
+            giftcard.classList.add('bounce-right');
+            giftcard.classList.remove('bounce-left');
+        }
+    });
+    </script>
+</body>
+</html>
