@@ -164,7 +164,13 @@ a:hover {
     box-shadow: 7px 7px 0px #090909;
     border-radius: 8px;
     text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Add transition for smooth hover effect */
 }
+.activity:hover {
+    transform: scale(1.05); /* Slightly increase the size */
+    box-shadow: 10px 10px 0px #090909; /* Enhance the shadow for a more pronounced effect */
+}
+
 .activity img {
     width: 100%;
     height: auto;
@@ -327,26 +333,26 @@ a:hover {
     width: 100%; /* Makes the image take up 100% of the .arrow-down div width */
     max-width: 40px; /* Limits the image size to 40px */
 }
-.highlight-yellow {
-    position: relative;
-    display: inline-block;
-    padding: 5px 15px;
-    z-index: 1;
-    line-height: 0.8;
-}
-.highlight-yellow::before {
-    content: "";
-    background-color: #14088e;
-    position:absolute;
-    border-radius: 2px;
-    z-index: -1;
-    top: 35%;
-    left: 0;
-    right: 0;
-    height: 35%;
-    transform: rotate(-0.5deg);
-    overflow: hidden;
-}
+	.highlight-yellow {
+		position: relative;
+		display: inline-block;
+		padding: 5px 15px;
+		z-index: 1;
+		line-height: 0.8;
+	}
+	.highlight-yellow::before {
+		content: "";
+		background-color: #14088e;
+		position:absolute;
+		border-radius: 2px;
+		z-index: -1;
+		top: 35%;
+		left: 0;
+		right: 0;
+		height: 35%;
+		transform: rotate(-0.5deg);
+		overflow: hidden;
+	}
 .highlight-pink {
     position: relative;
     display: inline-block;
