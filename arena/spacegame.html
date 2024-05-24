@@ -1,48 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Space Flap</title>
     <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
+    <link href='https://cdn.jsdelivr.net/npm/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         body, html { background-color: #050110; margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; }
         canvas {
             display: block;
             background-color: #050110;
-            background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715551523/stars2_ogze9l.gif);
-            background-size: 50%;
+            background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1716573916/spacebg3_rjyhqt.png');
+            background-size: 40%;
             margin: auto;
             position: absolute;
             top: 0; left: 0; right: 0; bottom: 0;
         }
-        #startButton, #restartButton {
+        #startButton, #restartButton, #submitNameButton {
             display: none;
-            position: absolute;
+            position: relative;
             left: 50%;
-            top: 70%;
-            transform: translate(-50%, -50%);
-            font-size: 20px;
+            transform: translateX(-50%);
+            font-size: 1em;
             font-weight: bold;
             padding: 15px;
             cursor: pointer;
             border: 3px solid #eee;
-            background-color: transparent;
+            background: rgba(0, 0, 0, 0.3);
             color: #eee;
             border-radius: 8px;
             font-family: 'Roboto Mono';
+            margin-top: 10px; /* Add margin to space out buttons */
         }
-        #startButton:hover, #restartButton:hover {
+        #startButton:hover, #restartButton:hover, #submitNameButton:hover {
             border: 3px solid #ff4a8b;
             color: #ff4a8b;
         }
+        #startButton { top: 70%; }
         #instructions {
             display: none;
             position: absolute;
-            width: calc(100% - 40px); /* Adjust width to fit the screen */
-            max-width: 600px; /* Optional: Add a max-width for larger screens */
-            box-sizing: border-box; /* Include padding in the width */
+            width: calc(100% - 40px);
+            max-width: 600px;
+            box-sizing: border-box;
             text-align: center;
             top: 20%;
             left: 50%;
@@ -51,7 +50,76 @@
             color: white;
             font-family: 'Roboto Mono';
             z-index: 99;
-            padding: 10px; /* Added padding */
+            padding: 10px;
+        }
+        #gameTitle {
+            font-family: 'Karla';
+            font-size: 48px;
+            font-weight: bold;
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+            position: relative;
+            top: -20px; /* Adjust position to fit better with the spaceship image */
+        }
+
+        @media (min-width: 520px) {
+            #gameTitle {
+                font-size: 64px;
+            }
+        }
+
+        #gameTitle::before {
+            content: " ";
+            display: block;
+            height: 40px; /* Adjust height for arch effect */
+            width: 100%;
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            pointer-events: none;
+        }
+        #leaderboard {
+            display: none;
+            position: absolute;
+            top: 45%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 20px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-family: 'Roboto Mono';
+            font-size: 1.5em;
+            max-width: 90%;
+        }
+        #nameInput {
+            display: none;
+            position: absolute;
+            top: 45%; /* Adjusted position */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            padding: 20px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-family: 'Roboto Mono';
+            text-align: center;
+            width: calc(80% - 40px);
+            max-width: 300px;
+        }
+        #playerName {
+            border: 2px solid white;
+            background-color: #050110;
+            color: white;
+            padding: 5px;
+            border-radius: 8px;
+            font-family: 'Roboto Mono';
+            text-align: center;
+            margin-bottom: 10px;
+            width: calc(100% - 20px); /* Adjusted width to fit within the container */
         }
         @keyframes float {
             0%, 100% {
@@ -64,219 +132,335 @@
         .float img {
             animation: float 3s ease-in-out infinite;
         }
-        @media (max-width: 420px) {
+        @media (max-width: 520px) {
             #instructions {
-                font-size: 16px;
+                font-size: 1em;
+            }
+            #leaderboard {
+            	font-size: 1em;
             }
         }
     </style>
 </head>
 <body>
     <canvas id="gameCanvas"></canvas>
-    <div id="instructions"><div class="float"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475408/spaceship-sprite_w3gb6f.svg" height="60px" ></div><p>Click or tap to make the spaceship fly!<p>Avoid the planets to score points!</div>
+    <div id="instructions">
+        <div id="gameTitle">Space Adventure</div>
+        <div class="float"><img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475408/spaceship-sprite_w3gb6f.svg" height="60px"></div>
+        <p>Click or tap to make the spaceship fly!</p>
+        <p>Avoid the planets to score points!</p>
+    </div>
     <button id="startButton">Start Game</button>
-    <button id="restartButton">Restart Game</button>
-<script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
-    const spaceshipImg = new Image();
-    const wiggleImg = new Image();
-    const planetImgs = [
-        new Image(), new Image(), new Image(),
-        new Image(), new Image(), new Image()  // Additional planets
-    ];
-    let imagesLoaded = 0;
+    <div id="leaderboard">
+        <!-- Updated leaderboard without list element -->
+        <div id="leaderboardList"></div>
+    </div>
+    <div id="nameInput">
+        <p>Enter your name (1-5 characters):</p>
+        <input type="text" id="playerName" maxlength="5">
+        <button id="submitNameButton">Submit</button>
+        <button id="restartButton">Restart Game</button>
+    </div>
 
-    function imageLoaded() {
-        imagesLoaded++;
-        if (imagesLoaded === 8) { // Including spaceship, wiggle, and six planets
-            showStartScreen();
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+        import { getDatabase, ref, set, push, onValue, query, orderByChild, limitToLast } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBo9q-iel7G7ypP9Ak55eCbbAPIArTBUUE",
+            authDomain: "space-game-3b7da.firebaseapp.com",
+            projectId: "space-game-3b7da",
+            storageBucket: "space-game-3b7da.appspot.com",
+            messagingSenderId: "579368274556",
+            appId: "1:579368274556:web:2c43065aaaee5010e017f9",
+            measurementId: "G-YDEV0FTNMS",
+            databaseURL: "https://space-game-3b7da-default-rtdb.firebaseio.com/"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const spaceshipImg = new Image();
+        const wiggleImg = new Image();
+        const planetImgs = [
+            new Image(), new Image(), new Image(),
+            new Image(), new Image(), new Image()
+        ];
+        let imagesLoaded = 0;
+
+        function imageLoaded() {
+            imagesLoaded++;
+            if (imagesLoaded === 8) {
+                showStartScreen();
+            }
         }
-    }
 
-    spaceshipImg.onload = wiggleImg.onload = imageLoaded;
-    planetImgs.forEach(img => img.onload = imageLoaded);
+        spaceshipImg.onload = wiggleImg.onload = imageLoaded;
+        planetImgs.forEach(img => img.onload = imageLoaded);
 
-    spaceshipImg.src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475408/spaceship-sprite_w3gb6f.svg';
-    wiggleImg.src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715536531/wiggle_znkcd5.svg';
-    planetImgs[0].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715566824/planet7-sprite_aqzbyk.png';
-    planetImgs[1].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475427/planet1-sprite_jjv5jp.png';
-    planetImgs[2].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475424/planet2-sprite_hlvcbm.png';
-    planetImgs[3].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523872/planet4-sprite_wkahed.png';
-    planetImgs[4].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523868/planet5-sprite_s6xhyf.png';
-    planetImgs[5].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523865/planet6-sprite_agttqs.png';
+        spaceshipImg.src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475408/spaceship-sprite_w3gb6f.svg';
+        wiggleImg.src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715536531/wiggle_znkcd5.svg';
+        planetImgs[0].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715566824/planet7-sprite_aqzbyk.png';
+        planetImgs[1].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475427/planet1-sprite_jjv5jp.png';
+        planetImgs[2].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715475424/planet2-sprite_hlvcbm.png';
+        planetImgs[3].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523872/planet4-sprite_wkahed.png';
+        planetImgs[4].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523868/planet5-sprite_s6xhyf.png';
+        planetImgs[5].src = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715523865/planet6-sprite_agttqs.png';
 
-    let spaceship, planets, frame, score, gameOver, scrollOffset = 0;
-    const spaceshipWidth = 60;
-    const spaceshipHeight = 42;
-    const borderHeight = 25; // Height of the wiggle border at the top and bottom
+        let spaceship, planets, frame, score, gameOver, scrollOffset = 0;
+        const spaceshipWidth = 60;
+        const spaceshipHeight = 42;
+        const borderHeight = 25;
 
-    function init() {
-        spaceship = { x: 100, y: (canvas.height - 2 * borderHeight) / 2 + borderHeight, vy: 0 };
-        planets = [];
-        frame = 0;
-        score = 0;
-        gameOver = false;
-        scrollOffset = 0;
-        resizeCanvas();
-        gameLoop();
-        startButton.style.display = 'none';
-        restartButton.style.display = 'none';
-        instructions.style.display = 'none';
-    }
+        const startButton = document.getElementById('startButton');
+        const restartButton = document.getElementById('restartButton');
+        const nameInput = document.getElementById('nameInput');
+        const submitNameButton = document.getElementById('submitNameButton');
 
-    window.addEventListener('resize', resizeCanvas);
-    function resizeCanvas() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        drawBorders();
-    }
-
-    startButton.addEventListener('click', startGame);
-    restartButton.addEventListener('click', init);
-    canvas.addEventListener('click', function() {
-        if (!gameOver) {
-            spaceship.vy = -5;
+        function init() {
+            spaceship = { x: 100, y: (canvas.height - 2 * borderHeight) / 2 + borderHeight, vy: 0 };
+            planets = [];
+            frame = 0;
+            score = 0;
+            gameOver = false;
+            scrollOffset = 0;
+            resizeCanvas();
+            updateBackground(); // Ensure background is updated on init
+            gameLoop();
+            startButton.style.display = 'none';
+            restartButton.style.display = 'none';
+            instructions.style.display = 'none';
+            nameInput.style.display = 'none';
+            leaderboard.style.display = 'none';
         }
-    });
 
-    function startGame() {
-        init();
-    }
-
-    function drawSpaceship() {
-        ctx.drawImage(spaceshipImg, spaceship.x, spaceship.y, spaceshipWidth, spaceshipHeight);
-    }
-
-    function updateSpaceship() {
-        spaceship.vy += 0.1;  // Gravity effect
-        spaceship.y += spaceship.vy;
-
-        // Check for collision with the top and bottom borders
-        if (spaceship.y < borderHeight || spaceship.y > canvas.height - spaceshipHeight - borderHeight) {
-            endGame();  // Call end game function if collision occurs
+        window.addEventListener('resize', resizeCanvas);
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            drawBorders();
+            updateBackground(); // Ensure background is updated on resize
         }
-    }
 
-    function drawPlanets() {
-        planets.forEach(planet => {
-            const size = planet.size * 50;
-            ctx.drawImage(planet.img, planet.x, planet.y, size, size);
-        });
-    }
-
-    function updatePlanets() {
-        if (frame % 100 === 0) {
-            const size = Math.random() * 0.5 + 0.5;
-            const y = Math.random() * ((canvas.height - 2 * borderHeight) - (size * 50)) + borderHeight;
-            planets.push({
-                x: canvas.width,
-                y,
-                img: planetImgs[Math.floor(Math.random() * planetImgs.length)],
-                size: size,
-                passed: false
-            });
-        }
-        planets.forEach(planet => {
-            planet.x -= 2;
-            if (!planet.passed && planet.x + planet.size * 50 < spaceship.x) {
-                planet.passed = true;
-                score++;
+        startButton.addEventListener('click', startGame);
+        restartButton.addEventListener('click', init);
+        canvas.addEventListener('click', function() {
+            if (!gameOver) {
+                spaceship.vy = -5;
             }
         });
-        planets = planets.filter(planet => planet.x + planet.size * 50 > 0);
-    }
 
-    function checkCollision() {
-        planets.forEach(planet => {
-            const size = planet.size * 50;
-            if (spaceship.x < planet.x + size && spaceship.x + spaceshipWidth > planet.x &&
-                spaceship.y < planet.y + size && spaceship.y + spaceshipHeight > planet.y &&
-                planet.y > borderHeight && planet.y + size < canvas.height - borderHeight) {
+        function startGame() {
+            init();
+        }
+
+        function drawSpaceship() {
+            ctx.drawImage(spaceshipImg, spaceship.x, spaceship.y, spaceshipWidth, spaceshipHeight);
+        }
+
+        function updateSpaceship() {
+            spaceship.vy += 0.1;
+            spaceship.y += spaceship.vy;
+
+            if (spaceship.y < borderHeight || spaceship.y > canvas.height - spaceshipHeight - borderHeight) {
                 endGame();
             }
-        });
-    }
+        }
 
-    function scoreDisplay() {
-        ctx.fillStyle = 'white';
-        ctx.font = '24px Roboto Mono';
-        const scorePositionX = 20;
-        const scorePositionY = 50;  
-        ctx.fillText(`Score: ${score}`, scorePositionX, scorePositionY);
-    }
+        function drawPlanets() {
+            planets.forEach(planet => {
+                const size = planet.size * 50;
+                ctx.drawImage(planet.img, planet.x, planet.y, size, size);
+            });
+        }
 
-    function drawBorders() {
-        const patternHeight = 25;
-        const patternRepeat = Math.ceil(canvas.width / wiggleImg.width) + 1;
-        scrollOffset = (scrollOffset - 3) % wiggleImg.width;
+        function updatePlanets() {
+            if (frame % 100 === 0) {
+                const size = Math.random() * 0.5 + 0.5;
+                const y = Math.random() * ((canvas.height - 2 * borderHeight) - (size * 50)) + borderHeight;
+                planets.push({
+                    x: canvas.width,
+                    y,
+                    img: planetImgs[Math.floor(Math.random() * planetImgs.length)],
+                    size: size,
+                    passed: false
+                });
+            }
+            planets.forEach(planet => {
+                planet.x -= 2;
+                if (!planet.passed && planet.x + planet.size * 50 < spaceship.x) {
+                    planet.passed = true;
+                    score++;
+                }
+            });
+            planets = planets.filter(planet => planet.x + planet.size * 50 > 0);
+        }
 
-        ctx.save();
-        ctx.translate(scrollOffset, 0);
-        for (let i = -1; i < patternRepeat; i++) {
-            ctx.drawImage(wiggleImg, i * wiggleImg.width, 0, wiggleImg.width, patternHeight);
+        function checkCollision() {
+            planets.forEach(planet => {
+                const size = planet.size * 50;
+                if (spaceship.x < planet.x + size && spaceship.x + spaceshipWidth > planet.x &&
+                    spaceship.y < planet.y + size && spaceship.y + spaceshipHeight > planet.y &&
+                    planet.y > borderHeight && planet.y + size < canvas.height - borderHeight) {
+                    endGame();
+                }
+            });
+        }
+
+        function scoreDisplay() {
+            ctx.fillStyle = 'white';
+            ctx.font = '24px Roboto Mono';
+            const scorePositionX = 20;
+            const scorePositionY = 50;
+            ctx.fillText(`Score: ${score}`, scorePositionX, scorePositionY);
+        }
+
+        function drawBorders() {
+            const patternHeight = 25;
+            const patternRepeat = Math.ceil(canvas.width / wiggleImg.width) + 1;
+            scrollOffset = (scrollOffset - 3) % wiggleImg.width;
+
             ctx.save();
-            ctx.scale(1, -1);
-            ctx.drawImage(wiggleImg, i * wiggleImg.width, -canvas.height, wiggleImg.width, patternHeight);
+            ctx.translate(scrollOffset, 0);
+            for (let i = -1; i < patternRepeat; i++) {
+                ctx.drawImage(wiggleImg, i * wiggleImg.width, 0, wiggleImg.width, patternHeight);
+                ctx.save();
+                ctx.scale(1, -1);
+                ctx.drawImage(wiggleImg, i * wiggleImg.width, -canvas.height, wiggleImg.width, patternHeight);
+                ctx.restore();
+            }
             ctx.restore();
         }
-        ctx.restore();
-    }
 
-    let bgOffset = 0;
+        let bgOffset = 0;
 
-    function updateBackground() {
-        bgOffset -= 0.5; // This controls the speed of the background scrolling to the left
-        canvas.style.backgroundImage = "url('https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715551523/stars2_ogze9l.gif')";
-        canvas.style.backgroundPosition = `${bgOffset}px 0`;
-    }
-
-    function gameLoop() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        updateBackground(); // Update the background position in each frame
-        drawBorders();
-        drawSpaceship();
-        updateSpaceship();
-        drawPlanets();
-        updatePlanets();
-        checkCollision();
-        if (!gameOver) {
-            scoreDisplay(); // Only display the score if the game is not over
+        function updateBackground() {
+            bgOffset -= 0.5;
+            canvas.style.backgroundPosition = `${bgOffset}px 0`;
         }
-        frame++;
-        if (!gameOver) {
-            requestAnimationFrame(gameLoop);
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            updateBackground();
+            drawBorders();
+            drawSpaceship();
+            updateSpaceship();
+            drawPlanets();
+            updatePlanets();
+            checkCollision();
+            if (!gameOver) {
+                scoreDisplay();
+            }
+            frame++;
+            if (!gameOver) {
+                requestAnimationFrame(gameLoop);
+            }
         }
-    }
 
-    function endGame() {
-        gameOver = true;
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas to avoid drawing over other elements
-        drawBorders(); // Redraw borders to keep them visible
-        ctx.font = '36px Roboto Mono'; // Large font for "Game Over"
-        ctx.fillStyle = 'white';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+        function endGame() {
+            gameOver = true;
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas to avoid drawing over other elements
+            drawBorders(); // Redraw borders to keep them visible
+            ctx.font = '36px Roboto Mono'; // Large font for "Game Over"
+            ctx.fillStyle = 'white';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
 
-        // Display "Game Over" at the center of the canvas
-        ctx.fillText("Game Over!", canvas.width / 2, canvas.height / 2 - 40);
+            // Display "Game Over" at the center of the canvas
+            ctx.fillText("Game Over!", canvas.width / 2, canvas.height / 2 - 100); // Moved up
 
-        // Use a smaller font for the score below the "Game Over" message
-        ctx.font = '24px Roboto Mono';
-        ctx.fillText(`Score: ${score}`, canvas.width / 2, canvas.height / 2 + 20);
+            // Use a smaller font for the score below the "Game Over" message
+            ctx.font = '24px Roboto Mono';
+            ctx.fillText(`Score: ${score}`, canvas.width / 2, canvas.height / 2 - 60); // Moved up
 
-        restartButton.style.display = 'block';
-    }
+            showNameInput();
+        }
 
-    function showStartScreen() {
-        ctx.fillStyle = '#44148f';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        drawBorders();  // Draw the borders on the start screen
-        instructions.style.display = 'block';
-        startButton.style.display = 'block';
-    }
+        function showNameInput() {
+            nameInput.style.display = 'block';
+            submitNameButton.style.display = 'block';  // Ensure the submit button is displayed
+            restartButton.style.display = 'block';  // Ensure the restart button is displayed
+        }
 
-    window.onload = resizeRef = resizeCanvas;
-</script>
+        function isValidName(name) {
+			const badWords = [
+				"anal", "anus", "arse", "ass", "bastard", "bitch", "bloody", "bollock", "bollok", "boner", 
+				"boob", "bugger", "bum", "butt", "clit", "cock", "crap", "cunt", "damn", "dick", "dildo", 
+				"dyke", "fag", "fart", "fuck", "hell", "homo", "jerk", "jizz", "knob", "labia", "lmao", 
+				"lmfao", "muff", "nigga", "nigger", "piss", "poop", "prick", "pube", "pussy", "scrotum", 
+				"sex", "shit", "slut", "smegma", "spunk", "tit", "turd", "twat", "vagina", "wank",
+				"anal", "anus", "arse", "ass", "bastard", "bitch", "bloody", "bollock", "bollok", "boner", 
+				"boob", "bugger", "bum", "butt", "clit", "cock", "crap", "cunt", "damn", "dick", "dildo", 
+				"dyke", "fag", "fart", "fuck", "hell", "homo", "jerk", "jizz", "knob", "labia", "lmao", 
+				"lmfao", "muff", "nigga", "nigger", "piss", "poop", "prick", "pube", "pussy", "scrotum", 
+				"sex", "shit", "slut", "smegma", "spunk", "tit", "turd", "twat", "vagina", "wank",
+				"arse", "bstrd", "bldy", "blk", "bugr", "dlld", "lbia", "ngr", "scrot", "vgn", "fgt"
+
+			]; // Add bad words to filter out
+			return name.length >= 1 && name.length <= 5 && !badWords.some(word => name.toLowerCase().includes(word));
+		}
+
+
+        function updateLeaderboard(name, score) {
+            const scoresRef = ref(database, 'leaderboard');
+            const newScoreRef = push(scoresRef);
+            set(newScoreRef, {
+                name,
+                score
+            });
+        }
+
+        function showLeaderboard() {
+            const scoresRef = query(ref(database, 'leaderboard'), orderByChild('score'), limitToLast(3));
+            onValue(scoresRef, (snapshot) => {
+                const leaderboard = [];
+                snapshot.forEach((childSnapshot) => {
+                    leaderboard.push(childSnapshot.val());
+                });
+                leaderboard.reverse();
+
+                const leaderboardList = document.getElementById('leaderboardList');
+                leaderboardList.innerHTML = '';
+                const colors = ['#c8ff00', '#ff4a8b', '#6da2ef'];
+                leaderboard.forEach((entry, index) => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `<i class="bx bxs-medal" style="color:${colors[index]}"></i> ${entry.name} (${entry.score} pts)`;
+                    leaderboardList.appendChild(div);
+                });
+
+                const leaderboardDiv = document.getElementById('leaderboard');
+                leaderboardDiv.style.display = 'block';
+            });
+        }
+
+        document.getElementById('submitNameButton').addEventListener('click', () => {
+            const playerName = document.getElementById('playerName').value.trim();
+            if (isValidName(playerName)) {
+                updateLeaderboard(playerName, score);
+                nameInput.style.display = 'none';
+                submitNameButton.style.display = 'none';  // Hide the submit button after submission
+                showLeaderboard();
+                restartButton.style.display = 'block';
+            } else {
+                alert('Invalid name. Please enter a 1-5 character name without bad words.');
+            }
+        });
+
+        function showStartScreen() {
+            ctx.fillStyle = '#44148f';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            drawBorders();
+            instructions.style.display = 'block';
+            startButton.style.display = 'block';
+        }
+
+        window.onload = () => {
+            resizeCanvas();
+            updateBackground(); // Ensure background is updated on load
+        };
+    </script>
 </body>
 </html>
