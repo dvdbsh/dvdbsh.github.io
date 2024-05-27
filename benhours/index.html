@@ -8,7 +8,7 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
-    <meta name="theme-color" content="#c1dfd5">
+    <meta name="theme-color" content="#d4e9e2">
     <style>
         @font-face {
             font-family: 'SoDoSans';
@@ -39,7 +39,7 @@
             padding: 0;
             font-family: "SoDoSans", sans-serif;
             font-size: 1rem;
-            background-color: #c1dfd5;
+            background-color: #d4e9e2;
         }
 
         a {
@@ -65,10 +65,8 @@
             flex-basis: calc(50% - 20px);
             padding: 10px;
             box-sizing: border-box;
-            border: 1px solid #ddd;
             border-radius: 20px;
-            background: #fff;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            background: #ffffff;
             margin: 10px;
             text-align: center;
         }
@@ -133,7 +131,13 @@
             margin: 10px auto;
             border-top: 1px solid #007850;
         }
-        
+
+        /* Media query for smaller screens */
+        @media (max-width: 350px) {
+            .card, .two-columns {
+                flex-basis: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -151,47 +155,46 @@
 
         <div class="card">
             <div class="icon-wrapper">
-        <i class='bx bx-calendar' style="font-size: 2rem; text-align: center; display: block;"></i>
-    </div>
+                <i class='bx bx-calendar' style="font-size: 2rem; text-align: center; display: block;"></i>
+            </div>
             <h3 id="quarterTitle"></h3>
             <p id="quarterDates"></p>
         </div>
 
         <div class="card">
-    <div class="icon-wrapper">
-        <i class='bx bx-time-five' style="font-size: 2rem; text-align: center; display: block;"></i>
-    </div>
-    <h3>Days left to qualify for next quarter</h3>
-    <p id="daysLeftCell"></p>
-</div>
+            <div class="icon-wrapper">
+                <i class='bx bx-time-five' style="font-size: 2rem; text-align: center; display: block;"></i>
+            </div>
+            <h3>Days left to qualify for next quarter</h3>
+            <p id="daysLeftCell"></p>
+        </div>
 
-<div class="card">
-    <div class="icon-wrapper">
-        <i class='bx bx-calendar-event' style="font-size: 2rem; text-align: center; display: block;"></i>
-    </div>
-    <h3>Last day for eligibility</h3>
-    <p id="lastEligibilityDate"></p>
-    <div class="section-divider"></div>
-    <small>Last day to work that will count in the quarter toward benefits eligibility</small>
-</div>
+        <div class="card">
+            <div class="icon-wrapper">
+                <i class='bx bx-calendar-event' style="font-size: 2rem; text-align: center; display: block;"></i>
+            </div>
+            <h3>Last day for eligibility</h3>
+            <p id="lastEligibilityDate"></p>
+            <div class="section-divider"></div>
+            <small>Last day to work that will count in the quarter toward benefits eligibility</small>
+        </div>
 
-<div class="card">
-    <div class="icon-wrapper">
-        <i class='bx bx-money' style="font-size: 2rem; text-align: center; display: block;"></i>
-    </div>
-    <h3>Last pay date in the quarter</h3>
-    <p id="lastPayDateCell"></p>
-    <div class="section-divider"></div>
-    <small>You must have at least 240 total paid hours on this pay stub to remain eligible</small>
-</div>
+        <div class="card">
+            <div class="icon-wrapper">
+                <i class='bx bx-money' style="font-size: 2rem; text-align: center; display: block;"></i>
+            </div>
+            <h3>Last pay date in the quarter</h3>
+            <p id="lastPayDateCell"></p>
+            <div class="section-divider"></div>
+            <small>You must have at least 240 total paid hours on this pay stub to remain eligible</small>
+        </div>
 
-<div class="two-columns card">
-    <h3>These paid hours are the ones that count</h3>
-    <p id="paidHours"></p>
-    <div class="section-divider"></div>
-    <small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small>
-</div>
-
+        <div class="two-columns card">
+            <h3>These paid hours are the ones that count</h3>
+            <p id="paidHours"></p>
+            <div class="section-divider"></div>
+            <small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small>
+        </div>
 
         <div class="two-columns card footer">
             <b>All information has been sourced from Partner Hub.</b>
