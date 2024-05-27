@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aggregated RSS Feed</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            color: #558f27;
+        }
+        .feed-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            max-width: 1200px;
+        }
+        .feed-item {
+            position: relative; /* Added */
+            background-color: #212121;
+            border-radius: 0px;
+            margin: 15px;
+            width: 300px;
+            box-sizing: border-box;
+            transition: transform 0.2s;
+            overflow: hidden;
+            text-decoration: none;
+            color: inherit;
+        }
+        .feed-item:hover {
+            transform: scale(1.02);
+        }
+        .feed-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+        }
+        .feed-item-content {
+            padding: 15px;
+        }
+        .feed-item h2 {
+            margin: 0 0 10px 0;
+            font-size: 1.2em;
+            color: #558f27;
+        }
+        .feed-item .meta {
+            font-size: 0.9em;
+            color: #33636e;
+            margin-bottom: 10px;
+        }
+        .feed-item p {
+            font-size: 1em;
+            color: #eee;
+        }
+        .visited-overlay {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            width: 70px;
+            height: 70px;
+            background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1716837612/bite_ghgwlo.svg');
+            background-size: cover;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Aggregated RSS Feed</h1>
+    <div class="feed-container" id="rss-feed"></div>
+
+    <script>
+        const rssFeeds = [
+            { url: 'https://globalnews.ca/london/feed', name: 'Global News' },
+            { url: 'https://london.ctvnews.ca/rss/ctv-news-london-1.1073369', name: 'CTV News London' },
+            { url: 'https://www.cbc.ca/cmlink/rss-canada-london', name: 'CBC News London' }
+        ];
+
+        function extractImageFromDescription(description) {
+            const imgRegex = /<img.*?src="(.*?)".*?>/;
+            const match = imgRegex.exec(description);
+            let thumbnail = null;
+            if (match) {
+                thumbnail = match[1];
+                description = description.replace(imgRegex, ''); // Remove the image tag from the description
+            }
+            return { thumbnail, cleanedDescription: description };
+        }
+
+        function stripHtmlTags(html) {
+            const div = document.createElement('div');
+            div.innerHTML = html;
+            return div.textContent || div.innerText || '';
+        }
+
+        async function fetchRSS(feed) {
+            const response = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`);
+            const data = await response.json();
+            return data.items.map(item => {
+                const { thumbnail, cleanedDescription } = extractImageFromDescription(item.description);
+                const enclosure = item.enclosure ? item.enclosure.link || item.enclosure.url : null;
+                return {
+                    ...item,
+                    source: feed.name,
+                    thumbnail: enclosure || item.thumbnail || thumbnail,
+                    cleanedDescription: stripHtmlTags(cleanedDescription)
+                };
+            });
+        }
+
+        async function aggregateRSSFeeds(feeds) {
+            const allEntries = [];
+            for (const feed of feeds) {
+                try {
+                    const entries = await fetchRSS(feed);
+                    allEntries.push(...entries);
+                } catch (error) {
+                    console.error(`Failed to fetch RSS feed from ${feed.url}`, error);
+                }
+            }
+            return allEntries.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+        }
+
+        function truncateText(text, wordLimit) {
+            const words = text.split(' ');
+            return words.length > wordLimit ? words.slice(0, wordLimit).join(' ') + '...' : text;
+        }
+
+        function markAsVisited(link) {
+            const visitedLinks = JSON.parse(localStorage.getItem('visitedLinks')) || [];
+            if (!visitedLinks.includes(link)) {
+                visitedLinks.push(link);
+                localStorage.setItem('visitedLinks', JSON.stringify(visitedLinks));
+            }
+        }
+
+        function isVisited(link) {
+            const visitedLinks = JSON.parse(localStorage.getItem('visitedLinks')) || [];
+            return visitedLinks.includes(link);
+        }
+
+        function displayFeed(entries) {
+            const feedContainer = document.getElementById('rss-feed');
+            feedContainer.innerHTML = '';
+            entries.forEach(entry => {
+                const item = document.createElement('a');
+                item.className = 'feed-item';
+                item.href = entry.link;
+                item.target = '_blank';
+                item.addEventListener('click', () => markAsVisited(entry.link));
+                item.innerHTML = `
+                    ${entry.thumbnail ? `<img src="${entry.thumbnail}" alt="${entry.title}">` : ''}
+                    <div class="feed-item-content">
+                        <h2>${entry.title}</h2>
+                        <div class="meta">${new Date(entry.pubDate).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })} | ${entry.source}</div>
+                        <p>${truncateText(entry.cleanedDescription, 20)}</p>
+                    </div>
+                    ${isVisited(entry.link) ? `<div class="visited-overlay"></div>` : ''}
+                `;
+                feedContainer.appendChild(item);
+            });
+        }
+
+        (async function() {
+            const entries = await aggregateRSSFeeds(rssFeeds);
+            displayFeed(entries);
+        })();
+    </script>
+</body>
+</html>
