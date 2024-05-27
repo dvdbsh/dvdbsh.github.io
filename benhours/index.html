@@ -2,15 +2,14 @@
 <html>
 <head>
     <title>Hours Calculator</title>
-	<meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
     <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
     <meta name="theme-color" content="#c1dfd5">
     <style>
-	
         @font-face {
             font-family: 'SoDoSans';
             font-weight: 400;
@@ -251,7 +250,6 @@
         document.getElementById("lastPayDateCell").innerHTML = currentQuarter.lastPayDate;
         document.getElementById("paidHours").innerHTML = currentQuarter.paidHours;
 
-        const difference = currentQuarter.endDate - now;
         const daysLeft = Math.ceil((new Date(currentQuarter.lastEligibilityDate).getTime() - now) / (1000 * 60 * 60 * 24));
         const weeksLeft = Math.floor(daysLeft / 7);
         if (daysLeft > 0) {
@@ -275,18 +273,22 @@
                 {
                     startDate: new Date("January 12, 2024").getTime(),
                     endDate: new Date("March 22, 2024").getTime(),
+                    lastEligibilityDate: "March 17, 2024"
                 },
                 {
                     startDate: new Date("April 5, 2024").getTime(),
                     endDate: new Date("June 28, 2024").getTime(),
+                    lastEligibilityDate: "June 23, 2024"
                 },
                 {
                     startDate: new Date("July 12, 2024").getTime(),
                     endDate: new Date("September 20, 2024").getTime(),
+                    lastEligibilityDate: "September 15, 2024"
                 },
                 {
                     startDate: new Date("October 6, 2023").getTime(),
                     endDate: new Date("December 29, 2023").getTime(),
+                    lastEligibilityDate: "December 24, 2023"
                 }
             ];
 
@@ -295,8 +297,8 @@
                 currentQuarter = quarters[quarters.length - 1]; // Default to the last quarter if none matches
             }
 
-            const difference = currentQuarter.endDate - now;
-            const weeksLeft = Math.floor(difference / (1000 * 60 * 60 * 24 * 7));
+            const daysLeft = Math.ceil((new Date(currentQuarter.lastEligibilityDate).getTime() - now) / (1000 * 60 * 60 * 24));
+            const weeksLeft = Math.floor(daysLeft / 7);
             const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft);
             document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed (" + requiredHoursPerWeek + " more hours per week needed)<p><small>These numbers are rounded up to the nearest hour and are approximate.</small>";
         }
@@ -314,8 +316,6 @@
     updateQuarterInfo();
     updateDaysLeft();
 </script>
-
-
 
     <!-- Made with coffee by David :) -->
 </body>
