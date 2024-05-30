@@ -4,10 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AggreGator</title>
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com' crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Reddit+Sans:wght@400;600;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&family=Reddit+Sans+Condensed:wght@200..900&family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" defer></script>
     <style>
         body {
@@ -21,7 +21,7 @@
             position: relative;
         }
         h1 {
-            color: #558f27;
+            color: #5a964c;
             font-size: 2.8em;
             font-weight: 900;
             margin: -10px 0 0 0;
@@ -76,7 +76,7 @@
         .feed-item h2 {
             margin: 0 0 5px 0;
             font-size: 1.2em;
-            color: #558f27;
+            color: #5a964c;
         }
         .feed-item .meta {
             font-size: 0.9em;
@@ -84,11 +84,11 @@
             margin-top: 0px;
             margin-bottom: 0px;
             font-weight: 600;
+            font-family: "Reddit Mono", monospace;
         }
         .feed-item p {
             font-size: 1em;
             color: #eee;
-            font-family: 'Roboto', sans-serif;
             margin-bottom: 20px;
         }
         .read-icon, .unread-icon {
@@ -98,7 +98,7 @@
             font-size: 1.5em;
         }
         .read-icon {
-            color: #558f27;
+            color: #5a964c;
         }
         .unread-icon {
             color: #278f89;
@@ -156,38 +156,45 @@
         .filter-button {
             background-color: #278f89;
             color: white;
+            font-weight: 500;
+            font-family: "Reddit Sans";
+            text-transform: uppercase;
             border: none;
             border-radius: 20px;
             padding: 10px 20px;
             margin: 5px;
             cursor: pointer;
             transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
         }
         .filter-button:hover {
-            background-color: #558f27;
+            background-color: #5a964c;
         }
         .filter-button.active {
-            background-color: #558f27;
+            background-color: #5a964c;
+        }
+        .filter-button .material-symbols-rounded {
+            margin-right: 8px;
         }
     </style>
 </head>
 <body>
     <div class="header" id="header">
-        <img src="https://ouch-cdn2.icons8.com/MOUqaUKeBQNNlLzwd4KTvN8UWgrV_m3V3wIe9mBrNUo/rs:fit:368:209/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9wbmcvNTYv/MmIwZjBiNDQtOGY1/ZC00NDI5LTk5ZTQt/MDkwZmI1ZDlmZDgw/LnBuZw.png" width="150px" id="header-img">
-        <h1>Aggre<i>gator</i></h1>
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1717085039/gater.svg" id="header-img" width="290px">
     </div>
     <div class="loading" id="loading">
         <lottie-player src="https://lottie.host/9f837e05-12ef-446a-a603-5270f5a5ebae/S8e06BendA.json" background="##ffffff" speed="1" style="width: 200px; height: 200px" loop autoplay></lottie-player>
     </div>
     <div class="filter-container" id="filter-container">
-        <button class="filter-button" data-topic="All">All</button>
-        <button class="filter-button" data-topic="News">News</button>
-        <button class="filter-button" data-topic="Sports">Sports</button>
-        <button class="filter-button" data-topic="Technology">Technology</button>
-        <button class="filter-button" data-topic="Health">Health</button>
+        <button class="filter-button" data-topic="All"><span class="material-symbols-rounded">list</span>All</button>
+        <button class="filter-button" data-topic="News"><span class="material-symbols-rounded">feed</span>News</button>
+        <button class="filter-button" data-topic="Sports"><span class="material-symbols-rounded">sports</span>Sports</button>
+        <button class="filter-button" data-topic="Technology"><span class="material-symbols-rounded">memory</span>Technology</button>
+        <button class="filter-button" data-topic="Health"><span class="material-symbols-rounded">health_and_safety</span>Health</button>
     </div>
     <div class="feed-container" id="rss-feed"></div>
-    <img src="https://ouch-cdn2.icons8.com/MobL-V_Ru3Uq1EmD164DYuye-O_DATYGf3c1KgVYLas/rs:fit:368:368/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9wbmcvMjg2/Lzc4ZGY4OTBhLTk3/NTAtNGQxZi1hM2Rj/LWFlNGY5MWNiZGQz/Zi5wbmc.png" width="120px">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1717086579/thatsall_sui758.svg" width="140px">
 
 <script>
     const rssFeeds = [
@@ -344,7 +351,7 @@
             icon.classList.remove('unread-icon');
             icon.classList.add('read-icon');
             icon.classList.remove('bx-right-arrow-circle');
-            icon.classList.add('bxs-check-circle');
+            icon.classList.add('material-symbols-rounded', 'check');
         }
     }
 
@@ -355,8 +362,7 @@
         if (entries.length === 0) {
             feedContainer.innerHTML = `
                 <div style="text-align: center; margin-top: 20px;">
-                    <p>No stories with this tag</p>
-                    <img src="https://ouch-cdn2.icons8.com/CVHw9wpaGwsg4c3x5xU1ZgHaZceV81IBRhAdt5dFAnA/rs:fit:368:368/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9wbmcvODkz/L2Y3NzhjNDJkLWVl/YzItNGYzMy1iMzUw/LWFhNTViMDMwZGEz/ZS5wbmc.png" alt="No stories" width="150px">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1717086084/hmm_j6moez.svg" alt="No stories">
                 </div>
             `;
             return;
@@ -374,7 +380,7 @@
                         <div class="meta">${formatDateTime(entry.pubDate)} | ${entry.source}</div>
                         <p>${truncateText(entry.cleanedContent, 25)}</p>
                     </div>
-                    ${isVisited(entry.link) ? `<i class='bx bxs-check-circle read-icon'></i>` : `<i class='bx bx-right-arrow-circle unread-icon'></i>`}
+                    ${isVisited(entry.link) ? `<i class="material-symbols-rounded read-icon">check_circle</i>` : `<i class="material-symbols-rounded unread-icon">arrow_forward</i>`}
                 </a>
             `;
             feedContainer.appendChild(item);
@@ -401,13 +407,25 @@
             const button = document.createElement('button');
             button.className = 'filter-button';
             button.setAttribute('data-topic', topic);
-            button.textContent = topic;
+            button.innerHTML = `<span class="material-symbols-rounded">${getIconForTopic(topic)}</span>${topic}`;
             button.addEventListener('click', handleFilterButtonClick);
             filterContainer.appendChild(button);
         });
 
         // Activate the "All" button by default
         document.querySelector('.filter-button[data-topic="All"]').classList.add('active');
+    }
+
+    function getIconForTopic(topic) {
+        switch (topic) {
+            case 'All': return 'list';
+            case 'News': return 'feed';
+            case 'Crime' : return 'local_police';
+            case 'Sports': return 'sports_baseball';
+            case 'Technology': return 'memory';
+            case 'Health': return 'ecg_heart';
+            default: return 'location_on';
+        }
     }
 
     function handleFilterButtonClick(event) {
