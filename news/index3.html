@@ -6,8 +6,8 @@
     <title>AggreGator</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<link href="https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&family=Reddit+Sans+Condensed:wght@200..900&family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Reddit+Mono:wght@200..900&family=Reddit+Sans+Condensed:wght@200..900&family=Reddit+Sans:ital,wght@0,200..900;1,200..900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/@lottiefiles/lottie-player@latest/dist/lottie-player.js" defer></script>
     <style>
         body {
@@ -350,8 +350,8 @@
         if (icon) {
             icon.classList.remove('unread-icon');
             icon.classList.add('read-icon');
-            icon.classList.remove('bx-right-arrow-circle');
-            icon.classList.add('material-symbols-rounded', 'check');
+            icon.classList.remove('material-symbols-rounded', 'arrow_forward');
+            icon.classList.add('material-symbols-rounded', 'check_circle');
         }
     }
 
@@ -420,7 +420,7 @@
         switch (topic) {
             case 'All': return 'list';
             case 'News': return 'feed';
-            case 'Crime' : return 'local_police';
+            case 'Crime': return 'local_police';
             case 'Sports': return 'sports_baseball';
             case 'Technology': return 'memory';
             case 'Health': return 'ecg_heart';
