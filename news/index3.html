@@ -34,8 +34,8 @@
             padding: 20px 0;
         }
         .header img {
-        	padding: 0px;
-            }
+            padding: 0px;
+        }
         .feed-container {
             display: flex;
             flex-direction: column;
@@ -68,7 +68,7 @@
             border-top-right-radius: 20px;
         }
         .feed-item-content {
-            padding: 15px;
+            padding: 25px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
@@ -89,6 +89,7 @@
             font-size: 1em;
             color: #eee;
             font-family: 'Roboto', sans-serif;
+            margin-bottom: 20px;
         }
         .read-icon, .unread-icon {
             position: absolute;
@@ -144,6 +145,30 @@
                 flex-grow: 1;
             }
         }
+
+        .filter-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        .filter-button {
+            background-color: #278f89;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .filter-button:hover {
+            background-color: #558f27;
+        }
+        .filter-button.active {
+            background-color: #558f27;
+        }
     </style>
 </head>
 <body>
@@ -153,6 +178,13 @@
     </div>
     <div class="loading" id="loading">
         <lottie-player src="https://lottie.host/9f837e05-12ef-446a-a603-5270f5a5ebae/S8e06BendA.json" background="##ffffff" speed="1" style="width: 200px; height: 200px" loop autoplay></lottie-player>
+    </div>
+    <div class="filter-container" id="filter-container">
+        <button class="filter-button" data-topic="All">All</button>
+        <button class="filter-button" data-topic="News">News</button>
+        <button class="filter-button" data-topic="Sports">Sports</button>
+        <button class="filter-button" data-topic="Technology">Technology</button>
+        <button class="filter-button" data-topic="Health">Health</button>
     </div>
     <div class="feed-container" id="rss-feed"></div>
     <img src="https://ouch-cdn2.icons8.com/MobL-V_Ru3Uq1EmD164DYuye-O_DATYGf3c1KgVYLas/rs:fit:368:368/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9wbmcvMjg2/Lzc4ZGY4OTBhLTk3/NTAtNGQxZi1hM2Rj/LWFlNGY5MWNiZGQz/Zi5wbmc.png" width="120px">
@@ -165,6 +197,15 @@
         { url: 'https://www.1069thex.com/category/news-home-page/feed/', name: '106.9 The X' },
         { url: 'https://lfpress.com/feed', name: 'The London Free Press' }
     ];
+
+    const predefinedFilters = {
+        'All': [],
+        'Local': ['Local'],
+        'Canada': ['Canada'],
+        'Crime': ['Crime'],
+        'Sports': ['Sports'],
+        'Health': ['Health']
+    };
 
     function extractImageFromContent(content) {
         const imgRegex = /<img.*?src="(.*?)".*?>/;
@@ -215,6 +256,7 @@
             return {
                 ...item,
                 source: feed.name,
+                topics: item.categories || [],
                 thumbnail: ogImage || enclosure || item.thumbnail || thumbnail,
                 cleanedContent: stripHtmlTags(cleanedContent)
             };
@@ -310,6 +352,16 @@
         const feedContainer = document.getElementById('rss-feed');
         feedContainer.innerHTML = '';
 
+        if (entries.length === 0) {
+            feedContainer.innerHTML = `
+                <div style="text-align: center; margin-top: 20px;">
+                    <p>No stories with this tag</p>
+                    <img src="https://ouch-cdn2.icons8.com/CVHw9wpaGwsg4c3x5xU1ZgHaZceV81IBRhAdt5dFAnA/rs:fit:368:368/czM6Ly9pY29uczgu/b3VjaC1wcm9kLmFz/c2V0cy9wbmcvODkz/L2Y3NzhjNDJkLWVl/YzItNGYzMy1iMzUw/LWFhNTViMDMwZGEz/ZS5wbmc.png" alt="No stories" width="150px">
+                </div>
+            `;
+            return;
+        }
+
         entries.forEach(entry => {
             const item = document.createElement('div');
             item.className = 'feed-item';
@@ -329,12 +381,53 @@
         });
     }
 
+    function filterEntriesByTopic(entries, topic) {
+        if (topic === 'All') {
+            return entries;
+        }
+        return entries.filter(entry => {
+            if (topic === 'Local') {
+                return entry.topics.some(tag => tag.toLowerCase().includes('london'));
+            }
+            return entry.topics.some(tag => predefinedFilters[topic].includes(tag));
+        });
+    }
+
+    function generateFilterButtons() {
+        const filterContainer = document.getElementById('filter-container');
+        filterContainer.innerHTML = '';
+
+        Object.keys(predefinedFilters).forEach(topic => {
+            const button = document.createElement('button');
+            button.className = 'filter-button';
+            button.setAttribute('data-topic', topic);
+            button.textContent = topic;
+            button.addEventListener('click', handleFilterButtonClick);
+            filterContainer.appendChild(button);
+        });
+
+        // Activate the "All" button by default
+        document.querySelector('.filter-button[data-topic="All"]').classList.add('active');
+    }
+
+    function handleFilterButtonClick(event) {
+        const topic = event.target.getAttribute('data-topic');
+        const filterButtons = document.querySelectorAll('.filter-button');
+        filterButtons.forEach(button => button.classList.remove('active'));
+        event.target.classList.add('active');
+
+        const allEntries = JSON.parse(localStorage.getItem('rssCache')).data;
+        const filteredEntries = filterEntriesByTopic(allEntries, topic);
+        displayFeed(filteredEntries);
+    }
+
     (async function() {
         const loadingElement = document.getElementById('loading');
         loadingElement.classList.add('active');
         const entries = await aggregateRSSFeeds(rssFeeds);
         console.log('Fetched Entries:', entries); // Debugging
         loadingElement.classList.remove('active');
+        generateFilterButtons();
         displayFeed(entries);
     })();
 </script>
