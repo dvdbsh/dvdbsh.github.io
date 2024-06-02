@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tomb Raider (2013)</title>
+    <title>Tomb Raider Central</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
         @font-face {
@@ -30,18 +30,38 @@
         }
 
         .container {
-            width: 90%;
-            max-width: 1200px;
+            flex-grow: 1;
             margin: auto;
             padding: 20px;
+            max-width: 1200px;
         }
 
         .header {
+            width: 100%;
             text-align: center;
+            padding: 20px;
+            background-color: #1E1E1E;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: top 0.3s ease;
             margin-bottom: 40px;
         }
 
-        .header nav a {
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+            text-transform: uppercase;
+            flex-grow: 1;
+        }
+
+        .nav a {
             text-decoration: none;
             color: #E0E0E0;
             margin: 0 10px;
@@ -49,16 +69,130 @@
             transition: color 0.3s ease;
         }
 
-        .header nav a:hover {
+        .nav a:hover {
             color: #BB86FC;
         }
+
+        .header .menu-icon {
+            display: none;
+            font-size: 2em;
+            cursor: pointer;
+            margin-right: 40px; /* Ensure it fits within the header */
+        }
+
+        .main-navigation {
+            width: 270px;
+            position: fixed;
+            top: 80px; /* Adjust according to header height */
+            left: 0;
+            bottom: 0;
+            overflow-y: auto;
+            padding: 10px;
+            z-index: 1000;
+            font-size: 0.9em;
+            transition: left 0.3s ease;
+        }
+
+        .main-navigation ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .main-navigation li {
+            margin: 10px 0;
+        }
+
+        .main-navigation a {
+            text-decoration: none;
+            color: #E0E0E0;
+            display: block;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .main-navigation a:hover,
+        .main-navigation .active > a {
+            background-color: #333;
+            color: #BB86FC;
+        }
+
+        .main-navigation .submenu {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .main-navigation .submenu a {
+            padding: 10px;
+        }
+
+        .main-navigation .submenu .sub-links {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .main-navigation .submenu .sub-links a {
+            padding: 10px;
+        }
+
+.sub-nav {
+    background-color: #1E1E1E;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.sub-nav .dropdown-btn {
+    display: none;
+    background-color: #1E1E1E;
+    color: #E0E0E0;
+    font-size: 16px;
+    border: none;
+    padding: 15px;
+    text-align: left;
+    width: 100%;
+    cursor: pointer;
+}
+
+.sub-nav .dropdown-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.sub-nav a {
+    text-decoration: none;
+    color: #E0E0E0;
+    font-weight: bold;
+    transition: color 0.3s ease;
+    margin: 5px 10px;
+}
+
+.sub-nav a:hover {
+    color: #BB86FC;
+}
+
+.content {
+    margin-left: 280px; /* Adjust according to navigation width */
+    padding: 120px 20px 20px 20px; /* Adjust according to header height */
+    transition: margin-left 0.3s ease, padding-top 0.3s ease;
+}
+
 
         .section-header {
             display: flex;
             align-items: center;
             font-size: 2em;
             margin-bottom: 30px;
-            border-bottom: 2px solid #BB86FC;
+            border-bottom: 4px solid #BB86FC;
+        }
+
+        .section-header h2 {
+            margin: 20px 0 20px 0;
         }
 
         .section-header img {
@@ -152,6 +286,9 @@
         }
 
         @media (max-width: 768px) {
+        	.header h1 {
+            	font-size: 1.5em;
+            }
             .masonry-grid {
                 column-count: 1;
             }
@@ -165,9 +302,81 @@
             }
 
             .section-header img {
-                margin-right: 20px;
+                margin-right: 10px;
                 width: 30px;
                 height: 30px;
+            }
+
+            .header .menu-icon {
+                display: block;
+            }
+
+            .main-navigation {
+                width: 100%;
+                height: 100%;
+                position: fixed;
+                top: 0;
+                left: -100%;
+                transition: left 0.3s ease;
+                z-index: 1000;
+                background-color: #121212;
+                padding: 20px 10px; /* Adjusted padding */
+                box-sizing: border-box;
+            }
+
+            .main-navigation.open {
+                left: 0;
+            }
+
+            .main-navigation .close-menu {
+                display: block;
+                text-align: right;
+                margin-bottom: 20px;
+                font-size: 2.5em;
+                cursor: pointer;
+                color: #E0E0E0;
+            }
+
+            .content {
+                margin-left: 0;
+                padding-top: 110px; /* Adjust according to header height */
+            }
+
+            .main-navigation .submenu,
+            .main-navigation .submenu .sub-links {
+                padding-left: 10px;
+            }
+            .sub-nav {
+            	padding: 10px;
+                }
+    .sub-nav .dropdown-btn {
+        display: block;
+    }
+
+    .sub-nav .dropdown-content {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .sub-nav .dropdown-content a {
+        margin: 10px 0;
+    }
+
+    .sub-nav .dropdown-content.show {
+        display: flex;
+    }
+
+    .content {
+        margin-left: 0;
+        padding-top: 100px; /* Adjust according to header height */
+    }
+        }
+
+        @media (min-width: 769px) {
+            .close-menu {
+                display: none; /* Hidden on desktop */
             }
         }
 
@@ -396,23 +605,76 @@
             margin: 0;
             color: #BB86FC;
         }
-        
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>Tomb Raider (2013)</h1>
-            <nav>
-                <a href="#info">Info</a> | 
-                <a href="#cheats">Cheat Codes</a> | 
-                <a href="#achievements">Achievements</a> |
-                <a href="#masonry1">Masonry Gallery 1</a> |
-                <a href="#flex1">Flex Gallery 1</a> |
-                <a href="#videos">Video Gallery</a> |
-                <a href="#actors">Actors</a>
-            </nav>
-        </div>
+    <div class="header">
+        <h1>Tomb Raider Central</h1>
+        <i class='bx bx-menu menu-icon'></i>
+    </div>
+
+    <nav class="main-navigation">
+        <i class='bx bx-x close-menu'></i>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li class="menu-item">
+                <a href="#">+ Category 1</a>
+                <ul class="submenu">
+                    <li class="submenu-item">
+                        <a href="#">- Cat 1 Section 1</a>
+                        <ul class="sub-links">
+                            <li><a href="#">-- Cat 1 Section 1 Link 1</a></li>
+                            <li><a href="#">-- Cat 1 Section 1 Link 2</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu-item">
+                        <a href="#">- Cat 1 Section 2</a>
+                        <ul class="sub-links">
+                            <li><a href="#">-- Cat 1 Section 2 Link 1</a></li>
+                            <li><a href="#">-- Cat 1 Section 2 Link 2</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+            <li class="menu-item">
+                <a href="#">+ Category 2</a>
+                <ul class="submenu">
+                    <li class="submenu-item">
+                        <a href="#">- Cat 2 Section 1</a>
+                        <ul class="sub-links">
+                            <li><a href="#">-- Cat 2 Section 1 Link 1</a></li>
+                            <li><a href="#">-- Cat 2 Section 1 Link 2</a></li>
+                        </ul>
+                    </li>
+                    <li class="submenu-item">
+                        <a href="#">- Cat 2 Section 2</a>
+                        <ul class="sub-links">
+                            <li><a href="#">-- Cat 2 Section 2 Link 1</a></li>
+                            <li><a href="#">-- Cat 2 Section 2 Link 2</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <div class="container content">
+    
+<nav class="sub-nav">
+    <button class="dropdown-btn">Menu</button>
+    <div class="dropdown-content">
+        <a href="#info">Info</a>
+        <a href="#cheats">Cheat Codes</a>
+        <a href="#achievements">Achievements</a>
+        <a href="#masonry1">Masonry Gallery 1</a>
+        <a href="#flex1">Flex Gallery 1</a>
+        <a href="#videos">Video Gallery</a>
+        <a href="#actors">Actors</a>
+    </div>
+</nav>
+
+
+
 
         <section id="info" class="media-info">
             <img src="https://tombraidercentral.online/images/remastered/tr1/thumbs/cover.jpg" alt="Poster Image" loading="lazy">
@@ -422,9 +684,132 @@
             </div>
         </section>
 
+        <section class="grid">
+            <!-- General Information -->
+            <div class="card">
+                <i class='bx bx-calendar bx-icon'></i>
+                <div>
+                    <h3>Release Date</h3>
+                    <p>March 5, 2013</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-category bx-icon'></i>
+                <div>
+                    <h3>Genre</h3>
+                    <p>Action-Adventure</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-star bx-icon'></i>
+                <div>
+                    <h3>Rating</h3>
+                    <p>M (Mature)</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-time bx-icon'></i>
+                <div>
+                    <h3>Duration</h3>
+                    <p>120 minutes</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-joystick bx-icon'></i>
+                <div>
+                    <h3>Platforms</h3>
+                    <p>PC, PS3, Xbox 360</p>
+                </div>
+            </div>
+
+            <!-- Development and Production -->
+            <div class="card">
+                <i class='bx bx-code-block bx-icon'></i>
+                <div>
+                    <h3>Developer</h3>
+                    <p>Crystal Dynamics</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-user bx-icon'></i>
+                <div>
+                    <h3>Director</h3>
+                    <p>Daniel Chayer-Bisson</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-pencil bx-icon'></i>
+                <div>
+                    <h3>Writer</h3>
+                    <p>Rhianna Pratchett</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-user-circle bx-icon'></i>
+                <div>
+                    <h3>Producer</h3>
+                    <p>Graham King</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-cog bx-icon'></i>
+                <div>
+                    <h3>Engine</h3>
+                    <p>Crystal Engine</p>
+                </div>
+            </div>
+
+            <!-- Financials -->
+            <div class="card">
+                <i class='bx bx-dollar bx-icon'></i>
+                <div>
+                    <h3>Box Office</h3>
+                    <p>$275 million</p>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div class="card">
+                <i class='bx bx-group bx-icon'></i>
+                <div>
+                    <h3>Multiplayer</h3>
+                    <p>Yes</p>
+                </div>
+            </div>
+
+            <!-- TV Shows Specific -->
+            <div class="card">
+                <i class='bx bx-tv bx-icon'></i>
+                <div>
+                    <h3>Number of Seasons</h3>
+                    <p>3</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-play-circle bx-icon'></i>
+                <div>
+                    <h3>Number of Episodes</h3>
+                    <p>30</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-broadcast bx-icon'></i>
+                <div>
+                    <h3>Network</h3>
+                    <p>Netflix</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-calendar-check bx-icon'></i>
+                <div>
+                    <h3>First Aired</h3>
+                    <p>January 12, 2018</p>
+                </div>
+            </div>
+        </section>
+
         <section id="cheats" class="cheats">
             <div class="section-header">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1717342145/header-icon_ucdamt.webp" alt="Icon">
                 <h2>Cheats</h2>
             </div>
             <div class="grid">
@@ -502,7 +887,6 @@
 
         <section id="achievements" class="achievements">
             <div class="section-header">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1717342145/header-icon_ucdamt.webp" alt="Icon">
                 <h2>Achievements</h2>
             </div>
             <div class="grid">
@@ -604,12 +988,11 @@
 
         <section id="masonry1" class="gallery">
             <div class="section-header">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1717342145/header-icon_ucdamt.webp" alt="Icon">
                 <h2>Masonry Gallery 1</h2>
             </div>
             <div class="masonry-grid">
-                <a href="https://tombraidercentral.online/images/revisioned_tv/screenshots/thumbs/01.jpg" class="lightbox-trigger"><img src="https://tombraidercentral.online/images/revisioned_tv/screenshots/thumbs/01.jpg" alt="Placeholder Image 1" loading="lazy"></a>
-                <a href="https://via.placeholder.com/300x400" class="lightbox-trigger"><img src="https://tombraidercentral.online/images/revisioned_tv/screenshots/thumbs/01.jpg" alt="Placeholder Image 2" loading="lazy"></a>
+                <a href="https://via.placeholder.com/400x300" class="lightbox-trigger"><img src="https://via.placeholder.com/400x300" alt="Placeholder Image 1" loading="lazy"></a>
+                <a href="https://via.placeholder.com/300x400" class="lightbox-trigger"><img src="https://via.placeholder.com/300x400" alt="Placeholder Image 2" loading="lazy"></a>
                 <a href="https://via.placeholder.com/400x400" class="lightbox-trigger"><img src="https://via.placeholder.com/400x400" alt="Placeholder Image 3" loading="lazy"></a>
                 <a href="https://via.placeholder.com/300x200" class="lightbox-trigger"><img src="https://via.placeholder.com/300x200" alt="Placeholder Image 4" loading="lazy"></a>
                 <a href="https://via.placeholder.com/500x300" class="lightbox-trigger"><img src="https://via.placeholder.com/500x300" alt="Placeholder Image 5" loading="lazy"></a>
@@ -618,7 +1001,6 @@
 
         <section id="flex1" class="gallery">
             <div class="section-header">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1717342145/header-icon_ucdamt.webp" alt="Icon">
                 <h2>Flex Gallery 1</h2>
             </div>
             <div class="flex-grid">
@@ -632,7 +1014,6 @@
 
         <section id="videos" class="gallery">
             <div class="section-header">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1717342145/header-icon_ucdamt.webp" alt="Icon">
                 <h2>Video Gallery</h2>
             </div>
             <div class="video-grid">
@@ -688,7 +1069,6 @@
 
         <section id="actors" class="actors">
             <div class="section-header">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1717342145/header-icon_ucdamt.webp" alt="Icon">
                 <h2>Actors</h2>
             </div>
             <div class="actors-grid">
@@ -721,22 +1101,137 @@
         </section>
     </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        function initImageGalleries(galleryClass) {
-            var images = document.querySelectorAll(galleryClass + ' .lightbox-trigger img');
-            images.forEach(function(image) {
-                image.setAttribute('loading', 'lazy');
+    <script>
+        document.querySelector('.menu-icon').addEventListener('click', function() {
+            document.querySelector('.main-navigation').classList.toggle('open');
+        });
+
+        document.querySelector('.close-menu').addEventListener('click', function() {
+            document.querySelector('.main-navigation').classList.remove('open');
+        });
+
+        document.querySelectorAll('.menu-item > a').forEach(menu => {
+            menu.addEventListener('click', function(event) {
+                event.preventDefault();
+                const parent = menu.parentElement;
+                const submenu = parent.querySelector('.submenu');
+                
+                // Close all other submenus
+                document.querySelectorAll('.submenu').forEach(sm => {
+                    if (sm !== submenu) {
+                        sm.style.maxHeight = '0';
+                    }
+                });
+
+                // Toggle the clicked submenu
+                if (submenu.style.maxHeight === '0px' || submenu.style.maxHeight === '') {
+                    submenu.style.maxHeight = submenu.scrollHeight + 'px';
+                } else {
+                    submenu.style.maxHeight = '0';
+                }
             });
+        });
+
+        document.querySelectorAll('.submenu-item > a').forEach(submenu => {
+            submenu.addEventListener('click', function(event) {
+                event.preventDefault();
+                const parent = submenu.parentElement;
+                const subLinks = parent.querySelector('.sub-links');
+                
+                // Close all other sub-links
+                document.querySelectorAll('.sub-links').forEach(sl => {
+                    if (sl !== subLinks) {
+                        sl.style.maxHeight = '0';
+                    }
+                });
+
+                // Toggle the clicked sub-links
+                if (subLinks.style.maxHeight === '0px' || subLinks.style.maxHeight === '') {
+                    subLinks.style.maxHeight = subLinks.scrollHeight + 'px';
+                } else {
+                    subLinks.style.maxHeight = '0';
+                }
+            });
+        });
+
+        // Show header on scroll up
+        let lastScrollTop = 0;
+        window.addEventListener('scroll', function() {
+            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+            if (currentScroll > lastScrollTop) {
+                // Downscroll
+                document.querySelector('.header').style.top = '-100%';
+            } else {
+                // Upscroll
+                document.querySelector('.header').style.top = '0';
+            }
+            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // For mobile or negative scrolling
+        }, false);
+
+        function initLightbox(galleryClass, lightboxId, imgId) {
+            var slideIndex = 1;
+            showSlide(slideIndex, galleryClass, imgId);
+
+            function openLightbox(event) {
+                event.preventDefault();
+                var imgSrc = event.currentTarget.querySelector('img').getAttribute('src');
+                preloadImage(imgSrc, function() {
+                    document.getElementById(lightboxId).style.display = 'block';
+                    currentSlide(parseInt(event.currentTarget.getAttribute('data-slide-index')), galleryClass, imgId);
+                });
+            }
+
+            function closeLightbox() {
+                document.getElementById(lightboxId).style.display = 'none';
+            }
+
+            function changeSlide(n, galleryClass, imgId) {
+                showSlide(slideIndex += n, galleryClass, imgId);
+            }
+
+            function currentSlide(n, galleryClass, imgId) {
+                showSlide(slideIndex = n, galleryClass, imgId);
+            }
+
+            function showSlide(n, galleryClass, imgId) {
+                var slides = document.querySelectorAll(galleryClass + ' .lightbox-trigger');
+                if (n > slides.length) { slideIndex = 1 }
+                if (n < 1) { slideIndex = slides.length }
+                var img = slides[slideIndex - 1].getElementsByTagName('img')[0].src;
+                preloadImage(img, function() {
+                    document.getElementById(imgId).src = img;
+                });
+            }
+
+            function preloadImage(src, callback) {
+                var img = new Image();
+                img.src = src;
+                img.onload = callback;
+            }
+
+            document.querySelectorAll(galleryClass + ' .lightbox-trigger').forEach((element, index) => {
+                element.setAttribute('data-slide-index', index + 1);
+                element.onclick = openLightbox;
+            });
+
+            document.getElementById(lightboxId).querySelector('.close').onclick = closeLightbox;
+            document.getElementById(lightboxId).querySelector('.prev').onclick = function () {
+                changeSlide(-1, galleryClass, imgId);
+            };
+            document.getElementById(lightboxId).querySelector('.next').onclick = function () {
+                changeSlide(1, galleryClass, imgId);
+            };
         }
 
-        // Initialize image galleries
-        initImageGalleries('#masonry1');
-        initImageGalleries('#flex1');
+        // Initialize lightboxes for each gallery
+        initLightbox('#masonry1', 'lightbox-masonry', 'lightbox-img-masonry');
+        initLightbox('#flex1', 'lightbox-flex', 'lightbox-img-flex');
+    </script>
+    <script>
+    document.querySelector('.dropdown-btn').addEventListener('click', function() {
+        document.querySelector('.dropdown-content').classList.toggle('show');
     });
 </script>
-
-
 
 </body>
 </html>
