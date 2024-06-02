@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tomb Raider (2013)</title>
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <style>
+        @font-face {
+            font-family: 'Alexandria';
+            src: url('https://fonts.gstatic.com/s/alexandria/v3/UMBXrPdDqW66y0Y2usFeai3dAw.woff2') format('woff2');
+        }
+
+        @font-face {
+            font-family: 'Roboto';
+            src: url('https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2') format('woff2');
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #121212;
+            color: #E0E0E0;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Alexandria', sans-serif;
+            color: #BB86FC;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .header nav a {
+            text-decoration: none;
+            color: #E0E0E0;
+            margin: 0 10px;
+            font-weight: bold;
+            transition: color 0.3s ease;
+        }
+
+        .header nav a:hover {
+            color: #BB86FC;
+        }
+
+        .media-info {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 40px;
+            background-color: #1E1E1E;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .media-info img {
+            max-width: 250px;
+            margin-right: 20px;
+            flex: 1;
+            border-radius: 10px;
+        }
+
+        .media-info .description {
+            flex: 2;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .card {
+            background-color: #1E1E1E;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+
+        .card h3 {
+            margin-top: 0;
+            display: inline-flex;
+            align-items: center;
+            font-size: 1.2em;
+            margin-right: 10px;
+        }
+
+        .card i.bx-icon {
+            margin-right: 10px;
+            font-size: 1.5em;
+            color: #fbbf6a;
+        }
+
+        .gallery {
+            margin-bottom: 40px;
+        }
+
+        .gallery-header {
+            margin-bottom: 20px;
+        }
+
+        .masonry-grid {
+            column-count: 3;
+            column-gap: 15px;
+        }
+
+        .masonry-grid a {
+            display: block;
+            margin-bottom: 15px;
+        }
+
+        .masonry-grid img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+        .flex-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .flex-grid a {
+            display: block;
+            width: calc(33.333% - 10px);
+        }
+
+        .flex-grid img {
+            width: 100%;
+            height: auto;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .masonry-grid {
+                column-count: 2;
+            }
+
+            .flex-grid a {
+                width: calc(50% - 10px);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .masonry-grid {
+                column-count: 1;
+            }
+
+            .flex-grid a {
+                width: 100%;
+            }
+        }
+
+        /* Lightbox CSS */
+        .lightbox {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            padding-top: 10px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+
+        .lightbox-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+        }
+
+        .lightbox-content img {
+            max-width: 90%;
+            max-height: 80%;
+        }
+
+        .close {
+            position: absolute;
+            top: 20px;
+            right: 35px;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: #bbb;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .prev,
+        .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 16px;
+            margin-top: -50px;
+            color: #fff;
+            font-weight: bold;
+            font-size: 24px;
+            transition: 0.3s;
+            user-select: none;
+        }
+
+        .prev {
+            left: 10px;
+        }
+
+        .next {
+            right: 10px;
+        }
+
+        .prev:hover,
+        .next:hover {
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 8px;
+        }
+
+        .achievements .platform h3 {
+            margin-bottom: 10px;
+        }
+
+        .achievements .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .achievements ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .achievements li {
+            display: flex;
+            align-items: center;
+            background-color: #1E1E1E;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        .achievements .description {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .achievements .description strong {
+            font-size: 1.1em;
+            color: #BB86FC;
+        }
+
+        .achievements .description p {
+            margin: 5px 0 0 0;
+        }
+
+        .gamerscore {
+            display: flex;
+            align-items: center;
+            font-weight: bold;
+            color: #BB86FC;
+            padding: 0 10px;
+            font-size: 1.2em;
+        }
+
+        .gamerscore svg {
+            width: 24px;
+            height: 24px;
+            margin-left: 5px;
+            fill: currentColor;
+        }
+
+        .trophy-icon {
+            font-size: 2em;
+            margin-right: 10px;
+        }
+
+        .trophy-bronze {
+            color: #cd7f32;
+        }
+
+        .trophy-silver {
+            color: #c0c0c0;
+        }
+
+        .trophy-gold {
+            color: #ffd700;
+        }
+
+        .trophy-platinum {
+            color: #e5e4e2;
+        }
+
+        .cheats .platform h3 {
+            margin-bottom: 10px;
+        }
+
+        .cheats .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .cheats ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .cheats li {
+            display: flex;
+            align-items: center;
+            background-color: #1E1E1E;
+            padding: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            border-radius: 5px;
+        }
+
+        .cheats .description {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cheats .description strong {
+            font-size: 1.1em;
+            color: #BB86FC;
+        }
+
+        .cheats .description p {
+            margin: 5px 0 0 0;
+        }
+
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .video-card {
+            background-color: #1E1E1E;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-card .video-wrapper {
+            position: relative;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 aspect ratio */
+            height: 0;
+            margin-bottom: 10px;
+        }
+
+        .video-card iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .video-card .video-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .video-card .video-info p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Tomb Raider (2013)</h1>
+            <nav>
+                <a href="#info">Info</a> | 
+                <a href="#cheats">Cheat Codes</a> | 
+                <a href="#achievements">Achievements</a> |
+                <a href="#masonry1">Masonry Gallery 1</a> |
+                <a href="#flex1">Flex Gallery 1</a> |
+                <a href="#videos">Video Gallery</a>
+            </nav>
+        </div>
+
+        <section id="info" class="media-info">
+            <img src="https://tombraidercentral.online/images/remastered/tr1/thumbs/cover.jpg" alt="Poster Image" loading="lazy">
+            <div class="description">
+                <h2>Media Description</h2>
+                <p>Tomb Raider explores the intense origin story of Lara Croft and her ascent from a young woman to a hardened survivor. Armed only with raw instincts and the ability to push beyond the limits of human endurance, Lara must fight to unravel the dark history of a forgotten island to escape its relentless hold.</p>
+            </div>
+        </section>
+
+        <section class="grid">
+            <!-- General Information -->
+            <div class="card">
+                <i class='bx bx-calendar bx-icon'></i>
+                <div>
+                    <h3>Release Date</h3>
+                    <p>March 5, 2013</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-category bx-icon'></i>
+                <div>
+                    <h3>Genre</h3>
+                    <p>Action-Adventure</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-star bx-icon'></i>
+                <div>
+                    <h3>Rating</h3>
+                    <p>M (Mature)</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-time bx-icon'></i>
+                <div>
+                    <h3>Duration</h3>
+                    <p>120 minutes</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-joystick bx-icon'></i>
+                <div>
+                    <h3>Platforms</h3>
+                    <p>PC, PS3, Xbox 360</p>
+                </div>
+            </div>
+
+            <!-- Development and Production -->
+            <div class="card">
+                <i class='bx bx-code-block bx-icon'></i>
+                <div>
+                    <h3>Developer</h3>
+                    <p>Crystal Dynamics</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-user bx-icon'></i>
+                <div>
+                    <h3>Director</h3>
+                    <p>Daniel Chayer-Bisson</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-pencil bx-icon'></i>
+                <div>
+                    <h3>Writer</h3>
+                    <p>Rhianna Pratchett</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-user-circle bx-icon'></i>
+                <div>
+                    <h3>Producer</h3>
+                    <p>Graham King</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-cog bx-icon'></i>
+                <div>
+                    <h3>Engine</h3>
+                    <p>Crystal Engine</p>
+                </div>
+            </div>
+
+            <!-- Financials -->
+            <div class="card">
+                <i class='bx bx-dollar bx-icon'></i>
+                <div>
+                    <h3>Box Office</h3>
+                    <p>$275 million</p>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <div class="card">
+                <i class='bx bx-group bx-icon'></i>
+                <div>
+                    <h3>Multiplayer</h3>
+                    <p>Yes</p>
+                </div>
+            </div>
+
+            <!-- TV Shows Specific -->
+            <div class="card">
+                <i class='bx bx-tv bx-icon'></i>
+                <div>
+                    <h3>Number of Seasons</h3>
+                    <p>3</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-play-circle bx-icon'></i>
+                <div>
+                    <h3>Number of Episodes</h3>
+                    <p>30</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-broadcast bx-icon'></i>
+                <div>
+                    <h3>Network</h3>
+                    <p>Netflix</p>
+                </div>
+            </div>
+            <div class="card">
+                <i class='bx bx-calendar-check bx-icon'></i>
+                <div>
+                    <h3>First Aired</h3>
+                    <p>January 12, 2018</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="cheats" class="cheats">
+            <div class="grid">
+                <div class="platform">
+                    <h3>PC Cheat Codes</h3>
+                    <ul>
+                        <li>
+                            <div class="description">
+                                <strong>God Mode</strong>
+                                <p>Type "IDDQD" to become invincible.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="description">
+                                <strong>Unlimited Ammo</strong>
+                                <p>Type "IDKFA" to get unlimited ammunition.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="description">
+                                <strong>Unlock All Weapons</strong>
+                                <p>Type "IDFA" to unlock all weapons.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="platform">
+                    <h3>PS3 Cheat Codes</h3>
+                    <ul>
+                        <li>
+                            <div class="description">
+                                <strong>Infinite Health</strong>
+                                <p>Hold L1 + R1 and press Up, Down, Left, Right, Square.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="description">
+                                <strong>Max Ammo</strong>
+                                <p>Hold L1 + R1 and press Circle, Circle, Triangle, Triangle, Up.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="description">
+                                <strong>Unlock All Levels</strong>
+                                <p>Hold L1 + R1 and press Left, Right, Left, Right, Circle.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="platform">
+                    <h3>Xbox 360 Cheat Codes</h3>
+                    <ul>
+                        <li>
+                            <div class="description">
+                                <strong>God Mode</strong>
+                                <p>Hold LB + RB and press Up, Down, Left, Right, X.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="description">
+                                <strong>Unlimited Ammo</strong>
+                                <p>Hold LB + RB and press B, B, Y, Y, Up.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="description">
+                                <strong>Unlock All Weapons</strong>
+                                <p>Hold LB + RB and press Left, Right, Left, Right, B.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="achievements" class="achievements">
+            <div class="grid">
+                <div class="platform">
+                    <h3>Xbox Achievements</h3>
+                    <ul>
+                        <li>
+                            <div class="gamerscore">
+                                <span>10</span>
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="10" stroke="#008000" stroke-width="2" fill="none"/>
+                                    <text x="7" y="16" fill="#fff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">G</text>
+                                </svg>
+                            </div>
+                            <div class="description">
+                                <strong>One Smart Cookie</strong>
+                                <p>Complete one optional tomb.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="gamerscore">
+                                <span>10</span>
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="10" stroke="#008000" stroke-width="2" fill="none"/>
+                                    <text x="7" y="16" fill="#fff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">G</text>
+                                </svg>
+                            </div>
+                            <div class="description">
+                                <strong>Bookworm</strong>
+                                <p>Find 25% of all documents.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="gamerscore">
+                                <span>10</span>
+                                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <circle cx="12" cy="12" r="10" stroke="#008000" stroke-width="2" fill="none"/>
+                                    <text x="7" y="16" fill="#fff" font-family="Arial, sans-serif" font-size="12" font-weight="bold">G</text>
+                                </svg>
+                            </div>
+                            <div class="description">
+                                <strong>Looking for Trouble</strong>
+                                <p>Find 25% of GPS caches.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="platform">
+                    <h3>PlayStation Trophies</h3>
+                    <ul>
+                        <li>
+                            <i class='bx bx-trophy trophy-icon trophy-bronze'></i>
+                            <div class="description">
+                                <strong>One Smart Cookie</strong>
+                                <p>Complete one optional tomb.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class='bx bx-trophy trophy-icon trophy-bronze'></i>
+                            <div class="description">
+                                <strong>Bookworm</strong>
+                                <p>Find 25% of all documents.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <i class='bx bx-trophy trophy-icon trophy-bronze'></i>
+                            <div class="description">
+                                <strong>Looking for Trouble</strong>
+                                <p>Find 25% of GPS caches.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="platform">
+                    <h3>Steam Achievements</h3>
+                    <ul>
+                        <li>
+                            <div class="description">
+                                <strong>One Smart Cookie</strong>
+                                <p>Complete one optional tomb.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="description">
+                                <strong>Bookworm</strong>
+                                <p>Find 25% of all documents.</p>
+                            </div>
+                        </li>
+                        <li>
+                            <div class="description">
+                                <strong>Looking for Trouble</strong>
+                                <p>Find 25% of GPS caches.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="masonry1" class="gallery">
+            <h2 class="gallery-header">Masonry Gallery 1</h2>
+            <div class="masonry-grid">
+                <a href="https://via.placeholder.com/400x300" class="lightbox-trigger"><img src="https://via.placeholder.com/400x300" alt="Placeholder Image 1" loading="lazy"></a>
+                <a href="https://via.placeholder.com/300x400" class="lightbox-trigger"><img src="https://via.placeholder.com/300x400" alt="Placeholder Image 2" loading="lazy"></a>
+                <a href="https://via.placeholder.com/400x400" class="lightbox-trigger"><img src="https://via.placeholder.com/400x400" alt="Placeholder Image 3" loading="lazy"></a>
+                <a href="https://via.placeholder.com/300x200" class="lightbox-trigger"><img src="https://via.placeholder.com/300x200" alt="Placeholder Image 4" loading="lazy"></a>
+                <a href="https://via.placeholder.com/500x300" class="lightbox-trigger"><img src="https://via.placeholder.com/500x300" alt="Placeholder Image 5" loading="lazy"></a>
+            </div>
+        </section>
+
+        <section id="flex1" class="gallery">
+            <h2 class="gallery-header">Flex Gallery 1</h2>
+            <div class="flex-grid">
+                <a href="https://via.placeholder.com/1280x720" class="lightbox-trigger"><img src="https://via.placeholder.com/1280x720" alt="Placeholder Image 1" loading="lazy"></a>
+                <a href="https://via.placeholder.com/1280x720" class="lightbox-trigger"><img src="https://via.placeholder.com/1280x720" alt="Placeholder Image 2" loading="lazy"></a>
+                <a href="https://via.placeholder.com/1280x720" class="lightbox-trigger"><img src="https://via.placeholder.com/1280x720" alt="Placeholder Image 3" loading="lazy"></a>
+                <a href="https://via.placeholder.com/1280x720" class="lightbox-trigger"><img src="https://via.placeholder.com/1280x720" alt="Placeholder Image 4" loading="lazy"></a>
+                <a href="https://via.placeholder.com/1280x720" class="lightbox-trigger"><img src="https://via.placeholder.com/1280x720" alt="Placeholder Image 5" loading="lazy"></a>
+            </div>
+        </section>
+
+        <section id="videos" class="gallery">
+            <h2 class="gallery-header">Video Gallery</h2>
+            <div class="video-grid">
+                <div class="video-card">
+                    <div class="video-wrapper">
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" loading="lazy" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-info">
+                        <p>Episode Title</p>
+                        <p>Episode 1, Season 1</p>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-wrapper">
+                        <iframe src="https://www.youtube.com/embed/9bZkp7q19f0" loading="lazy" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-info">
+                        <p>Another Episode</p>
+                        <p>Episode 2, Season 1</p>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <div class="video-wrapper">
+                        <iframe src="https://www.youtube.com/embed/3JZ_D3ELwOQ" loading="lazy" allowfullscreen></iframe>
+                    </div>
+                    <div class="video-info">
+                        <p>Third Episode</p>
+                        <p>Episode 3, Season 1</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lightbox for Masonry Gallery -->
+        <div id="lightbox-masonry" class="lightbox">
+            <span class="close"><i class='bx bx-x'></i></span>
+            <div class="lightbox-content">
+                <img id="lightbox-img-masonry" src="">
+            </div>
+            <a class="prev"><i class='bx bxs-chevron-left'></i></a>
+            <a class="next"><i class='bx bxs-chevron-right'></i></a>
+        </div>
+
+        <!-- Lightbox for Flex Gallery -->
+        <div id="lightbox-flex" class="lightbox">
+            <span class="close"><i class='bx bx-x'></i></span>
+            <div class="lightbox-content">
+                <img id="lightbox-img-flex" src="">
+            </div>
+            <a class="prev"><i class='bx bxs-chevron-left'></i></a>
+            <a class="next"><i class='bx bxs-chevron-right'></i></a>
+        </div>
+    </div>
+
+    <script>
+        function initLightbox(galleryClass, lightboxId, imgId) {
+            var slideIndex = 1;
+            showSlide(slideIndex, galleryClass, imgId);
+
+            function openLightbox(event) {
+                event.preventDefault();
+                document.getElementById(lightboxId).style.display = 'block';
+                currentSlide(parseInt(event.currentTarget.getAttribute('data-slide-index')), galleryClass, imgId);
+            }
+
+            function closeLightbox() {
+                document.getElementById(lightboxId).style.display = 'none';
+            }
+
+            function changeSlide(n, galleryClass, imgId) {
+                showSlide(slideIndex += n, galleryClass, imgId);
+            }
+
+            function currentSlide(n, galleryClass, imgId) {
+                showSlide(slideIndex = n, galleryClass, imgId);
+            }
+
+            function showSlide(n, galleryClass, imgId) {
+                var slides = document.querySelectorAll(galleryClass + ' .lightbox-trigger');
+                if (n > slides.length) { slideIndex = 1 }
+                if (n < 1) { slideIndex = slides.length }
+                var img = slides[slideIndex - 1].getElementsByTagName('img')[0].src;
+                document.getElementById(imgId).src = img;
+            }
+
+            document.querySelectorAll(galleryClass + ' .lightbox-trigger').forEach((element, index) => {
+                element.setAttribute('data-slide-index', index + 1);
+                element.onclick = openLightbox;
+            });
+
+            document.getElementById(lightboxId).querySelector('.close').onclick = closeLightbox;
+            document.getElementById(lightboxId).querySelector('.prev').onclick = function () {
+                changeSlide(-1, galleryClass, imgId);
+            };
+            document.getElementById(lightboxId).querySelector('.next').onclick = function () {
+                changeSlide(1, galleryClass, imgId);
+            };
+        }
+
+        // Initialize lightboxes for each gallery
+        initLightbox('#masonry1', 'lightbox-masonry', 'lightbox-img-masonry');
+        initLightbox('#flex1', 'lightbox-flex', 'lightbox-img-flex');
+    </script>
+</body>
+</html>
