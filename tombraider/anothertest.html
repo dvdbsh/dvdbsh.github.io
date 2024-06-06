@@ -6,6 +6,13 @@
     <title>Tomb Raider Central</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
+    	:root {
+    --cat-bg-color: #1E1E1E; /* Category background color */
+    --submenu-bg-color: #2A2A2A; /* Submenu background color */
+    --sublink-bg-color: #353535; /* Sub-link background color */
+    --hover-bg-color: #333; /* Hover background color */
+    --hover-text-color: #BB86FC; /* Hover text color */
+}
         @font-face {
             font-family: 'Alexandria';
             src: url('https://fonts.gstatic.com/s/alexandria/v3/UMBXrPdDqW66y0Y2usFeai3dAw.woff2') format('woff2');
@@ -15,6 +22,38 @@
             font-family: 'Roboto';
             src: url('https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2') format('woff2');
         }
+        
+/* Scrollbar styles */
+*::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+}
+
+*::-webkit-scrollbar-track {
+    background: #1E1E1E; /* Background of the scrollbar track */
+    border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: #BB86FC; /* Color of the scrollbar thumb */
+    border-radius: 10px;
+    border: 3px solid #1E1E1E; /* Space around the thumb to show the track */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: #BB86FC; /* Color when hovering over the scrollbar thumb */
+}
+
+*::-webkit-scrollbar-button {
+    display: none; /* Hide the up/down buttons if you don't want them */
+}
+
+/* For Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: #BB86FC #1E1E1E;
+}
+
+        
 
         body {
             font-family: 'Roboto', sans-serif;
@@ -67,7 +106,12 @@
             margin: 0 10px;
             font-weight: bold;
             transition: color 0.3s ease;
+			
         }
+        
+        nav a i {
+    		margin-right: 5px;
+		}
 
         .nav a:hover {
             color: #BB86FC;
@@ -83,27 +127,27 @@
         .main-navigation {
             width: 270px;
             position: fixed;
-            top: 80px; /* Adjust according to header height */
+            top: 88px; /* Adjust according to header height */
             left: 0;
             bottom: 0;
             overflow-y: auto;
             padding: 10px;
             z-index: 1000;
             font-size: 0.9em;
-            transition: left 0.3s ease;
+            transition: 0.3s ease;
         }
+		
+		.main-navigation.fixed {
+			top: 0;
+			transition: 0.3s ease;
+		}
 
-        .main-navigation ul {
-            list-style-type: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .main-navigation li {
+        .main-navigation .menu-item {
             margin: 10px 0;
         }
 
-        .main-navigation a {
+        .main-navigation .menu-item > a {
+		font-family: 'Alexandria', sans-serif;
             text-decoration: none;
             color: #E0E0E0;
             display: block;
@@ -111,77 +155,133 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             transition: background-color 0.3s ease, color 0.3s ease;
+            background-color: var(--cat-bg-color);
         }
 
-        .main-navigation a:hover,
-        .main-navigation .active > a {
-            background-color: #333;
-            color: #BB86FC;
+        .main-navigation .menu-item > a:hover,
+        .main-navigation .menu-item.active > a,
+        .main-navigation .submenu a:hover,
+        .main-navigation .submenu .sub-links a:hover {
+            background-color: var(--hover-bg-color);
+            color: var(--hover-text-color);
         }
 
         .main-navigation .submenu {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease;
+            margin-top: 2.5px;
+        }
+
+        .main-navigation .submenu.open {
+            max-height: 1000px; /* Set a large max-height to allow for expansion */
         }
 
         .main-navigation .submenu a {
             padding: 10px;
+            text-decoration: none;
+            color: #E0E0E0;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+            background-color: var(--submenu-bg-color);
         }
 
-        .main-navigation .submenu .sub-links {
+        .main-navigation .submenu-item .sub-links {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease;
         }
 
-        .main-navigation .submenu .sub-links a {
-            padding: 10px;
+        .main-navigation .submenu-item .sub-links.open {
+            max-height: 500px; /* Set a large max-height to allow for expansion */
         }
 
-.sub-nav {
-    background-color: #1E1E1E;
-    border-radius: 10px;
-    margin-bottom: 20px;
-    padding: 20px;
-}
+        .main-navigation .submenu .sub-links a {
+            padding: 10px;
+            text-decoration: none;
+            color: #E0E0E0;
+            display: block;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+            margin-bottom: 0;
+            background-color: var(--sublink-bg-color);
+        }
 
-.sub-nav .dropdown-btn {
-    display: none;
-    background-color: #1E1E1E;
-    color: #E0E0E0;
-    font-size: 16px;
-    border: none;
-    padding: 15px;
-    text-align: left;
-    width: 100%;
-    cursor: pointer;
-}
+        .sub-nav {
+            background-color: #1E1E1E;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            padding: 20px;
+        }
 
-.sub-nav .dropdown-content {
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-}
+        .sub-nav .dropdown-btn {
+            display: none;
+            background-color: #1E1E1E;
+            color: #E0E0E0;
+            font-size: 1.2em;
+			font-weight: bold;
+			font-family: 'Alexandria', sans-serif;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            cursor: pointer;
+        }
 
-.sub-nav a {
-    text-decoration: none;
-    color: #E0E0E0;
-    font-weight: bold;
-    transition: color 0.3s ease;
-    margin: 5px 10px;
-}
+        .sub-nav .dropdown-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
 
-.sub-nav a:hover {
-    color: #BB86FC;
-}
+        .sub-nav a {
+            text-decoration: none;
+            color: #E0E0E0;
+            font-weight: bold;
+            transition: color 0.3s ease;
+            margin: 5px 10px;
+        }
 
-.content {
-    margin-left: 280px; /* Adjust according to navigation width */
-    padding: 120px 20px 20px 20px; /* Adjust according to header height */
-    transition: margin-left 0.3s ease, padding-top 0.3s ease;
-}
+        .sub-nav a:hover {
+            color: #BB86FC;
+        }
+        
+        .classic-era {
+            background-image: url('https://tombraidercentral.online/images/menu/classic_menu.png');
+            background-position: right;
+            background-repeat: no-repeat;
+            background-size: auto 50px;
+        }
+        
+        .remastered-era {
+            background-image: url('https://tombraidercentral.online/images/menu/remastered_menu.png');
+            background-position: right;
+            background-repeat: no-repeat;
+            background-size: auto 50px;
+        }
+        
+        .legend-era {
+            background-image: url('https://tombraidercentral.online/images/menu/legend_menu.png');
+            background-position: right;
+            background-repeat: no-repeat;
+            background-size: auto 50px;
+        }
+        
+        .survivor-era {
+            background-image: url('https://tombraidercentral.online/images/menu/survivor_menu.png');
+            background-position: right;
+            background-repeat: no-repeat;
+            background-size: auto 50px;
+        }        
+        
 
+        .content {
+            margin-left: 280px; /* Adjust according to navigation width */
+            padding: 120px 20px 20px 20px; /* Adjust according to header height */
+            transition: margin-left 0.3s ease, padding-top 0.3s ease;
+        }
 
         .section-header {
             display: flex;
@@ -286,9 +386,10 @@
         }
 
         @media (max-width: 768px) {
-        	.header h1 {
-            	font-size: 1.5em;
+            .header h1 {
+                font-size: 1.5em;
             }
+
             .masonry-grid {
                 column-count: 1;
             }
@@ -342,36 +443,42 @@
                 padding-top: 110px; /* Adjust according to header height */
             }
 
-            .main-navigation .submenu,
-            .main-navigation .submenu .sub-links {
-                padding-left: 10px;
-            }
             .sub-nav {
-            	padding: 10px;
-                }
-    .sub-nav .dropdown-btn {
-        display: block;
-    }
+                padding: 10px;
+            }
 
-    .sub-nav .dropdown-content {
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
-    }
+            .sub-nav .dropdown-btn {
+                display: block;
+            }
 
-    .sub-nav .dropdown-content a {
-        margin: 10px 0;
-    }
+.sub-nav .dropdown-content {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
 
-    .sub-nav .dropdown-content.show {
-        display: flex;
-    }
+.sub-nav .dropdown-content.show {
+    display: flex;
+}
 
-    .content {
-        margin-left: 0;
-        padding-top: 100px; /* Adjust according to header height */
-    }
+            .sub-nav .dropdown-content a {
+                margin: 10px 0;
+            }
+
+            .sub-nav .dropdown-content.show {
+                display: flex;
+            }
+
+            .content {
+                margin-left: 0;
+                padding-top: 100px; /* Adjust according to header height */
+            }
+            
+            .media-info img {
+            	max-width: 100%;
+            	margin-right: 0px;
+        	}
         }
 
         @media (min-width: 769px) {
@@ -614,52 +721,88 @@
     </div>
 
     <nav class="main-navigation">
-        <i class='bx bx-x close-menu'></i>
-        <ul>
-            <li><a href="#">Home</a></li>
-            <li class="menu-item">
-                <a href="#">+ Category 1</a>
-                <ul class="submenu">
-                    <li class="submenu-item">
-                        <a href="#">- Cat 1 Section 1</a>
-                        <ul class="sub-links">
-                            <li><a href="#">-- Cat 1 Section 1 Link 1</a></li>
-                            <li><a href="#">-- Cat 1 Section 1 Link 2</a></li>
-                        </ul>
-                    </li>
-                    <li class="submenu-item">
-                        <a href="#">- Cat 1 Section 2</a>
-                        <ul class="sub-links">
-                            <li><a href="#">-- Cat 1 Section 2 Link 1</a></li>
-                            <li><a href="#">-- Cat 1 Section 2 Link 2</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-            <li class="menu-item">
-                <a href="#">+ Category 2</a>
-                <ul class="submenu">
-                    <li class="submenu-item">
-                        <a href="#">- Cat 2 Section 1</a>
-                        <ul class="sub-links">
-                            <li><a href="#">-- Cat 2 Section 1 Link 1</a></li>
-                            <li><a href="#">-- Cat 2 Section 1 Link 2</a></li>
-                        </ul>
-                    </li>
-                    <li class="submenu-item">
-                        <a href="#">- Cat 2 Section 2</a>
-                        <ul class="sub-links">
-                            <li><a href="#">-- Cat 2 Section 2 Link 1</a></li>
-                            <li><a href="#">-- Cat 2 Section 2 Link 2</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </li>
-        </ul>
-    </nav>
+    <i class='bx bx-x close-menu'></i>
+    <div class="menu-item">
+        <a href="/index.php"><i class='bx bx-home-circle'></i> Home</a>
+    </div>
+    <div class="menu-item">
+        <a href="#"><i class='bx bxs-home-alt-2'></i> Main Areas</a>
+        <div class="submenu">
+            <div class="submenu-item">
+                <a href="#"><i class='bx bxs-chevron-right'></i> News Archive</a>
+            </div>
+            <div class="submenu-item">
+                <a href="#"><i class='bx bxs-chevron-right'></i> Link 1.2</a>
+            </div>
+            <div class="submenu-item">
+                <a href="#"><i class='bx bxs-chevron-right'></i> Link 1.3</a>
+            </div>
+        </div>
+    </div>
+    <div class="menu-item">
+        <a href="#"><i class='bx bxs-joystick'></i> Games</a>
+        <div class="submenu">
+            <div class="submenu-item">
+                <a href="#" class="remastered-era"><i class='bx bx-chevrons-right'></i> Remastered Era</a>
+                <div class="sub-links">
+                    <a href="/tombraider_remastered_01.php"><i class='bx bxs-chevron-right'></i> Tomb Raider</a>
+                    <a href="/tombraider_remastered_02.php"><i class='bx bxs-chevron-right'></i> Tomb Raider II</a>
+                    <a href="/tombraider_remastered_03.php"><i class='bx bxs-chevron-right'></i> Tomb Raider III</a>
+                </div>
+            </div>
+            <div class="submenu-item">
+                <a href="#" class="classic-era"><i class='bx bx-chevrons-right'></i> Classic Era</a>
+                <div class="sub-links">
+                    <a href="/tombraider_01.php"><i class='bx bxs-chevron-right'></i> Tomb Raider</a>
+                    <a href="/tombraider_02.php"><i class='bx bxs-chevron-right'></i> Tomb Raider II</a>
+                    <a href="/tombraider_03.php"><i class='bx bxs-chevron-right'></i> Tomb Raider III</a>
+                    <a href="/tombraider_04.php"><i class='bx bxs-chevron-right'></i> The Last Revelation</a>
+                    <a href="/tombraider_05.php"><i class='bx bxs-chevron-right'></i> Chronicles</a>
+                    <a href="/tombraider_06.php"><i class='bx bxs-chevron-right'></i> The Angel of Darkness</a>
+                </div>
+            </div>
+            <div class="submenu-item">
+                <a href="#" class="legend-era"><i class='bx bx-chevrons-right'></i> Legend Era</a>
+                <div class="sub-links">
+                    <a href="/tombraider_legend.php"><i class='bx bxs-chevron-right'></i> Legend</a>
+                    <a href="/tombraider_anniversary.php"><i class='bx bxs-chevron-right'></i> Anniversary</a>
+                    <a href="/tombraider_underworld.php"><i class='bx bxs-chevron-right'></i> Underworld</a>
+                </div>
+            </div>
+            <div class="submenu-item">
+                <a href="#" class="survivor-era"><i class='bx bx-chevrons-right'></i> Survivor Era</a>
+                <div class="sub-links">
+                    <a href="/tombraider_2013.php"><i class='bx bxs-chevron-right'></i> Tomb Raider (2013)</a>
+                    <a href="/tombraider_rotr.php"><i class='bx bxs-chevron-right'></i> Rise of the Tomb Raider</a>
+                    <a href="/tombraider_sotr.php"><i class='bx bxs-chevron-right'></i> Shadow of the Tomb Raider</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="menu-item">
+        <a href="#"><i class='bx bxs-movie-play'></i> Media</a>
+        <div class="submenu">
+            <div class="submenu-item">
+                <a href="#"><i class='bx bx-chevrons-right'></i> Movies</a>
+                <div class="sub-links">
+                    <a href="/lctr_movie.php"><i class='bx bxs-chevron-right'></i> Lara Croft: Tomb Raider</a>
+                    <a href="/lctrcol_movie.php"><i class='bx bxs-chevron-right'></i> Lara Croft Tomb Raider: The Cradle of Life</a>
+                    <a href="/tr2018_movie.php"><i class='bx bxs-chevron-right'></i> Tomb Raider (2018)</a>
+                </div>
+            </div>
+            <div class="submenu-item">
+                <a href="#"><i class='bx bx-chevrons-right'></i> Series</a>
+                <div class="sub-links">
+                    <a href="/revisioned_tv.php"><i class='bx bxs-chevron-right'></i> Re\Visioned: Tomb Raider</a>
+                    <a href="/trlolc_tv.php"><i class='bx bxs-chevron-right'></i> Tomb Raider: The Legend of Lara Croft</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
 
     <div class="container content">
-    
 <nav class="sub-nav">
     <button class="dropdown-btn">Menu</button>
     <div class="dropdown-content">
@@ -1102,136 +1245,132 @@
     </div>
 
     <script>
-        document.querySelector('.menu-icon').addEventListener('click', function() {
-            document.querySelector('.main-navigation').classList.toggle('open');
+let lastScrollTop = 0;
+const header = document.querySelector('.header');
+const mainNavigation = document.querySelector('.main-navigation');
+
+window.addEventListener('scroll', function() {
+    let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+    if (currentScroll > lastScrollTop) {
+        // Downscroll
+        header.style.top = '-100%';
+        mainNavigation.classList.add('fixed');
+    } else {
+        // Upscroll
+        header.style.top = '0';
+        mainNavigation.classList.remove('fixed');
+    }
+    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // For mobile or negative scrolling
+}, false);
+
+document.querySelector('.menu-icon').addEventListener('click', function() {
+    document.querySelector('.main-navigation').classList.toggle('open');
+});
+
+document.querySelector('.close-menu').addEventListener('click', function() {
+    document.querySelector('.main-navigation').classList.remove('open');
+});
+
+document.querySelectorAll('.menu-item > a').forEach(menu => {
+    menu.addEventListener('click', function(event) {
+        event.preventDefault();
+        const parent = menu.parentElement;
+        const submenu = parent.querySelector('.submenu');
+        
+        // Close all other submenus
+        document.querySelectorAll('.submenu').forEach(sm => {
+            if (sm !== submenu) {
+                sm.classList.remove('open');
+            }
         });
 
-        document.querySelector('.close-menu').addEventListener('click', function() {
-            document.querySelector('.main-navigation').classList.remove('open');
-        });
-
-        document.querySelectorAll('.menu-item > a').forEach(menu => {
-            menu.addEventListener('click', function(event) {
-                event.preventDefault();
-                const parent = menu.parentElement;
-                const submenu = parent.querySelector('.submenu');
-                
-                // Close all other submenus
-                document.querySelectorAll('.submenu').forEach(sm => {
-                    if (sm !== submenu) {
-                        sm.style.maxHeight = '0';
-                    }
-                });
-
-                // Toggle the clicked submenu
-                if (submenu.style.maxHeight === '0px' || submenu.style.maxHeight === '') {
-                    submenu.style.maxHeight = submenu.scrollHeight + 'px';
-                } else {
-                    submenu.style.maxHeight = '0';
-                }
-            });
-        });
-
-        document.querySelectorAll('.submenu-item > a').forEach(submenu => {
-            submenu.addEventListener('click', function(event) {
-                event.preventDefault();
-                const parent = submenu.parentElement;
-                const subLinks = parent.querySelector('.sub-links');
-                
-                // Close all other sub-links
-                document.querySelectorAll('.sub-links').forEach(sl => {
-                    if (sl !== subLinks) {
-                        sl.style.maxHeight = '0';
-                    }
-                });
-
-                // Toggle the clicked sub-links
-                if (subLinks.style.maxHeight === '0px' || subLinks.style.maxHeight === '') {
-                    subLinks.style.maxHeight = subLinks.scrollHeight + 'px';
-                } else {
-                    subLinks.style.maxHeight = '0';
-                }
-            });
-        });
-
-        // Show header on scroll up
-        let lastScrollTop = 0;
-        window.addEventListener('scroll', function() {
-            let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-            if (currentScroll > lastScrollTop) {
-                // Downscroll
-                document.querySelector('.header').style.top = '-100%';
-            } else {
-                // Upscroll
-                document.querySelector('.header').style.top = '0';
-            }
-            lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // For mobile or negative scrolling
-        }, false);
-
-        function initLightbox(galleryClass, lightboxId, imgId) {
-            var slideIndex = 1;
-            showSlide(slideIndex, galleryClass, imgId);
-
-            function openLightbox(event) {
-                event.preventDefault();
-                var imgSrc = event.currentTarget.querySelector('img').getAttribute('src');
-                preloadImage(imgSrc, function() {
-                    document.getElementById(lightboxId).style.display = 'block';
-                    currentSlide(parseInt(event.currentTarget.getAttribute('data-slide-index')), galleryClass, imgId);
-                });
-            }
-
-            function closeLightbox() {
-                document.getElementById(lightboxId).style.display = 'none';
-            }
-
-            function changeSlide(n, galleryClass, imgId) {
-                showSlide(slideIndex += n, galleryClass, imgId);
-            }
-
-            function currentSlide(n, galleryClass, imgId) {
-                showSlide(slideIndex = n, galleryClass, imgId);
-            }
-
-            function showSlide(n, galleryClass, imgId) {
-                var slides = document.querySelectorAll(galleryClass + ' .lightbox-trigger');
-                if (n > slides.length) { slideIndex = 1 }
-                if (n < 1) { slideIndex = slides.length }
-                var img = slides[slideIndex - 1].getElementsByTagName('img')[0].src;
-                preloadImage(img, function() {
-                    document.getElementById(imgId).src = img;
-                });
-            }
-
-            function preloadImage(src, callback) {
-                var img = new Image();
-                img.src = src;
-                img.onload = callback;
-            }
-
-            document.querySelectorAll(galleryClass + ' .lightbox-trigger').forEach((element, index) => {
-                element.setAttribute('data-slide-index', index + 1);
-                element.onclick = openLightbox;
-            });
-
-            document.getElementById(lightboxId).querySelector('.close').onclick = closeLightbox;
-            document.getElementById(lightboxId).querySelector('.prev').onclick = function () {
-                changeSlide(-1, galleryClass, imgId);
-            };
-            document.getElementById(lightboxId).querySelector('.next').onclick = function () {
-                changeSlide(1, galleryClass, imgId);
-            };
-        }
-
-        // Initialize lightboxes for each gallery
-        initLightbox('#masonry1', 'lightbox-masonry', 'lightbox-img-masonry');
-        initLightbox('#flex1', 'lightbox-flex', 'lightbox-img-flex');
-    </script>
-    <script>
-    document.querySelector('.dropdown-btn').addEventListener('click', function() {
-        document.querySelector('.dropdown-content').classList.toggle('show');
+        // Toggle the clicked submenu
+        submenu.classList.toggle('open');
     });
-</script>
+});
+
+document.querySelectorAll('.submenu-item > a').forEach(submenu => {
+    submenu.addEventListener('click', function(event) {
+        event.preventDefault();
+        const parent = submenu.parentElement;
+        const subLinks = parent.querySelector('.sub-links');
+        
+        // Close all other sub-links
+        document.querySelectorAll('.sub-links').forEach(sl => {
+            if (sl !== subLinks) {
+                sl.classList.remove('open');
+            }
+        });
+
+        // Toggle the clicked sub-links
+        subLinks.classList.toggle('open');
+    });
+});
+
+function initLightbox(galleryClass, lightboxId, imgId) {
+    var slideIndex = 1;
+    showSlide(slideIndex, galleryClass, imgId);
+
+    function openLightbox(event) {
+        event.preventDefault();
+        var imgSrc = event.currentTarget.querySelector('img').getAttribute('src');
+        preloadImage(imgSrc, function() {
+            document.getElementById(lightboxId).style.display = 'block';
+            currentSlide(parseInt(event.currentTarget.getAttribute('data-slide-index')), galleryClass, imgId);
+        });
+    }
+
+    function closeLightbox() {
+        document.getElementById(lightboxId).style.display = 'none';
+    }
+
+    function changeSlide(n, galleryClass, imgId) {
+        showSlide(slideIndex += n, galleryClass, imgId);
+    }
+
+    function currentSlide(n, galleryClass, imgId) {
+        showSlide(slideIndex = n, galleryClass, imgId);
+    }
+
+    function showSlide(n, galleryClass, imgId) {
+        var slides = document.querySelectorAll(galleryClass + ' .lightbox-trigger');
+        if (n > slides.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = slides.length }
+        var img = slides[slideIndex - 1].getElementsByTagName('img')[0].src;
+        preloadImage(img, function() {
+            document.getElementById(imgId).src = img;
+        });
+    }
+
+    function preloadImage(src, callback) {
+        var img = new Image();
+        img.src = src;
+        img.onload = callback;
+    }
+
+    document.querySelectorAll(galleryClass + ' .lightbox-trigger').forEach((element, index) => {
+        element.setAttribute('data-slide-index', index + 1);
+        element.onclick = openLightbox;
+    });
+
+    document.getElementById(lightboxId).querySelector('.close').onclick = closeLightbox;
+    document.getElementById(lightboxId).querySelector('.prev').onclick = function () {
+        changeSlide(-1, galleryClass, imgId);
+    };
+    document.getElementById(lightboxId).querySelector('.next').onclick = function () {
+        changeSlide(1, galleryClass, imgId);
+    };
+}
+
+// Initialize lightboxes for each gallery
+initLightbox('#masonry1', 'lightbox-masonry', 'lightbox-img-masonry');
+initLightbox('#flex1', 'lightbox-flex', 'lightbox-img-flex');
+
+document.querySelector('.dropdown-btn').addEventListener('click', function() {
+    document.querySelector('.dropdown-content').classList.toggle('show');
+});
+
+    </script>
 
 </body>
 </html>
