@@ -63,7 +63,9 @@
     scrollbar-width: thin;
     scrollbar-color: var(--scrollbar-thumb-bg-color) var(--scrollbar-track-bg-color);
 }
-
+.no-scroll {
+    overflow: hidden;
+}
 
 body {
     font-family: 'Roboto', sans-serif;
@@ -73,6 +75,7 @@ body {
     color: var(--text-color);
     font-size: 1rem; /* 16px */
     line-height: 1.5;
+	
 }
 
 h1, h2, h3 {
@@ -1400,148 +1403,151 @@ nav a i {
     <i class='bx bxs-chevrons-up'></i>
 </div>
 <script>
-    let lastScrollTop = 0;
-    const header = document.querySelector('.header');
-    const mainNavigation = document.querySelector('.main-navigation');
+ let lastScrollTop = 0;
+const header = document.querySelector('.header');
+const mainNavigation = document.querySelector('.main-navigation');
 
-    window.addEventListener('scroll', function() {
-        let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-        if (currentScroll > lastScrollTop) {
-            // Downscroll
-            header.style.top = '-100%';
-            mainNavigation.classList.add('fixed');
-        } else {
-            // Upscroll
-            header.style.top = '0';
-            mainNavigation.classList.remove('fixed');
-        }
-        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // For mobile or negative scrolling
-    }, false);
+window.addEventListener('scroll', function() {
+    let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+    if (currentScroll > lastScrollTop) {
+        // Downscroll
+        header.style.top = '-100%';
+        mainNavigation.classList.add('fixed');
+    } else {
+        // Upscroll
+        header.style.top = '0';
+        mainNavigation.classList.remove('fixed');
+    }
+    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // For mobile or negative scrolling
+}, false);
 
-    document.querySelector('.menu-icon').addEventListener('click', function() {
-        document.querySelector('.main-navigation').classList.toggle('open');
-    });
+document.querySelector('.menu-icon').addEventListener('click', function() {
+    document.querySelector('.main-navigation').classList.toggle('open');
+    document.body.classList.toggle('no-scroll'); // Toggle the no-scroll class
+});
 
-    document.querySelector('.close-menu').addEventListener('click', function() {
-        document.querySelector('.main-navigation').classList.remove('open');
-    });
+document.querySelector('.close-menu').addEventListener('click', function() {
+    document.querySelector('.main-navigation').classList.remove('open');
+    document.body.classList.remove('no-scroll'); // Remove the no-scroll class
+});
 
-    document.querySelectorAll('.menu-item > a').forEach(menu => {
-        menu.addEventListener('click', function(event) {
-            event.preventDefault();
-            const parent = menu.parentElement;
-            const submenu = parent.querySelector('.submenu');
-            
-            // Close all other submenus
-            document.querySelectorAll('.submenu').forEach(sm => {
-                if (sm !== submenu) {
-                    sm.classList.remove('open');
-                }
-            });
-
-            // Toggle the clicked submenu
-            submenu.classList.toggle('open');
-        });
-    });
-
-    document.querySelectorAll('.submenu-item > a').forEach(submenu => {
-        submenu.addEventListener('click', function(event) {
-            event.preventDefault();
-            const parent = submenu.parentElement;
-            const subLinks = parent.querySelector('.sub-links');
-            
-            // Close all other sub-links
-            document.querySelectorAll('.sub-links').forEach(sl => {
-                if (sl !== subLinks) {
-                    sl.classList.remove('open');
-                }
-            });
-
-            // Toggle the clicked sub-links
-            subLinks.classList.toggle('open');
-        });
-    });
-
-    function initLightbox(galleryClass, lightboxId, imgId) {
-        var slideIndex = 1;
-        showSlide(slideIndex, galleryClass, imgId);
-
-        function openLightbox(event) {
-            event.preventDefault();
-            var imgSrc = event.currentTarget.querySelector('img').getAttribute('src');
-            preloadImage(imgSrc, function() {
-                document.getElementById(lightboxId).style.display = 'block';
-                currentSlide(parseInt(event.currentTarget.getAttribute('data-slide-index')), galleryClass, imgId);
-            });
-        }
-
-        function closeLightbox() {
-            document.getElementById(lightboxId).style.display = 'none';
-        }
-
-        function changeSlide(n, galleryClass, imgId) {
-            showSlide(slideIndex += n, galleryClass, imgId);
-        }
-
-        function currentSlide(n, galleryClass, imgId) {
-            showSlide(slideIndex = n, galleryClass, imgId);
-        }
-
-        function showSlide(n, galleryClass, imgId) {
-            var slides = document.querySelectorAll(galleryClass + ' .lightbox-trigger');
-            if (n > slides.length) { slideIndex = 1 }
-            if (n < 1) { slideIndex = slides.length }
-            var img = slides[slideIndex - 1].getElementsByTagName('img')[0].src;
-            preloadImage(img, function() {
-                document.getElementById(imgId).src = img;
-            });
-        }
-
-        function preloadImage(src, callback) {
-            var img = new Image();
-            img.src = src;
-            img.onload = callback;
-        }
-
-        document.querySelectorAll(galleryClass + ' .lightbox-trigger').forEach((element, index) => {
-            element.setAttribute('data-slide-index', index + 1);
-            element.onclick = openLightbox;
+document.querySelectorAll('.menu-item > a').forEach(menu => {
+    menu.addEventListener('click', function(event) {
+        event.preventDefault();
+        const parent = menu.parentElement;
+        const submenu = parent.querySelector('.submenu');
+        
+        // Close all other submenus
+        document.querySelectorAll('.submenu').forEach(sm => {
+            if (sm !== submenu) {
+                sm.classList.remove('open');
+            }
         });
 
-        document.getElementById(lightboxId).querySelector('.close').onclick = closeLightbox;
-        document.getElementById(lightboxId).querySelector('.prev').onclick = function () {
-            changeSlide(-1, galleryClass, imgId);
-        };
-        document.getElementById(lightboxId).querySelector('.next').onclick = function () {
-            changeSlide(1, galleryClass, imgId);
-        };
+        // Toggle the clicked submenu
+        submenu.classList.toggle('open');
+    });
+});
+
+document.querySelectorAll('.submenu-item > a').forEach(submenu => {
+    submenu.addEventListener('click', function(event) {
+        event.preventDefault();
+        const parent = submenu.parentElement;
+        const subLinks = parent.querySelector('.sub-links');
+        
+        // Close all other sub-links
+        document.querySelectorAll('.sub-links').forEach(sl => {
+            if (sl !== subLinks) {
+                sl.classList.remove('open');
+            }
+        });
+
+        // Toggle the clicked sub-links
+        subLinks.classList.toggle('open');
+    });
+});
+
+function initLightbox(galleryClass, lightboxId, imgId) {
+    var slideIndex = 1;
+    showSlide(slideIndex, galleryClass, imgId);
+
+    function openLightbox(event) {
+        event.preventDefault();
+        var imgSrc = event.currentTarget.querySelector('img').getAttribute('src');
+        preloadImage(imgSrc, function() {
+            document.getElementById(lightboxId).style.display = 'block';
+            currentSlide(parseInt(event.currentTarget.getAttribute('data-slide-index')), galleryClass, imgId);
+        });
     }
 
-    // Initialize lightboxes for each gallery
-    initLightbox('#masonry1', 'lightbox-masonry', 'lightbox-img-masonry');
-    initLightbox('#flex1', 'lightbox-flex', 'lightbox-img-flex');
+    function closeLightbox() {
+        document.getElementById(lightboxId).style.display = 'none';
+    }
 
-    document.querySelector('.dropdown-btn').addEventListener('click', function() {
-        document.querySelector('.dropdown-content').classList.toggle('show');
-    });
+    function changeSlide(n, galleryClass, imgId) {
+        showSlide(slideIndex += n, galleryClass, imgId);
+    }
 
-    // Show/hide the back-to-top button based on scroll distance
-    window.addEventListener('scroll', function() {
-        const backToTopButton = document.querySelector('.back-to-top');
-        if (window.scrollY > 300) { // Show button after scrolling 300px
-            backToTopButton.style.display = 'block';
-        } else {
-            backToTopButton.style.display = 'none';
-        }
-    });
+    function currentSlide(n, galleryClass, imgId) {
+        showSlide(slideIndex = n, galleryClass, imgId);
+    }
 
-    // Smooth scroll to top when button is clicked
-    document.querySelector('.back-to-top').addEventListener('click', function() {
-        window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
+    function showSlide(n, galleryClass, imgId) {
+        var slides = document.querySelectorAll(galleryClass + ' .lightbox-trigger');
+        if (n > slides.length) { slideIndex = 1 }
+        if (n < 1) { slideIndex = slides.length }
+        var img = slides[slideIndex - 1].getElementsByTagName('img')[0].src;
+        preloadImage(img, function() {
+            document.getElementById(imgId).src = img;
         });
+    }
+
+    function preloadImage(src, callback) {
+        var img = new Image();
+        img.src = src;
+        img.onload = callback;
+    }
+
+    document.querySelectorAll(galleryClass + ' .lightbox-trigger').forEach((element, index) => {
+        element.setAttribute('data-slide-index', index + 1);
+        element.onclick = openLightbox;
     });
+
+    document.getElementById(lightboxId).querySelector('.close').onclick = closeLightbox;
+    document.getElementById(lightboxId).querySelector('.prev').onclick = function () {
+        changeSlide(-1, galleryClass, imgId);
+    };
+    document.getElementById(lightboxId).querySelector('.next').onclick = function () {
+        changeSlide(1, galleryClass, imgId);
+    };
+}
+
+// Initialize lightboxes for each gallery
+initLightbox('#masonry1', 'lightbox-masonry', 'lightbox-img-masonry');
+initLightbox('#flex1', 'lightbox-flex', 'lightbox-img-flex');
+
+document.querySelector('.dropdown-btn').addEventListener('click', function() {
+    document.querySelector('.dropdown-content').classList.toggle('show');
+});
+
+// Show/hide the back-to-top button based on scroll distance
+window.addEventListener('scroll', function() {
+    const backToTopButton = document.querySelector('.back-to-top');
+    if (window.scrollY > 300) { // Show button after scrolling 300px
+        backToTopButton.style.display = 'block';
+    } else {
+        backToTopButton.style.display = 'none';
+    }
+});
+
+// Smooth scroll to top when button is clicked
+document.querySelector('.back-to-top').addEventListener('click', function() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
 </script>
 
 
