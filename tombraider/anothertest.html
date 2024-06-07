@@ -6,16 +6,7 @@
     <title>Tomb Raider Central</title>
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <style>
-        :root {
-            --cat-bg-color: #1E1E1E; /* Category background color */
-            --submenu-bg-color: #2A2A2A; /* Submenu background color */
-            --sublink-bg-color: #353535; /* Sub-link background color */
-            --hover-bg-color: #333; /* Hover background color */
-            --hover-text-color: #BB86FC; /* Hover text color */
-            font-size: 16px; /* Base font size */
-        }
-        
-        @font-face {
+@font-face {
             font-family: 'Alexandria';
             src: url('https://fonts.gstatic.com/s/alexandria/v3/UMBXrPdDqW66y0Y2usFeai3dAw.woff2') format('woff2');
         }
@@ -23,803 +14,856 @@
         @font-face {
             font-family: 'Roboto';
             src: url('https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2') format('woff2');
-        }
-        
-        /* Scrollbar styles */
-        *::-webkit-scrollbar {
-            width: 12px; /* Width of the scrollbar */
-        }
-
-        *::-webkit-scrollbar-track {
-            background: #1E1E1E; /* Background of the scrollbar track */
-            border-radius: 10px;
-        }
-
-        *::-webkit-scrollbar-thumb {
-            background-color: #BB86FC; /* Color of the scrollbar thumb */
-            border-radius: 10px;
-            border: 3px solid #1E1E1E; /* Space around the thumb to show the track */
-        }
-
-        *::-webkit-scrollbar-thumb:hover {
-            background-color: #BB86FC; /* Color when hovering over the scrollbar thumb */
-        }
-
-        *::-webkit-scrollbar-button {
-            display: none; /* Hide the up/down buttons if you don't want them */
-        }
-
-        /* For Firefox */
-        * {
-            scrollbar-width: thin;
-            scrollbar-color: #BB86FC #1E1E1E;
-        }
-
-        body {
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #121212;
-            color: #E0E0E0;
-            font-size: 1rem; /* 16px */
-            line-height: 1.5;
-        }
-
-        h1, h2, h3 {
-            font-family: 'Alexandria', sans-serif;
-            color: #BB86FC;
-        }
-
-        h1 {
-            font-size: 2rem; /* 32px */
-        }
-
-        h2 {
-            font-size: 1.75rem; /* 28px */
-        }
-
-        h3 {
-            font-size: 1.5rem; /* 24px */
-        }
-
-        .container {
-            flex-grow: 1;
-            margin: auto;
-            padding: 20px;
-            max-width: 1200px;
-        }
-
-        .header {
-            width: 100%;
-            text-align: center;
-            padding: 20px;
-            background-color: #1E1E1E;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            transition: top 0.3s ease;
-            margin-bottom: 40px;
-        }
-
-        .header h1 {
-            margin: 0;
-            font-size: 2.5rem; /* 40px */
-            text-transform: uppercase;
-            flex-grow: 1;
-        }
-
-        .nav a {
-            text-decoration: none;
-            color: #E0E0E0;
-            margin: 0 10px;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        nav a i {
-            margin-right: 5px;
-        }
-
-        .nav a:hover {
-            color: #BB86FC;
-        }
-
-        .header .menu-icon {
-            display: none;
-            font-size: 2rem; /* 32px */
-            cursor: pointer;
-            margin-right: 40px; /* Ensure it fits within the header */
-        }
-
-        .main-navigation {
-            width: 270px;
-            position: fixed;
-            top: 88px; /* Adjust according to header height */
-            left: 0;
-            bottom: 0;
-            overflow-y: auto;
-            padding: 10px;
-            z-index: 1000;
-            font-size: 0.9rem; /* 14.4px */
-            transition: 0.3s ease;
-        }
-
-        .main-navigation.fixed {
-            top: 0;
-            transition: 0.3s ease;
-        }
-
-        .main-navigation .menu-item {
-            margin: 10px 0;
-        }
-
-        .main-navigation .menu-item > a {
-            font-family: 'Alexandria', sans-serif;
-            text-decoration: none;
-            color: #E0E0E0;
-            display: block;
-            padding: 10px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            transition: background-color 0.3s ease, color 0.3s ease;
-            background-color: var(--cat-bg-color);
-        }
-
-        .main-navigation .menu-item > a:hover,
-        .main-navigation .menu-item.active > a,
-        .main-navigation .submenu a:hover,
-        .main-navigation .submenu .sub-links a:hover {
-            background-color: var(--hover-bg-color);
-            color: var(--hover-text-color);
-        }
-
-        .main-navigation .submenu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-            margin-top: 2.5px;
-        }
-
-        .main-navigation .submenu.open {
-            max-height: 1000px; /* Set a large max-height to allow for expansion */
-        }
-
-        .main-navigation .submenu a {
-            padding: 10px;
-            text-decoration: none;
-            color: #E0E0E0;
-            display: block;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin-top: 10px;
-            background-color: var(--submenu-bg-color);
-        }
-
-        .main-navigation .submenu-item .sub-links {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-
-        .main-navigation .submenu-item .sub-links.open {
-            max-height: 500px; /* Set a large max-height to allow for expansion */
-        }
-
-        .main-navigation .submenu .sub-links a {
-            padding: 10px;
-            text-decoration: none;
-            color: #E0E0E0;
-            display: block;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin-top: 10px;
-            margin-bottom: 0;
-            background-color: var(--sublink-bg-color);
-        }
-
-        .sub-nav {
-            background-color: #1E1E1E;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            padding: 20px;
-        }
-
-        .sub-nav .dropdown-btn {
-            display: none;
-            background-color: #1E1E1E;
-            color: #E0E0E0;
-            font-size: 1.2rem; /* 19.2px */
-            font-weight: bold;
-            font-family: 'Alexandria', sans-serif;
-            border: none;
-            padding: 15px;
-            width: 100%;
-            cursor: pointer;
-        }
-
-        .sub-nav .dropdown-content {
-            display: flex;
-            justify-content: space-between;
-            flex-wrap: wrap;
-        }
-
-        .sub-nav a {
-            text-decoration: none;
-            color: #E0E0E0;
-            font-weight: bold;
-            transition: color 0.3s ease;
-            margin: 5px 10px;
-        }
-
-        .sub-nav a:hover {
-            color: #BB86FC;
-        }
-
-        .classic-era {
-            background-image: url('https://tombraidercentral.online/images/menu/classic_menu.png');
-            background-position: right;
-            background-repeat: no-repeat;
-            background-size: auto 50px;
-        }
-
-        .remastered-era {
-            background-image: url('https://tombraidercentral.online/images/menu/remastered_menu.png');
-            background-position: right;
-            background-repeat: no-repeat;
-            background-size: auto 50px;
-        }
-
-        .legend-era {
-            background-image: url('https://tombraidercentral.online/images/menu/legend_menu.png');
-            background-position: right;
-            background-repeat: no-repeat;
-            background-size: auto 50px;
-        }
-
-        .survivor-era {
-            background-image: url('https://tombraidercentral.online/images/menu/survivor_menu.png');
-            background-position: right;
-            background-repeat: no-repeat;
-            background-size: auto 50px;
-        }
-
-        .content {
-            margin-left: 280px; /* Adjust according to navigation width */
-            padding: 120px 20px 20px 20px; /* Adjust according to header height */
-            transition: margin-left 0.3s ease, padding-top 0.3s ease;
-        }
-
-        .section-header {
-            display: flex;
-            align-items: center;
-            font-size: 2rem; /* 32px */
-            margin-bottom: 30px;
-            border-bottom: 4px solid #BB86FC;
-        }
-
-        .section-header h2 {
-            margin: 20px 0 20px 0;
-        }
-
-        .section-header img {
-            margin-right: 10px;
-            width: 40px;
-            height: 40px;
-        }
-
-        .media-info {
-            display: flex;
-            flex-wrap: wrap;
-            margin-bottom: 40px;
-            background-color: #1E1E1E;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-        }
-
-        .media-info img {
-            max-width: 250px;
-            margin-right: 20px;
-            flex: 1;
-            border-radius: 10px;
-        }
-
-        .media-info .description {
-            flex: 2;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 40px;
-        }
-
-        .card, .achievements li, .cheats li, .video-card {
-            background-color: #1E1E1E;
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-        }
-
-        .card h3 {
-            margin-top: 0;
-            display: inline-flex;
-            align-items: center;
-            font-size: 1.2rem; /* 19.2px */
-            margin-right: 10px;
-        }
-
-        .card i.bx-icon {
-            margin-right: 10px;
-            font-size: 1.5rem; /* 24px */
-            color: #fbbf6a;
-        }
-
-        .gallery {
-            margin-bottom: 40px;
-        }
-
-        .gallery-header {
-            margin-bottom: 20px;
-        }
-
-        .masonry-grid {
-            column-count: 3;
-            column-gap: 15px;
-        }
-
-        .masonry-grid a {
-            display: block;
-            margin-bottom: 15px;
-        }
-
-        .masonry-grid img, .flex-grid img {
-            width: 100%;
-            height: auto;
-            border-radius: 10px;
-        }
-
-        .flex-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .flex-grid a {
-            display: block;
-            width: calc(33.333% - 10px);
-        }
-
-        @media (max-width: 768px) {
-            :root {
-                font-size: 14px; /* Base font size for smaller screens */
-            }
-
-            .header h1 {
-                font-size: 1.5rem; /* 21px */
-            }
-
-            .masonry-grid {
-                column-count: 1;
-            }
-
-            .flex-grid a {
-                width: 100%;
-            }
-
-            .section-header {
-                font-size: 1.2rem; /* 16.8px */
-            }
-
-            .section-header img {
-                margin-right: 10px;
-                width: 30px;
-                height: 30px;
-            }
-
-            .header .menu-icon {
-                display: block;
-            }
-
-            .main-navigation {
-                width: 100%;
-                height: 100%;
-                position: fixed;
-                top: 0;
-                left: -100%;
-                transition: left 0.3s ease;
-                z-index: 1000;
-                background-color: #121212;
-                padding: 20px 10px; /* Adjusted padding */
-                box-sizing: border-box;
-            }
-
-            .main-navigation.open {
-                left: 0;
-            }
-
-            .main-navigation .close-menu {
-                display: block;
-                text-align: right;
-                margin-bottom: 20px;
-                font-size: 2.5rem; /* 35px */
-                cursor: pointer;
-                color: #E0E0E0;
-            }
-
-            .content {
-                margin-left: 0;
-                padding-top: 110px; /* Adjust according to header height */
-            }
-
-            .sub-nav {
-                padding: 10px;
-            }
-
-            .sub-nav .dropdown-btn {
-                display: block;
-            }
-
-            .sub-nav .dropdown-content {
-                display: none;
-                flex-direction: column;
-                align-items: center;
-                width: 100%;
-            }
-
-            .sub-nav .dropdown-content.show {
-                display: flex;
-            }
-
-            .sub-nav .dropdown-content a {
-                margin: 10px 0;
-            }
-
-            .content {
-                margin-left: 0;
-                padding-top: 100px; /* Adjust according to header height */
-            }
-
-            .media-info img {
-                max-width: 100%;
-                margin-right: 0px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            :root {
-                font-size: 18px; /* Base font size for very small screens */
-            }
-
-            .header h1 {
-                font-size: 1.25rem; /* 15px */
-            }
-
-            .masonry-grid {
-                column-count: 1;
-            }
-
-            .flex-grid a {
-                width: 100%;
-            }
-
-            .section-header {
-                font-size: 1rem; /* 12px */
-            }
-
-            .section-header img {
-                margin-right: 10px;
-                width: 20px;
-                height: 20px;
-            }
-
-            .header .menu-icon {
-                display: block;
-            }
-
-            .main-navigation {
-                width: 100%;
-                height: 100%;
-                position: fixed;
-                top: 0;
-                left: -100%;
-                transition: left 0.3s ease;
-                z-index: 1000;
-                background-color: #121212;
-                padding: 20px 10px; /* Adjusted padding */
-                box-sizing: border-box;
-            }
-
-            .main-navigation.open {
-                left: 0;
-            }
-
-            .main-navigation .close-menu {
-                display: block;
-                text-align: right;
-                margin-bottom: 20px;
-                font-size: 2rem; /* 24px */
-                cursor: pointer;
-                color: #E0E0E0;
-            }
-
-            .content {
-                margin-left: 0;
-                padding-top: 90px; /* Adjust according to header height */
-            }
-
-            .sub-nav {
-                padding: 10px;
-            }
-
-            .sub-nav .dropdown-btn {
-                display: block;
-            }
-
-            .sub-nav .dropdown-content {
-                display: none;
-                flex-direction: column;
-                align-items: center;
-                width: 100%;
-            }
-
-            .sub-nav .dropdown-content.show {
-                display: flex;
-            }
-
-            .sub-nav .dropdown-content a {
-                margin: 10px 0;
-            }
-
-            .content {
-                margin-left: 0;
-                padding-top: 90px; /* Adjust according to header height */
-            }
-
-            .media-info img {
-                max-width: 100%;
-                margin-right: 0px;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .close-menu {
-                display: none; /* Hidden on desktop */
-            }
-        }
-
-        .lightbox {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            padding-top: 10px;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.9);
-        }
-
-        .lightbox-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-        }
-
-        .lightbox-content img {
-            max-width: 90%;
-            max-height: 80%;
-        }
-
-        .close {
-            position: absolute;
-            top: 20px;
-            right: 35px;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: #bbb;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        .prev,
-        .next {
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            width: auto;
-            padding: 16px;
-            margin-top: -50px;
-            color: #fff;
-            font-weight: bold;
-            font-size: 24px;
-            transition: 0.3s;
-            user-select: none;
-        }
-
-        .prev {
-            left: 10px;
-        }
-
-        .next {
-            right: 10px;
-        }
-
-        .prev:hover,
-        .next:hover {
-            background-color: rgba(0, 0, 0, 0.8);
-            border-radius: 8px;
-        }
-
-        .achievements .platform h3, .cheats .platform h3 {
-            margin-bottom: 10px;
-        }
-
-        .achievements .grid, .cheats .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .achievements ul, .cheats ul {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .achievements li, .cheats li {
-            display: flex;
-            align-items: center;
-            background-color: #1E1E1E;
-            padding: 15px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 5px;
-        }
-
-        .achievements .description, .cheats .description {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .achievements .description strong, .cheats .description strong {
-            font-size: 1.1rem; /* 17.6px */
-            color: #BB86FC;
-        }
-
-        .achievements .description p, .cheats .description p {
-            margin: 5px 0 0 0;
-        }
-
-        .gamerscore {
-            display: flex;
-            align-items: center;
-            font-weight: bold;
-            color: #BB86FC;
-            padding: 0 10px;
-            font-size: 1.2rem; /* 19.2px */
-        }
-
-        .gamerscore svg {
-            width: 24px;
-            height: 24px;
-            margin-left: 5px;
-            fill: currentColor;
-        }
-
-        .trophy-icon {
-            font-size: 2rem; /* 32px */
-            margin-right: 10px;
-        }
-
-        .trophy-bronze {
-            color: #cd7f32;
-        }
-
-        .trophy-silver {
-            color: #c0c0c0;
-        }
-
-        .trophy-gold {
-            color: #ffd700;
-        }
-
-        .trophy-platinum {
-            color: #e5e4e2;
-        }
-
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .video-card {
-            background-color: #1E1E1E;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .video-card .video-wrapper {
-            position: relative;
-            width: 100%;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
-            margin-bottom: 10px;
-        }
-
-        .video-card iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border-radius: 10px;
-            border: 0px;
-        }
-
-        .video-card .video-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .video-card .video-info p {
-            margin: 5px 0;
-        }
-
-        .actors {
-            margin-bottom: 40px;
-        }
-
-        .actors-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-        }
-
-        .actor-card {
-            background-color: #1E1E1E;
-            padding: 15px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            text-align: center;
-        }
-
-        .actor-card img {
-            width: 150px;
-            height: 150px;
-            border-radius: 50%;
-            margin-bottom: 15px;
-        }
-
-        .actor-card h3 {
-            margin: 0 0 5px 0;
-            font-size: 1.2rem; /* 19.2px */
-            color: #fbbf6a;
-        }
-
-        .actor-card p {
-            margin: 0;
-            color: #BB86FC;
-        }
+        }    
+:root {
+    --cat-bg-color: #1E1E1E; /* Category background color */
+    --submenu-bg-color: #2A2A2A; /* Submenu background color */
+    --sublink-bg-color: #353535; /* Sub-link background color */
+    --hover-bg-color: #333; /* Hover background color */
+    --hover-text-color: #BB86FC; /* Hover text color */
+    --text-color: #E0E0E0; /* General text color */
+    --header-bg-color: #1E1E1E; /* Header background color */
+    --highlight-color: #BB86FC; /* Highlight color */
+	--accent-color: #fbbf6a;
+    --box-shadow-color: rgba(0, 0, 0, 0.2); /* Box shadow color */
+    --scrollbar-track-bg-color: #1E1E1E; /* Scrollbar track background color */
+    --scrollbar-thumb-bg-color: #BB86FC; /* Scrollbar thumb background color */
+    --scrollbar-thumb-hover-bg-color: #BB86FC; /* Scrollbar thumb hover background color */
+    --background-color: #121212; /* Background color */
+    --gamerscore-border-color: #008000; /* Gamerscore border color */
+    font-size: 16px; /* Base font size */
+}
+
+/* Scrollbar styles */
+*::-webkit-scrollbar {
+    width: 12px; /* Width of the scrollbar */
+}
+
+*::-webkit-scrollbar-track {
+    background: var(--scrollbar-track-bg-color); /* Background of the scrollbar track */
+    border-radius: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--scrollbar-thumb-bg-color); /* Color of the scrollbar thumb */
+    border-radius: 10px;
+    border: 3px solid var(--scrollbar-track-bg-color); /* Space around the thumb to show the track */
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: var(--scrollbar-thumb-hover-bg-color); /* Color when hovering over the scrollbar thumb */
+}
+
+*::-webkit-scrollbar-button {
+    display: none; /* Hide the up/down buttons if you don't want them */
+}
+
+/* For Firefox */
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--scrollbar-thumb-bg-color) var(--scrollbar-track-bg-color);
+}
+
+
+body {
+    font-family: 'Roboto', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-size: 1rem; /* 16px */
+    line-height: 1.5;
+}
+
+h1, h2, h3 {
+    font-family: 'Alexandria', sans-serif;
+    color: var(--highlight-color);
+}
+
+h1 {
+    font-size: 2rem; /* 32px */
+}
+
+h2 {
+    font-size: 1.75rem; /* 28px */
+}
+
+h3 {
+    font-size: 1.5rem; /* 24px */
+}
+
+.container {
+    flex-grow: 1;
+    margin: auto;
+    padding: 20px;
+    max-width: 1200px;
+}
+
+.header {
+    width: 100%;
+    text-align: center;
+    padding: 20px;
+    background-color: var(--header-bg-color);
+    box-shadow: 0 4px 8px var(--box-shadow-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: top 0.3s ease;
+    margin-bottom: 40px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 2.5rem; /* 40px */
+    text-transform: uppercase;
+    flex-grow: 1;
+}
+
+.nav a {
+    text-decoration: none;
+    color: var(--text-color);
+    margin: 0 10px;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+nav a i {
+    margin-right: 5px;
+}
+
+.nav a:hover {
+    color: var(--highlight-color);
+}
+
+.header .menu-icon {
+    display: none;
+    font-size: 2rem; /* 32px */
+    cursor: pointer;
+    margin-right: 40px; /* Ensure it fits within the header */
+}
+
+.main-navigation {
+    width: 270px;
+    position: fixed;
+    top: 88px; /* Adjust according to header height */
+    left: 0;
+    bottom: 0;
+    overflow-y: auto;
+    padding: 10px;
+    z-index: 1000;
+    font-size: 0.9rem; /* 14.4px */
+    transition: 0.3s ease;
+}
+
+.main-navigation.fixed {
+    top: 0;
+    transition: 0.3s ease;
+}
+
+.main-navigation .menu-item {
+    margin: 10px 0;
+}
+
+.main-navigation .menu-item > a {
+    font-family: 'Alexandria', sans-serif;
+    text-decoration: none;
+    color: var(--text-color);
+    display: block;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px var(--box-shadow-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+    background-color: var(--cat-bg-color);
+}
+
+.main-navigation .menu-item > a:hover,
+.main-navigation .menu-item.active > a,
+.main-navigation .submenu a:hover,
+.main-navigation .submenu .sub-links a:hover {
+    background-color: var(--hover-bg-color);
+    color: var(--hover-text-color);
+}
+
+.main-navigation .submenu {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    margin-top: 2.5px;
+}
+
+.main-navigation .submenu.open {
+    max-height: 1000px; /* Set a large max-height to allow for expansion */
+}
+
+.main-navigation .submenu a {
+    padding: 10px;
+    text-decoration: none;
+    color: var(--text-color);
+    display: block;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px var(--box-shadow-color);
+    margin-top: 10px;
+    background-color: var(--submenu-bg-color);
+}
+
+.main-navigation .submenu-item .sub-links {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.main-navigation .submenu-item .sub-links.open {
+    max-height: 500px; /* Set a large max-height to allow for expansion */
+}
+
+.main-navigation .submenu .sub-links a {
+    padding: 10px;
+    text-decoration: none;
+    color: var(--text-color);
+    display: block;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px var(--box-shadow-color);
+    margin-top: 10px;
+    margin-bottom: 0;
+    background-color: var(--sublink-bg-color);
+}
+
+.sub-nav {
+    background-color: var(--header-bg-color);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 20px;
+}
+
+.sub-nav .dropdown-btn {
+    display: none;
+    background-color: var(--header-bg-color);
+    color: var(--text-color);
+    font-size: 1.2rem; /* 19.2px */
+    font-weight: bold;
+    font-family: 'Alexandria', sans-serif;
+    border: none;
+    padding: 15px;
+    width: 100%;
+    cursor: pointer;
+}
+
+.sub-nav .dropdown-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.sub-nav a {
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: bold;
+    transition: color 0.3s ease;
+    margin: 5px 10px;
+}
+
+.sub-nav a:hover {
+    color: var(--highlight-color);
+}
+
+.classic-era {
+    background-image: url('https://tombraidercentral.online/images/menu/classic_menu.png');
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: auto 50px;
+}
+
+.remastered-era {
+    background-image: url('https://tombraidercentral.online/images/menu/remastered_menu.png');
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: auto 50px;
+}
+
+.legend-era {
+    background-image: url('https://tombraidercentral.online/images/menu/legend_menu.png');
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: auto 50px;
+}
+
+.survivor-era {
+    background-image: url('https://tombraidercentral.online/images/menu/survivor_menu.png');
+    background-position: right;
+    background-repeat: no-repeat;
+    background-size: auto 50px;
+}
+
+.content {
+    margin-left: 280px; /* Adjust according to navigation width */
+    padding: 120px 20px 20px 20px; /* Adjust according to header height */
+    transition: margin-left 0.3s ease, padding-top 0.3s ease;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Add this to position the icon at the right end */
+    font-size: 2rem; /* 32px */
+    margin-bottom: 30px;
+    border-bottom: 4px solid var(--cat-bg-color);
+}
+
+.section-header h2 {
+    margin: 20px 0 10px 0;
+}
+
+.section-header img {
+    margin-right: 10px;
+    width: 40px;
+    height: 40px;
+}
+
+.media-info {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+    background-color: var(--cat-bg-color);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px var(--box-shadow-color);
+}
+
+.media-info img {
+    max-width: 250px;
+    margin-right: 20px;
+    flex: 1;
+    border-radius: 10px;
+}
+
+.media-info .description {
+    flex: 2;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 40px;
+}
+
+.card, .achievements li, .cheats li, .video-card {
+    background-color: var(--cat-bg-color);
+    padding: 15px;
+    box-shadow: 0 4px 8px var(--box-shadow-color);
+    border-radius: 10px;
+}
+
+.card h3 {
+    margin-top: 0;
+    display: inline-flex;
+    align-items: center;
+    font-size: 1.2rem; /* 19.2px */
+    margin-right: 10px;
+}
+
+.card i.bx-icon {
+    margin-right: 10px;
+    font-size: 1.5rem; /* 24px */
+	color: var(--accent-color);
+}
+
+.gallery {
+    margin-bottom: 40px;
+}
+
+.gallery-header {
+    margin-bottom: 20px;
+}
+
+.masonry-grid {
+    column-count: 3;
+    column-gap: 15px;
+}
+
+.masonry-grid a {
+    display: block;
+    margin-bottom: 15px;
+}
+
+.masonry-grid img, .flex-grid img {
+    width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.flex-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.flex-grid a {
+    display: block;
+    width: calc(33.333% - 10px);
+}
+
+@media (max-width: 768px) {
+    :root {
+        font-size: 14px; /* Base font size for smaller screens */
+    }
+
+    .header h1 {
+        font-size: 1.5rem; /* 21px */
+    }
+
+    .masonry-grid {
+        column-count: 1;
+    }
+
+    .flex-grid a {
+        width: 100%;
+    }
+
+    .section-header {
+        font-size: 1.2rem; /* 16.8px */
+    }
+
+    .section-header img {
+        margin-right: 10px;
+        width: 30px;
+        height: 30px;
+    }
+
+    .header .menu-icon {
+        display: block;
+    }
+
+    .main-navigation {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: -100%;
+        transition: left 0.3s ease;
+        z-index: 1000;
+        background-color: var(--background-color);
+        padding: 20px 10px; /* Adjusted padding */
+        box-sizing: border-box;
+    }
+
+    .main-navigation.open {
+        left: 0;
+    }
+
+    .main-navigation .close-menu {
+        display: block;
+        text-align: right;
+        margin-bottom: 20px;
+        font-size: 2.5rem; /* 35px */
+        cursor: pointer;
+        color: var(--text-color);
+    }
+
+    .content {
+        margin-left: 0;
+        padding-top: 110px; /* Adjust according to header height */
+    }
+
+    .sub-nav {
+        padding: 10px;
+    }
+
+    .sub-nav .dropdown-btn {
+        display: block;
+    }
+
+    .sub-nav .dropdown-content {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .sub-nav .dropdown-content.show {
+        display: flex;
+    }
+
+    .sub-nav .dropdown-content a {
+        margin: 10px 0;
+    }
+
+    .content {
+        margin-left: 0;
+        padding-top: 100px; /* Adjust according to header height */
+    }
+
+    .media-info img {
+        max-width: 100%;
+        margin-right: 0px;
+    }
+}
+
+@media (max-width: 480px) {
+    :root {
+        font-size: 18px; /* Base font size for very small screens */
+    }
+
+    .header h1 {
+        font-size: 1.25rem; /* 15px */
+    }
+
+    .masonry-grid {
+        column-count: 1;
+    }
+
+    .flex-grid a {
+        width: 100%;
+    }
+
+    .section-header {
+        font-size: 1rem; /* 12px */
+    }
+
+    .section-header img {
+        margin-right: 10px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .header .menu-icon {
+        display: block;
+    }
+
+    .main-navigation {
+        width: 100%;
+        height: 100%;
+        position: fixed;
+        top: 0;
+        left: -100%;
+        transition: left 0.3s ease;
+        z-index: 1000;
+        background-color: var(--background-color);
+        padding: 20px 10px; /* Adjusted padding */
+        box-sizing: border-box;
+    }
+
+    .main-navigation.open {
+        left: 0;
+    }
+
+    .main-navigation .close-menu {
+        display: block;
+        text-align: right;
+        margin-bottom: 20px;
+        font-size: 2rem; /* 24px */
+        cursor: pointer;
+        color: var(--text-color);
+    }
+
+    .content {
+        margin-left: 0;
+        padding-top: 90px; /* Adjust according to header height */
+    }
+
+    .sub-nav {
+        padding: 10px;
+    }
+
+    .sub-nav .dropdown-btn {
+        display: block;
+    }
+
+    .sub-nav .dropdown-content {
+        display: none;
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+
+    .sub-nav .dropdown-content.show {
+        display: flex;
+    }
+
+    .sub-nav .dropdown-content a {
+        margin: 10px 0;
+    }
+
+    .content {
+        margin-left: 0;
+        padding-top: 90px; /* Adjust according to header height */
+    }
+
+    .media-info img {
+        max-width: 100%;
+        margin-right: 0px;
+    }
+}
+
+@media (min-width: 769px) {
+    .close-menu {
+        display: none; /* Hidden on desktop */
+    }
+}
+
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    padding-top: 10px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.lightbox-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+}
+
+.lightbox-content img {
+    max-width: 90%;
+    max-height: 80%;
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.prev,
+.next {
+    cursor: pointer;
+    position: absolute;
+    top: 50%;
+    width: auto;
+    padding: 16px;
+    margin-top: -50px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 24px;
+    transition: 0.3s;
+    user-select: none;
+}
+
+.prev {
+    left: 10px;
+}
+
+.next {
+    right: 10px;
+}
+
+.prev:hover,
+.next:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 8px;
+}
+
+.achievements .platform h3, .cheats .platform h3 {
+    margin-bottom: 10px;
+}
+
+.achievements .grid, .cheats .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.achievements ul, .cheats ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.achievements li, .cheats li {
+    display: flex;
+    align-items: center;
+    background-color: var(--cat-bg-color);
+    padding: 15px;
+    margin-bottom: 10px;
+    box-shadow: 0 4px 8px var(--box-shadow-color);
+    border-radius: 5px;
+}
+
+.achievements .description, .cheats .description {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.achievements .description strong, .cheats .description strong {
+    font-size: 1.1rem; /* 17.6px */
+    color: var(--highlight-color);
+}
+
+.achievements .description p, .cheats .description p {
+    margin: 5px 0 0 0;
+}
+
+.gamerscore {
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    color: var(--highlight-color);
+    padding: 0 10px;
+    font-size: 1.2rem; /* 19.2px */
+}
+
+.gamerscore svg {
+    width: 24px;
+    height: 24px;
+    margin-left: 5px;
+    fill: currentColor;
+}
+
+.gamerscore svg circle {
+    stroke: var(--gamerscore-border-color);
+}
+
+.gamerscore svg text {
+    fill: #fff;
+}
+
+.trophy-icon {
+    font-size: 2rem; /* 32px */
+    margin-right: 10px;
+}
+
+.trophy-bronze {
+    color: #cd7f32;
+}
+
+.trophy-silver {
+    color: #c0c0c0;
+}
+
+.trophy-gold {
+    color: #ffd700;
+}
+
+.trophy-platinum {
+    color: #e5e4e2;
+}
+
+.video-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.video-card {
+    background-color: var(--cat-bg-color);
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px var(--box-shadow-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.video-card .video-wrapper {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%; /* 16:9 aspect ratio */
+    height: 0;
+    margin-bottom: 10px;
+}
+
+.video-card iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    border: 0px;
+}
+
+.video-card .video-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.video-card .video-info p {
+    margin: 5px 0;
+}
+
+.actors {
+    margin-bottom: 40px;
+}
+
+.actors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.actor-card {
+    background-color: var(--cat-bg-color);
+    padding: 15px;
+    box-shadow: 0 4px 8px var(--box-shadow-color);
+    border-radius: 10px;
+    text-align: center;
+}
+
+.actor-card img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.actor-card h3 {
+    margin: 0 0 5px 0;
+    font-size: 1.2rem; /* 19.2px */
+}
+
+.actor-card p {
+    margin: 0;
+    color: var(--text-color);
+}
+
+.back-to-top {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background-color: var(--cat-bg-color);
+    color: var(--highlight-color);
+    border-radius: 10px; /* Same border-radius as other elements */
+    padding: 10px;
+    cursor: pointer;
+    display: none; /* Hidden by default */
+    box-shadow: 0 4px 8px var(--box-shadow-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.back-to-top:hover {
+    background-color: var(--hover-bg-color);
+    color: var(--hover-text-color);
+}
+
+.back-to-top i {
+    font-size: 1.5rem; /* Adjust icon size as needed */
+}
+
+
+
     </style>
 
 </head>
@@ -1352,134 +1396,158 @@
             </div>
         </section>
     </div>
+<div class="back-to-top">
+    <i class='bx bxs-chevrons-up'></i>
+</div>
+<script>
+    let lastScrollTop = 0;
+    const header = document.querySelector('.header');
+    const mainNavigation = document.querySelector('.main-navigation');
 
-    <script>
-let lastScrollTop = 0;
-const header = document.querySelector('.header');
-const mainNavigation = document.querySelector('.main-navigation');
+    window.addEventListener('scroll', function() {
+        let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
+        if (currentScroll > lastScrollTop) {
+            // Downscroll
+            header.style.top = '-100%';
+            mainNavigation.classList.add('fixed');
+        } else {
+            // Upscroll
+            header.style.top = '0';
+            mainNavigation.classList.remove('fixed');
+        }
+        lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // For mobile or negative scrolling
+    }, false);
 
-window.addEventListener('scroll', function() {
-    let currentScroll = window.pageYOffset || document.documentElement.scrollTop;
-    if (currentScroll > lastScrollTop) {
-        // Downscroll
-        header.style.top = '-100%';
-        mainNavigation.classList.add('fixed');
-    } else {
-        // Upscroll
-        header.style.top = '0';
-        mainNavigation.classList.remove('fixed');
-    }
-    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll; // For mobile or negative scrolling
-}, false);
-
-document.querySelector('.menu-icon').addEventListener('click', function() {
-    document.querySelector('.main-navigation').classList.toggle('open');
-});
-
-document.querySelector('.close-menu').addEventListener('click', function() {
-    document.querySelector('.main-navigation').classList.remove('open');
-});
-
-document.querySelectorAll('.menu-item > a').forEach(menu => {
-    menu.addEventListener('click', function(event) {
-        event.preventDefault();
-        const parent = menu.parentElement;
-        const submenu = parent.querySelector('.submenu');
-        
-        // Close all other submenus
-        document.querySelectorAll('.submenu').forEach(sm => {
-            if (sm !== submenu) {
-                sm.classList.remove('open');
-            }
-        });
-
-        // Toggle the clicked submenu
-        submenu.classList.toggle('open');
-    });
-});
-
-document.querySelectorAll('.submenu-item > a').forEach(submenu => {
-    submenu.addEventListener('click', function(event) {
-        event.preventDefault();
-        const parent = submenu.parentElement;
-        const subLinks = parent.querySelector('.sub-links');
-        
-        // Close all other sub-links
-        document.querySelectorAll('.sub-links').forEach(sl => {
-            if (sl !== subLinks) {
-                sl.classList.remove('open');
-            }
-        });
-
-        // Toggle the clicked sub-links
-        subLinks.classList.toggle('open');
-    });
-});
-
-function initLightbox(galleryClass, lightboxId, imgId) {
-    var slideIndex = 1;
-    showSlide(slideIndex, galleryClass, imgId);
-
-    function openLightbox(event) {
-        event.preventDefault();
-        var imgSrc = event.currentTarget.querySelector('img').getAttribute('src');
-        preloadImage(imgSrc, function() {
-            document.getElementById(lightboxId).style.display = 'block';
-            currentSlide(parseInt(event.currentTarget.getAttribute('data-slide-index')), galleryClass, imgId);
-        });
-    }
-
-    function closeLightbox() {
-        document.getElementById(lightboxId).style.display = 'none';
-    }
-
-    function changeSlide(n, galleryClass, imgId) {
-        showSlide(slideIndex += n, galleryClass, imgId);
-    }
-
-    function currentSlide(n, galleryClass, imgId) {
-        showSlide(slideIndex = n, galleryClass, imgId);
-    }
-
-    function showSlide(n, galleryClass, imgId) {
-        var slides = document.querySelectorAll(galleryClass + ' .lightbox-trigger');
-        if (n > slides.length) { slideIndex = 1 }
-        if (n < 1) { slideIndex = slides.length }
-        var img = slides[slideIndex - 1].getElementsByTagName('img')[0].src;
-        preloadImage(img, function() {
-            document.getElementById(imgId).src = img;
-        });
-    }
-
-    function preloadImage(src, callback) {
-        var img = new Image();
-        img.src = src;
-        img.onload = callback;
-    }
-
-    document.querySelectorAll(galleryClass + ' .lightbox-trigger').forEach((element, index) => {
-        element.setAttribute('data-slide-index', index + 1);
-        element.onclick = openLightbox;
+    document.querySelector('.menu-icon').addEventListener('click', function() {
+        document.querySelector('.main-navigation').classList.toggle('open');
     });
 
-    document.getElementById(lightboxId).querySelector('.close').onclick = closeLightbox;
-    document.getElementById(lightboxId).querySelector('.prev').onclick = function () {
-        changeSlide(-1, galleryClass, imgId);
-    };
-    document.getElementById(lightboxId).querySelector('.next').onclick = function () {
-        changeSlide(1, galleryClass, imgId);
-    };
-}
+    document.querySelector('.close-menu').addEventListener('click', function() {
+        document.querySelector('.main-navigation').classList.remove('open');
+    });
 
-// Initialize lightboxes for each gallery
-initLightbox('#masonry1', 'lightbox-masonry', 'lightbox-img-masonry');
-initLightbox('#flex1', 'lightbox-flex', 'lightbox-img-flex');
+    document.querySelectorAll('.menu-item > a').forEach(menu => {
+        menu.addEventListener('click', function(event) {
+            event.preventDefault();
+            const parent = menu.parentElement;
+            const submenu = parent.querySelector('.submenu');
+            
+            // Close all other submenus
+            document.querySelectorAll('.submenu').forEach(sm => {
+                if (sm !== submenu) {
+                    sm.classList.remove('open');
+                }
+            });
 
-document.querySelector('.dropdown-btn').addEventListener('click', function() {
-    document.querySelector('.dropdown-content').classList.toggle('show');
-});
+            // Toggle the clicked submenu
+            submenu.classList.toggle('open');
+        });
+    });
 
-    </script>
+    document.querySelectorAll('.submenu-item > a').forEach(submenu => {
+        submenu.addEventListener('click', function(event) {
+            event.preventDefault();
+            const parent = submenu.parentElement;
+            const subLinks = parent.querySelector('.sub-links');
+            
+            // Close all other sub-links
+            document.querySelectorAll('.sub-links').forEach(sl => {
+                if (sl !== subLinks) {
+                    sl.classList.remove('open');
+                }
+            });
+
+            // Toggle the clicked sub-links
+            subLinks.classList.toggle('open');
+        });
+    });
+
+    function initLightbox(galleryClass, lightboxId, imgId) {
+        var slideIndex = 1;
+        showSlide(slideIndex, galleryClass, imgId);
+
+        function openLightbox(event) {
+            event.preventDefault();
+            var imgSrc = event.currentTarget.querySelector('img').getAttribute('src');
+            preloadImage(imgSrc, function() {
+                document.getElementById(lightboxId).style.display = 'block';
+                currentSlide(parseInt(event.currentTarget.getAttribute('data-slide-index')), galleryClass, imgId);
+            });
+        }
+
+        function closeLightbox() {
+            document.getElementById(lightboxId).style.display = 'none';
+        }
+
+        function changeSlide(n, galleryClass, imgId) {
+            showSlide(slideIndex += n, galleryClass, imgId);
+        }
+
+        function currentSlide(n, galleryClass, imgId) {
+            showSlide(slideIndex = n, galleryClass, imgId);
+        }
+
+        function showSlide(n, galleryClass, imgId) {
+            var slides = document.querySelectorAll(galleryClass + ' .lightbox-trigger');
+            if (n > slides.length) { slideIndex = 1 }
+            if (n < 1) { slideIndex = slides.length }
+            var img = slides[slideIndex - 1].getElementsByTagName('img')[0].src;
+            preloadImage(img, function() {
+                document.getElementById(imgId).src = img;
+            });
+        }
+
+        function preloadImage(src, callback) {
+            var img = new Image();
+            img.src = src;
+            img.onload = callback;
+        }
+
+        document.querySelectorAll(galleryClass + ' .lightbox-trigger').forEach((element, index) => {
+            element.setAttribute('data-slide-index', index + 1);
+            element.onclick = openLightbox;
+        });
+
+        document.getElementById(lightboxId).querySelector('.close').onclick = closeLightbox;
+        document.getElementById(lightboxId).querySelector('.prev').onclick = function () {
+            changeSlide(-1, galleryClass, imgId);
+        };
+        document.getElementById(lightboxId).querySelector('.next').onclick = function () {
+            changeSlide(1, galleryClass, imgId);
+        };
+    }
+
+    // Initialize lightboxes for each gallery
+    initLightbox('#masonry1', 'lightbox-masonry', 'lightbox-img-masonry');
+    initLightbox('#flex1', 'lightbox-flex', 'lightbox-img-flex');
+
+    document.querySelector('.dropdown-btn').addEventListener('click', function() {
+        document.querySelector('.dropdown-content').classList.toggle('show');
+    });
+
+    // Show/hide the back-to-top button based on scroll distance
+    window.addEventListener('scroll', function() {
+        const backToTopButton = document.querySelector('.back-to-top');
+        if (window.scrollY > 300) { // Show button after scrolling 300px
+            backToTopButton.style.display = 'block';
+        } else {
+            backToTopButton.style.display = 'none';
+        }
+    });
+
+    // Smooth scroll to top when button is clicked
+    document.querySelector('.back-to-top').addEventListener('click', function() {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+</script>
+
+
+
+
+
 
 </body>
 </html>
