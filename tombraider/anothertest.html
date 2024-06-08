@@ -72,6 +72,8 @@ body {
     margin: 0;
     padding: 0;
     background-color: var(--background-color);
+    background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1717846070/bg_2_dkqruw.svg);
+	background-size: fit;
     color: var(--text-color);
     font-size: 1rem; /* 16px */
     line-height: 1.5;
@@ -244,6 +246,7 @@ nav a:hover i {
 
 .sub-nav {
     background-color: var(--header-bg-color);
+    box-shadow: 0 4px 8px var(--box-shadow-color);
     border-radius: 10px;
     margin-bottom: 20px;
     padding: 20px;
@@ -284,28 +287,28 @@ nav a:hover i {
     background-image: url('https://tombraidercentral.online/images/menu/classic_menu.png');
     background-position: right;
     background-repeat: no-repeat;
-    background-size: auto 50px;
+    background-size: auto 60px;
 }
 
 .remastered-era {
     background-image: url('https://tombraidercentral.online/images/menu/remastered_menu.png');
     background-position: right;
     background-repeat: no-repeat;
-    background-size: auto 50px;
+    background-size: auto 60px;
 }
 
 .legend-era {
     background-image: url('https://tombraidercentral.online/images/menu/legend_menu.png');
     background-position: right;
     background-repeat: no-repeat;
-    background-size: auto 50px;
+    background-size: auto 60px;
 }
 
 .survivor-era {
     background-image: url('https://tombraidercentral.online/images/menu/survivor_menu.png');
     background-position: right;
     background-repeat: no-repeat;
-    background-size: auto 50px;
+    background-size: auto 60px;
 }
 
 .content {
@@ -457,6 +460,8 @@ nav a:hover i {
         transition: left 0.3s ease;
         z-index: 1000;
         background-color: var(--background-color);
+		background-image: url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1717846070/bg_2_dkqruw.svg);
+		background-size: fit;
         padding: 20px 10px; /* Adjusted padding */
         box-sizing: border-box;
         font-size: 1.2em;
@@ -853,28 +858,31 @@ nav a:hover i {
     position: fixed;
     bottom: 20px;
     right: 20px;
-    background-color: var(--cat-bg-color);
-    color: var(--highlight-color);
+    background-color: var(--submenu-bg-color);
+    color: var(--text-color);
     border-radius: 10px; /* Same border-radius as other elements */
     padding: 10px;
     cursor: pointer;
-    display: none; /* Hidden by default */
     box-shadow: 0 4px 8px var(--box-shadow-color);
-    transition: background-color 0.3s ease, color 0.3s ease;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    transform: translateY(100%);
+    z-index: 1000; /* Ensure it's above other content */
 }
 
-.back-to-top:hover {
-    background-color: var(--hover-bg-color);
-    color: var(--hover-text-color);
+.back-to-top.show {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .back-to-top i {
     font-size: 1.5rem; /* Adjust icon size as needed */
 }
 
-
-
-    </style>
+.back-to-top i:hover {
+    color: var(--accent-color);
+}
+ </style>
 
 </head>
 <body>
@@ -1410,7 +1418,7 @@ nav a:hover i {
     <i class='bx bxs-chevrons-up'></i>
 </div>
 <script>
- let lastScrollTop = 0;
+let lastScrollTop = 0;
 const header = document.querySelector('.header');
 const mainNavigation = document.querySelector('.main-navigation');
 
@@ -1541,9 +1549,9 @@ document.querySelector('.dropdown-btn').addEventListener('click', function() {
 window.addEventListener('scroll', function() {
     const backToTopButton = document.querySelector('.back-to-top');
     if (window.scrollY > 300) { // Show button after scrolling 300px
-        backToTopButton.style.display = 'block';
+        backToTopButton.classList.add('show');
     } else {
-        backToTopButton.style.display = 'none';
+        backToTopButton.classList.remove('show');
     }
 });
 
@@ -1554,6 +1562,26 @@ document.querySelector('.back-to-top').addEventListener('click', function() {
         behavior: 'smooth'
     });
 });
+
+
+// Smooth scroll to top when button is clicked
+document.querySelector('.back-to-top').addEventListener('click', function() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+});
+
+// Smooth scroll to sections
+document.querySelectorAll('.dropdown-content a').forEach(link => {
+    link.addEventListener('click', function(event) {
+        event.preventDefault();
+        const targetId = event.currentTarget.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        targetElement.scrollIntoView({ behavior: 'smooth' });
+    });
+});
+
 
 </script>
 
