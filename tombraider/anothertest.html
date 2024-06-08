@@ -136,7 +136,7 @@ h3 {
 }
 
 nav a i {
-    margin-right: 5px;
+    margin-right: 10px;
     font-size: 1.4em;
 }
 
@@ -158,20 +158,20 @@ nav a:hover i {
 .main-navigation {
     width: 270px;
     position: fixed;
-    top: 88px; /* Adjust according to header height */
+    top: 100px; /* Adjust according to header height */
     left: 0;
     bottom: 0;
     overflow-y: auto;
     padding: 10px;
-    z-index: 1000;
     font-size: 0.9rem; /* 14.4px */
     transition: 0.3s ease;
 }
 
 .main-navigation.fixed {
-    top: 0;
+    top: 0px; /* Ensure this matches the initial top value */
     transition: 0.3s ease;
 }
+
 
 .main-navigation .menu-item {
     margin: 10px 0;
@@ -459,6 +459,7 @@ nav a:hover i {
         background-color: var(--background-color);
         padding: 20px 10px; /* Adjusted padding */
         box-sizing: border-box;
+        font-size: 1.2em;
     }
 
     .main-navigation.open {
