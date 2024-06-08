@@ -137,10 +137,15 @@ h3 {
 
 nav a i {
     margin-right: 5px;
+    font-size: 1.4em;
 }
 
 .nav a:hover {
     color: var(--highlight-color);
+}
+
+nav a:hover i {
+    color: var(--accent-color);
 }
 
 .header .menu-icon {
@@ -170,14 +175,15 @@ nav a i {
 
 .main-navigation .menu-item {
     margin: 10px 0;
+    verticle-align: center;
 }
 
 .main-navigation .menu-item > a {
     font-family: 'Alexandria', sans-serif;
     text-decoration: none;
     color: var(--text-color);
-    display: block;
-    padding: 10px;
+    display: flex;
+    padding: 14px;
     border-radius: 10px;
     box-shadow: 0 4px 8px var(--box-shadow-color);
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -372,7 +378,7 @@ nav a i {
 
 .card i.bx-icon {
     margin-right: 10px;
-    font-size: 1.5rem; /* 24px */
+    font-size: 2.5rem; /* 24px */
 	color: var(--accent-color);
 }
 
@@ -882,7 +888,7 @@ nav a i {
         <a href="/index.php"><i class='bx bx-home-circle'></i> Home</a>
     </div>
     <div class="menu-item">
-        <a href="#"><i class='bx bxs-home-alt-2'></i> Main Areas</a>
+        <a href="#"><i class='bx bx-home-alt-2'></i> Main Areas</a>
         <div class="submenu">
             <div class="submenu-item">
                 <a href="#"><i class='bx bxs-chevron-right'></i> News Archive</a>
@@ -896,7 +902,7 @@ nav a i {
         </div>
     </div>
     <div class="menu-item">
-        <a href="#"><i class='bx bxs-joystick'></i> Games</a>
+        <a href="#"><i class='bx bx-joystick'></i> Games</a>
         <div class="submenu">
             <div class="submenu-item">
                 <a href="#" class="remastered-era"><i class='bx bx-chevrons-right'></i> Remastered Era</a>
@@ -936,7 +942,7 @@ nav a i {
         </div>
     </div>
     <div class="menu-item">
-        <a href="#"><i class='bx bxs-movie-play'></i> Media</a>
+        <a href="#"><i class='bx bx-movie-play'></i> Media</a>
         <div class="submenu">
             <div class="submenu-item">
                 <a href="#"><i class='bx bx-chevrons-right'></i> Movies</a>
