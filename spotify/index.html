@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Spotify Playlists</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .playlist {
+            margin-bottom: 20px;
+        }
+        .playlist img {
+            max-width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <h1>My Spotify Playlists</h1>
+    <div id="playlists"></div>
+
+    <script>
+        const clientId = 'f90d84c58df444cfb9ada7d0509a3bac';
+        const redirectUri = 'https://dvdbsh.github.io/spotify'; // Replace with your GitHub Pages URL
+
+        async function getAccessToken() {
+            const tokenEndpoint = 'https://accounts.spotify.com/authorize';
+            const params = new URLSearchParams({
+                client_id: clientId,
+                response_type: 'token',
+                redirect_uri: redirectUri,
+                scope: 'playlist-read-private',
+            });
+            window.location = `${tokenEndpoint}?${params.toString()}`;
+        }
+
+        function getHashParams() {
+            const hashParams = {};
+            let e, r = /([^&;=]+)=?([^&;]*)/g,
+                q = window.location.hash.substring(1);
+            while (e = r.exec(q)) {
+                hashParams[e[1]] = decodeURIComponent(e[2]);
+            }
+            return hashParams;
+        }
+
+        async function getPlaylists(token) {
+            const result = await fetch('https://api.spotify.com/v1/me/playlists', {
+                method: 'GET',
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                }
+            });
+            const data = await result.json();
+            return data.items;
+        }
+
+        async function displayPlaylists() {
+            const params = getHashParams();
+            const token = params.access_token;
+
+            if (!token) {
+                await getAccessToken();
+                return;
+            }
+
+            const playlists = await getPlaylists(token);
+
+            const playlistContainer = document.getElementById('playlists');
+            playlists.forEach(playlist => {
+                const playlistDiv = document.createElement('div');
+                playlistDiv.className = 'playlist';
+
+                const playlistImage = document.createElement('img');
+                playlistImage.src = playlist.images[0]?.url || '';
+                playlistDiv.appendChild(playlistImage);
+
+                const playlistName = document.createElement('p');
+                playlistName.textContent = playlist.name;
+                playlistDiv.appendChild(playlistName);
+
+                playlistContainer.appendChild(playlistDiv);
+            });
+        }
+
+        displayPlaylists();
+    </script>
+</body>
+</html>
