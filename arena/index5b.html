@@ -640,6 +640,49 @@
             font-size: 1.2em;
             color: #eee;
         }
+		.iframe-container {
+		width: 100%;
+		max-width: 1200px;
+		height: 720px;
+		overflow: hidden;
+		border: 2px solid #090909;
+		box-shadow: 7px 7px 0px #090909;
+		border-radius: 8px;
+		margin-top: 40px;
+		}
+
+		.toggleHeader {
+            cursor: pointer;
+			border-bottom: 2px solid #090909;
+            max-width: 100%;
+			background-color: #fff;
+            padding: 20px;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+			color: #333;
+			border-radius: 8px;
+        }
+        .faqcontent {
+            display: none;
+            padding: 20px;
+            max-width: 100%;
+            margin-bottom: 20px;
+			background-color: #44148f;
+			border-radius: 8px;
+			}
+        .faqcontent p {
+        	font-family: Roboto Mono;
+            }
+        .faqcontent h2 {
+        	font-family: Roboto Mono;
+            }
+        .faqbx {
+            font-size: 32px;
+            color: #333;
+            vertical-align: middle;
+        }
 
         @media (max-width: 768px) {
             .header img {
@@ -1017,6 +1060,90 @@
             <button>Reach out to us directly!</button>
         </div>
     </section>
+
+	<section id="bookonline">
+	<div class="container">
+    <section class="hero">
+
+  		<div class="text full-width" >
+            <h1 class="highlight-yellow" style="margin-top: 0;">Let's Do This!</h1>
+			<p>No need to stress about the details – we've made it super easy to book ahead online. Lock in your plans, secure your spot, and get ready for a blast!</p>
+        </div>
+        </section>
+        
+        <div class="toggleHeader" onclick="toggleVisibility('faq0', this)">
+        <h2>How does group pricing work?</h2>
+        <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq0"></i>
+    </div>
+    <div id="faq0" class="faqcontent">
+        <h2>It's simple!</h2>
+        <p>Our group packages are priced per person and include access to all listed activities within that package, as well as a private party room. To qualify for group pricing and the private room, each group must consist of at least 6 participants. Please note, the maximum number of people per group is limited to 20 at any time.</p>
+        <p>When you arrive for your event, we will check you in, confirm the number of guests and finalize payment. We do not take payments online.</p>
+        <p>Are you looking to book for a larger event for a business, school or organization? <a href="https://www.sarnialasertag.com/organization">Reach out to us directly</a>.</p>    </div>
+    <div class="toggleHeader" onclick="toggleVisibility('faq3', this)">
+        <h2>Is there a minimum or maxium amount of people I can have?</h2>
+        <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq3"></i>
+    </div>
+    <div id="faq3" class="faqcontent">
+        <h2>Yes!</h2>
+        <p>To qualify for group pricing and the private room, each group must consist of at least 6 participants. Please note, the maximum number of people per group is limited to 20 at any time.</p>
+        <p>Are you looking to book for a larger event for a business, school or organiation? <a href="https://www.sarnialasertag.com/organization">Reach out to us directly</a>.</p>
+    </div>
+    <div class="toggleHeader" onclick="toggleVisibility('faq1', this)">
+        <h2>Will my group have a private room available to them?</h2>
+        <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq1"></i>
+    </div>
+    <div id="faq1" class="faqcontent">
+        <h2>Yes!</h2>
+        <p>Throughout your booking slot, you'll have exclusive access to a private party room. It's your space to decorate and use as needed for your event. Enjoy the privacy and flexibility to make your celebration perfect!</p>
+    </div>
+
+
+<div class="toggleHeader" onclick="toggleVisibility('faq2', this)">
+    <h2>Can I bring in my own food for my event?</h2>
+    <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq2"></i>
+</div>
+<div id="faq2" class="faqcontent">
+    <h2>Yes!</h2>
+    <p>You're welcome to bring your favorite treats, like a birthday cake or snacks, along with non-alcoholic beverages to enjoy during your event. Additionally, we offer a selection of personal-sized snacks including chips and chocolate bars, as well as soda and water available for purchase, should you need a little extra refreshment.</p>
+    <p>Please note that The Arena maintains a <b>strict zero-tolerance policy regarding the presence and use of alcohol or drugs on the premises</b>. We are committed to providing a safe and enjoyable environment for all guests. If any member of your party is found violating this policy, the entire group will be required to leave immediately, and no compensation will be offered for the disruption. We appreciate your cooperation and understanding in helping us maintain a safe and welcoming space for everyone.</p>
+
+</div>
+<div class="iframe-container">
+<iframe src="https://squareup.com/appointments/book/ubo4tlk6rwm1nl/3N7XM7GWRSW3E/start" width="100%" height="100%" frameborder="0"></iframe>
+</div>
+</div>
+
+
+    <script>
+        function toggleVisibility(sectionId, header) {
+            var content = document.getElementById(sectionId);
+            var arrow = document.getElementById('arrow-' + sectionId);
+            var allContents = document.querySelectorAll('.faqcontent');
+            var allArrows = document.querySelectorAll('faqbx');
+
+            allContents.forEach(function(otherContent) {
+                if (otherContent !== content) {
+                    otherContent.style.display = 'none';
+                }
+            });
+
+allArrows.forEach(function(otherArrow) {
+    if (otherArrow !== arrow) {
+        otherArrow.className = 'faqbx bx bx-down-arrow-circle';
+    }
+});
+
+if (content.style.display === 'none' || content.style.display === '') {
+    content.style.display = 'block';
+    arrow.className = 'faqbx bx bx-up-arrow-circle';
+} else {
+    content.style.display = 'none';
+    arrow.className = 'faqbx bx bx-down-arrow-circle';
+}
+        }
+    </script>
+	</section>
 
     <section class="testimonials">
         <div class="testimonial righttilt">
