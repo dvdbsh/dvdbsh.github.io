@@ -41,20 +41,26 @@
         h1, h2, h3 {
             font-family: 'Karla', sans-serif;
         }
+		
+		a	{
+			color: #ffb0db;
+		}
+		
+		a:hover	{
+			text-decoration: none;
+		}
+		
+		section	{
+			margin-bottom: 40px;
+		}
 
         body, html {
             margin: 0;
             padding: 0;
             font-family: 'Karla', sans-serif;
             margin: auto;
-            background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1714251583/starfield_x7qcbq.png'),
-            linear-gradient(
-                to bottom,
-                #44148f,
-                #1f0942,
-                #0c041a,
-                #44148f
-            );
+            background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1714251583/starfield_x7qcbq.png');
+            background-color: #44148f;
             background-size: 100%;
             color: #eee;
 			scroll-behavior: smooth;
@@ -81,22 +87,34 @@
         .header img {
             width: 250px;
         }
-		.backtotop {
-			width: 50px;
-			height: 50px;
-			position: fixed;
-			bottom: 15px;
-			right: 15px;
-            background: #fff;
-            border: 2px solid #090909;
-            box-shadow: 7px 7px 0px #090909;
-            border-radius: 8px;
-			z-index: 99;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			cursor: pointer;
-		}
+.backtotop {
+    width: 50px;
+    height: 50px;
+    position: fixed;
+    bottom: 15px;
+    right: -60px; /* Start off-screen */
+    background: #fff;
+    border: 2px solid #090909;
+    box-shadow: 7px 7px 0px #090909;
+    border-radius: 8px;
+    z-index: 99;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: right 0.1s ease, opacity 0.3s ease;
+    opacity: 0;
+	text-decoration: none;
+	display: flex;
+}
+
+.backtotop.show {
+    right: 15px; /* Slide in to this position */
+    opacity: 1; /* Fade in */
+	display: flex;
+}
+
+	
+
 
 		.top-icon {
 			color: #000;
@@ -650,15 +668,17 @@
 		box-shadow: 7px 7px 0px #090909;
 		border-radius: 8px;
 		margin-top: 40px;
+		background-color: #fff;
 		}
 
 		.toggleHeader {
+		    border: 2px solid #090909;
+            box-shadow: 7px 7px 0px #090909;
             cursor: pointer;
-			border-bottom: 2px solid #090909;
             max-width: 100%;
 			background-color: #fff;
             padding: 20px;
-            margin-bottom: 5px;
+            margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -672,6 +692,8 @@
             margin-bottom: 20px;
 			background-color: #44148f;
 			border-radius: 8px;
+			border: 2px solid #090909;
+            box-shadow: 7px 7px 0px #090909;
 			}
         .faqcontent p {
         	font-family: Roboto Mono;
@@ -684,6 +706,60 @@
             color: #333;
             vertical-align: middle;
         }
+		    .scroll-container {
+        position: relative;
+        width: 100%; /* Fixed width */
+        height: 600px; /* Fixed height */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        margin: auto; /* Center the container */
+		
+    }
+
+    .message {
+        position: relative;
+        font-size: 3.5rem;
+        text-align: center;
+        white-space: nowrap;
+        z-index: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+    .text-left, .text-right {
+        display: inline-block;
+        width: 450px;
+    }
+
+    .giftcard {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 410px;
+        border-radius: 25px;
+        transition: transform 0.5s ease;
+        z-index: 2;
+        image-rendering: -webkit-optimize-contrast; /* Chrome, Safari */
+        image-rendering: crisp-edges; /* Firefox */
+    }
+
+    .bounce-left {
+        transform: translateX(-500px) translateY(-50%);
+    }
+
+    .bounce-right {
+        transform: translateX(0) translateY(-50%);
+    }
+	
+	.phone-icon	{
+		font-size:1.5em;
+		border: 3px solid #320775;
+		border-radius: 50%;
+		padding: 10px;
+	}
 
         @media (max-width: 768px) {
             .header img {
@@ -849,11 +925,11 @@
             </nav>
         </div>
     </div>
-<a href="#">
-    <div class="backtotop">
-        <i class='bx bx-up-arrow-alt top-icon'></i>
-    </div>
-</a>
+<button class="backtotop" id="backToTopBtn">
+    <i class='bx bx-up-arrow-alt top-icon'></i>
+</button>
+
+
 
     <section class="hero">
 
@@ -923,13 +999,7 @@
         </div>
     </section>
 </div>
-<div class="ribbon">
-    <div class="ribbontext">Sarnia Plays Here • Sarnia Laughs Here • Sarnia Climbs Here • Sarnia Wins Here • Sarnia
-        Putts Here • Sarnia Parties Here • Sarnia Plays Here • Sarnia Laughs Here • Sarnia Climbs Here • Sarnia Wins Here
-        • Sarnia Putts Here • Sarnia Parties Here • Sarnia Plays Here • Sarnia Laughs Here • Sarnia Climbs Here • Sarnia
-        Wins Here • Sarnia Putts Here • Sarnia Parties Here •
-    </div>
-</div>
+
 <div class="container">
     <section class="pricing" id="pricing">
         <div class="price-category">
@@ -1054,20 +1124,80 @@
         <img src="https://dvdbsh.github.io/arena/squiggle-right.svg">
     </div>
     <section class="hero circle">
-
         <div class="text full-width">
-            <h1 class="highlight-yellow" style="margin-top: 0;">Hosting an Event?</h1>
+            <h1 class="highlight-yellow" style="margin-top: 0;">Hosting an Large Event?</h1>
             <br>
             <button>Reach out to us directly!</button>
         </div>
     </section>
+	</div>
+	<div class="ribbon">
+    <div class="ribbontext">Sarnia Plays Here • Sarnia Laughs Here • Sarnia Climbs Here • Sarnia Wins Here • Sarnia
+        Putts Here • Sarnia Parties Here • Sarnia Plays Here • Sarnia Laughs Here • Sarnia Climbs Here • Sarnia Wins Here
+        • Sarnia Putts Here • Sarnia Parties Here • Sarnia Plays Here • Sarnia Laughs Here • Sarnia Climbs Here • Sarnia
+        Wins Here • Sarnia Putts Here • Sarnia Parties Here •
+    </div>
+	</div>
+	<div class="container">
+	<section class="testimonials">
+<section class="hero">
 
+  		<div class="text full-width" >
+            <h1 class="highlight-yellow" style="margin-top: 0;">People are talking!</h1>
+			<p>We love hearing that you had a great visit! Share your experience with us <a href="https://www.sarnialasertag.com/contact-us">here!</a></p>
+        </div>
+        </section>
+        <section class="testimonials">
+<div class="testimonial righttilt">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442347/marcus.svg" class="yellow" alt="Customer Review">
+    <p>"Had an amazing time rock climbing! The routes were challenging but fun, and the staff were really encouraging. Definitely coming back!" <h3>Marcus W.</h3></p>
+</div>
+    <div class="straightpath">
+        <img src="https://dvdbsh.github.io/arena/straightpath.svg">
+    </div>
+<div class="testimonial lefttilt">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/priya.svg" class="pink" alt="Customer Review">
+    <p>"My kid’s mini golf party was awesome! The package was great, staff were super nice, and the courses were so fun. Totally worth it." <h3>Priya R.</h3></p>
+</div>
+    <div class="straightpath rev">
+        <img src="https://dvdbsh.github.io/arena/straightpath.svg">
+    </div>
+<div class="testimonial righttilt">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/alex.svg" class="blue" alt="Customer Review">
+    <p>"Laser tag at The Arena is epic! The multi-level play areas and strategy kept us on our toes. Can't wait for the next game!" <h3>Alex G.</h3></p>
+</div>
+    <div class="straightpath">
+        <img src="https://dvdbsh.github.io/arena/straightpath.svg">
+    </div>
+<div class="testimonial lefttilt">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442346/jenna.svg" class="blue" alt="Customer Review">
+    <p>"Our office team building event at laser tag was a blast. It was fun, engaging, and perfect for boosting team spirit!" <h3>Jenna K</h3></p>
+</div>
+    <div class="straightpath rev">
+        <img src="https://dvdbsh.github.io/arena/straightpath.svg">
+    </div>
+<div class="testimonial righttilt">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442344/sophia.svg" class="yellow" alt="Customer Review">
+    <p>"Hosting my son’s laser tag birthday was easy and fun. The staff were super helpful, and everything went smoothly. Unforgettable day!" <h3>Sophia M.</h3></p>
+</div>
+    <div class="straightpath">
+        <img src="https://dvdbsh.github.io/arena/straightpath.svg">
+    </div>
+<div class="testimonial lefttilt">
+    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/darren.svg" class="pink" alt="Customer Review">
+    <p>"The mini golf adventure was cool! The courses made for a fun rainy day activity. We'll definitely be back." <h3>Darren L.</h3></p>
+</div>
+</section>
+
+
+
+    </section>
 	<section id="bookonline">
 	<div class="container">
     <section class="hero">
 
   		<div class="text full-width" >
-            <h1 class="highlight-yellow" style="margin-top: 0;">Let's Do This!</h1>
+            <h1 class="highlight-yellow" style="margin-top: 0;">Book Your Group Visit Online!</h1>
 			<p>No need to stress about the details – we've made it super easy to book ahead online. Lock in your plans, secure your spot, and get ready for a blast!</p>
         </div>
         </section>
@@ -1077,7 +1207,7 @@
         <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq0"></i>
     </div>
     <div id="faq0" class="faqcontent">
-        <h2>It's simple!</h2>
+        <h2>✨ It's simple!</h2>
         <p>Our group packages are priced per person and include access to all listed activities within that package, as well as a private party room. To qualify for group pricing and the private room, each group must consist of at least 6 participants. Please note, the maximum number of people per group is limited to 20 at any time.</p>
         <p>When you arrive for your event, we will check you in, confirm the number of guests and finalize payment. We do not take payments online.</p>
         <p>Are you looking to book for a larger event for a business, school or organization? <a href="https://www.sarnialasertag.com/organization">Reach out to us directly</a>.</p>    </div>
@@ -1086,7 +1216,7 @@
         <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq3"></i>
     </div>
     <div id="faq3" class="faqcontent">
-        <h2>Yes!</h2>
+        <h2>✨ Yes!</h2>
         <p>To qualify for group pricing and the private room, each group must consist of at least 6 participants. Please note, the maximum number of people per group is limited to 20 at any time.</p>
         <p>Are you looking to book for a larger event for a business, school or organiation? <a href="https://www.sarnialasertag.com/organization">Reach out to us directly</a>.</p>
     </div>
@@ -1095,7 +1225,7 @@
         <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq1"></i>
     </div>
     <div id="faq1" class="faqcontent">
-        <h2>Yes!</h2>
+        <h2>✨ Yes!</h2>
         <p>Throughout your booking slot, you'll have exclusive access to a private party room. It's your space to decorate and use as needed for your event. Enjoy the privacy and flexibility to make your celebration perfect!</p>
     </div>
 
@@ -1105,7 +1235,7 @@
     <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq2"></i>
 </div>
 <div id="faq2" class="faqcontent">
-    <h2>Yes!</h2>
+    <h2>✨ Yes!</h2>
     <p>You're welcome to bring your favorite treats, like a birthday cake or snacks, along with non-alcoholic beverages to enjoy during your event. Additionally, we offer a selection of personal-sized snacks including chips and chocolate bars, as well as soda and water available for purchase, should you need a little extra refreshment.</p>
     <p>Please note that The Arena maintains a <b>strict zero-tolerance policy regarding the presence and use of alcohol or drugs on the premises</b>. We are committed to providing a safe and enjoyable environment for all guests. If any member of your party is found violating this policy, the entire group will be required to leave immediately, and no compensation will be offered for the disruption. We appreciate your cooperation and understanding in helping us maintain a safe and welcoming space for everyone.</p>
 
@@ -1146,66 +1276,14 @@ if (content.style.display === 'none' || content.style.display === '') {
     </script>
 	</section>
 
-    <section class="testimonials">
-        <div class="testimonial righttilt">
-            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442347/marcus.svg" class="yellow"
-                 alt="Customer Review">
-            <p>"Exhilarating rock climbing experience! Challenging routes and incredibly supportive staff made my first
-                climb unforgettable. Can't wait to tackle more climbs." <h3>Marcus W.</h3></p>
-        </div>
-        <div class="straightpath">
-            <img src="https://dvdbsh.github.io/arena/straightpath.svg">
-        </div>
-        <div class="testimonial lefttilt">
-            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/priya.svg" class="pink"
-                 alt="Customer Review">
-            <p>"My son's mini golf birthday party was exceptional. The value-packed package, thoughtful staff, and
-                creative courses offered a memorable day that was also easy on the budget." <h3>Priya R.</h3></p>
-        </div>
-        <div class="straightpath rev">
-            <img src="https://dvdbsh.github.io/arena/straightpath.svg">
-        </div>
-        <div class="testimonial righttilt">
-            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/alex.svg" class="blue"
-                 alt="Customer Review">
-            <p>"Laser tag at The Arena is a blast! Multi-level play areas and strategic gameplay had us feeling like we
-                were in another world. Eager for our next match!" <h3>Alex G.</h3></p>
-        </div>
-        <div class="straightpath">
-            <img src="https://dvdbsh.github.io/arena/straightpath.svg">
-        </div>
-        <div class="testimonial lefttilt">
-            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442346/jenna.svg" class="blue"
-                 alt="Customer Review">
-            <p>"The office team building at the laser tag was a hit. Engaging, strategic, and full of energy, it was an
-                ideal outing. Great for team spirit!" <h3>Jenna K</h3></p>
-        </div>
-        <div class="straightpath rev">
-            <img src="https://dvdbsh.github.io/arena/straightpath.svg">
-        </div>
-        <div class="testimonial righttilt">
-            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442344/sophia.svg" class="yellow"
-                 alt="Customer Review">
-            <p>"Hosting my son's laser tag birthday was seamless and offered great value. Everything ran smoothly thanks
-                to the attentive staff, making for an unforgettable day." <h3>Sophia M.</h3></p>
-        </div>
-        <div class="straightpath">
-            <img src="https://dvdbsh.github.io/arena/straightpath.svg">
-        </div>
-        <div class="testimonial lefttilt">
-            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/darren.svg" class="pink"
-                 alt="Customer Review">
-            <p>"The mini golf adventure exceeded expectations! Creative, challenging, and perfect for a fun day out. A
-                truly unique experience we'll definitely revisit." <h3>Darren L.</h3></p>
-        </div>
-
-    </section>
+    
     <section class="hero" id="visit">
 
         <div class="text">
             <h1 class="highlight-yellow">Ready to Visit?</h1>
             <p>We're over the moon with excitement at the thought of welcoming you! Our doors are open wide during our
                 business hours. Navigate your way through the stars and drop by!</p>
+				<p><a href="tel:+15195421001"><i class='bx bx-phone phone-icon'></i></a> <a href=""><i class='bx bx-envelope phone-icon'></i></a></p>
         </div>
         <div class="image">
             <!-- Replace the src with your image link -->
@@ -1278,6 +1356,32 @@ if (content.style.display === 'none' || content.style.display === '') {
 
 </script>
 <script>
+document.addEventListener("DOMContentLoaded", function() {
+    const giftcard = document.querySelector('.giftcard');
+    const container = document.querySelector('.scroll-container');
+
+    // Create an intersection observer
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                // When the container is in view, bounce to the left and stay there
+                giftcard.classList.add('bounce-left');
+                giftcard.classList.remove('bounce-right');
+                
+                // Disconnect observer after applying the bounce
+                observer.disconnect();
+            }
+        });
+    }, {
+        threshold: 0.9 // Trigger when at least 10% of the container is visible
+    });
+
+    // Observe the scroll container
+    observer.observe(container);
+});
+
+    </script>
+<script>
     document.addEventListener("DOMContentLoaded", function () {
         // Define the observer
         const observer = new IntersectionObserver((entries) => {
@@ -1320,6 +1424,29 @@ if (content.style.display === 'none' || content.style.display === '') {
         var mobileNav = document.getElementById('mobileNav');
         mobileNav.classList.toggle('active');
     }
+</script>
+<script>
+window.addEventListener('scroll', function() {
+    const backToTopBtn = document.getElementById('backToTopBtn');
+    const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+
+    // Set the scroll distance in pixels after which the button appears
+    const scrollThreshold = 300; // Adjust this value as needed
+
+    if (scrollPosition > scrollThreshold) {
+        backToTopBtn.classList.add('show');
+    } else {
+        backToTopBtn.classList.remove('show');
+    }
+});
+</script>
+<script>
+document.getElementById('backToTopBtn').addEventListener('click', function() {
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Smooth scrolling
+    });
+});
 </script>
 </body>
 </html>
