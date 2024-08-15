@@ -1,14 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>The Arena - Sarnia Laser Tag</title>
-	<!-- Other meta tags and links -->
+    <title>The Arena - Sarnia Laser Tag</title>
+    <!-- Other meta tags and links -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-status-bar-style" content="translucent">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Theme color for mobile browsers -->
-    <meta name="theme-color" content="#44148f">
+    <meta name="theme-color" content="var(--arena-purple)">
 
     <!-- Favicon -->
     <link rel="icon" href="https://res.cloudinary.com/di8j84ent/image/upload/v1709228921/favicon2_cefnb0.png" type="image/png">
@@ -19,107 +19,134 @@
     <!-- Styles and links -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+
     <style type="text/css">
+		:root {
+			--arena-purple: #44148f;
+			--arena-dark-purple: #320775;
+			--arena-magenta: #990099;
+			--arena-pink: #ffb0db;
+			--arena-light-gray: #eee;
+			--arena-white: #fff;
+			--arena-black: #090909;
+			--arena-dark-blue: #14088e;
+			--arena-light-blue: #8ac2d9;
+			--arena-blue: #3292e0;
+			--arena-lavender: #be95ff;
+			--arena-deep-purple: #8b40ff;
+			--arena-light-purple: #d0a4e1;
+			--arena-teal: #6cf7f3;
+			--arena-dark-gray: #333;
+			--arena-yellow: #edf763;
+		}
+
+	
         /* For WebKit browsers (e.g., Chrome, Safari) */
         ::-webkit-scrollbar {
             width: 12px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #320775;
+            background: var(--arena-dark-purple);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #44148f;
+            background: var(--arena-purple);
             border-radius: 0px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: #990099;
+            background: var(--arena-magenta);
         }
 
         h1, h2, h3 {
             font-family: 'Karla', sans-serif;
         }
-		
-		a	{
-			color: #ffb0db;
-		}
-		
-		a:hover	{
-			text-decoration: none;
-		}
-		
-		section	{
-			margin-bottom: 40px;
-		}
+
+        a {
+            color: var(--arena-pink);
+        }
+
+        a:hover {
+            text-decoration: none;
+        }
+
+        section {
+            margin-bottom: 40px;
+        }
 
         body, html {
             margin: 0;
             padding: 0;
             font-family: 'Karla', sans-serif;
-            margin: auto;
             background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1714251583/starfield_x7qcbq.png');
-            background-color: #44148f;
+            background-color: var(--arena-purple);
             background-size: 100%;
-            color: #eee;
-			scroll-behavior: smooth;
+            color: var(--arena-light-gray);
+            scroll-behavior: smooth;
         }
 
         .container {
             position: relative;
             max-width: 1200px;
             margin: auto;
-            padding: 0 20px 20px 20px;
+            padding: 20px;
         }
+		
+		.purplebg {
+			background-color: var(--arena-purple);
+		}
+		
+		.darkpurplebg {
+			background-color: var(--arena-dark-purple);
+		}
 
         .header {
             background: rgba(13, 3, 28, 0.3);
-            color: #fff;
+            color: var(--arena-white);
             padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-radius: 20px;
-			margin-top:20px;
+            margin-top: 20px;
         }
 
         .header img {
             width: 250px;
         }
-.backtotop {
-    width: 50px;
-    height: 50px;
-    position: fixed;
-    bottom: 15px;
-    right: -60px; /* Start off-screen */
-    background: #fff;
-    border: 2px solid #090909;
-    box-shadow: 7px 7px 0px #090909;
-    border-radius: 8px;
-    z-index: 99;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    transition: right 0.1s ease, opacity 0.3s ease;
-    opacity: 0;
-	text-decoration: none;
-	display: flex;
-}
 
-.backtotop.show {
-    right: 15px; /* Slide in to this position */
-    opacity: 1; /* Fade in */
-	display: flex;
-}
+        .backtotop {
+            width: 50px;
+            height: 50px;
+            position: fixed;
+            bottom: 15px;
+            right: -60px; /* Start off-screen */
+            background: var(--arena-white);
+            border: 2px solid var(--arena-black);
+            box-shadow: 7px 7px 0px var(--arena-black);
+            border-radius: 8px;
+            z-index: 99;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: right 0.1s ease, opacity 0.3s ease;
+            opacity: 0;
+            text-decoration: none;
+            display: flex;
+        }
 
-	
+        .backtotop.show {
+            right: 15px; /* Slide in to this position */
+            opacity: 1; /* Fade in */
+            display: flex;
+        }
 
+        .top-icon {
+            color: var(--arena-black);
+            font-size: 2em;
+        }
 
-		.top-icon {
-			color: #000;
-			font-size: 2em;
-		}
         nav ul {
             list-style-type: none;
             display: flex;
@@ -130,7 +157,7 @@
         }
 
         nav ul li a {
-            color: #fff;
+            color: var(--arena-white);
             text-decoration: none;
         }
 
@@ -162,7 +189,7 @@
         }
 
         .mobile-nav ul li a {
-            color: #fff;
+            color: var(--arena-white);
             text-decoration: none;
             font-size: 1.2em;
         }
@@ -179,7 +206,7 @@
             position: absolute;
             top: 20px;
             right: 20px;
-            color: #fff;
+            color: var(--arena-white);
             cursor: pointer;
             font-size: 2em;
         }
@@ -245,17 +272,17 @@
             font-family: 'Roboto Mono', monospace;
             font-size: 1rem;
             padding: 10px 20px;
-            background-color: #990099;
-            color: white;
-            border: 2px solid #090909;
+            background-color: var(--arena-magenta);
+            color: var(--arena-white);
+            border: 2px solid var(--arena-black);
             border-radius: 8px;
-            box-shadow: 7px 7px 0px #090909;
+            box-shadow: 7px 7px 0px var(--arena-black);
             cursor: pointer;
             margin: 20px;
         }
 
         .hero button:hover {
-            background-color: #44148f;
+            background-color: var(--arena-purple);
             transform: ease(1s);
         }
 
@@ -268,7 +295,7 @@
         .circle {
             padding: 50px;
             border-radius: 50%;
-            border: 2px dashed #eee;
+            border: 2px dashed var(--arena-light-gray);
             margin: 20px;
         }
 
@@ -286,7 +313,7 @@
             font-weight: bold;
             letter-spacing: 0.10rem;
             font-family: 'Roboto Mono', monospace;
-            background-color: #d0a4e1;
+            background-color: var(--arena-light-purple);
         }
 
         .activities {
@@ -301,9 +328,9 @@
             width: calc(100% / 3);
             margin: 10px;
             padding: 20px 20px;
-            background: #fff;
-            border: 2px solid #090909;
-            box-shadow: 7px 7px 0px #090909;
+            background: var(--arena-white);
+            border: 2px solid var(--arena-black);
+            box-shadow: 7px 7px 0px var(--arena-black);
             border-radius: 8px;
             text-align: center;
         }
@@ -312,7 +339,7 @@
             width: 100%;
             height: auto;
             border-radius: 8px;
-            border: 2px solid #090909;
+            border: 2px solid var(--arena-black);
         }
 
         .activity div.text-content {
@@ -328,13 +355,13 @@
             margin: 10px;
             font-size: 1.9rem;
             font-weight: 800;
-            color: #333;
+            color: var(--arena-dark-gray);
         }
 
         .activity p {
             font-family: 'Roboto Mono', monospace;
             padding: 0px;
-            color: #333;
+            color: var(--arena-dark-gray);
         }
 
         .pricing {
@@ -345,16 +372,16 @@
 
         .price-category {
             width: calc(50% - 60px);
-            background: #fff;
+            background: var(--arena-white);
             margin-bottom: 20px;
-            border: 2px solid #090909;
-            box-shadow: 7px 7px 0px #090909;
+            border: 2px solid var(--arena-black);
+            box-shadow: 7px 7px 0px var(--arena-black);
             border-radius: 8px;
             padding: 20px;
             display: flex;
             flex-wrap: wrap;
             justify-content: space-between;
-            color: #333;
+            color: var(--arena-dark-gray);
         }
 
         .price-item, .group-package {
@@ -387,13 +414,13 @@
             flex: 0 0 calc(25% - 20px); /* Adjust the width to accommodate 4 items per row accounting for margin */
             margin: 10px;
             padding: 20px;
-            background: #fff;
-            border: 2px solid #090909;
-            box-shadow: 7px 7px 0px #090909;
+            background: var(--arena-white);
+            border: 2px solid var(--arena-black);
+            box-shadow: 7px 7px 0px var(--arena-black);
             border-radius: 8px;
             text-align: center;
             font-family: 'Roboto Mono', monospace;
-            color: #333;
+            color: var(--arena-dark-gray);
         }
 
         .testimonial h3 {
@@ -405,7 +432,7 @@
             height: 80px;
             margin-bottom: 20px;
             border-radius: 50%;
-            border: 2px solid #090909;
+            border: 2px solid var(--arena-black);
         }
 
         @keyframes wiggle-lefttilt {
@@ -437,15 +464,15 @@
         }
 
         .pink {
-            background-color: #ffb0db;
+            background-color: var(--arena-pink);
         }
 
         .blue {
-            background-color: #3292e0;
+            background-color: var(--arena-blue);
         }
 
         .yellow {
-            background-color: #edf763;
+            background-color: var(--arena-yellow);
         }
 
         .righttilt {
@@ -457,7 +484,7 @@
         }
 
         .hours {
-            color: white;
+            color: var(--arena-white);
             padding: 0px;
             text-align: center;
         }
@@ -495,7 +522,7 @@
 
         .highlight-yellow::before {
             content: "";
-            background-color: #14088e;
+            background-color: var(--arena-dark-blue);
             position: absolute;
             border-radius: 2px;
             z-index: -1;
@@ -517,7 +544,7 @@
 
         .highlight-pink::before {
             content: "";
-            background-color: #ffb0db;
+            background-color: var(--arena-pink);
             position: absolute;
             border-radius: 2px;
             z-index: -1;
@@ -543,7 +570,7 @@
 
         .highlight-blue::before {
             content: "";
-            background-color: #8ac2d9;
+            background-color: var(--arena-light-blue);
             position: absolute;
             border-radius: 2px;
             z-index: -1;
@@ -555,7 +582,7 @@
         }
 
         .highlight-blue-text {
-            color: #3292e0;
+            color: var(--arena-blue);
             font-weight: bold;
         }
 
@@ -569,7 +596,7 @@
 
         .highlight-purple::before {
             content: "";
-            background-color: #be95ff;
+            background-color: var(--arena-lavender);
             position: absolute;
             border-radius: 2px;
             z-index: -1;
@@ -581,7 +608,7 @@
         }
 
         .highlight-purple-text {
-            color: #8b40ff;
+            color: var(--arena-deep-purple);
             font-weight: bold;
         }
 
@@ -594,40 +621,40 @@
 
         .business-hour {
             flex-basis: calc(16.666% - 20px);
-            border: 2px solid #090909;
-            box-shadow: 5px 5px 0px #090909;
-            color: #fff;
+            border: 2px solid var(--arena-black);
+            box-shadow: 5px 5px 0px var(--arena-black);
+            color: var(--arena-white);
             border-radius: 8px;
             padding: 5px;
             margin-bottom: 10px;
             text-align: center;
             margin-top: 10px;
-            background: linear-gradient(to bottom, #6cf7f3 50%, #fff 50%);
+            background: linear-gradient(to bottom, var(--arena-teal) 50%, var(--arena-white) 50%);
             overflow: hidden;
         }
 
         .business-hour b {
-            color: #333;
+            color: var(--arena-dark-gray);
             font-family: 'Karla';
         }
 
         .business-hour p {
-            color: #333;
+            color: var(--arena-dark-gray);
             font-family: 'Roboto Mono', monospace;
         }
 
         .highlight {
-            background: linear-gradient(to bottom, #edf763 50%, #fff 50%);
+            background: linear-gradient(to bottom, var(--arena-yellow) 50%, var(--arena-white) 50%);
             overflow: hidden;
         }
 
         .business-hour.highlight b {
-            color: #333;
+            color: var(--arena-dark-gray);
             font-weight: 800;
         }
 
         .double {
-            width: calc(100% - 10px)
+            width: calc(100% - 10px);
         }
 
         .double h1 {
@@ -639,16 +666,16 @@
         }
 
         .ribbon {
-            background-color: #44148f;
+            background-color: var(--arena-purple);
             white-space: nowrap;
             overflow: hidden;
             transform: translateY(-50%);
             padding: 10px 0;
             text-align: center;
-            border-top: 2px solid #090909;
-            border-bottom: 2px solid #090909;
-            box-shadow: 0px 7px 0px #090909;
-            margin: 40px 0;
+            border-top: 2px solid var(--arena-black);
+            border-bottom: 2px solid var(--arena-black);
+            box-shadow: 0px 7px 0px var(--arena-black);
+			margin: 40px 0px -20px 0px;
         }
 
         .ribbontext {
@@ -657,109 +684,114 @@
             text-transform: uppercase;
             letter-spacing: 1px;
             font-size: 1.2em;
-            color: #eee;
+            color: var(--arena-light-gray);
         }
-		.iframe-container {
-		width: 100%;
-		max-width: 1200px;
-		height: 720px;
-		overflow: hidden;
-		border: 2px solid #090909;
-		box-shadow: 7px 7px 0px #090909;
-		border-radius: 8px;
-		margin-top: 40px;
-		background-color: #fff;
-		}
 
-		.toggleHeader {
-		    border: 2px solid #090909;
-            box-shadow: 7px 7px 0px #090909;
+        .iframe-container {
+            width: 100%;
+            max-width: 1200px;
+            height: 720px;
+            overflow: hidden;
+            border: 2px solid var(--arena-black);
+            box-shadow: 7px 7px 0px var(--arena-black);
+            border-radius: 8px;
+            margin-top: 40px;
+            background-color: var(--arena-white);
+        }
+
+        .toggleHeader {
+            border: 2px solid var(--arena-black);
+            box-shadow: 7px 7px 0px var(--arena-black);
             cursor: pointer;
             max-width: 100%;
-			background-color: #fff;
+            background-color: var(--arena-white);
             padding: 20px;
             margin-bottom: 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-			color: #333;
-			border-radius: 8px;
+            color: var(--arena-dark-gray);
+            border-radius: 8px;
         }
+
         .faqcontent {
             display: none;
             padding: 20px;
             max-width: 100%;
             margin-bottom: 20px;
-			background-color: #44148f;
-			border-radius: 8px;
-			border: 2px solid #090909;
-            box-shadow: 7px 7px 0px #090909;
-			}
+            background-color: var(--arena-purple);
+            border-radius: 8px;
+            border: 2px solid var(--arena-black);
+            box-shadow: 7px 7px 0px var(--arena-black);
+        }
+
         .faqcontent p {
-        	font-family: Roboto Mono;
-            }
+            font-family: Roboto Mono;
+        }
+
         .faqcontent h2 {
-        	font-family: Roboto Mono;
-            }
+            font-family: Roboto Mono;
+        }
+
         .faqbx {
             font-size: 32px;
-            color: #333;
+            color: var(--arena-dark-gray);
             vertical-align: middle;
         }
-		    .scroll-container {
-        position: relative;
-        width: 100%; /* Fixed width */
-        height: 600px; /* Fixed height */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        overflow: hidden;
-        margin: auto; /* Center the container */
-		
-    }
 
-    .message {
-        position: relative;
-        font-size: 3.5rem;
-        text-align: center;
-        white-space: nowrap;
-        z-index: 1;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
+        .scroll-container {
+            position: relative;
+            width: 100%; /* Fixed width */
+            height: 600px; /* Fixed height */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin: auto; /* Center the container */
+        }
 
-    .text-left, .text-right {
-        display: inline-block;
-        width: 450px;
-    }
+        .message {
+            position: relative;
+            font-size: 3.5rem;
+            text-align: center;
+            white-space: nowrap;
+            z-index: 1;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
 
-    .giftcard {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 410px;
-        border-radius: 25px;
-        transition: transform 0.5s ease;
-        z-index: 2;
-        image-rendering: -webkit-optimize-contrast; /* Chrome, Safari */
-        image-rendering: crisp-edges; /* Firefox */
-    }
+        .text-left, .text-right {
+            display: inline-block;
+            width: 450px;
+        }
 
-    .bounce-left {
-        transform: translateX(-500px) translateY(-50%);
-    }
+        .giftcard {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 410px;
+            border-radius: 25px;
+            transition: transform 0.5s ease;
+            z-index: 2;
+            image-rendering: -webkit-optimize-contrast; /* Chrome, Safari */
+            image-rendering: crisp-edges; /* Firefox */
+        }
 
-    .bounce-right {
-        transform: translateX(0) translateY(-50%);
-    }
-	
-	.phone-icon	{
-		font-size:1.5em;
-		border: 3px solid #320775;
-		border-radius: 50%;
-		padding: 10px;
-	}
+        .bounce-left {
+            transform: translateX(-500px) translateY(-50%);
+        }
+
+        .bounce-right {
+            transform: translateX(0) translateY(-50%);
+        }
+
+        .phone-icon {
+            font-size: 1.5em;
+            border: 3px solid var(--arena-dark-purple);
+            border-radius: 50%;
+            padding: 10px;
+        }
 
         @media (max-width: 768px) {
             .header img {
@@ -772,7 +804,7 @@
 
             .menu-icon {
                 display: block;
-                color: #fff;
+                color: var(--arena-white);
                 font-size: 2em;
             }
 
@@ -787,7 +819,7 @@
                 right: -300px;
                 width: 300px;
                 height: 100%;
-                background: rgba(68, 20, 143, 1);
+                background: var(--arena-purple);
                 transition: 0.5s ease;
                 flex-direction: column;
                 align-items: center;
@@ -895,356 +927,439 @@
     </style>
 </head>
 <body>
-<div class="container">
-    <div class="header">
-        <div class="logo">
-            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1692228829/The_Arena_Logo_pdltcc.svg" alt="Logo">
-        </div>
-        <div class="full-nav">
-            <nav>
-                <ul>
-                    <li><a href="#activities">Activities</a></li>
-                    <li><a href="#pricing">Prices</a></li>
-                    <li><a href="#bookonline">Book Online</a></li>
-                    <li><a href="#">eGift Cards</a></li>
-                    <li><a href="#visit">Contact Us</a></li>
-                </ul>
-            </nav>
-        </div>
-        <i class='bx bx-menu menu-icon' name='menu' onclick="toggleMobileNav()"></i>
-        <div class="mobile-nav" id="mobileNav">
-            <i class="bx bx-x-circle close-icon" onclick="toggleMobileNav()"></i>
-            <nav>
-                <ul>
-                    <li><a href="#activities">Activities</a></li>
-                    <li><a href="#pricing">Prices</a></li>
-                    <li><a href="#bookonline">Book Online</a></li>
-                    <li><a href="#">eGift Cards</a></li>
-                    <li><a href="#visit">Contact Us</a></li>
-                </ul>
-            </nav>
-        </div>
-    </div>
-<button class="backtotop" id="backToTopBtn">
-    <i class='bx bx-up-arrow-alt top-icon'></i>
-</button>
-
-
-
-    <section class="hero">
-
-        <div class="text">
-            <h1 class="highlight-yellow">Welcome Adventurers</h1>
-            <p>Dive into a vibe where adventure meets chill at our go-to spot. Feel the rush with <span
-                    class="highlight-pink-text">laser tag</span> - think multi-level mazes with epic hideouts and sniper
-                spots up for grabs. Take on our <span class="highlight-blue-text">rock climbing</span> wall to level up
-                your grit and flex those climbing skills. Or, switch it up with some chill <span
-                    class="highlight-purple-text">mini golf</span> action, where quirky courses await your mastery.
-                Whether you're here to amp up the adrenaline or kick back, we’ve got your escapade covered. Get ready for
-                a day that’s anything but ordinary.</p>
-        </div>
-        <div class="image main">
-            <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1714256232/spcebro3_nyjbol.png" alt="Image Description">
-        </div>
-
-    </section>
-    <div class="threepath">
-        <img src="https://dvdbsh.github.io/arena/threepath.svg">
-    </div>
-    <div class="onepath">
-        <img src="https://dvdbsh.github.io/arena/onepath.svg">
-    </div>
-    <section class="activities" id="activities">
-        <div class="activity laser">
-            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1694547159/tag_hero_jgjhtj.jpg"
-                 alt="Laser Tag">
-            <div class="text-content">
-                <h3 class="highlight-pink">Laser Tag</h3>
-                <p>At our arena, we take laser tag to the next level by offering a <span
-                        class="highlight-pink-text">two-storey</span> playing space. Prepare to be amazed as you explore
-                    the multiple levels, corridors, and strategic vantage points that our arena has to offer. With two
-                    storeys of <span class="highlight-pink-text">intense gameplay</span>, you'll find yourself fully
-                    immersed in an adrenaline-pumping adventure like never before.</p>
+<div class="purplebg">
+    <div class="container">
+        <div class="header">
+            <div class="logo">
+                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1692228829/The_Arena_Logo_pdltcc.svg" alt="Logo">
+            </div>
+            <div class="full-nav">
+                <nav>
+                    <ul>
+                        <li><a href="#activities">Activities</a></li>
+                        <li><a href="#pricing">Prices</a></li>
+                        <li><a href="#bookonline">Book Online</a></li>
+                        <li><a href="#">eGift Cards</a></li>
+                        <li><a href="#visit">Contact Us</a></li>
+                    </ul>
+                </nav>
+            </div>
+            <i class='bx bx-menu menu-icon' name='menu' onclick="toggleMobileNav()"></i>
+            <div class="mobile-nav" id="mobileNav">
+                <i class="bx bx-x-circle close-icon" onclick="toggleMobileNav()"></i>
+                <nav>
+                    <ul>
+                        <li><a href="#activities">Activities</a></li>
+                        <li><a href="#pricing">Prices</a></li>
+                        <li><a href="#bookonline">Book Online</a></li>
+                        <li><a href="#">eGift Cards</a></li>
+                        <li><a href="#visit">Contact Us</a></li>
+                    </ul>
+                </nav>
             </div>
         </div>
-        <div class="squiggle">
-            <img src="https://dvdbsh.github.io/arena/squiggle.svg">
-        </div>
-        <div class="activity rockclimb">
-            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1693871034/rockclimb_home_hero-min_indgab.jpg"
-                 alt="Rock Climbing">
-            <div class="text-content">
-                <h3 class="highlight-blue">Rock Climbing</h3>
-                <p>Embark on an exhilarating journey up our challenging rock climbing wall. Designed to test your limits,
-                    each handhold and foothold becomes an obstacle to conquer, requiring <span
-                        class="highlight-blue-text">strength, focus, and determination</span>. Feel the adrenaline surge
-                    as you ascend, overcoming challenges and reaching new heights, marking personal achievements with
-                    every climb.</p>
+        <button class="backtotop" id="backToTopBtn">
+            <i class='bx bx-up-arrow-alt top-icon'></i>
+        </button>
+
+        <section class="hero">
+            <div class="text">
+                <h1 class="highlight-yellow">Welcome Adventurers</h1>
+                <p>Dive into a vibe where adventure meets chill at our go-to spot. Feel the rush with 
+                    <span class="highlight-pink-text">laser tag</span> - think multi-level mazes with epic hideouts and sniper spots up for grabs. 
+                    Take on our <span class="highlight-blue-text">rock climbing</span> wall to level up your grit and flex those climbing skills. 
+                    Or, switch it up with some chill <span class="highlight-purple-text">mini golf</span> action, where quirky courses await your mastery. 
+                    Whether you're here to amp up the adrenaline or kick back, we’ve got your escapade covered. Get ready for a day that’s anything but ordinary.
+                </p>
             </div>
-        </div>
-        <div class="squiggle rev">
-            <img src="https://dvdbsh.github.io/arena/squiggle.svg">
-        </div>
-        <div class="activity">
-            <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1693871034/minigolf_home_hero-min_y0ws0m.jpg"
-                 alt="Mini Golf">
-            <div class="text-content">
-                <h3 class="highlight-purple">Mini Golf</h3>
-                <p>For a relaxed, fun activity, dive into a round of mini golf. This game blends precision, strategy, and
-                    light-hearted competition. Tackle our vibrant, creatively designed course, weaving through obstacles
-                    and mastering tricky curves. Test your putting skills and chase that <span
-                        class="highlight-purple-text">hole-in-one</span>, all while enjoying friendly banter and laughter
-                    in a cheerful atmosphere.</p>
+            <div class="image main">
+                <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1714256232/spcebro3_nyjbol.png" alt="Image Description">
             </div>
+        </section>
+
+        <div class="threepath">
+            <img src="https://dvdbsh.github.io/arena/threepath.svg">
         </div>
-    </section>
+
+        <div class="onepath">
+            <img src="https://dvdbsh.github.io/arena/onepath.svg">
+        </div>
+
+        <section class="activities" id="activities">
+            <div class="activity laser">
+                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1694547159/tag_hero_jgjhtj.jpg" alt="Laser Tag">
+                <div class="text-content">
+                    <h3 class="highlight-pink">Laser Tag</h3>
+                    <p>At our arena, we take laser tag to the next level by offering a 
+                        <span class="highlight-pink-text">two-storey</span> playing space. Prepare to be amazed as you explore 
+                        the multiple levels, corridors, and strategic vantage points that our arena has to offer. With two 
+                        storeys of <span class="highlight-pink-text">intense gameplay</span>, you'll find yourself fully immersed 
+                        in an adrenaline-pumping adventure like never before.
+                    </p>
+                </div>
+            </div>
+            <div class="squiggle">
+                <img src="https://dvdbsh.github.io/arena/squiggle.svg">
+            </div>
+            <div class="activity rockclimb">
+                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1693871034/rockclimb_home_hero-min_indgab.jpg" alt="Rock Climbing">
+                <div class="text-content">
+                    <h3 class="highlight-blue">Rock Climbing</h3>
+                    <p>Embark on an exhilarating journey up our challenging rock climbing wall. Designed to test your limits, 
+                        each handhold and foothold becomes an obstacle to conquer, requiring 
+                        <span class="highlight-blue-text">strength, focus, and determination</span>. Feel the adrenaline surge 
+                        as you ascend, overcoming challenges and reaching new heights, marking personal achievements with every climb.
+                    </p>
+                </div>
+            </div>
+            <div class="squiggle rev">
+                <img src="https://dvdbsh.github.io/arena/squiggle.svg">
+            </div>
+            <div class="activity">
+                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto,f_auto/v1693871034/minigolf_home_hero-min_y0ws0m.jpg" alt="Mini Golf">
+                <div class="text-content">
+                    <h3 class="highlight-purple">Mini Golf</h3>
+                    <p>For a relaxed, fun activity, dive into a round of mini golf. This game blends precision, strategy, and light-hearted competition. 
+                        Tackle our vibrant, creatively designed course, weaving through obstacles and mastering tricky curves. 
+                        Test your putting skills and chase that <span class="highlight-purple-text">hole-in-one</span>, 
+                        all while enjoying friendly banter and laughter in a cheerful atmosphere.
+                    </p>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+<img 
+  src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1723735194/squig-purple-darkpurple_fubxdy.png" 
+  alt="" 
+  style="display:block;width:100%;height:100%;border-radius:inherit;object-position:center;object-fit:fill;image-rendering:auto" 
+  loading="lazy">
+<div class="darkpurplebg">
+	<div class="container">
+        <section class="pricing" id="pricing">
+            <div class="price-category">
+                <div class="double">
+                    <h1><span class="highlight-blue">Walk-In Prices</span></h1>
+                </div>
+
+                <div class="price-item">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/minigolf-icon_guotkk.png" alt="Mini Golf">
+                    <div>
+                        <h3>Mini Golf</h3>
+                        <p><strong>$10 per person</strong></p>
+                        <p>One round 10-hole mini golf</p>
+                    </div>
+                </div>
+
+                <div class="price-item">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/lasertag-icon_bin78v.png" alt="Laser Tag" style="transform: rotate(-25deg);">
+                    <div>
+                        <h3>Laser Tag</h3>
+                        <p><strong>$14 per person</strong></p>
+                        <p>20 minute game of laser tag</p>
+                    </div>
+                </div>
+
+                <div class="price-item">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/lasertag-icon_bin78v.png" alt="Laser Tag" style="transform: rotate(-25deg);">
+                    <div>
+                        <h3>Laser Tag</h3>
+                        <p><strong>$16 per person</strong></p>
+                        <p>30 minute game of laser tag</p>
+                    </div>
+                </div>
+
+                <div class="price-item">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710517090/climb-icon_zkqemf_uzo7mc.png" alt="Rock Climbing">
+                    <div>
+                        <h3>Rock Climbing</h3>
+                        <p><strong>$16 per person</strong></p>
+                        <p>3 rock climbs</p>
+                    </div>
+                </div>
+
+                <div class="price-item">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710517090/climb-icon_zkqemf_uzo7mc.png" alt="Rock Climbing">
+                    <div>
+                        <h3>Rock Climbing</h3>
+                        <p><strong>$20 per person</strong></p>
+                        <p>30 minutes of rock climbs</p>
+                    </div>
+                </div>
+
+                <div class="price-item">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710517090/climb-icon_zkqemf_uzo7mc.png" alt="Rock Climbing">
+                    <div>
+                        <h3>Rock Climbing</h3>
+                        <p><strong>$25 per person</strong></p>
+                        <p>One hour of rock climbs</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="squiggle rev">
+                <img src="https://dvdbsh.github.io/arena/squiggle.svg">
+            </div>
+
+            <div class="price-category">
+                <div class="double">
+                    <h1><span class="highlight-pink">Group Prices</span></h1>
+                </div>
+
+                <div class="group-package double">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710516020/group_viuias.png" alt="Package">
+                    <div>
+                        <h2>Keep In Mind</h2>
+                        <p>Groups must have 6 people minimum. Pricing is per person.</p>
+                    </div>
+                </div>
+
+                <div class="group-package">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/1_1_ickk6k.png" alt="Package 1">
+                    <div>
+                        <h3>Package 1</h3>
+                        <p><strong>$22 per person</strong></p>
+                        <p><i class='bx bx-check'></i> Two 20 minute games of laser tag</p>
+                    </div>
+                </div>
+
+                <div class="group-package">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/2_1_wsn2gy.png" alt="Package 2">
+                    <div>
+                        <h3>Package 2</h3>
+                        <p><strong>$28 per person</strong></p>
+                        <p><i class='bx bx-check'></i> Two 20 minute games of laser tag<br>
+                            <i class='bx bx-check'></i> Two rock climbs
+                        </p>
+                    </div>
+                </div>
+
+                <div class="group-package">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514250/3_5_n1vkc6.png" alt="Package 3">
+                    <div>
+                        <h3>Package 3</h3>
+                        <p><strong>$28 per person</strong></p>
+                        <p><i class='bx bx-check'></i> Two 20 minute games of laser tag<br>
+                            <i class='bx bx-check'></i> One round of 10-hole mini golf
+                        </p>
+                    </div>
+                </div>
+
+                <div class="group-package">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/4_1_cnthj0.png" alt="Package 4">
+                    <div>
+                        <h3>Package 4</h3>
+                        <p><strong>$32 per person</strong></p>
+                        <p><i class='bx bx-check'></i> One 20 minute game of laser tag<br>
+                            <i class='bx bx-check'></i> Two rock climbs<br>
+                            <i class='bx bx-check'></i> One round of 10-hole mini golf
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <div class="squiggle-right">
+            <img src="https://dvdbsh.github.io/arena/squiggle-right.svg">
+        </div>
+
+        <section class="hero circle">
+            <div class="text full-width">
+                <h1 class="highlight-yellow" style="margin-top: 0;">Hosting an Large Event?</h1>
+                <br>
+                <button>Reach out to us directly!</button>
+            </div>
+        </section>
+    </div>
+		<div class="ribbon">
+        <div class="ribbontext">
+            Sarnia Plays Here • Sarnia Laughs Here • Sarnia Climbs Here • Sarnia Wins Here • Sarnia Putts Here • 
+            Sarnia Parties Here • Sarnia Plays Here • Sarnia Laughs Here • Sarnia Climbs Here • Sarnia Wins Here • 
+            Sarnia Putts Here • Sarnia Parties Here • Sarnia Plays Here • Sarnia Laughs Here • Sarnia Climbs Here • 
+            Sarnia Wins Here • Sarnia Putts Here • Sarnia Parties Here •
+        </div>
+    </div>
 </div>
 
-<div class="container">
-    <section class="pricing" id="pricing">
-        <div class="price-category">
-            <div class="double"><h1><span class="highlight-blue">Walk-In Prices</h1></span></div>
-
-            <div class="price-item">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/minigolf-icon_guotkk.png"
-                     alt="Mini Golf">
-                <div>
-                    <h3>Mini Golf</h3>
-                    <p><strong>$10 per person</strong></p>
-                    <p>One round 10-hole mini golf</p>
-                </div>
-            </div>
-
-            <div class="price-item">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/lasertag-icon_bin78v.png"
-                     alt="Laser Tag" style="transform: rotate(-25deg);">
-                <div>
-                    <h3>Laser Tag</h3>
-                    <p><strong>$14 per person</strong></p>
-                    <p>20 minute game of laser tag</p>
-                </div>
-            </div>
-
-            <div class="price-item">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/lasertag-icon_bin78v.png"
-                     alt="Laser Tag" style="transform: rotate(-25deg);">
-                <div>
-                    <h3>Laser Tag</h3>
-                    <p><strong>$16 per person</strong></p>
-                    <p>30 minute game of laser tag</p>
-                </div>
-            </div>
-
-            <div class="price-item">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710517090/climb-icon_zkqemf_uzo7mc.png"
-                     alt="Rock Climbing">
-                <div>
-                    <h3>Rock Climbing</h3>
-                    <p><strong>$16 per person</strong></p>
-                    <p>3 rock climbs</p>
-                </div>
-            </div>
-
-            <div class="price-item">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710517090/climb-icon_zkqemf_uzo7mc.png"
-                     alt="Rock Climbing">
-                <div>
-                    <h3>Rock Climbing</h3>
-                    <p><strong>$20 per person</strong></p>
-                    <p>30 minutes of rock climbs</p>
-                </div>
-            </div>
-
-            <div class="price-item">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710517090/climb-icon_zkqemf_uzo7mc.png"
-                     alt="Rock Climbing">
-                <div>
-                    <h3>Rock Climbing</h3>
-                    <p><strong>$25 per person</strong></p>
-                    <p>One hour of rock climbs</p>
-                </div>
-            </div>
-
-        </div>
-        <div class="squiggle rev">
-            <img src="https://dvdbsh.github.io/arena/squiggle.svg">
-        </div>
-        <div class="price-category">
-            <div class="double"><h1><span class="highlight-pink">Group Prices</span></h1></div>
-            <div class="group-package double">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710516020/group_viuias.png" alt="Package">
-                <div>
-                    <h2>Keep In Mind</h2>
-                    <p>Groups must have 6 people minimum. Pricing is per person.</p>
-                </div>
-            </div>
-            <div class="group-package">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/1_1_ickk6k.png" alt="Package 1">
-                <div>
-                    <h3>Package 1</h3>
-                    <p><strong>$22 per person</strong></p>
-                    <p><i class='bx bx-check'></i> Two 20 minute games of laser tag</p>
-                </div>
-            </div>
-
-            <div class="group-package">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/2_1_wsn2gy.png" alt="Package 2">
-                <div>
-                    <h3>Package 2</h3>
-                    <p><strong>$28 per person</strong></p>
-                    <p><i class='bx bx-check'></i> Two 20 minute games of laser tag<br><i class='bx bx-check'></i> Two rock
-                        climbs</p>
-                </div>
-            </div>
-
-            <div class="group-package">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514250/3_5_n1vkc6.png" alt="Package 3">
-                <div>
-                    <h3>Package 3</h3>
-                    <p><strong>$28 per person</strong></p>
-                    <p><i class='bx bx-check'></i> Two 20 minute games of laser tag<br><i class='bx bx-check'></i> One round
-                        of 10-hole mini golf</p>
-                </div>
-            </div>
-
-            <div class="group-package">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/4_1_cnthj0.png" alt="Package 4">
-                <div>
-                    <h3>Package 4</h3>
-                    <p><strong>$32 per person</strong></p>
-                    <p><i class='bx bx-check'></i> One 20 minute game of laser tag<br><i class='bx bx-check'></i> Two rock
-                        climbs<br><i class='bx bx-check'></i> One round of 10-hole mini golf</p>
-                </div>
-            </div>
-
-            <!-- Add additional Group Packages here -->
-        </div>
-    </section>
-    <div class="squiggle-right">
-        <img src="https://dvdbsh.github.io/arena/squiggle-right.svg">
-    </div>
-    <section class="hero circle">
-        <div class="text full-width">
-            <h1 class="highlight-yellow" style="margin-top: 0;">Hosting an Large Event?</h1>
-            <br>
-            <button>Reach out to us directly!</button>
-        </div>
-    </section>
-	</div>
-	<div class="ribbon">
-    <div class="ribbontext">Sarnia Plays Here • Sarnia Laughs Here • Sarnia Climbs Here • Sarnia Wins Here • Sarnia
-        Putts Here • Sarnia Parties Here • Sarnia Plays Here • Sarnia Laughs Here • Sarnia Climbs Here • Sarnia Wins Here
-        • Sarnia Putts Here • Sarnia Parties Here • Sarnia Plays Here • Sarnia Laughs Here • Sarnia Climbs Here • Sarnia
-        Wins Here • Sarnia Putts Here • Sarnia Parties Here •
-    </div>
-	</div>
+<div class="purplebg">
 	<div class="container">
-	<section class="testimonials">
-<section class="hero">
-
-  		<div class="text full-width" >
-            <h1 class="highlight-yellow" style="margin-top: 0;">People are talking!</h1>
-			<p>We love hearing that you had a great visit! Share your experience with us <a href="https://www.sarnialasertag.com/contact-us">here!</a></p>
-        </div>
-        </section>
         <section class="testimonials">
-<div class="testimonial righttilt">
-    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442347/marcus.svg" class="yellow" alt="Customer Review">
-    <p>"Had an amazing time rock climbing! The routes were challenging but fun, and the staff were really encouraging. Definitely coming back!" <h3>Marcus W.</h3></p>
-</div>
-    <div class="straightpath">
-        <img src="https://dvdbsh.github.io/arena/straightpath.svg">
-    </div>
-<div class="testimonial lefttilt">
-    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/priya.svg" class="pink" alt="Customer Review">
-    <p>"My kid’s mini golf party was awesome! The package was great, staff were super nice, and the courses were so fun. Totally worth it." <h3>Priya R.</h3></p>
-</div>
-    <div class="straightpath rev">
-        <img src="https://dvdbsh.github.io/arena/straightpath.svg">
-    </div>
-<div class="testimonial righttilt">
-    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/alex.svg" class="blue" alt="Customer Review">
-    <p>"Laser tag at The Arena is epic! The multi-level play areas and strategy kept us on our toes. Can't wait for the next game!" <h3>Alex G.</h3></p>
-</div>
-    <div class="straightpath">
-        <img src="https://dvdbsh.github.io/arena/straightpath.svg">
-    </div>
-<div class="testimonial lefttilt">
-    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442346/jenna.svg" class="blue" alt="Customer Review">
-    <p>"Our office team building event at laser tag was a blast. It was fun, engaging, and perfect for boosting team spirit!" <h3>Jenna K</h3></p>
-</div>
-    <div class="straightpath rev">
-        <img src="https://dvdbsh.github.io/arena/straightpath.svg">
-    </div>
-<div class="testimonial righttilt">
-    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442344/sophia.svg" class="yellow" alt="Customer Review">
-    <p>"Hosting my son’s laser tag birthday was easy and fun. The staff were super helpful, and everything went smoothly. Unforgettable day!" <h3>Sophia M.</h3></p>
-</div>
-    <div class="straightpath">
-        <img src="https://dvdbsh.github.io/arena/straightpath.svg">
-    </div>
-<div class="testimonial lefttilt">
-    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/darren.svg" class="pink" alt="Customer Review">
-    <p>"The mini golf adventure was cool! The courses made for a fun rainy day activity. We'll definitely be back." <h3>Darren L.</h3></p>
-</div>
-</section>
-
-
-
-    </section>
-	<section id="bookonline">
-	<div class="container">
-    <section class="hero">
-
-  		<div class="text full-width" >
-            <h1 class="highlight-yellow" style="margin-top: 0;">Book Your Group Visit Online!</h1>
-			<p>No need to stress about the details – we've made it super easy to book ahead online. Lock in your plans, secure your spot, and get ready for a blast!</p>
-        </div>
+            <section class="hero">
+                <div class="text full-width">
+                    <h1 class="highlight-yellow" style="margin-top: 0;">People are talking!</h1>
+                    <p>We love hearing that you had a great visit! Share your experience with us 
+                        <a href="https://www.sarnialasertag.com/contact-us">here!</a>
+                    </p>
+                </div>
+            </section>
+            <section class="testimonials">
+                <div class="testimonial righttilt">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442347/marcus.svg" class="yellow" alt="Customer Review">
+                    <p>"Had an amazing time rock climbing! The routes were challenging but fun, and the staff were really encouraging. Definitely coming back!" 
+                        <h3>Marcus W.</h3>
+                    </p>
+                </div>
+                <div class="straightpath">
+                    <img src="https://dvdbsh.github.io/arena/straightpath.svg">
+                </div>
+                <div class="testimonial lefttilt">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/priya.svg" class="pink" alt="Customer Review">
+                    <p>"My kid’s mini golf party was awesome! The package was great, staff were super nice, and the courses were so fun. Totally worth it." 
+                        <h3>Priya R.</h3>
+                    </p>
+                </div>
+                <div class="straightpath rev">
+                    <img src="https://dvdbsh.github.io/arena/straightpath.svg">
+                </div>
+                <div class="testimonial righttilt">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/alex.svg" class="blue" alt="Customer Review">
+                    <p>"Laser tag at The Arena is epic! The multi-level play areas and strategy kept us on our toes. Can't wait for the next game!" 
+                        <h3>Alex G.</h3>
+                    </p>
+                </div>
+                <div class="straightpath">
+                    <img src="https://dvdbsh.github.io/arena/straightpath.svg">
+                </div>
+                <div class="testimonial lefttilt">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442346/jenna.svg" class="blue" alt="Customer Review">
+                    <p>"Our office team building event at laser tag was a blast. It was fun, engaging, and perfect for boosting team spirit!" 
+                        <h3>Jenna K</h3>
+                    </p>
+                </div>
+                <div class="straightpath rev">
+                    <img src="https://dvdbsh.github.io/arena/straightpath.svg">
+                </div>
+                <div class="testimonial righttilt">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442344/sophia.svg" class="yellow" alt="Customer Review">
+                    <p>"Hosting my son’s laser tag birthday was easy and fun. The staff were super helpful, and everything went smoothly. Unforgettable day!" 
+                        <h3>Sophia M.</h3>
+                    </p>
+                </div>
+                <div class="straightpath">
+                    <img src="https://dvdbsh.github.io/arena/straightpath.svg">
+                </div>
+                <div class="testimonial lefttilt">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1712442345/darren.svg" class="pink" alt="Customer Review">
+                    <p>"The mini golf adventure was cool! The courses made for a fun rainy day activity. We'll definitely be back." 
+                        <h3>Darren L.</h3>
+                    </p>
+                </div>
+            </section>
         </section>
-        
-        <div class="toggleHeader" onclick="toggleVisibility('faq0', this)">
-        <h2>How does group pricing work?</h2>
-        <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq0"></i>
-    </div>
-    <div id="faq0" class="faqcontent">
-        <h2>✨ It's simple!</h2>
-        <p>Our group packages are priced per person and include access to all listed activities within that package, as well as a private party room. To qualify for group pricing and the private room, each group must consist of at least 6 participants. Please note, the maximum number of people per group is limited to 20 at any time.</p>
-        <p>When you arrive for your event, we will check you in, confirm the number of guests and finalize payment. We do not take payments online.</p>
-        <p>Are you looking to book for a larger event for a business, school or organization? <a href="https://www.sarnialasertag.com/organization">Reach out to us directly</a>.</p>    </div>
-    <div class="toggleHeader" onclick="toggleVisibility('faq3', this)">
-        <h2>Is there a minimum or maxium amount of people I can have?</h2>
-        <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq3"></i>
-    </div>
-    <div id="faq3" class="faqcontent">
-        <h2>✨ Yes!</h2>
-        <p>To qualify for group pricing and the private room, each group must consist of at least 6 participants. Please note, the maximum number of people per group is limited to 20 at any time.</p>
-        <p>Are you looking to book for a larger event for a business, school or organiation? <a href="https://www.sarnialasertag.com/organization">Reach out to us directly</a>.</p>
-    </div>
-    <div class="toggleHeader" onclick="toggleVisibility('faq1', this)">
-        <h2>Will my group have a private room available to them?</h2>
-        <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq1"></i>
-    </div>
-    <div id="faq1" class="faqcontent">
-        <h2>✨ Yes!</h2>
-        <p>Throughout your booking slot, you'll have exclusive access to a private party room. It's your space to decorate and use as needed for your event. Enjoy the privacy and flexibility to make your celebration perfect!</p>
-    </div>
-
-
-<div class="toggleHeader" onclick="toggleVisibility('faq2', this)">
-    <h2>Can I bring in my own food for my event?</h2>
-    <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq2"></i>
+	</div>
 </div>
-<div id="faq2" class="faqcontent">
-    <h2>✨ Yes!</h2>
-    <p>You're welcome to bring your favorite treats, like a birthday cake or snacks, along with non-alcoholic beverages to enjoy during your event. Additionally, we offer a selection of personal-sized snacks including chips and chocolate bars, as well as soda and water available for purchase, should you need a little extra refreshment.</p>
-    <p>Please note that The Arena maintains a <b>strict zero-tolerance policy regarding the presence and use of alcohol or drugs on the premises</b>. We are committed to providing a safe and enjoyable environment for all guests. If any member of your party is found violating this policy, the entire group will be required to leave immediately, and no compensation will be offered for the disruption. We appreciate your cooperation and understanding in helping us maintain a safe and welcoming space for everyone.</p>
+<div class="container">
+        <section id="bookonline">
+            <div class="container">
+                <section class="hero">
+                    <div class="text full-width">
+                        <h1 class="highlight-yellow" style="margin-top: 0;">Book Your Group Visit Online!</h1>
+                        <p>No need to stress about the details – we've made it super easy to book ahead online. Lock in your plans, secure your spot, and get ready for a blast!</p>
+                    </div>
+                </section>
 
-</div>
-<div class="iframe-container">
-<iframe src="https://squareup.com/appointments/book/ubo4tlk6rwm1nl/3N7XM7GWRSW3E/start" width="100%" height="100%" frameborder="0"></iframe>
-</div>
-</div>
+                <div class="toggleHeader" onclick="toggleVisibility('faq0', this)">
+                    <h2>How does group pricing work?</h2>
+                    <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq0"></i>
+                </div>
+                <div id="faq0" class="faqcontent">
+                    <h2>✨ It's simple!</h2>
+                    <p>Our group packages are priced per person and include access to all listed activities within that package, as well as a private party room. 
+                        To qualify for group pricing and the private room, each group must consist of at least 6 participants. Please note, the maximum number of people per group is limited to 20 at any time.
+                    </p>
+                    <p>When you arrive for your event, we will check you in, confirm the number of guests and finalize payment. We do not take payments online.</p>
+                    <p>Are you looking to book for a larger event for a business, school or organization? 
+                        <a href="https://www.sarnialasertag.com/organization">Reach out to us directly</a>.
+                    </p>    
+                </div>
 
+                <div class="toggleHeader" onclick="toggleVisibility('faq3', this)">
+                    <h2>Is there a minimum or maxium amount of people I can have?</h2>
+                    <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq3"></i>
+                </div>
+                <div id="faq3" class="faqcontent">
+                    <h2>✨ Yes!</h2>
+                    <p>To qualify for group pricing and the private room, each group must consist of at least 6 participants. Please note, the maximum number of people per group is limited to 20 at any time.
+                    </p>
+                    <p>Are you looking to book for a larger event for a business, school or organization? 
+                        <a href="https://www.sarnialasertag.com/organization">Reach out to us directly</a>.
+                    </p>
+                </div>
+
+                <div class="toggleHeader" onclick="toggleVisibility('faq1', this)">
+                    <h2>Will my group have a private room available to them?</h2>
+                    <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq1"></i>
+                </div>
+                <div id="faq1" class="faqcontent">
+                    <h2>✨ Yes!</h2>
+                    <p>Throughout your booking slot, you'll have exclusive access to a private party room. It's your space to decorate and use as needed for your event. Enjoy the privacy and flexibility to make your celebration perfect!</p>
+                </div>
+
+                <div class="toggleHeader" onclick="toggleVisibility('faq2', this)">
+                    <h2>Can I bring in my own food for my event?</h2>
+                    <i class='faqbx bx bx-down-arrow-circle' id="arrow-faq2"></i>
+                </div>
+                <div id="faq2" class="faqcontent">
+                    <h2>✨ Yes!</h2>
+                    <p>You're welcome to bring your favorite treats, like a birthday cake or snacks, along with non-alcoholic beverages to enjoy during your event. Additionally, we offer a selection of personal-sized snacks including chips and chocolate bars, as well as soda and water available for purchase, should you need a little extra refreshment.</p>
+                    <p>Please note that The Arena maintains a <b>strict zero-tolerance policy regarding the presence and use of alcohol or drugs on the premises</b>. 
+                        We are committed to providing a safe and enjoyable environment for all guests. If any member of your party is found violating this policy, the entire group will be required to leave immediately, and no compensation will be offered for the disruption. 
+                        We appreciate your cooperation and understanding in helping us maintain a safe and welcoming space for everyone.
+                    </p>
+                </div>
+
+                <div class="iframe-container">
+                    <iframe src="https://squareup.com/appointments/book/ubo4tlk6rwm1nl/3N7XM7GWRSW3E/start" width="100%" height="100%" frameborder="0"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <section class="hero" id="visit">
+            <div class="text">
+                <h1 class="highlight-yellow">Ready to Visit?</h1>
+                <p>We're over the moon with excitement at the thought of welcoming you! Our doors are open wide during our business hours. Navigate your way through the stars and drop by!</p>
+                <p>
+                    <a href="tel:+15195421001"><i class='bx bx-phone phone-icon'></i></a> 
+                    <a href=""><i class='bx bx-envelope phone-icon'></i></a>
+                </p>
+            </div>
+            <div class="image">
+                <!-- Replace the src with your image link -->
+                <a href="https://www.google.com/maps/dir/42.9802491,-81.2037244/1886+London+Line,+Sarnia,+ON+N7W+1B3/@42.9321471,-83.1115738,8z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x882583f032715077:0xdf8f3cb05927e5!2m2!1d-82.3151737!2d42.9853351?entry=ttu" target="_blank">
+                    <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1712845028/map_2_k1jpgv.png" alt="Business Location Map" border="0">
+                </a>
+            </div>
+        </section>
+
+        <section class="hours">
+            <div class="business-hours">
+                <div class="business-hour sunday">
+                    <p><b>SUN</b></p>
+                    <p>11AM - 7PM</p>
+                </div>
+                <div class="business-hour montuesday">
+                    <p><b>MON + TUES</b></p>
+                    <p>Closed</p>
+                </div>
+                <div class="business-hour wednesday">
+                    <p><b>WED</b></p>
+                    <p>4PM - 8PM</p>
+                </div>
+                <div class="business-hour thursday">
+                    <p><b>THURS</b></p>
+                    <p>4PM - 8PM</p>
+                </div>
+                <div class="business-hour friday">
+                    <p><b>FRI</b></p>
+                    <p>4PM - 10PM</p>
+                </div>
+                <div class="business-hour saturday">
+                    <p><b>SAT</b></p>
+                    <p>12PM - 10PM</p>
+                </div>
+            </div>
+        </section>
+    </div>
 
     <script>
         function toggleVisibility(sectionId, header) {
@@ -1259,194 +1374,130 @@
                 }
             });
 
-allArrows.forEach(function(otherArrow) {
-    if (otherArrow !== arrow) {
-        otherArrow.className = 'faqbx bx bx-down-arrow-circle';
-    }
-});
-
-if (content.style.display === 'none' || content.style.display === '') {
-    content.style.display = 'block';
-    arrow.className = 'faqbx bx bx-up-arrow-circle';
-} else {
-    content.style.display = 'none';
-    arrow.className = 'faqbx bx bx-down-arrow-circle';
-}
-        }
-    </script>
-	</section>
-
-    
-    <section class="hero" id="visit">
-
-        <div class="text">
-            <h1 class="highlight-yellow">Ready to Visit?</h1>
-            <p>We're over the moon with excitement at the thought of welcoming you! Our doors are open wide during our
-                business hours. Navigate your way through the stars and drop by!</p>
-				<p><a href="tel:+15195421001"><i class='bx bx-phone phone-icon'></i></a> <a href=""><i class='bx bx-envelope phone-icon'></i></a></p>
-        </div>
-        <div class="image">
-            <!-- Replace the src with your image link -->
-            <a href="https://www.google.com/maps/dir/42.9802491,-81.2037244/1886+London+Line,+Sarnia,+ON+N7W+1B3/@42.9321471,-83.1115738,8z/data=!3m1!4b1!4m9!4m8!1m1!4e1!1m5!1m1!1s0x882583f032715077:0xdf8f3cb05927e5!2m2!1d-82.3151737!2d42.9853351?entry=ttu"
-               target="_blank"><img
-                    src="https://res.cloudinary.com/di8j84ent/image/upload/v1712845028/map_2_k1jpgv.png"
-                    alt="Business Location Map" border="0"></a>
-        </div>
-
-    </section>
-    <section class="hours">
-        <div class="business-hours">
-            <div class="business-hour sunday">
-                <p><b>SUN</b></p>
-                <p>11AM - 7PM</p>
-            </div>
-            <div class="business-hour montuesday">
-                <p><b>MON + TUES</b></p>
-                <p>Closed</p>
-            </div>
-            <div class="business-hour wednesday">
-                <p><b>WED</b></p>
-                <p>4PM - 8PM</p>
-            </div>
-            <div class="business-hour thursday">
-                <p><b>THURS</b></p>
-                <p>4PM - 8PM</p>
-            </div>
-            <div class="business-hour friday">
-                <p><b>FRI</b></p>
-                <p>4PM - 10PM</p>
-            </div>
-            <div class="business-hour saturday">
-                <p><b>SAT</b></p>
-                <p>12PM - 10PM</p>
-            </div>
-        </div>
-    </section>
-</div>
-<script>
-    // Get the current day (0 for Sunday, 1 for Monday, etc.)
-    const currentDay = new Date().getDay();
-
-    // Define the mapping of days to the corresponding business hour div classes
-    const dayToClassMapping = {
-        0: "sunday",
-        1: "monday",
-        2: "tuesday",
-        3: "wednesday",
-        4: "thursday",
-        5: "friday",
-        6: "saturday",
-    };
-
-    // Determine the class name for the current day's business hour div
-    let dayClassName = dayToClassMapping[currentDay];
-
-    // If today is Monday or Tuesday, and they share the same div, set the class name to "monday"
-    if (currentDay === 1 || currentDay === 2) {
-        dayClassName = "montuesday";
-    }
-
-    // Select the corresponding business hour div based on the class name
-    const businessHourDiv = document.querySelector(`.business-hour.${dayClassName}`);
-
-    // Add the "highlight" class to the current day's business hour div
-    if (businessHourDiv) {
-        businessHourDiv.classList.add("highlight");
-    }
-
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    const giftcard = document.querySelector('.giftcard');
-    const container = document.querySelector('.scroll-container');
-
-    // Create an intersection observer
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                // When the container is in view, bounce to the left and stay there
-                giftcard.classList.add('bounce-left');
-                giftcard.classList.remove('bounce-right');
-                
-                // Disconnect observer after applying the bounce
-                observer.disconnect();
-            }
-        });
-    }, {
-        threshold: 0.9 // Trigger when at least 10% of the container is visible
-    });
-
-    // Observe the scroll container
-    observer.observe(container);
-});
-
-    </script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        // Define the observer
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    // Apply animation based on initial tilt
-                    entry.target.style.animationName = entry.target.classList.contains('lefttilt') ? 'wiggle-lefttilt' : 'wiggle-righttilt';
-                    entry.target.style.animationDuration = '2s';
-                    entry.target.style.animationIterationCount = 'infinite';
-                    entry.target.style.animationTimingFunction = 'ease-in-out';
-                } else {
-                    // Remove animation when not in view
-                    entry.target.style.animationName = 'none';
+            allArrows.forEach(function(otherArrow) {
+                if (otherArrow !== arrow) {
+                    otherArrow.className = 'faqbx bx bx-down-arrow-circle';
                 }
             });
-        }, {
-            threshold: 0.1
+
+            if (content.style.display === 'none' || content.style.display === '') {
+                content.style.display = 'block';
+                arrow.className = 'faqbx bx bx-up-arrow-circle';
+            } else {
+                content.style.display = 'none';
+                arrow.className = 'faqbx bx bx-down-arrow-circle';
+            }
+        }
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.animationName = entry.target.classList.contains('lefttilt') ? 'wiggle-lefttilt' : 'wiggle-righttilt';
+                        entry.target.style.animationDuration = '2s';
+                        entry.target.style.animationIterationCount = 'infinite';
+                        entry.target.style.animationTimingFunction = 'ease-in-out';
+                    } else {
+                        entry.target.style.animationName = 'none';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            document.querySelectorAll('.testimonial').forEach(testimonial => {
+                observer.observe(testimonial);
+            });
         });
+    </script>
 
-        // Observe each testimonial element
-        document.querySelectorAll('.testimonial').forEach(testimonial => {
-            observer.observe(testimonial);
+    <script>
+        window.addEventListener('scroll', function () {
+            requestAnimationFrame(() => {
+                const scrollPosition = window.pageYOffset;
+                const ribbonText = document.querySelector('.ribbontext');
+                ribbonText.style.transform = `translateX(${-scrollPosition * 0.2}px)`;
+            });
         });
-    });
+    </script>
 
-</script>
-<script>
-    window.addEventListener('scroll', function () {
-        requestAnimationFrame(() => {
-            const scrollPosition = window.pageYOffset;
-            const ribbonText = document.querySelector('.ribbontext');
-            // Modify the translation based on scroll
-            ribbonText.style.transform = `translateX(${-scrollPosition * 0.2}px)`;
+    <script>
+        function toggleMobileNav() {
+            var mobileNav = document.getElementById('mobileNav');
+            mobileNav.classList.toggle('active');
+        }
+    </script>
+
+    <script>
+        window.addEventListener('scroll', function () {
+            const backToTopBtn = document.getElementById('backToTopBtn');
+            const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+            const scrollThreshold = 300;
+
+            if (scrollPosition > scrollThreshold) {
+                backToTopBtn.classList.add('show');
+            } else {
+                backToTopBtn.classList.remove('show');
+            }
         });
-    });
+    </script>
 
-</script>
-<script>
-    function toggleMobileNav() {
-        var mobileNav = document.getElementById('mobileNav');
-        mobileNav.classList.toggle('active');
-    }
-</script>
-<script>
-window.addEventListener('scroll', function() {
-    const backToTopBtn = document.getElementById('backToTopBtn');
-    const scrollPosition = window.scrollY || document.documentElement.scrollTop;
+    <script>
+        document.getElementById('backToTopBtn').addEventListener('click', function () {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+    </script>
 
-    // Set the scroll distance in pixels after which the button appears
-    const scrollThreshold = 300; // Adjust this value as needed
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const giftcard = document.querySelector('.giftcard');
+            const container = document.querySelector('.scroll-container');
 
-    if (scrollPosition > scrollThreshold) {
-        backToTopBtn.classList.add('show');
-    } else {
-        backToTopBtn.classList.remove('show');
-    }
-});
-</script>
-<script>
-document.getElementById('backToTopBtn').addEventListener('click', function() {
-    window.scrollTo({
-        top: 0,
-        behavior: 'smooth' // Smooth scrolling
-    });
-});
-</script>
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        giftcard.classList.add('bounce-left');
+                        giftcard.classList.remove('bounce-right');
+                        observer.disconnect();
+                    }
+                });
+            }, {
+                threshold: 0.9
+            });
+
+            observer.observe(container);
+        });
+    </script>
+
+    <script>
+        const currentDay = new Date().getDay();
+
+        const dayToClassMapping = {
+            0: "sunday",
+            1: "monday",
+            2: "tuesday",
+            3: "wednesday",
+            4: "thursday",
+            5: "friday",
+            6: "saturday",
+        };
+
+        let dayClassName = dayToClassMapping[currentDay];
+
+        if (currentDay === 1 || currentDay === 2) {
+            dayClassName = "montuesday";
+        }
+
+        const businessHourDiv = document.querySelector(`.business-hour.${dayClassName}`);
+
+        if (businessHourDiv) {
+            businessHourDiv.classList.add("highlight");
+        }
+    </script>
 </body>
 </html>
