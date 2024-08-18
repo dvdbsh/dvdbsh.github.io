@@ -104,7 +104,6 @@ a:not(:has(img)):hover::after {
         }
 
         .container {
-            position: relative;
             max-width: 1200px;
             margin: auto;
             padding: 20px;
@@ -241,7 +240,6 @@ a:not(:has(img)):hover::after {
         }
 
         .hero .text h1 {
-            font-size: 3em;
         }
 
         .hero p {
@@ -304,16 +302,18 @@ a:not(:has(img)):hover::after {
             transform: ease(1s);
         }
 		
-		.welcome-message {
+.welcome-message {
     position: relative;
     display: inline-block;
-    font-size: 3em; /* Adjust as needed */
+    font-size: 3.2em; /* Adjust as needed */
     font-weight: bold;
     color: var(--arena-white);
     padding: 10px 20px;
     border-radius: 10px;
-	margin-top: 20px;
-	margin-bottom: 10px;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    max-width: 100%; /* Ensure the text doesn't overflow */
+    box-sizing: border-box; /* Include padding in the element's width */
 }
 
 .welcome-message::before,
@@ -329,16 +329,49 @@ a:not(:has(img)):hover::after {
 .welcome-message::before {
     background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1723999636/sparkle_01_awkaoa.svg'); /* Left icon */
     top: 30%;
-    left: -40px; /* Position to the left of the text */
-    transform: translateY(-50%);
+    left: 0; /* Position at the start of the text */
+    transform: translateX(-130%) translateY(-50%); /* Adjust the distance from the text */
 }
 
 .welcome-message::after {
     background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1723999635/sparkle_02_tvwfyk.svg'); /* Right icon */
     top: 70%;
-    right: -40px; /* Position to the right of the text */
-    transform: translateY(-50%);
+    right: 0; /* Position at the end of the text */
+    transform: translateX(130%) translateY(-50%); /* Adjust the distance from the text */
 }
+
+/* Media Query for Tablets and Smaller Devices */
+@media (max-width: 768px) {
+    .welcome-message {
+        font-size: 2.4em; /* Scale down font size */
+    }
+
+    .welcome-message::before {
+        transform: translateX(-100%) translateY(-50%); /* Adjust icon position for smaller screens */
+    }
+
+    .welcome-message::after {
+        transform: translateX(100%) translateY(-50%); /* Adjust icon position for smaller screens */
+    }
+}
+
+/* Media Query for Mobile Devices */
+@media (max-width: 480px) {
+    .welcome-message {
+        font-size: 1.8em; /* Further scale down font size */
+    }
+
+    .welcome-message::before {
+        transform: translateX(-80%) translateY(-50%); /* Adjust icon position for mobile screens */
+    }
+
+    .welcome-message::after {
+        transform: translateX(80%) translateY(-50%); /* Adjust icon position for mobile screens */
+    }
+}
+
+
+
 
 
         .full-width {
@@ -1035,11 +1068,13 @@ a:not(:has(img)):hover::after {
         <button class="backtotop" id="backToTopBtn">
             <i class='bx bx-up-arrow-alt top-icon'></i>
         </button>
-
+		<section class="hero">
+                <div class="text full-width">
+                    <h1 class="welcome-message">Welcome Adventurers</h1>
+				</div>
+		</section>
         <section class="hero">
             <div class="text">
-                <h1 class="welcome-message">Welcome Adventurers</h1>
-
                 <p>Dive into a vibe where adventure meets chill at our go-to spot. Feel the rush with 
                     <span class="highlight-pink-text">laser tag</span> - think multi-level mazes with epic hideouts and sniper spots up for grabs. 
                     Take on our <span class="highlight-blue-text">rock climbing</span> wall to level up your grit and flex those climbing skills. 
