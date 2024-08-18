@@ -907,6 +907,11 @@
             width: 100%;
             margin: auto;
         }
+		
+		.hero .image {
+        justify-content: center;
+		margin-bottom: -80px;
+		}
 
         .main img {
             width: 100%;
@@ -987,6 +992,10 @@
         .business-hour {
             flex-basis: calc(50% - 20px);
         }
+		.icon-sparkle, .icon-twinkle {
+        width: 1em;
+        height: 1em;
+    }
     }
 
     @media (max-width: 340px) {
@@ -1115,13 +1124,13 @@
   loading="lazy">
 
 	<div class="container">
-		<section class="hero">
+		<section class="hero" id="pricing">
                 <div class="text full-width">
                     <h1><i class="icon-sparkle" style="margin-top:-20px; padding-right:10px;"></i>Our Prices<i class="icon-twinkle" style="margin-bottom:-20px; padding-left:10px;"></i></h1>
                     <p>We're happy to offer a wide variety of fun activities at affordable prices! Whether you want to stop by on a whim with your bestie, or plan ahead and bring the whole crew, we've got you covered!</p>
                 </div>
         </section>
-        <section class="pricing" id="pricing">		
+        <section class="pricing">		
             <div class="price-category">
                 <div class="double">
                     <h1><span class="highlight-blue">Walk-In Prices</span></h1>
