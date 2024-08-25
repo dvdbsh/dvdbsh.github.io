@@ -29,6 +29,7 @@
         --arena-light-gray: #eee;
         --arena-white: #fff;
         --arena-black: #090909;
+		--arena-black-30: rgba(9, 9, 9, 0.43);
         --arena-dark-blue: #14088e;
         --arena-light-blue: #8ac2d9;
         --arena-blue: #3292e0;
@@ -59,8 +60,11 @@
     }
 
     h1, h2, h3 {
-        font-family: 'Bricolage Grotesque', sans-serif;
+        font-family: 'Bricolage Grotesque', sans-serif;        
     }
+	.headershadow {
+		text-shadow: 3px 3px 0px var(--arena-black-30);
+	}
 
     a:not(:has(img)) {
         color: var(--arena-pink);
@@ -138,7 +142,7 @@
         right: -60px; /* Start off-screen */
         background: var(--arena-white);
         border: 2px solid var(--arena-black);
-        box-shadow: 7px 7px 0px var(--arena-black);
+        box-shadow: 7px 7px 0px var(--arena-black-30);
         border-radius: 8px;
         z-index: 99;
         justify-content: center;
@@ -160,6 +164,25 @@
         color: var(--arena-black);
         font-size: 2em;
     }
+	
+.icon-link {
+    color: var(--arena-white);
+    font-size: 1.5em;
+    text-decoration: none !important; /* Ensure no underline */
+    transition: color 0.3s ease;
+}
+
+.icon-link:hover {
+    color: var(--arena-pink);
+    text-decoration: none !important; /* Force remove underline */
+}
+
+.icon-link i {
+    text-decoration: none !important; /* Apply to the icon itself */
+}
+
+
+
 
     nav ul {
         list-style-type: none;
@@ -291,7 +314,7 @@
         color: var(--arena-white);
         border: 2px solid var(--arena-black);
         border-radius: 8px;
-        box-shadow: 7px 7px 0px var(--arena-black);
+        box-shadow: 7px 7px 0px var(--arena-black-30);
         cursor: pointer;
         margin: 20px;
     }
@@ -381,7 +404,7 @@
         padding: 20px 20px;
         background: var(--arena-white);
         border: 2px solid var(--arena-black);
-        box-shadow: 7px 7px 0px var(--arena-black);
+        box-shadow: 7px 7px 0px var(--arena-black-30);
         border-radius: 8px;
         text-align: center;
     }
@@ -426,7 +449,7 @@
         background: var(--arena-white);
         margin-bottom: 20px;
         border: 2px solid var(--arena-black);
-        box-shadow: 7px 7px 0px var(--arena-black);
+        box-shadow: 7px 7px 0px var(--arena-black-30);
         border-radius: 8px;
         padding: 20px;
         display: flex;
@@ -468,7 +491,7 @@
         padding: 20px;
         background: var(--arena-white);
         border: 2px solid var(--arena-black);
-        box-shadow: 7px 7px 0px var(--arena-black);
+        box-shadow: 7px 7px 0px var(--arena-black-30);
         border-radius: 8px;
         text-align: center;
         font-family: 'Roboto Mono', monospace;
@@ -674,7 +697,7 @@
     .business-hour {
         flex-basis: calc(16.666% - 20px);
         border: 2px solid var(--arena-black);
-        box-shadow: 5px 5px 0px var(--arena-black);
+        box-shadow: 5px 5px 0px var(--arena-black-30);
         color: var(--arena-white);
         border-radius: 8px;
         padding: 5px;
@@ -726,7 +749,7 @@
         text-align: center;
         border-top: 2px solid var(--arena-black);
         border-bottom: 2px solid var(--arena-black);
-        box-shadow: 0px 7px 0px var(--arena-black);
+        box-shadow: 0px 7px 0px var(--arena-black-30);
         margin: 80px 0px 80px 0px;
     }
 
@@ -747,7 +770,7 @@
         height: 720px;
         overflow: hidden;
         border: 2px solid var(--arena-black);
-        box-shadow: 7px 7px 0px var(--arena-black);
+        box-shadow: 7px 7px 0px var(--arena-black-30);
         border-radius: 8px;
         margin-top: 40px;
         background-color: var(--arena-white);
@@ -755,7 +778,7 @@
 
     .toggleHeader {
         border: 2px solid var(--arena-black);
-        box-shadow: 7px 7px 0px var(--arena-black);
+        box-shadow: 7px 7px 0px var(--arena-black-30);
         cursor: pointer;
         max-width: 100%;
         background-color: var(--arena-white);
@@ -776,7 +799,7 @@
         background-color: var(--arena-purple);
         border-radius: 8px;
         border: 2px solid var(--arena-black);
-        box-shadow: 7px 7px 0px var(--arena-black);
+        box-shadow: 7px 7px 0px var(--arena-black-30);
     }
 
     .faqcontent p {
@@ -870,6 +893,78 @@
     .icon-twinkle {
         background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1723999635/sparkle_02_tvwfyk.svg');
     }
+	.footer {
+    background-color: var(--arena-purple);
+    padding: 20px 20px;
+    color: var(--arena-light-gray);
+    text-align: center;
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+.footer-section {
+    flex: 1;
+    margin: 10px;
+    min-width: 250px;
+	font-size: 1em;
+}
+
+.footer-section h3 {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 1.5em;
+    margin-bottom: 10px;
+}
+
+.footer-section p, .footer-section a {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1em;
+    margin: 15px 0;
+    color: var(--arena-white);
+    text-decoration: none;
+}
+
+.footer-section a {
+	color: var(--arena-pink);
+}
+
+.footer-section a:hover {
+    text-decoration: none;
+}
+
+.social-icons a {
+    color: var(--arena-white-gray);
+    font-size: 2em;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.social-icons a:hover {
+    color: var(--arena-pink);
+	text-decoration: none !important;
+}
+
+.footer-bottom {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 0.9em;
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .footer-section {
+        margin-bottom: 20px;
+        text-align: center;
+    }
+}
+
 
     @media (max-width: 768px) {
         body, html {
@@ -901,7 +996,7 @@
             right: -300px;
             width: 300px;
             height: 100%;
-            background: var(--arena-purple);
+            background: var(--arena-dark-purple);
             transition: 0.5s ease;
             flex-direction: column;
             align-items: center;
@@ -1066,18 +1161,19 @@
 							<i class="icon-sparkle" style="margin-top: -20px; margin-right: 15px; width: 50px; height: 50px;"></i>
 						</div>
 						<div style="text-align: center;">
-							<h1 style="margin: 0; font-size: 3em;">Choose Your Adventure!</h1>
+							<h1 style="margin: 0; font-size: 3em;" class="headershadow">Choose Your Adventure!</h1>
 						</div>
 						<div style="display: flex; align-items: center;">
 							<i class="icon-twinkle" style="margin-bottom: -20px; margin-left: 10px; width: 50px; height: 50px;"></i>
 						</div>
 					</div>
-                <p>Dive into a vibe where adventure meets chill at our go-to spot. Feel the rush with 
-                    <span class="highlight-pink-text">laser tag</span> - think multi-level mazes with epic hideouts and sniper spots up for grabs. 
-                    Take on our <span class="highlight-blue-text">rock climbing</span> wall to level up your grit and flex those climbing skills. 
-                    Or, switch it up with some chill <span class="highlight-purple-text">mini golf</span> action, where quirky courses await your mastery. 
-                    Whether you're here to amp up the adrenaline or kick back, we’ve got your escapade covered. Get ready for a day that’s anything but ordinary.
-                </p>
+                <p>Dive into a vibe where adventure meets relaxation at Sarnia's ultimate spot. Feel the thrill with 
+    <span class="highlight-pink-text">laser tag</span> in our multi-level mazes, packed with epic hideouts and sniper spots just waiting to be claimed. 
+    Challenge yourself on our <span class="highlight-blue-text">rock climbing</span> wall to test your grit and showcase your climbing skills. 
+    Or, take a breather with some laid-back <span class="highlight-purple-text">mini golf</span>, where quirky courses are ready for your mastery. 
+    Whether you're here to boost your adrenaline or unwind, we've got your perfect escape covered. Get ready for a day in Sarnia that's anything but ordinary.
+</p>
+
             </div>
             <div class="image main">
                 <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1714256232/spcebro3_nyjbol.png" alt="Image Description">
@@ -1157,7 +1253,7 @@
 							<i class="icon-sparkle" style="margin-top: -20px; margin-right: 15px; width: 50px; height: 50px;"></i>
 						</div>
 						<div style="text-align: center;">
-							<h1 style="margin: 0;">Our Prices</h1>
+							<h1 style="margin: 0;" class="headershadow">Our Prices</h1>
 						</div>
 						<div style="display: flex; align-items: center;">
 							<i class="icon-twinkle" style="margin-bottom: -20px; margin-left: 10px; width: 50px; height: 50px;"></i>
@@ -1508,8 +1604,8 @@
                 <p>We're over the moon with excitement at the thought of welcoming you! Our doors are open wide during our business hours. Navigate your way through the stars and drop by!
                 </p>
                 <p>
-                    <a href="tel:+15195421001"><i class='bx bx-phone phone-icon'></i></a> 
-                    <a href=""><i class='bx bx-envelope phone-icon'></i></a>
+                    <a href="tel:+15195421001" class="icon-link"><i class='bx bx-phone'></i></a> 
+                    <a href="" class="icon-link"><i class='bx bx-envelope'></i></a>
                 </p>
             </div>
             <div class="text">
@@ -1549,6 +1645,42 @@
             </div>
         </section>
     </div>
+	<img 
+  src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1723741926/squiggle-trans-purple_weytxa.png" 
+  alt="" 
+  srcset="
+    https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1723741926/squiggle-trans-purple_weytxa.png 512w, 
+    https://res.cloudinary.com/di8j84ent/image/upload/w_1024,q_auto/v1723741926/squiggle-trans-purple_weytxa.png 1024w, 
+    https://res.cloudinary.com/di8j84ent/image/upload/w_2048,q_auto/v1723741926/squiggle-trans-purple_weytxa.png 2048w, 
+    https://res.cloudinary.com/di8j84ent/image/upload/w_4096,q_auto/v1723741926/squiggle-trans-purple_weytxa.png 4096w" 
+  sizes="200vw" 
+  style="display:block;width:100%;height:100%;border-radius:inherit;object-position:center;object-fit:fill;image-rendering:auto" 
+  loading="lazy">
+	<div class="footer">
+    <div class="container">
+        <div class="footer-content">
+<div class="footer-section">
+    <h3>The Fine Print</h3>
+    <p>All prices are displayed without applicable taxes and are subject to change without notice.</p>
+    <p>The Arena - Sarnia Laser Tag is a local, independently owned and run business. We thank you for your continued support and patronage.</p>
+    <p>By using our venue and facilities, you agree to abide by our <a href="/respect-responsible-use-policy">Respect & Responsible Use Policy</a> and <a href="/privacy-policy">Privacy Policy</a>.</p>
+
+</div>
+
+            <div class="footer-section">
+                <h3>Follow Us!</h3>
+                <div class="social-icons">
+                    <a href="#" target="_blank" class="icon-link"><i class='bx bxl-facebook-circle'></i></a>
+                    <a href="#" target="_blank" class="icon-link"><i class='bx bxl-instagram'></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2024 Robbie Bennett Holdings Inc.</p>
+        </div>
+    </div>
+</div>
+
 
     <script>
         function toggleVisibility(sectionId, header) {
@@ -1612,12 +1744,38 @@
         });
     </script>
 
-    <script>
-        function toggleMobileNav() {
-            var mobileNav = document.getElementById('mobileNav');
-            mobileNav.classList.toggle('active');
+<script>
+    function toggleMobileNav() {
+        var mobileNav = document.getElementById('mobileNav');
+        mobileNav.classList.toggle('active');
+
+        if (mobileNav.classList.contains('active')) {
+            document.addEventListener('click', closeNavOnClickOutside);
+        } else {
+            document.removeEventListener('click', closeNavOnClickOutside);
         }
-    </script>
+    }
+
+    function closeNavOnClickOutside(event) {
+        var mobileNav = document.getElementById('mobileNav');
+        if (!mobileNav.contains(event.target) && !event.target.classList.contains('menu-icon')) {
+            mobileNav.classList.remove('active');
+            document.removeEventListener('click', closeNavOnClickOutside);
+        }
+    }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const mobileNavLinks = document.querySelectorAll('.mobile-nav ul li a');
+
+        mobileNavLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                toggleMobileNav();
+            });
+        });
+    });
+</script>
+
+
 
     <script>
         window.addEventListener('scroll', function () {
