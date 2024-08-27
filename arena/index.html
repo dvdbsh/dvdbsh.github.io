@@ -67,42 +67,18 @@ h1, h2, h3 {
     text-shadow: 3px 3px 0px var(--arena-black-30);
 }
 
-/* Icon link styles */
-.icon-link {
-    color: var(--arena-white);
-    font-size: 1.5em;
-    text-decoration: none !important; /* Ensure no underline */
-    transition: color 0.3s ease;
-    position: relative;
-    padding-bottom: 0; /* Reset padding */
-}
-
-.icon-link::after {
-    content: none; /* Remove the underline pseudo-element */
-}
-
-.icon-link:hover {
-    color: var(--arena-yellow);
-    text-decoration: none !important; /* Force remove underline */
-}
-
-.icon-link i {
-    text-decoration: none !important; /* Apply to the icon itself */
-}
-
-/* General link styles */
-a {
+/* Apply the underline effect only to links with the underline-effect class */
+.underline-effect {
     position: relative;
     text-decoration: none;
     color: var(--arena-white);
     display: inline-block;
     transition: all 0.3s ease-in-out;
     padding-bottom: 0;
-	z-index: 1;
+    z-index: 1;
 }
 
-/* Pseudo-element for background effect */
-a::after {
+.underline-effect::after {
     content: '';
     position: absolute;
     width: 100%;
@@ -111,27 +87,25 @@ a::after {
     bottom: -2px;
     background-color: var(--arena-yellow);
     transition: height 0.3s ease-in-out;
-	z-index:-1;
+    z-index: -1;
 }
 
-/* Hover effect for expanding height */
-a:hover {
-color: var(--arena-purple);
+.underline-effect:hover {
+    color: var(--arena-purple);
 }
 
-a:hover::after {
+.underline-effect:hover::after {
     height: 100%; /* Expand height to cover the entire link */
 }
 
-
 /* Remove the pseudo-element for links that contain images */
-a:has(img)::after {
+.underline-effect:has(img)::after {
     content: none;
 }
 
 /* Specific styles for navigation links */
 nav ul li a {
-	font-size: 1.1em;
+    font-size: 1.1em;
     color: var(--arena-white);
     text-decoration: none;
     position: relative;
@@ -159,6 +133,35 @@ nav ul li a:hover::after {
     width: 100%;
     height: 2.5px;
 }
+
+/* Avoid applying the underline effect to buttons styled as links */
+button, .btn, .no-underline {
+    text-decoration: none !important;
+}
+
+/* Icon link styles */
+.icon-link {
+    color: var(--arena-white);
+    font-size: 1.5em;
+    text-decoration: none !important; /* Ensure no underline */
+    transition: color 0.3s ease;
+    position: relative;
+    padding-bottom: 0; /* Reset padding */
+}
+
+.icon-link::after {
+    content: none; /* Remove the underline pseudo-element */
+}
+
+.icon-link:hover {
+    color: var(--arena-yellow);
+    text-decoration: none !important; /* Force remove underline */
+}
+
+.icon-link i {
+    text-decoration: none !important; /* Apply to the icon itself */
+}
+
 
 
 section {
@@ -989,6 +992,113 @@ nav ul li {
     font-size: 0.9em;
 }
 
+/* Booking section styles */
+.booking-section {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-top: 40px;
+}
+
+.booking-package {
+    width: calc(25% - 80px); /* Four items per row */
+    background: var(--arena-white);
+    margin-bottom: 20px;
+    border: 2px solid var(--arena-black);
+    box-shadow: 0px 7px 0px var(--arena-black-30);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: var(--arena-dark-gray);
+    position: relative; /* Ensure the button is positioned relative to the div */
+    padding-bottom: 60px; /* Add padding to create space for the button */
+}
+
+.booking-package img {
+    width: 120px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+.booking-package h3 {
+    margin: 10px;
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--arena-dark-gray);
+    text-align: center;
+	align-items: bottom;
+    min-height: 60px; /* Ensure consistent height for all headings */
+}
+
+.booking-package p {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--arena-dark-gray);
+    margin-bottom: 40px;
+	text-align: center;
+}
+
+.booking-package ul {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+    flex-grow: 1; /* Make the list take up available space */
+}
+
+.booking-package ul li {
+    font-family: 'Roboto Mono', monospace;
+    color: var(--arena-dark-gray);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    font-size: 1rem;
+}
+
+.booking-package ul li i {
+    color: var(--arena-deep-purple);
+    margin-right: 10px;
+}
+
+.booking-package .book-now-btn {
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: var(--arena-magenta);
+    color: var(--arena-white);
+    border: 2px solid var(--arena-black);
+    border-radius: 8px;
+    box-shadow: 0px 7px 0px var(--arena-black-30);
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+    position: absolute; /* Position the button absolutely within the div */
+    bottom: 20px; /* Align it to the bottom of the div */
+    left: 50%;
+    transform: translateX(-50%);
+	text-decoration: none;
+}
+
+.booking-package .book-now-btn:hover {
+    background-color: var(--arena-purple);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .booking-package {
+        width: 100%; /* Make each package take up full width on small screens */
+        padding-bottom: 80px; /* Adjust padding for mobile screens */
+    }
+
+    .booking-package .book-now-btn {
+        bottom: 20px; /* Keep the button aligned to the bottom */
+    }
+}
+
+
+
+
+
 @media (max-width: 768px) {
     .footer-content {
         flex-direction: column;
@@ -1429,7 +1539,7 @@ nav ul li {
         <section class="hero circle">
             <div class="text full-width">
                 <h1 class="headershadow">Hosting a Larger Event?</h1>
-                <button><i class="icon-sparkle"></i> Reach out to us directly!</button>
+                <a href=""><button><i class="icon-sparkle"></i> Reach out to us directly!</button></a>
             </div>
         </section>
     </div>
@@ -1463,7 +1573,7 @@ nav ul li {
 							<i class="icon-twinkle" style="margin-bottom: -20px; margin-left: 10px; width: 50px; height: 50px;"></i>
 						</div>
 					</div>
-						<p>We love hearing that you had a great visit! Share your experience with us <a href="">here!</a></p>
+						<p>We love hearing that you had a great visit! Share your experience with us <a href="" class="underline-effect">here!</a></p>
 					</div>
 			</section>
             <section class="testimonials">
@@ -1569,7 +1679,7 @@ nav ul li {
                     </p>
                     <p>When you arrive for your event, we will check you in, confirm the number of guests and finalize payment. We do not take payments online.</p>
                     <p>Are you looking to book for a larger event for a business, school or organization? 
-                        <a href="https://www.sarnialasertag.com/organization">Reach out to us directly</a>.
+                        <a href="https://www.sarnialasertag.com/organization" class="underline-effect">Reach out to us directly</a>.
                     </p>    
                 </div>
 
@@ -1582,7 +1692,7 @@ nav ul li {
                     <p>To qualify for group pricing and the private room, each group must consist of at least 6 participants. Please note, the maximum number of people per group is limited to 20 at any time.
                     </p>
                     <p>Are you looking to book for a larger event for a business, school or organization? 
-                        <a href="https://www.sarnialasertag.com/organization">Reach out to us directly</a>.
+                        <a href="https://www.sarnialasertag.com/organization" class="underline-effect">Reach out to us directly</a>.
                     </p>
                 </div>
 
@@ -1608,9 +1718,60 @@ nav ul li {
                     </p>
                 </div>
 
-                <div class="iframe-container">
-                    <iframe src="https://squareup.com/appointments/book/ubo4tlk6rwm1nl/3N7XM7GWRSW3E/start" width="100%" height="100%" frameborder="0"></iframe>
-                </div>
+<section class="booking-section">
+    <div class="booking-package">
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/1_1_ickk6k.png" alt="Package 1">
+        <div class="header-container">
+            <h3>Double Trouble</h3>
+            <p class="price">$22 per person</p>
+        </div>
+        <ul>
+            <li><i class='bx bx-check'></i> Two 20-minute games of laser tag</li>
+        </ul>
+        <a href="https://book.squareup.com/appointments/ubo4tlk6rwm1nl/location/3N7XM7GWRSW3E/services/XQ7BGO5JLRW4B3TO6AZI5SRX" class="book-now-btn">Book Now</a>
+    </div>
+
+    <div class="booking-package">
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/2_1_wsn2gy.png" alt="Package 2">
+        <div class="header-container">
+            <h3>Climb & Conquer</h3>
+            <p class="price">$28 per person</p>
+        </div>
+        <ul>
+            <li><i class='bx bx-check'></i> Two 20-minute games of laser tag</li>
+            <li><i class='bx bx-check'></i> Two rock climbs</li>
+        </ul>
+        <a href="https://book.squareup.com/appointments/ubo4tlk6rwm1nl/location/3N7XM7GWRSW3E/services/RTSWPT23H3HDAMH2N5WFM45Z" class="book-now-btn">Book Now</a>
+    </div>
+
+    <div class="booking-package">
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514250/3_5_n1vkc6.png" alt="Package 3">
+        <div class="header-container">
+            <h3>Putt & Play</h3>
+            <p class="price">$28 per person</p>
+        </div>
+        <ul>
+            <li><i class='bx bx-check'></i> Two 20-minute games of laser tag</li>
+            <li><i class='bx bx-check'></i> One round of 10-hole mini golf</li>
+        </ul>
+        <a href="https://book.squareup.com/appointments/ubo4tlk6rwm1nl/location/3N7XM7GWRSW3E/services/KUWB2SSAJRK5BXDXEIOFZNWO" class="book-now-btn">Book Now</a>
+    </div>
+
+    <div class="booking-package">
+        <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/4_1_cnthj0.png" alt="Package 4">
+        <div class="header-container">
+            <h3>Ultimate Adventure</h3>
+            <p class="price">$32 per person</p>
+        </div>
+        <ul>
+            <li><i class='bx bx-check'></i> One 20-minute game of laser tag</li>
+            <li><i class='bx bx-check'></i> Two rock climbs</li>
+            <li><i class='bx bx-check'></i> One round of 10-hole mini golf</li>
+        </ul>
+        <a href="https://book.squareup.com/appointments/ubo4tlk6rwm1nl/location/3N7XM7GWRSW3E/services/M2APHKUCURYXC4XONKDLUDGN" class="book-now-btn">Book Now</a>
+    </div>
+</section>
+
             </div>
         </section>
 	</div>
@@ -1700,7 +1861,7 @@ nav ul li {
     <h3>The Fine Print</h3>
     <p>All prices are displayed without applicable taxes and are subject to change without notice.</p>
     <p>The Arena - Sarnia Laser Tag is a local, independently owned and run business. We thank you for your continued support and patronage.</p>
-    <p>By using our venue and facilities, you agree to abide by our <a href="/respect-responsible-use-policy">Respect & Responsible Use Policy</a> and <a href="/privacy-policy">Privacy Policy</a>.</p>
+    <p>By using our venue and facilities, you agree to abide by our <a href="/respect-responsible-use-policy" class="underline-effect">Respect & Responsible Use Policy</a> and <a href="/privacy-policy" class="underline-effect">Privacy Policy</a>.</p>
 
 </div>
 
