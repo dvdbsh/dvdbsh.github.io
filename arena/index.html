@@ -321,6 +321,9 @@ nav ul li {
     width: 50%;
     display: flex;
     justify-content: right;
+}
+
+.starbg {
     background-image: url('https://res.cloudinary.com/di8j84ent/image/upload/v1714252618/spacebro-bg_mjhgk4.png');
     background-size: contain;
     background-position: center;
@@ -918,9 +921,11 @@ nav ul li {
 
 .check-icon {
     color: var(--arena-deep-purple);
-    margin-left: -16px;
+    margin-left: -9px;
     padding: 0;
     font-weight: 800;
+	font-size: 1.3em;
+	
 }
 
 .icon-sparkle, .icon-twinkle {
@@ -1024,7 +1029,7 @@ nav ul li {
 
 .booking-package h3 {
     margin: 10px;
-    font-size: 2rem;
+    font-size: 2.5rem;
     font-weight: 800;
     color: var(--arena-dark-gray);
     text-align: center;
@@ -1033,10 +1038,21 @@ nav ul li {
 }
 
 .booking-package p {
-    font-size: 1.3rem;
+    font-size: 0.9rem;
     font-weight: bold;
     color: var(--arena-dark-gray);
     margin-bottom: 40px;
+	text-align: center;
+}
+
+.booking-package .price {
+    font-size: 1.3rem;
+    text-align: center;
+}
+
+
+.booking-package packtime {
+	font=size: 1.1rem;
 	text-align: center;
 }
 
@@ -1083,6 +1099,22 @@ nav ul li {
     background-color: var(--arena-purple);
 }
 
+    .weekly img {
+	width: 100%;
+    max-width: 300px !important;
+    padding: 20px;
+    margin-top: 40px;
+    border-radius: 0 0 40px 0;
+}
+	.weeklydeals-lg {
+    	display: flex;
+    	width: 80%;
+    	justify-content: center;
+    	align-items: center;
+    	margin: auto;
+		margin-top: 20px;
+		}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .booking-package {
@@ -1100,6 +1132,14 @@ nav ul li {
 
 
 @media (max-width: 768px) {
+	.weeklydeals-lg {
+    	display: flex;
+    	width: 100%;
+    	justify-content: center;
+    	align-items: center;
+    	margin: auto;
+		}
+
     .footer-content {
         flex-direction: column;
         align-items: center;
@@ -1322,8 +1362,8 @@ nav ul li {
 </p>
 
             </div>
-            <div class="image main">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1714256232/spcebro3_nyjbol.png" alt="Image Description">
+            <div class="image main starbg">
+                <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1714256232/spcebro3_nyjbol.png" alt="Astronaut floating in space">
             </div>
         </section>
 
@@ -1337,7 +1377,7 @@ nav ul li {
 
         <section class="activities" id="activities">
             <div class="activity laser">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1723756762/lasertag-act_o8jc5b.png" alt="Laser Tag">
+                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1724932951/lasertag-act_ppytjn.png" alt="Laser Tag">
                 <div class="text-content">
                     <h3>Laser Tag</h3>
                     <p>At our arena, we take laser tag to the next level by offering a 
@@ -1352,7 +1392,7 @@ nav ul li {
                 <img src="https://dvdbsh.github.io/arena/squiggle.svg">
             </div>
             <div class="activity rockclimb">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1723756762/rockclimb-act_ur01s8.png" alt="Rock Climbing">
+                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1724932951/rockclimb-act_skmjue.png" alt="Rock Climbing">
                 <div class="text-content">
                     <h3>Rock Climbing</h3>
                     <p>Embark on an exhilarating journey up our challenging rock climbing wall. Designed to test your limits, 
@@ -1366,7 +1406,7 @@ nav ul li {
                 <img src="https://dvdbsh.github.io/arena/squiggle.svg">
             </div>
             <div class="activity">
-                <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1723756762/minigolf-act_exluwm.png	" alt="Mini Golf">
+                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1724932951/minigolf-act_lqgbax.png" alt="Mini Golf">
                 <div class="text-content">
                     <h3>Mini Golf</h3>
                     <p>For a relaxed, fun activity, dive into a round of mini golf. This game blends precision, strategy, and light-hearted competition. 
@@ -1377,8 +1417,12 @@ nav ul li {
                 </div>
             </div>
         </section>
+
+
+
     </div>
 </div>
+
 
   <img 
   src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1723741147/squiggle-purple-trans_fwbpmp.png" 
@@ -1391,6 +1435,7 @@ nav ul li {
   sizes="200vw" 
   style="display:block;width:100%;height:100%;border-radius:inherit;object-position:center;object-fit:fill;image-rendering:auto" 
   loading="lazy">
+  
 
 	<div class="container">
 		<section class="hero" id="pricing">
@@ -1542,6 +1587,8 @@ nav ul li {
                 <a href=""><button><i class="icon-sparkle"></i> Reach out to us directly!</button></a>
             </div>
         </section>
+		
+		
     </div>
 
 <img 
@@ -1644,6 +1691,105 @@ nav ul li {
   sizes="200vw" 
   style="display:block;width:100%;height:100%;border-radius:inherit;object-position:center;object-fit:fill;image-rendering:auto" 
   loading="lazy">
+ 
+<div class="container">
+        <section class="hero" id="promos">
+            <div class="text full-width">
+                <div style="display: flex; align-items: center; justify-content: center;">
+						<div style="display: flex; align-items: center;">
+							<i class="icon-sparkle" style="margin-top: -20px; margin-right: 15px; width: 50px; height: 50px;"></i>
+						</div>
+						<div style="text-align: center;">
+							<h1 style="margin: 0;" class="headershadow">Rocket Powered Rates!</h1>
+						</div>
+						<div style="display: flex; align-items: center;">
+							<i class="icon-twinkle" style="margin-bottom: -20px; margin-left: 10px; width: 50px; height: 50px;"></i>
+						</div>
+					</div>
+                <p>Every week we offer daily specials on select activities! Looking for a great deal? You found it!</p>
+
+                <div class="weeklydeals-lg"><img id="weeklyDealImage" src=""></div>
+                                <p>All prices displayed are walk-in prices only, are priced per person, and cannot be combined with any other offer or promotion.</p>
+            </div>       
+        </section>
+    </div>      
+    <script>
+        // Get the current day of the week (0 = Sunday, 1 = Monday, ..., 6 = Saturday)
+        var dayOfWeek = new Date().getDay();
+        
+        var imgSrc;
+        switch(dayOfWeek) {
+            case 0: // Sunday
+            case 1: // Monday
+            case 2: // Tuesday
+            case 6: // Saturday
+                imgSrc = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715473287/weekly-sm_1_m696op.svg';
+                break;
+            case 3: // Wednesday
+                imgSrc = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715473640/wed_vtfbix.svg';
+                break;
+            case 4: // Thursday
+                imgSrc = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715473502/thur_nxvrnu.svg';
+                break;
+            case 5: // Friday
+                imgSrc = 'https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1715473499/fri_aq6xtu.svg';
+                break;
+        }
+
+        // Set the source for the image
+        document.getElementById('weeklyDealImage').src = imgSrc;
+    </script> 
+  
+<img 
+  src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1723741926/squiggle-trans-purple_weytxa.png" 
+  alt="" 
+  srcset="
+    https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1723741926/squiggle-trans-purple_weytxa.png 512w, 
+    https://res.cloudinary.com/di8j84ent/image/upload/w_1024,q_auto/v1723741926/squiggle-trans-purple_weytxa.png 1024w, 
+    https://res.cloudinary.com/di8j84ent/image/upload/w_2048,q_auto/v1723741926/squiggle-trans-purple_weytxa.png 2048w, 
+    https://res.cloudinary.com/di8j84ent/image/upload/w_4096,q_auto/v1723741926/squiggle-trans-purple_weytxa.png 4096w" 
+  sizes="200vw" 
+  style="display:block;width:100%;height:100%;border-radius:inherit;object-position:center;object-fit:fill;image-rendering:auto" 
+  loading="lazy">
+
+
+<div class="purplebg">
+	<div class="container">
+        <section class="hero">
+            <div class="text">
+
+                     <div style="display: flex; align-items: center; justify-content: center; margin-top:60px; margin-bottom: 20px;">
+						<div style="display: flex; align-items: center;">
+							<i class="icon-sparkle" style="margin-top: -20px; margin-right: 15px; width: 50px; height: 50px;"></i>
+						</div>
+						<div style="text-align: center;">
+							<h1 style="margin: 0; font-size: 3em;" class="headershadow">Gift a Galaxy of Fun!</h1>
+						</div>
+						<div style="display: flex; align-items: center;">
+							<i class="icon-twinkle" style="margin-bottom: -20px; margin-left: 10px; width: 50px; height: 50px;"></i>
+						</div>
+					</div>
+                <p>Choose one of our e-gift cards to send to a friend, co-worker, or loved one for any occasion!</p>
+
+            </div>
+            <div class="image">
+                <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1714696856/cards_1_rgqfck.png" alt="An image of gift cards flying through space like meteors">
+            </div>
+</section>
+	</div>
+</div>
+
+<img 
+  src="https://res.cloudinary.com/di8j84ent/image/upload/v1723741147/squiggle-purple-trans_fwbpmp.png" 
+  alt="" 
+  srcset="
+    https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1723741147/squiggle-purple-trans_fwbpmp.png 512w, 
+    https://res.cloudinary.com/di8j84ent/image/upload/w_1024,q_auto/v1723741147/squiggle-purple-trans_fwbpmp.png 1024w, 
+    https://res.cloudinary.com/di8j84ent/image/upload/w_2048,q_auto/v1723741147/squiggle-purple-trans_fwbpmp.png 2048w, 
+    https://res.cloudinary.com/di8j84ent/image/upload/w_4096,q_auto/v1723741147/squiggle-purple-trans_fwbpmp.png 4096w" 
+  sizes="200vw" 
+  style="display:block;width:100%;height:100%;border-radius:inherit;object-position:center;object-fit:fill;image-rendering:auto" 
+  loading="lazy">  
 
 	
 
@@ -1724,9 +1870,10 @@ nav ul li {
         <div class="header-container">
             <h3>Double Trouble</h3>
             <p class="price">$22 per person</p>
+			<p class="packtime">Approx. 1 hour 30 mins</p>
         </div>
         <ul>
-            <li><i class='bx bx-check'></i> Two 20-minute games of laser tag</li>
+            <li><i class='bx bx-check check-icon'></i> Two 20-minute games of laser tag</li>
         </ul>
         <a href="https://book.squareup.com/appointments/ubo4tlk6rwm1nl/location/3N7XM7GWRSW3E/services/XQ7BGO5JLRW4B3TO6AZI5SRX" class="book-now-btn">Book Now</a>
     </div>
@@ -1736,10 +1883,11 @@ nav ul li {
         <div class="header-container">
             <h3>Climb & Conquer</h3>
             <p class="price">$28 per person</p>
+			<p class="packtime">Approx. 2 hours</p>
         </div>
         <ul>
-            <li><i class='bx bx-check'></i> Two 20-minute games of laser tag</li>
-            <li><i class='bx bx-check'></i> Two rock climbs</li>
+            <li><i class='bx bx-check check-icon'></i> Two 20-minute games of laser tag</li>
+            <li><i class='bx bx-check check-icon'></i> Two rock climbs</li>
         </ul>
         <a href="https://book.squareup.com/appointments/ubo4tlk6rwm1nl/location/3N7XM7GWRSW3E/services/RTSWPT23H3HDAMH2N5WFM45Z" class="book-now-btn">Book Now</a>
     </div>
@@ -1749,10 +1897,11 @@ nav ul li {
         <div class="header-container">
             <h3>Putt & Play</h3>
             <p class="price">$28 per person</p>
+			<p class="packtime">Approx. 2 hours</p>
         </div>
         <ul>
-            <li><i class='bx bx-check'></i> Two 20-minute games of laser tag</li>
-            <li><i class='bx bx-check'></i> One round of 10-hole mini golf</li>
+            <li><i class='bx bx-check check-icon'></i> Two 20-minute games of laser tag</li>
+            <li><i class='bx bx-check check-icon'></i> One round of 10-hole mini golf</li>
         </ul>
         <a href="https://book.squareup.com/appointments/ubo4tlk6rwm1nl/location/3N7XM7GWRSW3E/services/KUWB2SSAJRK5BXDXEIOFZNWO" class="book-now-btn">Book Now</a>
     </div>
@@ -1762,11 +1911,12 @@ nav ul li {
         <div class="header-container">
             <h3>Ultimate Adventure</h3>
             <p class="price">$32 per person</p>
+			<p class="packtime">Approx. 2 hours</p>
         </div>
         <ul>
-            <li><i class='bx bx-check'></i> One 20-minute game of laser tag</li>
-            <li><i class='bx bx-check'></i> Two rock climbs</li>
-            <li><i class='bx bx-check'></i> One round of 10-hole mini golf</li>
+            <li><i class='bx bx-check check-icon'></i> One 20-minute game of laser tag</li>
+            <li><i class='bx bx-check check-icon'></i> Two rock climbs</li>
+            <li><i class='bx bx-check check-icon'></i> One round of 10-hole mini golf</li>
         </ul>
         <a href="https://book.squareup.com/appointments/ubo4tlk6rwm1nl/location/3N7XM7GWRSW3E/services/M2APHKUCURYXC4XONKDLUDGN" class="book-now-btn">Book Now</a>
     </div>
