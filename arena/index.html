@@ -1151,12 +1151,10 @@ nav ul li {
     border-radius: 8px;
     border: 0px solid var(--arena-black); /* Add border */
     box-shadow: 0px 7px 0px var(--arena-black-30); /* Add shadow */
-    transform: rotate(0deg); /* Rotate image */
     transform-origin: center; /* Ensure transformation happens from the center */
   }
 
   .swiper-slide:nth-child(2n) img {
-    transform: rotate(0deg); /* Alternate rotation for every other image */
     box-shadow: 3px 7px 0px var(--arena-black-30); /* Adjust shadow for rotated image */
   }
 
@@ -1671,7 +1669,7 @@ nav ul li {
         loading="eager"
         srcset="
           https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641254/slide02_cfbxuf.png 512w"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw">
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" style="transform: rotate(-3deg);">
     </div>
     <div class="swiper-slide">
       <img 
@@ -1680,7 +1678,7 @@ nav ul li {
         loading="eager"
         srcset="
           https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide07_zgk8ux.png 512w"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw">
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" style="transform: rotate(3deg);">
     </div>
     <div class="swiper-slide">
       <img 
@@ -1689,7 +1687,7 @@ nav ul li {
         loading="eager"
         srcset="
           https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide05_wu6t47.png 512w"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw">
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" style="transform: rotate(-3deg);">
     </div>
     <div class="swiper-slide">
       <img 
@@ -1698,7 +1696,7 @@ nav ul li {
         loading="eager"
         srcset="
           https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide06_wfx9vz.png 512w"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw">
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" style="transform: rotate(3deg);">
     </div>
     <div class="swiper-slide">
       <img 
@@ -1707,16 +1705,7 @@ nav ul li {
         loading="eager"
         srcset="
           https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide03_c3cdhj.png 512w"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw">
-    </div>
-    <div class="swiper-slide">
-      <img 
-        src="https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide01_srwbnd.png" 
-        alt="Slide 6" 
-        loading="eager"
-        srcset="
-          https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide01_srwbnd.png 512w"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw">
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" style="transform: rotate(-3deg);">
     </div>
     <div class="swiper-slide">
       <img 
@@ -1725,7 +1714,7 @@ nav ul li {
         loading="eager"
         srcset="
           https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide04_aye1ko.png 512w"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw">
+        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" style="transform: rotate(3deg);">
     </div>
   </div>
 </div>
@@ -2344,32 +2333,31 @@ nav ul li {
 	
 	<script>
 const swiper = new Swiper('.swiper-container', {
-    loop: true,
-    spaceBetween: -100, /* Ensure overlap between slides */
-    slidesPerView: 'auto',
-    centeredSlides: true,
-    grabCursor: true,
-    autoplay: {
-      delay: 3000,
-      disableOnInteraction: false,
+  loop: true,
+  spaceBetween: 10,
+  slidesPerView: 'auto',
+  grabCursor: true,
+  centeredSlides: true,
+  autoplay: {
+    delay: 3000,
+    disableOnInteraction: false,
+  },
+  preloadImages: false, // Disable preloading
+  lazy: {
+    loadPrevNext: true, // Load next/prev images in the queue
+    loadPrevNextAmount: 3, // Number of slides to preload in advance
+  },
+  breakpoints: {
+    640: {
+      slidesPerView: 1,
     },
-    initialSlide: 2, /* This will start on the 3rd image (index starts from 0) */
-    preloadImages: true, /* Enable image preloading */
-    lazy: {
-      loadPrevNext: true, /* Preload the next and previous slides for smoother transition */
-      loadPrevNextAmount: 2, /* Preload 2 slides before and after the current slide */
+    768: {
+      slidesPerView: 2,
     },
-    breakpoints: {
-      640: {
-        slidesPerView: 1,
-      },
-      768: {
-        slidesPerView: 2,
-      },
-      1024: {
-        slidesPerView: 3,
-      },
+    1024: {
+      slidesPerView: 3,
     },
+  },
 });
 </script>
 </body>
