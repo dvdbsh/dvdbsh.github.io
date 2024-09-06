@@ -20,6 +20,8 @@
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
 	<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..800&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+	<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
     <style type="text/css">
 :root {
     --arena-purple: #44148f;
@@ -177,6 +179,7 @@ body, html {
     background-size: 30%;
     color: var(--arena-light-gray);
     scroll-behavior: smooth;
+	overflow-x: hidden;
 }
 
 .container {
@@ -1117,6 +1120,57 @@ nav ul li {
     	margin: auto;
 		margin-top: 20px;
 		}
+		
+  .swiper-container {
+    width: 100vw; /* Make container take up full viewport width */
+    height: auto;
+    overflow: visible; /* Allow slides to go off the page */
+  }
+
+  .swiper-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  .swiper-slide {
+    position: relative;
+    transition: transform 0.3s ease-in-out;
+    z-index: 1;
+    margin: 0 -80px; /* Increase the overlap */
+  }
+
+  .swiper-slide img {
+    border-radius: 8px;
+    border: 0px solid var(--arena-black); /* Add border */
+    box-shadow: 0px 7px 0px var(--arena-black-30); /* Add shadow */
+    transform: rotate(-3deg); /* Rotate image */
+    transform-origin: center; /* Ensure transformation happens from the center */
+  }
+
+  .swiper-slide:nth-child(2n) img {
+    transform: rotate(3deg); /* Alternate rotation for every other image */
+    box-shadow: 3px 7px 0px var(--arena-black-30); /* Adjust shadow for rotated image */
+  }
+
+
+  /* Responsive image sizes */
+  @media (max-width: 640px) {
+    .swiper-slide img {
+      width: 250px; /* Smaller size for mobile */
+    }
+  }
+
+  @media (min-width: 641px) and (max-width: 1024px) {
+    .swiper-slide img {
+      width: 300px; /* Medium size for tablets */
+    }
+  }
+
+  @media (min-width: 1025px) {
+    .swiper-slide img {
+      width: 350px; /* Larger size for desktops */
+    }
+  }		
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -1760,6 +1814,8 @@ nav ul li {
   sizes="200vw" 
   style="display:block;width:100%;height:100%;border-radius:inherit;object-position:center;object-fit:fill;image-rendering:auto" 
   loading="lazy">
+  
+	
 
 
 <div class="purplebg">
@@ -2017,6 +2073,31 @@ nav ul li {
   style="display:block;width:100%;height:100%;border-radius:inherit;object-position:center;object-fit:fill;image-rendering:auto" 
   loading="lazy">
 	<div class="footer">
+<div class="swiper-container">
+  <div class="swiper-wrapper">
+    <div class="swiper-slide">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725641254/slide02_cfbxuf.png" alt="Slide 1" loading="eager">
+    </div>
+    <div class="swiper-slide">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725641253/slide07_zgk8ux.png" alt="Slide 2" loading="eager">
+    </div>
+    <div class="swiper-slide">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725641253/slide05_wu6t47.png" alt="Slide 3" loading="eager">
+    </div>
+    <div class="swiper-slide">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725641253/slide06_wfx9vz.png" alt="Slide 4" loading="eager">
+    </div>
+    <div class="swiper-slide">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725641253/slide03_c3cdhj.png" alt="Slide 5" loading="eager">
+    </div>
+    <div class="swiper-slide">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725641253/slide01_srwbnd.png" alt="Slide 6" loading="eager">
+    </div>
+    <div class="swiper-slide">
+      <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725641253/slide04_aye1ko.png" alt="Slide 7" loading="eager">
+    </div>
+  </div>
+</div>
     <div class="container">
         <div class="footer-content">
 <div class="footer-section">
@@ -2206,5 +2287,30 @@ nav ul li {
             businessHourDiv.classList.add("highlight");
         }
     </script>
+	
+	<script>
+  const swiper = new Swiper('.swiper-container', {
+    loop: true,
+    spaceBetween: -100, /* Ensure overlap between slides */
+    slidesPerView: 'auto',
+    centeredSlides: true,
+    grabCursor: true,
+    autoplay: {
+      delay: 3000,
+      disableOnInteraction: false,
+    },
+    breakpoints: {
+      640: {
+        slidesPerView: 1,
+      },
+      768: {
+        slidesPerView: 2,
+      },
+      1024: {
+        slidesPerView: 3,
+      },
+    },
+  });
+</script>
 </body>
 </html>
