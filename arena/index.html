@@ -1134,11 +1134,18 @@ nav ul li {
 		
 .carousel {
   width: 100%;
-  height: auto; /* Adjusted height to accommodate rotated images */
-  overflow: visible; /* Allow the rotated images to overflow without being clipped */
-  position: relative;
+  height: auto; /* Keep auto height for dynamic adjustment */
+  overflow: visible; /* Allow rotated images to overflow */
+  position: relative; /* Necessary for ::before to be relative to carousel */
   margin-top: -40px;
+  background-image:url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725815512/squiggle-bg-100_xii2sv.png);
+  background-size: 30%;
+  background-repeat: repeat-x;
+  background-position: center;
 }
+
+
+
 
 .carousel-cell {
   margin-right: 10px;
@@ -1152,7 +1159,9 @@ nav ul li {
 
 .carousel img {
   max-height: 80%; /* Ensure image fits within the carousel height */
-  width: 350px; /* Maintain aspect ratio */
+  height: 300px;
+  width: 300px; /* Maintain aspect ratio */
+  object-fit: cover;
   display: block;
   border-radius: 8px;
   box-shadow: 0px 7px 0px rgba(0, 0, 0, 0.3);
@@ -1164,6 +1173,8 @@ nav ul li {
   .carousel {
     height: auto; /* Adjust height for smaller screens */
 	padding-bottom: 40px;
+	background-image:url(https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725815512/squiggle-bg-100_xii2sv.png);
+	background-size: 100%;
   }
   .carousel img {
 	width: 250px;
@@ -1352,7 +1363,7 @@ nav ul li {
 	}
 
     .ribbontext {
-        font-size: 0.7em !important;
+        font-size: 0.5em !important;
         letter-spacing: 1px;
     }
 
@@ -1763,19 +1774,19 @@ nav ul li {
     <img 
       src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805062/slide02_qnp48e.png" 
       alt="Slide 2"
-      style="transform: rotate(3deg);">
+      style="transform: rotate(2deg);">
   </div>
   <div class="carousel-cell">
     <img 
       src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805062/slide03_l6jgoz.png" 
       alt="Slide 3"
-      style="transform: rotate(-3deg);">
+      style="transform: rotate(-2deg);">
   </div>
   <div class="carousel-cell">
     <img 
       src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805062/slide04_po0zbq.png" 
       alt="Slide 4"
-      style="transform: rotate(3deg);">
+      style="transform: rotate(1deg);">
   </div>
   <div class="carousel-cell">
     <img 
@@ -1787,7 +1798,7 @@ nav ul li {
     <img 
       src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805064/slide06_s3ixrt.png" 
       alt="Slide 6"
-      style="transform: rotate(3deg);">
+      style="transform: rotate(1deg);">
   </div>
 </div>
 
