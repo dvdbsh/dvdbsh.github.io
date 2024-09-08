@@ -17,13 +17,13 @@
     <link rel="apple-touch-icon" href="https://res.cloudinary.com/di8j84ent/image/upload/v1709228921/favicon_2023_dimp5x.png">
 
     <!-- Styles and links -->
-	<link rel="preload" href="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725641254/slide02_cfbxuf.png" as="image">
-<link rel="preload" href="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725641253/slide07_zgk8ux.png" as="image">
-<link rel="preload" href="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725641253/slide05_wu6t47.png" as="image">
-<link rel="preload" href="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725641253/slide06_wfx9vz.png" as="image">
-<link rel="preload" href="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725641253/slide03_c3cdhj.png" as="image">
-<link rel="preload" href="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725641253/slide01_srwbnd.png" as="image">
-<link rel="preload" href="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725641253/slide04_aye1ko.png" as="image">
+	<link rel="preload" href="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805062/slide01_ntfdq3.png" as="image">
+<link rel="preload" href="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805062/slide02_qnp48e.png" as="image">
+<link rel="preload" href="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805062/slide03_l6jgoz.png" as="image">
+<link rel="preload" href="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805062/slide04_po0zbq.png" as="image">
+<link rel="preload" href="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805062/slide05_w7tosn.png" as="image">
+<link rel="preload" href="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805064/slide06_s3ixrt.png" as="image">
+	<link rel="stylesheet" href="https://unpkg.com/flickity@2.2.2/dist/flickity.min.css">
 
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link href="https://fonts.googleapis.com/css2?family=Karla:wght@400;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
@@ -525,8 +525,11 @@ nav ul li {
     flex-direction: column;
     align-items: center;
     margin-bottom: 15px;
-    border-bottom: 1px solid var(--arena-light-gray);
     width: calc(50% - 10px);
+}
+
+.price-div {
+	border-bottom: 0px dashed var(--arena-purple);
 }
 
 .price-item img, .group-package img {
@@ -544,7 +547,7 @@ nav ul li {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around; /* Adjusted to manage spacing dynamically */
-    padding: 20px;
+    padding: 0px;
 }
 
 .testimonial {
@@ -1129,54 +1132,55 @@ nav ul li {
 		margin-top: 20px;
 		}
 		
-  .swiper-container {
-    width: 100vw; /* Make container take up full viewport width */
-    height: auto;
-    overflow: visible; /* Allow slides to go off the page */
+.carousel {
+  width: 100%;
+  height: auto; /* Adjusted height to accommodate rotated images */
+  overflow: visible; /* Allow the rotated images to overflow without being clipped */
+  position: relative;
+  margin-top: -40px;
+}
+
+.carousel-cell {
+  margin-right: 10px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px;
+  padding-bottom: 20px;
+}
+
+.carousel img {
+  max-height: 80%; /* Ensure image fits within the carousel height */
+  width: 350px; /* Maintain aspect ratio */
+  display: block;
+  border-radius: 8px;
+  box-shadow: 0px 7px 0px rgba(0, 0, 0, 0.3);
+  transform-origin: center; /* Ensure rotation happens around the center */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .carousel {
+    height: auto; /* Adjust height for smaller screens */
+	padding-bottom: 40px;
   }
+  .carousel img {
+	width: 250px;
+	}
+}
 
-  .swiper-wrapper {
-    display: flex;
-    align-items: center;
+@media (max-width: 480px) {
+  .carousel {
+    height: auto; /* Adjust height for mobile */
+	margin-top: -60px;
   }
-
-  .swiper-slide {
-    position: relative;
-    transition: transform 0.3s ease-in-out;
-    z-index: 1;
-    margin: 0 -80px; /* Increase the overlap */
+  .carousel img {
+    max-height: 90%; /* Keep the image size consistent */
   }
-
-  .swiper-slide img {
-    border-radius: 8px;
-    border: 0px solid var(--arena-black); /* Add border */
-    box-shadow: 0px 7px 0px var(--arena-black-30); /* Add shadow */
-    transform-origin: center; /* Ensure transformation happens from the center */
-  }
-
-  .swiper-slide:nth-child(2n) img {
-    box-shadow: 3px 7px 0px var(--arena-black-30); /* Adjust shadow for rotated image */
-  }
+}
 
 
-  /* Responsive image sizes */
-  @media (max-width: 640px) {
-    .swiper-slide img {
-      width: 250px; /* Smaller size for mobile */
-    }
-  }
-
-  @media (min-width: 641px) and (max-width: 1024px) {
-    .swiper-slide img {
-      width: 300px; /* Medium size for tablets */
-    }
-  }
-
-  @media (min-width: 1025px) {
-    .swiper-slide img {
-      width: 350px; /* Larger size for desktops */
-    }
-  }		
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
@@ -1529,7 +1533,7 @@ nav ul li {
                     <h1><span class="highlight-blue">Walk-In Prices</span></h1>
                 </div>
 
-                <div class="price-item">
+                <div class="price-item price-div">
                     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/minigolf-icon_guotkk.png" alt="Mini Golf">
                     <div>
                         <h3>Mini Golf</h3>
@@ -1538,7 +1542,7 @@ nav ul li {
                     </div>
                 </div>
 
-                <div class="price-item">
+                <div class="price-item price-div">
                     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/lasertag-icon_bin78v.png" alt="Laser Tag" style="transform: rotate(-25deg);">
                     <div>
                         <h3>Laser Tag</h3>
@@ -1547,7 +1551,7 @@ nav ul li {
                     </div>
                 </div>
 
-                <div class="price-item">
+                <div class="price-item price-div">
                     <img src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1708885911/lasertag-icon_bin78v.png" alt="Laser Tag" style="transform: rotate(-25deg);">
                     <div>
                         <h3>Laser Tag</h3>
@@ -1556,7 +1560,7 @@ nav ul li {
                     </div>
                 </div>
 
-                <div class="price-item">
+                <div class="price-item price-div">
                     <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710517090/climb-icon_zkqemf_uzo7mc.png" alt="Rock Climbing">
                     <div>
                         <h3>Rock Climbing</h3>
@@ -1601,7 +1605,7 @@ nav ul li {
                     </div>
                 </div>
 
-                <div class="group-package">
+                <div class="group-package price-div">
                     <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/1_1_ickk6k.png" alt="Package 1">
                     <div>
                         <h3>Double Trouble</h3>
@@ -1610,7 +1614,7 @@ nav ul li {
                     </div>
                 </div>
 
-                <div class="group-package">
+                <div class="group-package price-div">
                     <img src="https://res.cloudinary.com/di8j84ent/image/upload/v1710514210/2_1_wsn2gy.png" alt="Package 2">
                     <div>
                         <h3>Climb & Conquer</h3>
@@ -1660,66 +1664,6 @@ nav ul li {
 		
     </div>
 	
-<div class="swiper-container">
-  <div class="swiper-wrapper">
-    <div class="swiper-slide">
-      <img 
-        src="https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641254/slide02_cfbxuf.png" 
-        alt="Slide 1" 
-        loading="eager"
-        srcset="
-          https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641254/slide02_cfbxuf.png 512w"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" style="transform: rotate(-3deg);">
-    </div>
-    <div class="swiper-slide">
-      <img 
-        src="https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide07_zgk8ux.png" 
-        alt="Slide 2" 
-        loading="eager"
-        srcset="
-          https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide07_zgk8ux.png 512w"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" style="transform: rotate(3deg);">
-    </div>
-    <div class="swiper-slide">
-      <img 
-        src="https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide05_wu6t47.png" 
-        alt="Slide 3" 
-        loading="eager"
-        srcset="
-          https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide05_wu6t47.png 512w"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" style="transform: rotate(-3deg);">
-    </div>
-    <div class="swiper-slide">
-      <img 
-        src="https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide06_wfx9vz.png" 
-        alt="Slide 4" 
-        loading="eager"
-        srcset="
-          https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide06_wfx9vz.png 512w"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" style="transform: rotate(3deg);">
-    </div>
-    <div class="swiper-slide">
-      <img 
-        src="https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide03_c3cdhj.png" 
-        alt="Slide 5" 
-        loading="eager"
-        srcset="
-          https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide03_c3cdhj.png 512w"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" style="transform: rotate(-3deg);">
-    </div>
-    <div class="swiper-slide">
-      <img 
-        src="https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide04_aye1ko.png" 
-        alt="Slide 7" 
-        loading="eager"
-        srcset="
-          https://res.cloudinary.com/di8j84ent/image/upload/w_512,q_auto/v1725641253/slide04_aye1ko.png 512w"
-        sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw" style="transform: rotate(3deg);">
-    </div>
-  </div>
-</div>
-
-
 
 <img 
   src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1723741926/squiggle-trans-purple_weytxa.png" 
@@ -1808,7 +1752,55 @@ nav ul li {
             </section>
         </section>
 	</div>
+	<div class="carousel" data-flickity='{ "wrapAround": true, "autoPlay": 3000, "lazyLoad": true, "pageDots": false, "prevNextButtons": false, "contain": true }'>
+  <div class="carousel-cell">
+    <img 
+      src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805062/slide01_ntfdq3.png" 
+      alt="Slide 1" 
+      loading="lazy"
+      style="transform: rotate(-3deg);">
+  </div>
+  <div class="carousel-cell">
+    <img 
+      src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805062/slide02_qnp48e.png" 
+      alt="Slide 2" 
+      loading="lazy"
+      style="transform: rotate(3deg);">
+  </div>
+  <div class="carousel-cell">
+    <img 
+      src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805062/slide03_l6jgoz.png" 
+      alt="Slide 3" 
+      loading="lazy"
+      style="transform: rotate(-3deg);">
+  </div>
+  <div class="carousel-cell">
+    <img 
+      src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805062/slide04_po0zbq.png" 
+      alt="Slide 4" 
+      loading="lazy"
+      style="transform: rotate(3deg);">
+  </div>
+  <div class="carousel-cell">
+    <img 
+      src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805062/slide05_w7tosn.png" 
+      alt="Slide 5" 
+      loading="lazy"
+      style="transform: rotate(-3deg);">
+  </div>
+  <div class="carousel-cell">
+    <img 
+      src="https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1725805064/slide06_s3ixrt.png" 
+      alt="Slide 6" 
+      loading="lazy"
+      style="transform: rotate(3deg);">
+  </div>
 </div>
+
+<script src="https://unpkg.com/flickity@2.2.2/dist/flickity.pkgd.min.js"></script>
+</div>
+
+
 
 <img 
   src="https://res.cloudinary.com/di8j84ent/image/upload/v1723741147/squiggle-purple-trans_fwbpmp.png" 
@@ -2166,7 +2158,35 @@ nav ul li {
 </div>
 
 
-    <script>
+<script>
+const swiper = new Swiper('.swiper-container', {
+  loop: true,
+  spaceBetween: 10,
+  slidesPerView: 'auto',
+  grabCursor: true,
+  centeredSlides: false,
+  autoplay: {
+    delay: 3000,
+  },
+  preloadImages: true, // Disable preloading
+  lazy: {
+    loadPrevNext: true, // Load next/prev images in the queue
+    loadPrevNextAmount: 7, // Number of slides to preload in advance
+  },
+  breakpoints: {
+    640: {
+      slidesPerView: 1,
+    },
+    768: {
+      slidesPerView: 2,
+    },
+    1024: {
+      slidesPerView: 3,
+    },
+  },
+});
+</script>   
+   <script>
         function toggleVisibility(sectionId, header) {
             var content = document.getElementById(sectionId);
             var arrow = document.getElementById('arrow-' + sectionId);
@@ -2331,34 +2351,6 @@ nav ul li {
         }
     </script>
 	
-	<script>
-const swiper = new Swiper('.swiper-container', {
-  loop: true,
-  spaceBetween: 10,
-  slidesPerView: 'auto',
-  grabCursor: true,
-  centeredSlides: true,
-  autoplay: {
-    delay: 3000,
-    disableOnInteraction: false,
-  },
-  preloadImages: false, // Disable preloading
-  lazy: {
-    loadPrevNext: true, // Load next/prev images in the queue
-    loadPrevNextAmount: 3, // Number of slides to preload in advance
-  },
-  breakpoints: {
-    640: {
-      slidesPerView: 1,
-    },
-    768: {
-      slidesPerView: 2,
-    },
-    1024: {
-      slidesPerView: 3,
-    },
-  },
-});
-</script>
+	
 </body>
 </html>
