@@ -93,6 +93,7 @@
         h2,
         h3 {
             margin: 10px;
+			color: #333;
         }
 
         h3 {
@@ -143,19 +144,19 @@
 <body>
     <div class="container">
         <div class="card header">
-            <h3>Benefits Hours Calculator</h3>
+            <h3 style="color:#fff;">Benefits Hours Calculator</h3>
         </div>
 
         <!-- Cards for various information -->
         <div class="two-columns card">
-            <h2>Your current hours worked</h2>
+            <h2>Enter your current hours worked</h2>
             <p><input type="tel" id="numberInput" class="input" inputmode="decimal" placeholder="91.25"></p>
             <p id="differenceResult"></p>
         </div>
 
         <div class="card">
             <div class="icon-wrapper">
-                <i class='bx bx-calendar' style="font-size: 2rem; text-align: center; display: block;"></i>
+                <i class='bx bx-calendar' style="font-size: 2rem; text-align: center; display: block; color: #333;"></i>
             </div>
             <h3 id="quarterTitle"></h3>
             <p id="quarterDates"></p>
@@ -163,7 +164,7 @@
 
         <div class="card">
             <div class="icon-wrapper">
-                <i class='bx bx-time-five' style="font-size: 2rem; text-align: center; display: block;"></i>
+                <i class='bx bx-time-five' style="font-size: 2rem; text-align: center; display: block; color: #333;"></i>
             </div>
             <h3>Days left to qualify for next quarter</h3>
             <p id="daysLeftCell"></p>
@@ -171,7 +172,7 @@
 
         <div class="card">
             <div class="icon-wrapper">
-                <i class='bx bx-calendar-event' style="font-size: 2rem; text-align: center; display: block;"></i>
+                <i class='bx bx-calendar-event' style="font-size: 2rem; text-align: center; display: block; color: #333;"></i>
             </div>
             <h3>Last day for eligibility</h3>
             <p id="lastEligibilityDate"></p>
@@ -181,7 +182,7 @@
 
         <div class="card">
             <div class="icon-wrapper">
-                <i class='bx bx-money' style="font-size: 2rem; text-align: center; display: block;"></i>
+                <i class='bx bx-money' style="font-size: 2rem; text-align: center; display: block; color: #333;"></i>
             </div>
             <h3>Last pay date in the quarter</h3>
             <p id="lastPayDateCell"></p>
@@ -233,10 +234,10 @@
             },
             {
                 title: "October - December",
-                startDate: new Date("October 6, 2023").getTime(),
-                endDate: new Date("December 29, 2023").getTime(),
-                lastEligibilityDate: "December 24, 2023",
-                lastPayDate: "December 29, 2023",
+                startDate: new Date("October 6, 2024").getTime(),
+                endDate: new Date("December 29, 2024").getTime(),
+                lastEligibilityDate: "December 24, 2024",
+                lastPayDate: "December 29, 2024",
                 paidHours: "October 6 and 20<br>November 3 and 17<br>December 1, 15 and 29"
             }
         ];
@@ -289,9 +290,9 @@
                     lastEligibilityDate: "September 15, 2024"
                 },
                 {
-                    startDate: new Date("October 6, 2023").getTime(),
-                    endDate: new Date("December 29, 2023").getTime(),
-                    lastEligibilityDate: "December 24, 2023"
+                    startDate: new Date("October 6, 2024").getTime(),
+                    endDate: new Date("December 29, 2024").getTime(),
+                    lastEligibilityDate: "December 24, 2024"
                 }
             ];
 
@@ -303,7 +304,7 @@
             const daysLeft = Math.ceil((new Date(currentQuarter.lastEligibilityDate).getTime() - now) / (1000 * 60 * 60 * 24));
             const weeksLeft = Math.floor(daysLeft / 7);
             const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft);
-            document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed (" + requiredHoursPerWeek + " more hours per week needed)<p><small>These numbers are rounded up to the nearest hour and are approximate.</small>";
+            document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed (" + requiredHoursPerWeek + " hours per week)<p><small>These numbers are rounded up to the nearest hour and are approximate.</small>";
         }
     }
 
