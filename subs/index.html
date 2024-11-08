@@ -7,6 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/color-thief@2.3.2/dist/color-thief.umd.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -168,54 +169,54 @@
             <h4>Subscriptions</h4>
             <div class="subscription-item">
                 <div class="subscription-details">
-                    <img src="https://logo.clearbit.com/amazon.com" alt="Amazon Prime" class="subscription-logo" id="amazonPrimeLogo" style="border: 3px solid #FF9900">
+                    <img src="https://logo.clearbit.com/amazon.com" alt="Amazon Prime" class="subscription-logo" id="amazonPrimeLogo">
                     <div>
-                        <div class="subscription-info" style="color: #FF9900">Amazon Prime</div>
+                        <div class="subscription-info">Amazon Prime</div>
                         <div class="subscription-recurring">$9.99 CAD / Monthly (7th) - Entertainment</div>
                     </div>
                 </div>
             </div>
             <div class="subscription-item">
                 <div class="subscription-details">
-                    <img src="https://logo.clearbit.com/mega.nz" alt="Mega Pro" class="subscription-logo" id="megaProLogo" style="border: 3px solid #4285F4">
+                    <img src="logos/mega-logo.png" alt="Mega Pro" class="subscription-logo" id="megaProLogo">
                     <div>
-                        <div class="subscription-info" style="color: #4285F4">Mega Pro</div>
+                        <div class="subscription-info">Mega Pro</div>
                         <div class="subscription-recurring">$6.99 CAD / Monthly (14th) - Cloud Storage</div>
                     </div>
                 </div>
             </div>
             <div class="subscription-item">
                 <div class="subscription-details">
-                    <img src="https://logo.clearbit.com/openai.com" alt="ChatGPT Plus" class="subscription-logo" id="chatGptPlusLogo" style="border: 3px solid #00A4CC">
+                    <img src="https://logo.clearbit.com/openai.com" alt="ChatGPT Plus" class="subscription-logo" id="chatGptPlusLogo">
                     <div>
-                        <div class="subscription-info" style="color: #00A4CC">ChatGPT Plus</div>
+                        <div class="subscription-info">ChatGPT Plus</div>
                         <div class="subscription-recurring">$22.60 USD (~30.51 CAD) / Monthly (13th) - Utilities</div>
                     </div>
                 </div>
             </div>
             <div class="subscription-item">
                 <div class="subscription-details">
-                    <img src="https://logo.clearbit.com/spotify.com" alt="Spotify" class="subscription-logo" id="spotifyLogo" style="border: 3px solid #1DB954">
+                    <img src="https://logo.clearbit.com/spotify.com" alt="Spotify" class="subscription-logo" id="spotifyLogo">
                     <div>
-                        <div class="subscription-info" style="color: #1DB954">Spotify</div>
+                        <div class="subscription-info">Spotify</div>
                         <div class="subscription-recurring">$14.99 CAD / Monthly (23rd) - Entertainment</div>
                     </div>
                 </div>
             </div>
             <div class="subscription-item">
                 <div class="subscription-details">
-                    <img src="https://logo.clearbit.com/instacart.com" alt="Instacart" class="subscription-logo" id="instacartLogo" style="border: 3px solid #FF6F00">
+                    <img src="https://logo.clearbit.com/instacart.com" alt="Instacart" class="subscription-logo" id="instacartLogo">
                     <div>
-                        <div class="subscription-info" style="color: #FF6F00">Instacart</div>
+                        <div class="subscription-info">Instacart</div>
                         <div class="subscription-recurring">$99.99 CAD / Annually (8th) - Utilities</div>
                     </div>
                 </div>
             </div>
             <div class="subscription-item">
                 <div class="subscription-details">
-                    <img src="https://logo.clearbit.com/apple.com" alt="iCloud" class="subscription-logo" id="icloudLogo" style="border: 3px solid #00A1E0">
+                    <img src="https://logo.clearbit.com/apple.com" alt="iCloud" class="subscription-logo" id="icloudLogo">
                     <div>
-                        <div class="subscription-info" style="color: #00A1E0">iCloud</div>
+                        <div class="subscription-info">iCloud</div>
                         <div class="subscription-recurring">$3.99 CAD / Monthly (21st) - Cloud Storage</div>
                     </div>
                 </div>
@@ -223,30 +224,73 @@
         </div>
     </div>
 <script>
-        // Adding interactivity for filters
-        document.getElementById('searchSubscription')?.addEventListener('input', function () {
-            const searchValue = this.value.toLowerCase();
-            const subscriptions = document.querySelectorAll('.subscription-item');
-
-            subscriptions.forEach(sub => {
-                const name = sub.querySelector('.subscription-info').textContent.toLowerCase();
-                if (name.includes(searchValue)) {
-                    sub.style.display = 'flex';
-                } else {
-                    sub.style.display = 'none';
-                }
-            });
-        });
-
-        // Simple chart with Chart.js for spending overview
         document.addEventListener('DOMContentLoaded', function () {
             generateCalendar();
             updateChart();
+            extractLogoColors();  // Extract colors after page load
         });
+
+        function extractLogoColors() {
+            const logos = document.querySelectorAll('.subscription-logo');
+            logos.forEach((logo) => {
+                const img = logo;
+                const colorThief = new ColorThief();
+
+                if (img.complete) {
+                    getColor(img);
+                } else {
+                    img.addEventListener('load', function() {
+                        getColor(img);
+                    });
+                }
+
+                function getColor(image) {
+                    try {
+                        const dominantColor = colorThief.getColor(image);
+                        const colorHex = rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]);
+                        image.style.border = `3px solid ${colorHex}`;
+                        const parent = image.parentElement;
+                        const subscriptionInfo = parent.querySelector('.subscription-info');
+                        subscriptionInfo.style.color = colorHex;
+                        updateCalendarColor(image.alt, colorHex);
+                        updateChartColor(image.alt, colorHex);
+                    } catch (e) {
+                        console.error("Could not extract color from image", e);
+                    }
+                }
+            });
+        }
+
+        function rgbToHex(r, g, b) {
+            return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+        }
+
+        function updateCalendarColor(alt, colorHex) {
+            switch(alt) {
+                case 'Amazon Prime':
+                    document.querySelectorAll('.circle-marker')[0].style.backgroundColor = colorHex;
+                    break;
+                case 'Mega Pro':
+                    document.querySelectorAll('.circle-marker')[1].style.backgroundColor = colorHex;
+                    break;
+                case 'ChatGPT Plus':
+                    document.querySelectorAll('.circle-marker')[2].style.backgroundColor = colorHex;
+                    break;
+                case 'Spotify':
+                    document.querySelectorAll('.circle-marker')[3].style.backgroundColor = colorHex;
+                    break;
+                case 'Instacart':
+                    document.querySelectorAll('.circle-marker')[4].style.backgroundColor = colorHex;
+                    break;
+                case 'iCloud':
+                    document.querySelectorAll('.circle-marker')[5].style.backgroundColor = colorHex;
+                    break;
+            }
+        }
 
         function generateCalendar() {
             const calendarBody = document.getElementById('calendarBody');
-            calendarBody.innerHTML = ''; // Clear the calendar before generating it again
+            calendarBody.innerHTML = '';
             const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
             const firstDayIndex = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getDay();
             
@@ -283,22 +327,21 @@
 
         function getSubscriptionColor(day) {
             switch(day) {
-                case 7: return '#FF9900'; // Amazon Prime
-                case 14: return '#4285F4'; // Mega Pro
-                case 13: return '#00A4CC'; // ChatGPT Plus
-                case 23: return '#1DB954'; // Spotify
-                case 8: return '#FF6F00'; // Instacart
-                case 21: return '#00A1E0'; // iCloud
-                default: return '#c5e1a5'; // Default color
+                case 7: return '#FF9900';
+                case 14: return '#4285F4';
+                case 13: return '#00A4CC';
+                case 23: return '#1DB954';
+                case 8: return '#FF6F00';
+                case 21: return '#00A1E0';
+                default: return '#c5e1a5';
             }
         }
 
-        // Update chart with predefined colors
         function updateChart() {
             const backgroundColors = ['#FF9900', '#4285F4', '#00A4CC', '#1DB954', '#FF6F00', '#00A1E0'];
             const ctx = document.getElementById('spendingChart').getContext('2d');
             new Chart(ctx, {
-                type: 'bar',
+                type: 'pie',
                 data: {
                     labels: ['Amazon Prime', 'Mega Pro', 'ChatGPT Plus', 'Spotify', 'Instacart', 'iCloud'],
                     datasets: [{
@@ -310,9 +353,9 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    scales: {
-                        y: {
-                            beginAtZero: true
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
                         }
                     }
                 }
