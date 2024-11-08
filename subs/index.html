@@ -216,10 +216,10 @@
     </div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        generateCalendar();
-        updateChart();
         extractLogoColors();  // Extract colors after page load
     });
+
+    const subscriptionColors = {};
 
     function extractLogoColors() {
         const logos = document.querySelectorAll('.subscription-logo');
@@ -244,6 +244,7 @@
                     .then(palette => {
                         const dominantColor = palette.Vibrant ? palette.Vibrant.rgb : [255, 255, 255];
                         const colorHex = rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]);
+                        subscriptionColors[image.alt] = colorHex;  // Store color for use in chart and calendar
 
                         // Apply color to border and text
                         image.style.border = `3px solid ${colorHex}`;
@@ -251,8 +252,11 @@
                         const subscriptionInfo = parent.querySelector('.subscription-info');
                         subscriptionInfo.style.color = colorHex;
 
-                        // Optionally update color in calendar
-                        updateCalendarColor(image.alt, colorHex);
+                        // Update calendar and chart once all colors are extracted
+                        if (Object.keys(subscriptionColors).length === logos.length) {
+                            updateCalendarColors();
+                            updateChart();
+                        }
                     })
                     .catch(e => {
                         console.error("Could not extract color from image using Vibrant", e);
@@ -265,31 +269,7 @@
         return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
     }
 
-    function updateCalendarColor(alt, colorHex) {
-        const circleMarkers = document.querySelectorAll('.circle-marker');
-        switch (alt) {
-            case 'Amazon Prime':
-                circleMarkers[0].style.backgroundColor = colorHex;
-                break;
-            case 'Mega Pro':
-                circleMarkers[1].style.backgroundColor = colorHex;
-                break;
-            case 'ChatGPT Plus':
-                circleMarkers[2].style.backgroundColor = colorHex;
-                break;
-            case 'Spotify':
-                circleMarkers[3].style.backgroundColor = colorHex;
-                break;
-            case 'Instacart':
-                circleMarkers[4].style.backgroundColor = colorHex;
-                break;
-            case 'iCloud':
-                circleMarkers[5].style.backgroundColor = colorHex;
-                break;
-        }
-    }
-
-    function generateCalendar() {
+    function updateCalendarColors() {
         const calendarBody = document.getElementById('calendarBody');
         calendarBody.innerHTML = '';
         const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
@@ -310,7 +290,8 @@
                     if (isSubscriptionDay(date)) {
                         const circleMarker = document.createElement('span');
                         circleMarker.classList.add('circle-marker');
-                        circleMarker.style.backgroundColor = getSubscriptionColor(date);
+                        const color = getSubscriptionColor(date);
+                        circleMarker.style.backgroundColor = color;
                         cell.appendChild(circleMarker);
                     }
                     row.appendChild(cell);
@@ -322,33 +303,30 @@
     }
 
     function isSubscriptionDay(day) {
-        const subscriptionDays = [7, 13, 14, 21, 23];
-        return subscriptionDays.includes(day);
+        const subscriptionDays = {7: 'Amazon Prime', 14: 'Mega Pro', 23: 'Spotify', 8: 'Instacart', 21: 'iCloud'};
+        return subscriptionDays[day] !== undefined;
     }
 
     function getSubscriptionColor(day) {
-        switch(day) {
-            case 7: return '#FF9900';
-            case 14: return '#4285F4';
-            case 13: return '#00A4CC';
-            case 23: return '#1DB954';
-            case 8: return '#FF6F00';
-            case 21: return '#00A1E0';
-            default: return '#c5e1a5';
-        }
+        const subscriptionDays = {7: 'Amazon Prime', 14: 'Mega Pro', 23: 'Spotify', 8: 'Instacart', 21: 'iCloud'};
+        const subscriptionName = subscriptionDays[day];
+        return subscriptionColors[subscriptionName] || '#c5e1a5';
     }
 
     function updateChart() {
-        const backgroundColors = ['#FF9900', '#4285F4', '#00A4CC', '#1DB954', '#FF6F00', '#00A1E0'];
         const ctx = document.getElementById('spendingChart').getContext('2d');
+        const labels = Object.keys(subscriptionColors);
+        const colors = Object.values(subscriptionColors);
+        const data = [9.99, 6.99, 30.51, 14.99, 8.33, 3.99];  // Update with actual subscription data if needed
+
         new Chart(ctx, {
             type: 'pie',
             data: {
-                labels: ['Amazon Prime', 'Mega Pro', 'ChatGPT Plus', 'Spotify', 'Instacart', 'iCloud'],
+                labels: labels,
                 datasets: [{
                     label: 'Subscription Costs (CAD)',
-                    data: [9.99, 6.99, 30.51, 14.99, 8.33, 3.99],
-                    backgroundColor: backgroundColors
+                    data: data,
+                    backgroundColor: colors
                 }]
             },
             options: {
