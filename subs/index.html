@@ -53,10 +53,17 @@
         .chart-container {
             width: 100%;
             padding: 20px;
+            position: relative;
         }
         .chart-container canvas {
             width: 100% !important;
             height: 400px !important;
+        }
+        .chart-logo-overlay {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
         }
         .subscriptions-list {
             padding: 30px;
@@ -142,10 +149,11 @@
                 <h4>Spending Overview</h4>
                 <div class="chart-container">
                     <canvas id="spendingChart"></canvas>
+                    <div id="chartLogosOverlay"></div>
                 </div>
             </div>
             <div id="calendar" class="card-panel calendar-container">
-                <h4>Calendar View</h4>
+                <h4>Subscription Calendar View</h4>
                 <table id="subscriptionCalendar">
                     <thead>
                         <tr>
@@ -220,6 +228,7 @@
     });
 
     const subscriptionColors = {};
+    const subscriptionLogos = {};
 
     function extractLogoColors() {
         const logos = document.querySelectorAll('.subscription-logo');
@@ -245,6 +254,7 @@
                         const dominantColor = palette.Vibrant ? palette.Vibrant.rgb : [255, 255, 255];
                         const colorHex = rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]);
                         subscriptionColors[image.alt] = colorHex;  // Store color for use in chart and calendar
+                        subscriptionLogos[image.alt] = image.src;  // Store logo URL for use in chart overlay
 
                         // Apply color to border and text
                         image.style.border = `3px solid ${colorHex}`;
@@ -317,7 +327,24 @@
         const ctx = document.getElementById('spendingChart').getContext('2d');
         const labels = Object.keys(subscriptionColors);
         const colors = Object.values(subscriptionColors);
-        const data = [9.99, 6.99, 30.51, 14.99, 8.33, 3.99];  // Update with actual subscription data if needed
+        const data = labels.map(label => {
+            switch (label) {
+                case 'Amazon Prime':
+                    return 9.99;
+                case 'Mega Pro':
+                    return 6.99;
+                case 'Spotify':
+                    return 14.99;
+                case 'Instacart':
+                    return 99.99 / 12;  // Convert annual cost to monthly equivalent
+                case 'iCloud':
+                    return 3.99;
+                case 'ChatGPT Plus':
+                    return 30.51;
+                default:
+                    return 0;
+            }
+        });
 
         new Chart(ctx, {
             type: 'pie',
@@ -336,6 +363,21 @@
                     legend: {
                         position: 'bottom'
                     }
+                },
+                onComplete: function(chart) {
+                    const chartArea = chart.chartArea;
+                    const logoOverlay = document.getElementById('chartLogosOverlay');
+                    logoOverlay.innerHTML = '';
+
+                    chart.data.labels.forEach((label, i) => {
+                        const meta = chart.getDatasetMeta(0).data[i];
+                        const logo = document.createElement('img');
+                        logo.src = subscriptionLogos[label];
+                        logo.classList.add('chart-logo-overlay');
+                        logo.style.left = `${meta.x - 10}px`;
+                        logo.style.top = `${meta.y - 10}px`;
+                        logoOverlay.appendChild(logo);
+                    });
                 }
             }
         });
