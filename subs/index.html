@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Subscription Tracker Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .header {
+            background-color: #3f51b5;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+        .card-panel {
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .summary-container, .next-subscription-container, .total-subs-container, .total-annual-cost-container {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            background-color: #e3f2fd;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .card-row {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        .chart-container {
+            width: 100%;
+            padding: 20px;
+        }
+        .chart-container canvas {
+            width: 100% !important;
+            height: 400px !important;
+        }
+        .subscriptions-list {
+            padding: 30px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        .subscription-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #ddd;
+            padding: 20px 0;
+        }
+        .subscription-item:last-child {
+            border-bottom: none;
+        }
+        .subscription-details {
+            display: flex;
+            align-items: center;
+        }
+        .subscription-logo {
+            width: 50px;
+            height: 50px;
+            margin-right: 20px;
+            border-radius: 50%;
+        }
+        .subscription-info {
+            font-size: 1.1em;
+        }
+        .subscription-recurring {
+            color: #757575;
+            font-size: 0.9em;
+        }
+        .side-by-side {
+            display: flex;
+            gap: 30px;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        .side-by-side > .card-panel {
+            flex: 1 1 48%;
+            box-sizing: border-box;
+        }
+        .circle-marker {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        Subscription Tracker Dashboard
+    </div>
+    <div class="container">
+        <!-- Header area with button to add new subscription -->
+        <div class="header-container card-panel">
+            <h4>Manage Your Subscriptions</h4>
+            <button class="btn waves-effect waves-light" id="addSubscriptionButton">Add New Subscription</button>
+        </div>
+        <!-- Cards row for next subscription, total subscriptions, and total annual cost -->
+        <div class="card-row">
+            <div class="next-subscription-container">
+                <h5>Next Subscription Payment</h5>
+                <p>Amazon Prime - $9.99 CAD on 7th</p>
+            </div>
+            <div class="total-subs-container">
+                <h5>Total Subscriptions</h5>
+                <p>6 Active Subscriptions</p>
+            </div>
+            <div class="total-annual-cost-container">
+                <h5>Total Annual Cost</h5>
+                <p>$899.88 CAD (Estimated)</p>
+            </div>
+        </div>
+        <!-- Side-by-side layout for chart and calendar view -->
+        <div class="side-by-side">
+            <div id="chart" class="card-panel">
+                <h4>Spending Overview</h4>
+                <div class="chart-container">
+                    <canvas id="spendingChart"></canvas>
+                </div>
+            </div>
+            <div id="calendar" class="card-panel calendar-container">
+                <h4>Subscription Calendar View</h4>
+                <table id="subscriptionCalendar">
+                    <thead>
+                        <tr>
+                            <th>Sun</th>
+                            <th>Mon</th>
+                            <th>Tue</th>
+                            <th>Wed</th>
+                            <th>Thu</th>
+                            <th>Fri</th>
+                            <th>Sat</th>
+                        </tr>
+                    </thead>
+                    <tbody id="calendarBody">
+                        <!-- Calendar days will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <!-- List of subscriptions -->
+        <div class="subscriptions-list">
+            <h4>Subscriptions</h4>
+            <div class="subscription-item">
+                <div class="subscription-details">
+                    <img src="https://logo.clearbit.com/amazon.com" alt="Amazon Prime" class="subscription-logo" id="amazonPrimeLogo" style="border: 3px solid #FF9900">
+                    <div>
+                        <div class="subscription-info" style="color: #FF9900">Amazon Prime</div>
+                        <div class="subscription-recurring">$9.99 CAD / Monthly (7th) - Entertainment</div>
+                    </div>
+                </div>
+            </div>
+            <div class="subscription-item">
+                <div class="subscription-details">
+                    <img src="https://logo.clearbit.com/mega.nz" alt="Mega Pro" class="subscription-logo" id="megaProLogo" style="border: 3px solid #4285F4">
+                    <div>
+                        <div class="subscription-info" style="color: #4285F4">Mega Pro</div>
+                        <div class="subscription-recurring">$6.99 CAD / Monthly (14th) - Cloud Storage</div>
+                    </div>
+                </div>
+            </div>
+            <div class="subscription-item">
+                <div class="subscription-details">
+                    <img src="https://logo.clearbit.com/openai.com" alt="ChatGPT Plus" class="subscription-logo" id="chatGptPlusLogo" style="border: 3px solid #00A4CC">
+                    <div>
+                        <div class="subscription-info" style="color: #00A4CC">ChatGPT Plus</div>
+                        <div class="subscription-recurring">$22.60 USD (~30.51 CAD) / Monthly (13th) - Utilities</div>
+                    </div>
+                </div>
+            </div>
+            <div class="subscription-item">
+                <div class="subscription-details">
+                    <img src="https://logo.clearbit.com/spotify.com" alt="Spotify" class="subscription-logo" id="spotifyLogo" style="border: 3px solid #1DB954">
+                    <div>
+                        <div class="subscription-info" style="color: #1DB954">Spotify</div>
+                        <div class="subscription-recurring">$14.99 CAD / Monthly (23rd) - Entertainment</div>
+                    </div>
+                </div>
+            </div>
+            <div class="subscription-item">
+                <div class="subscription-details">
+                    <img src="https://logo.clearbit.com/instacart.com" alt="Instacart" class="subscription-logo" id="instacartLogo" style="border: 3px solid #FF6F00">
+                    <div>
+                        <div class="subscription-info" style="color: #FF6F00">Instacart</div>
+                        <div class="subscription-recurring">$99.99 CAD / Annually (8th) - Utilities</div>
+                    </div>
+                </div>
+            </div>
+            <div class="subscription-item">
+                <div class="subscription-details">
+                    <img src="https://logo.clearbit.com/apple.com" alt="iCloud" class="subscription-logo" id="icloudLogo" style="border: 3px solid #00A1E0">
+                    <div>
+                        <div class="subscription-info" style="color: #00A1E0">iCloud</div>
+                        <div class="subscription-recurring">$3.99 CAD / Monthly (21st) - Cloud Storage</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<script>
+        // Adding interactivity for filters
+        document.getElementById('searchSubscription')?.addEventListener('input', function () {
+            const searchValue = this.value.toLowerCase();
+            const subscriptions = document.querySelectorAll('.subscription-item');
+
+            subscriptions.forEach(sub => {
+                const name = sub.querySelector('.subscription-info').textContent.toLowerCase();
+                if (name.includes(searchValue)) {
+                    sub.style.display = 'flex';
+                } else {
+                    sub.style.display = 'none';
+                }
+            });
+        });
+
+        // Simple chart with Chart.js for spending overview
+        document.addEventListener('DOMContentLoaded', function () {
+            generateCalendar();
+            updateChart();
+        });
+
+        function generateCalendar() {
+            const calendarBody = document.getElementById('calendarBody');
+            calendarBody.innerHTML = ''; // Clear the calendar before generating it again
+            const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+            const firstDayIndex = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getDay();
+            
+            let date = 1;
+            for (let i = 0; i < 6; i++) {
+                const row = document.createElement('tr');
+                for (let j = 0; j < 7; j++) {
+                    const cell = document.createElement('td');
+                    if (i === 0 && j < firstDayIndex) {
+                        row.appendChild(cell);
+                    } else if (date > daysInMonth) {
+                        break;
+                    } else {
+                        cell.textContent = date;
+                        cell.classList.add('current-month');
+                        if (isSubscriptionDay(date)) {
+                            const circleMarker = document.createElement('span');
+                            circleMarker.classList.add('circle-marker');
+                            circleMarker.style.backgroundColor = getSubscriptionColor(date);
+                            cell.appendChild(circleMarker);
+                        }
+                        row.appendChild(cell);
+                        date++;
+                    }
+                }
+                calendarBody.appendChild(row);
+            }
+        }
+
+        function isSubscriptionDay(day) {
+            const subscriptionDays = [7, 13, 14, 21, 23];
+            return subscriptionDays.includes(day);
+        }
+
+        function getSubscriptionColor(day) {
+            switch(day) {
+                case 7: return '#FF9900'; // Amazon Prime
+                case 14: return '#4285F4'; // Mega Pro
+                case 13: return '#00A4CC'; // ChatGPT Plus
+                case 23: return '#1DB954'; // Spotify
+                case 8: return '#FF6F00'; // Instacart
+                case 21: return '#00A1E0'; // iCloud
+                default: return '#c5e1a5'; // Default color
+            }
+        }
+
+        // Update chart with predefined colors
+        function updateChart() {
+            const backgroundColors = ['#FF9900', '#4285F4', '#00A4CC', '#1DB954', '#FF6F00', '#00A1E0'];
+            const ctx = document.getElementById('spendingChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Amazon Prime', 'Mega Pro', 'ChatGPT Plus', 'Spotify', 'Instacart', 'iCloud'],
+                    datasets: [{
+                        label: 'Subscription Costs (CAD)',
+                        data: [9.99, 6.99, 30.51, 14.99, 8.33, 3.99],
+                        backgroundColor: backgroundColors
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+</script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+</body>
+</html>
