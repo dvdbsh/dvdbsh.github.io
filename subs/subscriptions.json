@@ -1,0 +1,56 @@
+[
+    {
+        "name": "Amazon Prime",
+        "logo": "logos/prime-logo.png",
+        "cost": 9.99,
+        "currency": "CAD",
+        "frequency": "monthly",
+        "recurring_day": 7,
+        "category": "Entertainment"
+    },
+    {
+        "name": "Mega Pro",
+        "logo": "logos/mega-logo.png",
+        "cost": 6.99,
+        "currency": "CAD",
+        "frequency": "monthly",
+        "recurring_day": 14,
+        "category": "Cloud Storage"
+    },
+    {
+        "name": "Spotify",
+        "logo": "logos/spotify-logo.png",
+        "cost": 14.99,
+        "currency": "CAD",
+        "frequency": "monthly",
+        "recurring_day": 23,
+        "category": "Entertainment"
+    },
+    {
+        "name": "Instacart",
+        "logo": "logos/instacart-logo.png",
+        "cost": 99.99,
+        "currency": "CAD",
+        "frequency": "annually",
+        "recurring_day": 8,
+        "category": "Utilities"
+    },
+    {
+        "name": "iCloud",
+        "logo": "logos/icloud-logo.png",
+        "cost": 3.99,
+        "currency": "CAD",
+        "frequency": "monthly",
+        "recurring_day": 21,
+        "category": "Cloud Storage"
+    },
+    {
+        "name": "ChatGPT Plus",
+        "logo": "logos/chatgpt-logo.png",
+        "cost": 30.51,
+        "currency": "CAD",
+        "frequency": "monthly",
+        "recurring_day": 13,
+        "category": "Productivity"
+    }
+]

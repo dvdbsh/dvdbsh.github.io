@@ -177,103 +177,86 @@
         <!-- List of subscriptions -->
         <div class="subscriptions-list">
             <h4>Subscriptions</h4>
-            <div class="subscription-item">
-                <div class="subscription-details">
-                    <img src="logos/prime-logo.png" alt="Amazon Prime" class="subscription-logo" crossorigin="anonymous">
-                    <div>
-                        <div class="subscription-info">Amazon Prime</div>
-                        <div class="subscription-recurring">$9.99 CAD / Monthly (7th) - Entertainment</div>
-                    </div>
-                </div>
-            </div>
-            <div class="subscription-item">
-                <div class="subscription-details">
-                    <img src="logos/mega-logo.png" alt="Mega Pro" class="subscription-logo" crossorigin="anonymous">
-                    <div>
-                        <div class="subscription-info">Mega Pro</div>
-                        <div class="subscription-recurring">$6.99 CAD / Monthly (14th) - Cloud Storage</div>
-                    </div>
-                </div>
-            </div>
-            <div class="subscription-item">
-                <div class="subscription-details">
-                    <img src="logos/spotify-logo.png" alt="Spotify" class="subscription-logo" crossorigin="anonymous">
-                    <div>
-                        <div class="subscription-info">Spotify</div>
-                        <div class="subscription-recurring">$14.99 CAD / Monthly (23rd) - Entertainment</div>
-                    </div>
-                </div>
-            </div>
-            <div class="subscription-item">
-                <div class="subscription-details">
-                    <img src="logos/instacart-logo.png" alt="Instacart" class="subscription-logo" crossorigin="anonymous">
-                    <div>
-                        <div class="subscription-info">Instacart</div>
-                        <div class="subscription-recurring">$99.99 CAD / Annually (8th) - Utilities</div>
-                    </div>
-                </div>
-            </div>
-            <div class="subscription-item">
-                <div class="subscription-details">
-                    <img src="logos/icloud-logo.png" alt="iCloud" class="subscription-logo" crossorigin="anonymous">
-                    <div>
-                        <div class="subscription-info">iCloud</div>
-                        <div class="subscription-recurring">$3.99 CAD / Monthly (21st) - Cloud Storage</div>
-                    </div>
-                </div>
-            </div>
+            <div id="subscriptionItems"></div>
         </div>
     </div>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        extractLogoColors();  // Extract colors after page load
+        loadSubscriptionData();  // Load subscription data from the flat file
     });
 
     const subscriptionColors = {};
     const subscriptionLogos = {};
 
-    function extractLogoColors() {
-        const logos = document.querySelectorAll('.subscription-logo');
-        logos.forEach((logo) => {
-            const img = logo;
+    async function loadSubscriptionData() {
+        try {
+            const response = await fetch('subscriptions.json');
+            const subscriptions = await response.json();
+            displaySubscriptions(subscriptions);
+            extractLogoColors(subscriptions);
+        } catch (error) {
+            console.error('Error loading subscription data:', error);
+        }
+    }
 
-            // Ensure image is fully loaded before extracting color
-            if (img.complete && img.naturalHeight !== 0) {
-                getColor(img);
-            } else {
-                img.addEventListener('load', function() {
-                    getColor(img);
-                });
-                img.addEventListener('error', function() {
-                    console.error("Failed to load image for color extraction:", img.src);
-                });
-            }
+    function displaySubscriptions(subscriptions) {
+        const subscriptionItemsContainer = document.getElementById('subscriptionItems');
+        subscriptionItemsContainer.innerHTML = '';
+        subscriptions.forEach(subscription => {
+            const itemDiv = document.createElement('div');
+            itemDiv.classList.add('subscription-item');
+            itemDiv.innerHTML = `
+                <div class="subscription-details">
+                    <img src="${subscription.logo}" alt="${subscription.name}" class="subscription-logo" crossorigin="anonymous">
+                    <div>
+                        <div class="subscription-info">${subscription.name}</div>
+                        <div class="subscription-recurring">${subscription.cost} ${subscription.currency} / ${subscription.frequency} (${subscription.recurring_day}) - ${subscription.category}</div>
+                    </div>
+                </div>
+            `;
+            subscriptionItemsContainer.appendChild(itemDiv);
+        });
+    }
 
-            function getColor(image) {
+    function extractLogoColors(subscriptions) {
+        subscriptions.forEach((subscription) => {
+            const img = new Image();
+            img.src = subscription.logo;
+            img.alt = subscription.name;
+
+            img.onload = () => {
                 // Using Vibrant.js to get the color
-                Vibrant.from(image.src).getPalette()
+                Vibrant.from(img).getPalette()
                     .then(palette => {
                         const dominantColor = palette.Vibrant ? palette.Vibrant.rgb : [255, 255, 255];
                         const colorHex = rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]);
-                        subscriptionColors[image.alt] = colorHex;  // Store color for use in chart and calendar
-                        subscriptionLogos[image.alt] = image.src;  // Store logo URL for use in chart overlay
+                        subscriptionColors[subscription.name] = colorHex;
+                        subscriptionLogos[subscription.name] = img.src;
 
                         // Apply color to border and text
-                        image.style.border = `3px solid ${colorHex}`;
-                        const parent = image.parentElement;
-                        const subscriptionInfo = parent.querySelector('.subscription-info');
-                        subscriptionInfo.style.color = colorHex;
+                        updatePageElements(subscription.name, colorHex);
 
                         // Update calendar and chart once all colors are extracted
-                        if (Object.keys(subscriptionColors).length === logos.length) {
-                            updateCalendarColors();
-                            updateChart();
+                        if (Object.keys(subscriptionColors).length === subscriptions.length) {
+                            updateCalendarColors(subscriptions);
+                            updateChart(subscriptions);
                             updateNextSubscriptionLogo();
                         }
                     })
                     .catch(e => {
                         console.error("Could not extract color from image using Vibrant", e);
                     });
+            };
+        });
+    }
+
+    function updatePageElements(subscriptionName, colorHex) {
+        const logos = document.querySelectorAll('.subscription-logo');
+        logos.forEach((logo) => {
+            if (logo.alt === subscriptionName) {
+                logo.style.border = `3px solid ${colorHex}`;
+                const subscriptionInfo = logo.parentElement.querySelector('.subscription-info');
+                subscriptionInfo.style.color = colorHex;
             }
         });
     }
@@ -282,7 +265,7 @@
         return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
     }
 
-    function updateCalendarColors() {
+    function updateCalendarColors(subscriptions) {
         const calendarBody = document.getElementById('calendarBody');
         calendarBody.innerHTML = '';
         const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
@@ -300,10 +283,10 @@
                 } else {
                     cell.textContent = date;
                     cell.classList.add('current-month');
-                    if (isSubscriptionDay(date)) {
+                    if (isSubscriptionDay(date, subscriptions)) {
                         const circleMarker = document.createElement('span');
                         circleMarker.classList.add('circle-marker');
-                        const color = getSubscriptionColor(date);
+                        const color = getSubscriptionColor(date, subscriptions);
                         circleMarker.style.backgroundColor = color;
                         cell.appendChild(circleMarker);
                     }
@@ -315,38 +298,21 @@
         }
     }
 
-    function isSubscriptionDay(day) {
-        const subscriptionDays = {7: 'Amazon Prime', 14: 'Mega Pro', 23: 'Spotify', 8: 'Instacart', 21: 'iCloud'};
-        return subscriptionDays[day] !== undefined;
+    function isSubscriptionDay(day, subscriptions) {
+        return subscriptions.some(subscription => parseInt(subscription.recurring_day) === day);
     }
 
-    function getSubscriptionColor(day) {
-        const subscriptionDays = {7: 'Amazon Prime', 14: 'Mega Pro', 23: 'Spotify', 8: 'Instacart', 21: 'iCloud'};
-        const subscriptionName = subscriptionDays[day];
-        return subscriptionColors[subscriptionName] || '#c5e1a5';
+    function getSubscriptionColor(day, subscriptions) {
+        const subscription = subscriptions.find(subscription => parseInt(subscription.recurring_day) === day);
+        return subscriptionColors[subscription.name] || '#c5e1a5';
     }
 
-    function updateChart() {
+    function updateChart(subscriptions) {
         const ctx = document.getElementById('spendingChart').getContext('2d');
-        const labels = Object.keys(subscriptionColors);
-        const colors = Object.values(subscriptionColors);
-        const data = labels.map(label => {
-            switch (label) {
-                case 'Amazon Prime':
-                    return 9.99;
-                case 'Mega Pro':
-                    return 6.99;
-                case 'Spotify':
-                    return 14.99;
-                case 'Instacart':
-                    return 99.99 / 12;  // Convert annual cost to monthly equivalent
-                case 'iCloud':
-                    return 3.99;
-                case 'ChatGPT Plus':
-                    return 30.51;
-                default:
-                    return 0;
-            }
+        const labels = subscriptions.map(subscription => subscription.name);
+        const colors = labels.map(label => subscriptionColors[label]);
+        const data = subscriptions.map(subscription => {
+            return subscription.frequency === 'annually' ? (subscription.cost / 12) : subscription.cost;
         });
 
         new Chart(ctx, {
