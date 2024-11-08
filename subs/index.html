@@ -117,7 +117,6 @@
             margin-left: 5px;
         }
         .centered-value {
-            text-align: center;
             font-size: 1.5em;
             font-weight: bold;
         }
@@ -138,8 +137,8 @@
             <div class="next-subscription-container">
                 <h5>Next Payment</h5>
                 <div style="display: flex; align-items: center;">
-                    <img id="nextSubscriptionLogo" src="" alt="Next Subscription Logo" class="subscription-logo" style="width: 40px; height: 40px; margin-right: 10px;">
-                    <p id="nextSubscriptionText"></p>
+                    <img id="nextSubscriptionLogo" src="logos/prime-logo.png" alt="Amazon Prime Logo" class="subscription-logo" style="width: 40px; height: 40px; margin-right: 10px;">
+                    <p class="centered-value">$9.99 CAD on 7th</p>
                 </div>
             </div>
             <div class="total-subs-container">
@@ -161,7 +160,7 @@
                 </div>
             </div>
             <div id="calendar" class="card-panel calendar-container">
-                <h4>Calendar View</h4>
+                <h4>Subscription Calendar View</h4>
                 <table id="subscriptionCalendar">
                     <thead>
                         <tr>
@@ -237,13 +236,6 @@
 
     const subscriptionColors = {};
     const subscriptionLogos = {};
-    const subscriptions = [
-        { name: 'Amazon Prime', amount: 9.99, recurrence: 'Monthly', day: 7 },
-        { name: 'Mega Pro', amount: 6.99, recurrence: 'Monthly', day: 14 },
-        { name: 'Spotify', amount: 14.99, recurrence: 'Monthly', day: 23 },
-        { name: 'Instacart', amount: 99.99, recurrence: 'Annually', day: 8 },
-        { name: 'iCloud', amount: 3.99, recurrence: 'Monthly', day: 21 }
-    ];
 
     function extractLogoColors() {
         const logos = document.querySelectorAll('.subscription-logo');
@@ -400,10 +392,9 @@
     }
 
     function updateNextSubscriptionLogo() {
-        const nextPayment = subscriptions.reduce((prev, curr) => (prev.day < curr.day ? prev : curr));
         const nextSubscriptionLogo = document.getElementById('nextSubscriptionLogo');
-        nextSubscriptionLogo.src = subscriptionLogos[nextPayment.name];
-        document.getElementById('nextSubscriptionText').textContent = `${nextPayment.name} - $${nextPayment.amount} CAD on ${nextPayment.day}th`;
+        const nextSubscriptionAlt = nextSubscriptionLogo.alt;
+        nextSubscriptionLogo.src = subscriptionLogos[nextSubscriptionAlt];
     }
 </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
