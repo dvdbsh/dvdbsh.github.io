@@ -168,199 +168,200 @@
         <div class="subscriptions-list">
             <h4>Subscriptions</h4>
             <div class="subscription-item">
-                <div class="subscription-details">
-                    <img src="https://logo.clearbit.com/amazon.com" alt="Amazon Prime" class="subscription-logo" id="amazonPrimeLogo">
-                    <div>
-                        <div class="subscription-info">Amazon Prime</div>
-                        <div class="subscription-recurring">$9.99 CAD / Monthly (7th) - Entertainment</div>
-                    </div>
-                </div>
-            </div>
-            <div class="subscription-item">
-                <div class="subscription-details">
-                    <img src="logos/mega-logo.png" alt="Mega Pro" class="subscription-logo" id="megaProLogo">
-                    <div>
-                        <div class="subscription-info">Mega Pro</div>
-                        <div class="subscription-recurring">$6.99 CAD / Monthly (14th) - Cloud Storage</div>
-                    </div>
-                </div>
-            </div>
-            <div class="subscription-item">
-                <div class="subscription-details">
-                    <img src="https://logo.clearbit.com/openai.com" alt="ChatGPT Plus" class="subscription-logo" id="chatGptPlusLogo">
-                    <div>
-                        <div class="subscription-info">ChatGPT Plus</div>
-                        <div class="subscription-recurring">$22.60 USD (~30.51 CAD) / Monthly (13th) - Utilities</div>
-                    </div>
-                </div>
-            </div>
-            <div class="subscription-item">
-                <div class="subscription-details">
-                    <img src="https://logo.clearbit.com/spotify.com" alt="Spotify" class="subscription-logo" id="spotifyLogo">
-                    <div>
-                        <div class="subscription-info">Spotify</div>
-                        <div class="subscription-recurring">$14.99 CAD / Monthly (23rd) - Entertainment</div>
-                    </div>
-                </div>
-            </div>
-            <div class="subscription-item">
-                <div class="subscription-details">
-                    <img src="https://logo.clearbit.com/instacart.com" alt="Instacart" class="subscription-logo" id="instacartLogo">
-                    <div>
-                        <div class="subscription-info">Instacart</div>
-                        <div class="subscription-recurring">$99.99 CAD / Annually (8th) - Utilities</div>
-                    </div>
-                </div>
-            </div>
-            <div class="subscription-item">
-                <div class="subscription-details">
-                    <img src="https://logo.clearbit.com/apple.com" alt="iCloud" class="subscription-logo" id="icloudLogo">
-                    <div>
-                        <div class="subscription-info">iCloud</div>
-                        <div class="subscription-recurring">$3.99 CAD / Monthly (21st) - Cloud Storage</div>
-                    </div>
-                </div>
-            </div>
+    <div class="subscription-details">
+        <img src="logos/prime-logo.png" alt="Amazon Prime" class="subscription-logo">
+        <div>
+            <div class="subscription-info">Amazon Prime</div>
+            <div class="subscription-recurring">$9.99 CAD / Monthly (7th) - Entertainment</div>
+        </div>
+    </div>
+</div>
+<div class="subscription-item">
+    <div class="subscription-details">
+        <img src="logos/mega-logo.png" alt="Mega Pro" class="subscription-logo">
+        <div>
+            <div class="subscription-info">Mega Pro</div>
+            <div class="subscription-recurring">$6.99 CAD / Monthly (14th) - Cloud Storage</div>
+        </div>
+    </div>
+</div>
+<div class="subscription-item">
+    <div class="subscription-details">
+        <img src="logos/spotify-logo.png" alt="Spotify" class="subscription-logo">
+        <div>
+            <div class="subscription-info">Spotify</div>
+            <div class="subscription-recurring">$14.99 CAD / Monthly (23rd) - Entertainment</div>
+        </div>
+    </div>
+</div>
+<div class="subscription-item">
+    <div class="subscription-details">
+        <img src="logos/instacart-logo.png" alt="Instacart" class="subscription-logo">
+        <div>
+            <div class="subscription-info">Instacart</div>
+            <div class="subscription-recurring">$99.99 CAD / Annually (8th) - Utilities</div>
+        </div>
+    </div>
+</div>
+<div class="subscription-item">
+    <div class="subscription-details">
+        <img src="logos/icloud-logo.png" alt="iCloud" class="subscription-logo">
+        <div>
+            <div class="subscription-info">iCloud</div>
+            <div class="subscription-recurring">$3.99 CAD / Monthly (21st) - Cloud Storage</div>
+        </div>
+    </div>
+</div>
+
         </div>
     </div>
 <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            generateCalendar();
-            updateChart();
-            extractLogoColors();  // Extract colors after page load
-        });
+document.addEventListener('DOMContentLoaded', function () {
+    generateCalendar();
+    updateChart();
+    extractLogoColors();  // Extract colors after page load
+});
 
-        function extractLogoColors() {
-            const logos = document.querySelectorAll('.subscription-logo');
-            logos.forEach((logo) => {
-                const img = logo;
-                const colorThief = new ColorThief();
+function extractLogoColors() {
+    const logos = document.querySelectorAll('.subscription-logo');
+    logos.forEach((logo) => {
+        const img = logo;
+        const colorThief = new ColorThief();
 
-                if (img.complete) {
-                    getColor(img);
-                } else {
-                    img.addEventListener('load', function() {
-                        getColor(img);
-                    });
-                }
-
-                function getColor(image) {
-                    try {
-                        const dominantColor = colorThief.getColor(image);
-                        const colorHex = rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]);
-                        image.style.border = `3px solid ${colorHex}`;
-                        const parent = image.parentElement;
-                        const subscriptionInfo = parent.querySelector('.subscription-info');
-                        subscriptionInfo.style.color = colorHex;
-                        updateCalendarColor(image.alt, colorHex);
-                        updateChartColor(image.alt, colorHex);
-                    } catch (e) {
-                        console.error("Could not extract color from image", e);
-                    }
-                }
+        // Ensure image is fully loaded before extracting color
+        if (img.complete && img.naturalHeight !== 0) {
+            getColor(img);
+        } else {
+            img.addEventListener('load', function() {
+                getColor(img);
+            });
+            img.addEventListener('error', function() {
+                console.error("Failed to load image for color extraction:", img.src);
             });
         }
 
-        function rgbToHex(r, g, b) {
-            return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
-        }
+        function getColor(image) {
+            try {
+                const dominantColor = colorThief.getColor(image);
+                const colorHex = rgbToHex(dominantColor[0], dominantColor[1], dominantColor[2]);
 
-        function updateCalendarColor(alt, colorHex) {
-            switch(alt) {
-                case 'Amazon Prime':
-                    document.querySelectorAll('.circle-marker')[0].style.backgroundColor = colorHex;
-                    break;
-                case 'Mega Pro':
-                    document.querySelectorAll('.circle-marker')[1].style.backgroundColor = colorHex;
-                    break;
-                case 'ChatGPT Plus':
-                    document.querySelectorAll('.circle-marker')[2].style.backgroundColor = colorHex;
-                    break;
-                case 'Spotify':
-                    document.querySelectorAll('.circle-marker')[3].style.backgroundColor = colorHex;
-                    break;
-                case 'Instacart':
-                    document.querySelectorAll('.circle-marker')[4].style.backgroundColor = colorHex;
-                    break;
-                case 'iCloud':
-                    document.querySelectorAll('.circle-marker')[5].style.backgroundColor = colorHex;
-                    break;
+                // Apply color to border and text
+                image.style.border = `3px solid ${colorHex}`;
+                const parent = image.parentElement;
+                const subscriptionInfo = parent.querySelector('.subscription-info');
+                subscriptionInfo.style.color = colorHex;
+
+                // Optionally update color in calendar or chart
+                updateCalendarColor(image.alt, colorHex);
+            } catch (e) {
+                console.error("Could not extract color from image", e);
             }
         }
+    });
+}
 
-        function generateCalendar() {
-            const calendarBody = document.getElementById('calendarBody');
-            calendarBody.innerHTML = '';
-            const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
-            const firstDayIndex = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getDay();
-            
-            let date = 1;
-            for (let i = 0; i < 6; i++) {
-                const row = document.createElement('tr');
-                for (let j = 0; j < 7; j++) {
-                    const cell = document.createElement('td');
-                    if (i === 0 && j < firstDayIndex) {
-                        row.appendChild(cell);
-                    } else if (date > daysInMonth) {
-                        break;
-                    } else {
-                        cell.textContent = date;
-                        cell.classList.add('current-month');
-                        if (isSubscriptionDay(date)) {
-                            const circleMarker = document.createElement('span');
-                            circleMarker.classList.add('circle-marker');
-                            circleMarker.style.backgroundColor = getSubscriptionColor(date);
-                            cell.appendChild(circleMarker);
-                        }
-                        row.appendChild(cell);
-                        date++;
-                    }
+function rgbToHex(r, g, b) {
+    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+}
+
+function updateCalendarColor(alt, colorHex) {
+    const circleMarkers = document.querySelectorAll('.circle-marker');
+    switch (alt) {
+        case 'Amazon Prime':
+            circleMarkers[0].style.backgroundColor = colorHex;
+            break;
+        case 'Mega Pro':
+            circleMarkers[1].style.backgroundColor = colorHex;
+            break;
+        case 'ChatGPT Plus':
+            circleMarkers[2].style.backgroundColor = colorHex;
+            break;
+        case 'Spotify':
+            circleMarkers[3].style.backgroundColor = colorHex;
+            break;
+        case 'Instacart':
+            circleMarkers[4].style.backgroundColor = colorHex;
+            break;
+        case 'iCloud':
+            circleMarkers[5].style.backgroundColor = colorHex;
+            break;
+    }
+}
+
+function generateCalendar() {
+    const calendarBody = document.getElementById('calendarBody');
+    calendarBody.innerHTML = '';
+    const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+    const firstDayIndex = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getDay();
+
+    let date = 1;
+    for (let i = 0; i < 6; i++) {
+        const row = document.createElement('tr');
+        for (let j = 0; j < 7; j++) {
+            const cell = document.createElement('td');
+            if (i === 0 && j < firstDayIndex) {
+                row.appendChild(cell);
+            } else if (date > daysInMonth) {
+                break;
+            } else {
+                cell.textContent = date;
+                cell.classList.add('current-month');
+                if (isSubscriptionDay(date)) {
+                    const circleMarker = document.createElement('span');
+                    circleMarker.classList.add('circle-marker');
+                    circleMarker.style.backgroundColor = getSubscriptionColor(date);
+                    cell.appendChild(circleMarker);
                 }
-                calendarBody.appendChild(row);
+                row.appendChild(cell);
+                date++;
             }
         }
+        calendarBody.appendChild(row);
+    }
+}
 
-        function isSubscriptionDay(day) {
-            const subscriptionDays = [7, 13, 14, 21, 23];
-            return subscriptionDays.includes(day);
-        }
+function isSubscriptionDay(day) {
+    const subscriptionDays = [7, 13, 14, 21, 23];
+    return subscriptionDays.includes(day);
+}
 
-        function getSubscriptionColor(day) {
-            switch(day) {
-                case 7: return '#FF9900';
-                case 14: return '#4285F4';
-                case 13: return '#00A4CC';
-                case 23: return '#1DB954';
-                case 8: return '#FF6F00';
-                case 21: return '#00A1E0';
-                default: return '#c5e1a5';
-            }
-        }
+function getSubscriptionColor(day) {
+    switch(day) {
+        case 7: return '#FF9900';
+        case 14: return '#4285F4';
+        case 13: return '#00A4CC';
+        case 23: return '#1DB954';
+        case 8: return '#FF6F00';
+        case 21: return '#00A1E0';
+        default: return '#c5e1a5';
+    }
+}
 
-        function updateChart() {
-            const backgroundColors = ['#FF9900', '#4285F4', '#00A4CC', '#1DB954', '#FF6F00', '#00A1E0'];
-            const ctx = document.getElementById('spendingChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'pie',
-                data: {
-                    labels: ['Amazon Prime', 'Mega Pro', 'ChatGPT Plus', 'Spotify', 'Instacart', 'iCloud'],
-                    datasets: [{
-                        label: 'Subscription Costs (CAD)',
-                        data: [9.99, 6.99, 30.51, 14.99, 8.33, 3.99],
-                        backgroundColor: backgroundColors
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            position: 'bottom'
-                        }
-                    }
+function updateChart() {
+    const backgroundColors = ['#FF9900', '#4285F4', '#00A4CC', '#1DB954', '#FF6F00', '#00A1E0'];
+    const ctx = document.getElementById('spendingChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Amazon Prime', 'Mega Pro', 'ChatGPT Plus', 'Spotify', 'Instacart', 'iCloud'],
+            datasets: [{
+                label: 'Subscription Costs (CAD)',
+                data: [9.99, 6.99, 30.51, 14.99, 8.33, 3.99],
+                backgroundColor: backgroundColors
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom'
                 }
-            });
+            }
         }
+    });
+}
+
 </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </body>
