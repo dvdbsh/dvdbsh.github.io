@@ -116,6 +116,11 @@
             display: inline-block;
             margin-left: 5px;
         }
+        .centered-value {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -131,16 +136,19 @@
         <!-- Cards row for next subscription, total subscriptions, and total annual cost -->
         <div class="card-row">
             <div class="next-subscription-container">
-                <h5>Next Subscription Payment</h5>
-                <p>Amazon Prime - $9.99 CAD on 7th</p>
+                <h5>Next Payment</h5>
+                <div style="display: flex; align-items: center;">
+                    <img id="nextSubscriptionLogo" src="" alt="Next Subscription Logo" class="subscription-logo" style="width: 40px; height: 40px; margin-right: 10px;">
+                    <p id="nextSubscriptionText"></p>
+                </div>
             </div>
             <div class="total-subs-container">
                 <h5>Total Subscriptions</h5>
-                <p>6 Active Subscriptions</p>
+                <p class="centered-value">6</p>
             </div>
             <div class="total-annual-cost-container">
                 <h5>Total Annual Cost</h5>
-                <p>$899.88 CAD (Estimated)</p>
+                <p class="centered-value">$899.88</p>
             </div>
         </div>
         <!-- Side-by-side layout for chart and calendar view -->
@@ -153,7 +161,7 @@
                 </div>
             </div>
             <div id="calendar" class="card-panel calendar-container">
-                <h4>Subscription Calendar View</h4>
+                <h4>Calendar View</h4>
                 <table id="subscriptionCalendar">
                     <thead>
                         <tr>
@@ -229,6 +237,13 @@
 
     const subscriptionColors = {};
     const subscriptionLogos = {};
+    const subscriptions = [
+        { name: 'Amazon Prime', amount: 9.99, recurrence: 'Monthly', day: 7 },
+        { name: 'Mega Pro', amount: 6.99, recurrence: 'Monthly', day: 14 },
+        { name: 'Spotify', amount: 14.99, recurrence: 'Monthly', day: 23 },
+        { name: 'Instacart', amount: 99.99, recurrence: 'Annually', day: 8 },
+        { name: 'iCloud', amount: 3.99, recurrence: 'Monthly', day: 21 }
+    ];
 
     function extractLogoColors() {
         const logos = document.querySelectorAll('.subscription-logo');
@@ -266,6 +281,7 @@
                         if (Object.keys(subscriptionColors).length === logos.length) {
                             updateCalendarColors();
                             updateChart();
+                            updateNextSubscriptionLogo();
                         }
                     })
                     .catch(e => {
@@ -381,6 +397,13 @@
                 }
             }
         });
+    }
+
+    function updateNextSubscriptionLogo() {
+        const nextPayment = subscriptions.reduce((prev, curr) => (prev.day < curr.day ? prev : curr));
+        const nextSubscriptionLogo = document.getElementById('nextSubscriptionLogo');
+        nextSubscriptionLogo.src = subscriptionLogos[nextPayment.name];
+        document.getElementById('nextSubscriptionText').textContent = `${nextPayment.name} - $${nextPayment.amount} CAD on ${nextPayment.day}th`;
     }
 </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
