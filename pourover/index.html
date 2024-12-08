@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Pour Over - Wrapped Experience</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      font-family: 'Syne', sans-serif;
+      background-color: #000;
+      color: white;
+    }
+
+    .slides {
+      display: flex;
+      flex-direction: column;
+      scroll-snap-type: y mandatory;
+      overflow-y: scroll;
+      height: 100vh;
+      scroll-behavior: smooth;
+    }
+
+    .slide {
+      flex: 0 0 100vh;
+      scroll-snap-align: start;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      position: relative;
+      color: white;
+      overflow: hidden;
+    }
+
+    .slide video {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 100vw; /* Cover the width of the viewport */
+      height: 100vh; /* Cover the height of the viewport */
+      object-fit: cover; /* Ensure the video overflows if necessary */
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .content {
+      z-index: 99;
+      text-align: center;
+	  padding: 20px;
+    }
+
+    .content h1, .content h2, .content p {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+
+    .content.active h1 {
+      animation: fade-up-bounce 1s ease-out forwards;
+      animation-delay: 0.5s;
+    }
+	
+    .content.active h2 {
+      animation: fade-up-bounce 1s ease-out forwards;
+      animation-delay: 1.5s;
+    }	
+
+    .content.active p {
+      animation: fade-up-bounce 1s ease-out forwards;
+      animation-delay: 2.5s;
+    }
+
+    @keyframes fade-up-bounce {
+      0% {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      60% {
+        opacity: 1;
+        transform: translateY(-10px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .intro-slide {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: 100vh;
+      background-color: #1DB954;
+      color: #000;
+      text-align: center;
+    }
+
+    .intro-slide h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      margin: 0 0 20px;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fade-up-bounce 1s ease-out forwards;
+      animation-delay: 0.5s;
+    }
+	
+    .intro-slide h2 {
+      font-size: 2rem;
+      font-weight: 800;
+      margin: 0 0 20px;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fade-up-bounce 1s ease-out forwards;
+      animation-delay: 1.5s;
+    }	
+
+    .intro-slide p {
+      font-size: 1.5rem;
+      font-weight: 400;
+      margin: 0 0 30px;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fade-up-bounce 1s ease-out forwards;
+      animation-delay: 2.5s;
+    }
+
+    .start-button {
+      background-color: #000;
+      color: #1DB954;
+      border: none;
+      padding: 15px 30px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .start-button:hover {
+      background-color: #1DB954;
+      color: #000;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="intro-slide">
+    <h1>Welcome to The Pour Over</h1>
+    <p>Your Starbucks Wrapped Experience</p>
+    <button class="start-button" onclick="startExperience()">Start Experience</button>
+  </div>
+
+  <div class="slides hidden">
+    <!-- Each slide -->
+    <div class="slide">
+      <div class="content">
+        <h1>Pop Was Our PSL</h1>
+		<h2>Making up 48% of the mix, it’s the crowd favorite we keep going back to, even when we all say we're “over it.”</h2>
+        <p>“Chase It (Mmm Da Da Da)” by Bebe Rexha<br>“Hurricane” by Bridgit Mendler<br>“No.1” by Tyla and Tems<br>“Black Magic” by Little Mix<br>“DESPECHÁ” by ROSALÍA</p>
+      </div>
+      <video loop preload="auto" playsinline>
+        <source src="clips/slide01.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+    <div class="slide">
+      <div class="content">
+        <h1>Top Song 2</h1>
+        <p>"Another Song" by Artist</p>
+      </div>
+      <video loop preload="auto" playsinline>
+        <source src="clips/slide02.mp4" type="video/mp4">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+
+  <script>
+    function startExperience() {
+      const introSlide = document.querySelector('.intro-slide');
+      const slides = document.querySelector('.slides');
+      const videos = document.querySelectorAll('video');
+      const contents = document.querySelectorAll('.content');
+
+      introSlide.classList.add('hidden');
+      slides.classList.remove('hidden');
+
+      // IntersectionObserver to detect visible slide
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            const video = entry.target.querySelector('video');
+            const content = entry.target.querySelector('.content');
+
+            if (entry.isIntersecting) {
+              video.play();
+              content.classList.add('active');
+            } else {
+              video.pause();
+              video.currentTime = 0; // Reset the video
+              content.classList.remove('active');
+            }
+          });
+        },
+        { threshold: 0.5 } // Trigger when 50% of the slide is visible
+      );
+
+      // Observe all slides
+      document.querySelectorAll('.slide').forEach((slide) => observer.observe(slide));
+    }
+  </script>
+</body>
+</html>
