@@ -40,17 +40,16 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 100vw; /* Cover the width of the viewport */
-      height: 100vh; /* Cover the height of the viewport */
-      object-fit: cover; /* Ensure the video overflows if necessary */
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
       z-index: -1;
       pointer-events: none;
     }
 
     .content {
-      z-index: 99;
-      text-align: center;
-	  padding: 20px;
+      z-index: 1;
+      padding: 20px;
     }
 
     .content h1, .content h2, .content p {
@@ -60,17 +59,54 @@
 
     .content.active h1 {
       animation: fade-up-bounce 1s ease-out forwards;
-      animation-delay: 0.5s;
+      animation-delay: 0.3s;
     }
-	
+
     .content.active h2 {
       animation: fade-up-bounce 1s ease-out forwards;
-      animation-delay: 1.5s;
-    }	
+      animation-delay: 0.5s;
+    }
 
     .content.active p {
       animation: fade-up-bounce 1s ease-out forwards;
-      animation-delay: 2.5s;
+      animation-delay: 0.7s;
+    }
+	
+	    .song-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .song {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 150px;
+      animation: fade-in-scale 0.8s ease forwards;
+    }
+
+    .song img {
+      width: 150px;
+      height: 150px;
+      border-radius: 10px;
+      object-fit: cover;
+      margin-bottom: 10px;
+	  
+    }
+
+    .song-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      text-align: center;
+    }
+
+    .song-artist {
+      font-size: 0.8rem;
+      font-weight: 400;
+      text-align: center;
     }
 
     @keyframes fade-up-bounce {
@@ -97,44 +133,35 @@
       background-color: #1DB954;
       color: #000;
       text-align: center;
+      padding: 20px;
     }
 
     .intro-slide h1 {
-      font-size: 3.5rem;
+      font-size: 2.5rem;
       font-weight: 800;
-      margin: 0 0 20px;
+      margin-bottom: 20px;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fade-up-bounce 1s ease-out forwards;
+      animation-delay: 0.3s;
+    }
+
+    .intro-slide p {
+      font-size: 1.2rem;
+      font-weight: 400;
+      margin-bottom: 20px;
       opacity: 0;
       transform: translateY(50px);
       animation: fade-up-bounce 1s ease-out forwards;
       animation-delay: 0.5s;
-    }
-	
-    .intro-slide h2 {
-      font-size: 2rem;
-      font-weight: 800;
-      margin: 0 0 20px;
-      opacity: 0;
-      transform: translateY(50px);
-      animation: fade-up-bounce 1s ease-out forwards;
-      animation-delay: 1.5s;
-    }	
-
-    .intro-slide p {
-      font-size: 1.5rem;
-      font-weight: 400;
-      margin: 0 0 30px;
-      opacity: 0;
-      transform: translateY(50px);
-      animation: fade-up-bounce 1s ease-out forwards;
-      animation-delay: 2.5s;
     }
 
     .start-button {
       background-color: #000;
       color: #1DB954;
       border: none;
-      padding: 15px 30px;
-      font-size: 1.2rem;
+      padding: 10px 20px;
+      font-size: 1rem;
       font-weight: 700;
       cursor: pointer;
       border-radius: 5px;
@@ -145,6 +172,35 @@
       background-color: #1DB954;
       color: #000;
     }
+	
+	.song img {
+  width: 150px;
+  height: 150px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 10px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+
+}
+
+.song.active img {
+  opacity: 1;
+  transform: scale(1);
+}
+
+@keyframes fade-in-scale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 
     .hidden {
       display: none;
@@ -158,64 +214,325 @@
     <button class="start-button" onclick="startExperience()">Start Experience</button>
   </div>
 
-  <div class="slides hidden">
-    <!-- Each slide -->
-    <div class="slide">
-      <div class="content">
-        <h1>Pop Was Our PSL</h1>
-		<h2>Making up 48% of the mix, it’s the crowd favorite we keep going back to, even when we all say we're “over it.”</h2>
-        <p>“Chase It (Mmm Da Da Da)” by Bebe Rexha<br>“Hurricane” by Bridgit Mendler<br>“No.1” by Tyla and Tems<br>“Black Magic” by Little Mix<br>“DESPECHÁ” by ROSALÍA</p>
+<div class="slides hidden">
+  <div class="slide">
+    <div class="content">
+      <h1>Ariana Grande Carried Our Shift</h1>
+      <h2>With 5 tracks, she was the backbone of our playlist—always on, always delivering, and never calling in.</h2>
+      <div class="song-list">
+        <div class="song">
+          <img src="album_art/supernatural - Ariana Grande.jpg" alt="supernatural">
+          <div class="song-title">supernatural</div>
+          <div class="song-artist">Ariana Grande, Troye Sivan</div>
+        </div>
+        <div class="song">
+          <img src="album_art/don't wanna break up again - Ariana Grande.jpg" alt="don't wanna break up again">
+          <div class="song-title">don't wanna break up again</div>
+          <div class="song-artist">Ariana Grande</div>
+        </div>
+        <div class="song">
+          <img src="album_art/we can't be friends - Ariana Grande.jpg" alt="we can't be friends">
+          <div class="song-title">we can't be friends</div>
+          <div class="song-artist">Ariana Grande</div>
+        </div>
+        <div class="song">
+          <img src="album_art/bye - Ariana Grande.jpg" alt="bye">
+          <div class="song-title">bye</div>
+          <div class="song-artist">Ariana Grande</div>
+        </div>
+        <div class="song">
+          <img src="album_art/the boy is mine - Ariana Grande.jpg" alt="the boy is mine">
+          <div class="song-title">the boy is mine</div>
+          <div class="song-artist">Ariana Grande</div>
+        </div>
       </div>
-      <video loop preload="auto" playsinline>
-        <source src="clips/slide01.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
     </div>
-    <div class="slide">
-      <div class="content">
-        <h1>Top Song 2</h1>
-        <p>"Another Song" by Artist</p>
-      </div>
-      <video loop preload="auto" playsinline>
-        <source src="clips/slide02.mp4" type="video/mp4">
-        Your browser does not support the video tag.
-      </video>
-    </div>
+    <video loop preload="auto" playsinline muted>
+      <source src="clips/slide01.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
   </div>
 
-  <script>
-    function startExperience() {
-      const introSlide = document.querySelector('.intro-slide');
-      const slides = document.querySelector('.slides');
-      const videos = document.querySelectorAll('video');
-      const contents = document.querySelectorAll('.content');
+  <div class="slide">
+    <div class="content">
+      <h1>Top 5 Genres</h1>
+      <h2>Your playlist is as diverse as the drink combinations you see in a day.</h2>
+      <p><strong>Pop:</strong> 41.9%</p>
+      <p><strong>R&B:</strong> 16.5%</p>
+      <p><strong>Hip Hop:</strong> 8.9%</p>
+      <p><strong>Rock:</strong> 7.6%</p>
+      <p><strong>World/Traditional:</strong> 2.5%</p>
+    </div>
+    <video loop preload="auto" playsinline muted>
+      <source src="clips/slide02.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
-      introSlide.classList.add('hidden');
-      slides.classList.remove('hidden');
+  <div class="slide">
+    <div class="content">
+      <h1>Pop Was Our PSL</h1>
+      <h2>Making up 41.9% of the mix, Pop is the seasonal go-to that always finds its way back to the spotlight. Whether you admit it or not, you secretly love it.</h2>
+      <div class="song-list">
+        <div class="song">
+          <img src="album_art/WILDFLOWER - Billie Eilish.jpg" alt="WILDFLOWER">
+          <div class="song-title">WILDFLOWER</div>
+          <div class="song-artist">Billie Eilish</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Beautiful Things - Benson Boone.jpg" alt="Beautiful Things">
+          <div class="song-title">Beautiful Things</div>
+          <div class="song-artist">Benson Boone</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Nonsense - Sabrina Carpenter.jpg" alt="Nonsense">
+          <div class="song-title">Nonsense</div>
+          <div class="song-artist">Sabrina Carpenter</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Stick Season - Noah Kahan.jpg" alt="Stick Season">
+          <div class="song-title">Stick Season</div>
+          <div class="song-artist">Noah Kahan</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Open Arms - SZA.jpg" alt="Open Arms">
+          <div class="song-title">Open Arms (feat. Travis Scott)</div>
+          <div class="song-artist">SZA, Travis Scott</div>
+        </div>
+      </div>
+    </div>
+    <video loop preload="auto" playsinline muted>
+      <source src="clips/slide03.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
-      // IntersectionObserver to detect visible slide
-      const observer = new IntersectionObserver(
-        (entries) => {
-          entries.forEach((entry) => {
-            const video = entry.target.querySelector('video');
-            const content = entry.target.querySelector('.content');
+  <div class="slide">
+    <div class="content">
+      <h1>R&B Is the Smooth Latte Art</h1>
+      <h2>At 16.5%, R&B added a rich, silky vibe to the playlist. Perfect for staying calm after being asked, “What’s in a vanilla latte?”</h2>
+      <div class="song-list">
+        <div class="song">
+          <img src="album_art/Pink + White - Frank Ocean.jpg" alt="Pink + White">
+          <div class="song-title">Pink + White</div>
+          <div class="song-artist">Frank Ocean</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Love - Keyshia Cole.jpg" alt="Love">
+          <div class="song-title">Love</div>
+          <div class="song-artist">Keyshia Cole</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Back On 74 - Jungle.jpg" alt="Back On 74">
+          <div class="song-title">Back On 74</div>
+          <div class="song-artist">Jungle</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Good Days - SZA.jpg" alt="Good Days">
+          <div class="song-title">Good Days</div>
+          <div class="song-artist">SZA</div>
+        </div>
+        <div class="song">
+          <img src="album_art/DESPECHÁ - ROSALÍA.jpg" alt="DESPECHÁ">
+          <div class="song-title">DESPECHÁ</div>
+          <div class="song-artist">ROSALÍA</div>
+        </div>
+      </div>
+    </div>
+    <video loop preload="auto" playsinline muted>
+      <source src="clips/slide04.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
-            if (entry.isIntersecting) {
-              video.play();
-              content.classList.add('active');
-            } else {
-              video.pause();
-              video.currentTime = 0; // Reset the video
-              content.classList.remove('active');
-            }
-          });
-        },
-        { threshold: 0.5 } // Trigger when 50% of the slide is visible
-      );
+  <div class="slide">
+    <div class="content">
+      <h1>Danceable Like a Front-Door Jam (Literally)</h1>
+      <h2>With an average 64/100 Danceability, these tracks flowed better than the store’s front door during peak.</h2>
+      <div class="song-list">
+        <div class="song">
+          <img src="album_art/Grip - Baby Tate.jpg" alt="Grip">
+          <div class="song-title">Grip</div>
+          <div class="song-artist">Baby Tate</div>
+        </div>
+        <div class="song">
+          <img src="album_art/U Dun Kno - SadBoi.jpg" alt="U Dun Kno">
+          <div class="song-title">U Dun Kno</div>
+          <div class="song-artist">SadBoi</div>
+        </div>
+        <div class="song">
+          <img src="album_art/No.1 - Tyla.jpg" alt="No.1">
+          <div class="song-title">No.1 (feat. Tems)</div>
+          <div class="song-artist">Tyla, Tems</div>
+        </div>
+        <div class="song">
+          <img src="album_art/808 - DJ Bliss.jpg" alt="808">
+          <div class="song-title">808</div>
+          <div class="song-artist">DJ Bliss, BIA</div>
+        </div>
+        <div class="song">
+          <img src="album_art/F__kin' Problems - A$AP Rocky.jpg" alt="F**kin' Problems">
+          <div class="song-title">F**kin' Problems (feat. Drake, 2 Chainz & Kendrick Lamar)</div>
+          <div class="song-artist">A$AP Rocky, Drake, 2 Chainz, Kendrick Lamar</div>
+        </div>
+      </div>
+    </div>
+    <video loop preload="auto" playsinline muted>
+      <source src="clips/slide05.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
 
-      // Observe all slides
-      document.querySelectorAll('.slide').forEach((slide) => observer.observe(slide));
-    }
-  </script>
+  <div class="slide">
+    <div class="content">
+      <h1>Tempo to Match a Close</h1>
+      <h2>At an average 121 BPM, the tracks had the perfect rhythm for wiping counters, stocking syrups, and powering through the last-minute rush.</h2>
+      <div class="song-list">
+        <div class="song">
+          <img src="album_art/MIDDLE OF THE NIGHT - Elley Duhé.jpg" alt="MIDDLE OF THE NIGHT">
+          <div class="song-title">MIDDLE OF THE NIGHT</div>
+          <div class="song-artist">Elley Duhé</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Heaven Without You - Alex Warren.jpg" alt="Heaven Without You">
+          <div class="song-title">Heaven Without You</div>
+          <div class="song-artist">Alex Warren</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Blood -- Water - grandson.jpg" alt="Blood Water">
+          <div class="song-title">Blood // Water</div>
+          <div class="song-artist">grandson</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Early Grave - The Contortionist.jpg" alt="Early Grave">
+          <div class="song-title">Early Grave</div>
+          <div class="song-artist">The Contortionist</div>
+        </div>
+        <div class="song">
+          <img src="album_art/FU-150 - Tanner Adell.jpg" alt="FU-150">
+          <div class="song-title">FU-150</div>
+          <div class="song-artist">Tanner Adell</div>
+        </div>
+      </div>
+    </div>
+    <video loop preload="auto" playsinline muted>
+      <source src="clips/slide06.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <div class="slide">
+    <div class="content">
+      <h1>Oldest Songs on the Playlist</h1>
+      <h2>Because there’s nothing wrong with being a little older than the rest! These classic tracks are still holding their own, like the baristas who remember when drink tickets had to be handwritten.</h2>
+      <div class="song-list">
+        <div class="song">
+          <img src="album_art/Welcome To The Jungle - Guns N' Roses.jpg" alt="Welcome To The Jungle">
+          <div class="song-title">Welcome To The Jungle</div>
+          <div class="song-artist">Guns N' Roses</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Love - Keyshia Cole.jpg" alt="Love">
+          <div class="song-title">Love</div>
+          <div class="song-artist">Keyshia Cole</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Honey, Honey - Amanda Seyfried.jpg" alt="Honey, Honey">
+          <div class="song-title">Honey, Honey</div>
+          <div class="song-artist">Amanda Seyfried, Ashley Lilley, Rachel McDowall</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Shoot to Thrill - AC_DC.jpg" alt="Shoot to Thrill">
+          <div class="song-title">Shoot to Thrill</div>
+          <div class="song-artist">AC/DC</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Need You Tonight - INXS.jpg" alt="Need You Tonight">
+          <div class="song-title">Need You Tonight</div>
+          <div class="song-artist">INXS</div>
+        </div>
+      </div>
+    </div>
+    <video loop preload="auto" playsinline muted>
+      <source src="clips/slide07.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+
+  <div class="slide">
+    <div class="content">
+      <h1>Hidden Beans, Reserve Menu Edition</h1>
+      <h2>Like that one seasonal drink only two people order, these tracks brought a unique flavor that kept things interesting.</h2>
+      <div class="song-list">
+        <div class="song">
+          <img src="album_art/snowfall - Øneheart.jpg" alt="snowfall">
+          <div class="song-title">snowfall</div>
+          <div class="song-artist">Øneheart, reidenshi</div>
+        </div>
+        <div class="song">
+          <img src="album_art/SKINNY - Billie Eilish.jpg" alt="SKINNY">
+          <div class="song-title">SKINNY</div>
+          <div class="song-artist">Billie Eilish</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Riptide - Vance Joy.jpg" alt="Riptide">
+          <div class="song-title">Riptide</div>
+          <div class="song-artist">Vance Joy</div>
+        </div>
+        <div class="song">
+          <img src="album_art/All Your'n - Tyler Childers.jpg" alt="All Your'n">
+          <div class="song-title">All Your'n</div>
+          <div class="song-artist">Tyler Childers</div>
+        </div>
+        <div class="song">
+          <img src="album_art/Supernatural - NewJeans.jpg" alt="Supernatural">
+          <div class="song-title">Supernatural</div>
+          <div class="song-artist">NewJeans</div>
+        </div>
+      </div>
+    </div>
+    <video loop preload="auto" playsinline muted>
+      <source src="clips/slide08.mp4" type="video/mp4">
+      Your browser does not support the video tag.
+    </video>
+  </div>
+</div>
+
+
+
+<script>
+  function startExperience() {
+    const introSlide = document.querySelector('.intro-slide');
+    const slides = document.querySelector('.slides');
+
+    introSlide.classList.add('hidden');
+    slides.classList.remove('hidden');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          const video = entry.target.querySelector('video');
+          const content = entry.target.querySelector('.content');
+          const songs = entry.target.querySelectorAll('.song'); // Select all songs in the slide
+
+          if (entry.isIntersecting) {
+            video.play();
+            content.classList.add('active');
+            songs.forEach((song) => song.classList.add('active')); // Add active class to each song
+          } else {
+            video.pause();
+            video.currentTime = 0;
+            content.classList.remove('active');
+            songs.forEach((song) => song.classList.remove('active')); // Remove active class from each song
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    document.querySelectorAll('.slide').forEach((slide) => observer.observe(slide));
+  }
+</script>
+
 </body>
 </html>
