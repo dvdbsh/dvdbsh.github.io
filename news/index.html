@@ -4,9 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>London News</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <style>
@@ -23,25 +20,45 @@
       padding: 1rem 1.5rem;
       box-shadow: 0 1px 4px rgba(0,0,0,0.1);
       margin: 0 -1.5rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #ffffff;
-      margin: 0;
+    h1 { font-size: 1.5rem; font-weight: 800; color: white; margin: 0; }
+    .menu-btn {
+      font-size: 1.75rem;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
     }
+    .settings-panel {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: #fff;
+      color: #000;
+      border-radius: 12px;
+      padding: 1rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 100;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .settings-panel.active { display: block; }
+    .settings-panel label { display: block; margin: 0.5rem 0; font-size: 0.9rem; }
     .source-scroller-wrapper {
       overflow-x: auto;
       margin: 0 -1.5rem 1.5rem;
       padding: 0 1.5rem;
-      -ms-overflow-style: none;
       scrollbar-width: none;
     }
     .source-scroller-wrapper::-webkit-scrollbar { display: none; }
     .source-scroller {
       display: flex;
       gap: 0.75rem;
-      min-width: max-content;
+      flex-wrap: wrap;
     }
     .source-scroller button {
       display: inline-flex;
@@ -52,24 +69,12 @@
       border: none;
       border-radius: 999px;
       padding: 0.5rem 1rem;
-      font-family: 'Nunito', sans-serif;
       font-weight: 600;
-      font-size: 1rem;
-      white-space: nowrap;
       cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .source-scroller button img,
-    .source-scroller button i {
-      height: 32px;
-      width: 32px;
-      border-radius: 50%;
-      flex-shrink: 0;
-      display: block;
+      transition: all 0.2s;
     }
     .source-scroller button.active {
-      background: #e8f5e9;
-      box-shadow: 0 0 0 2px var(--accent) inset;
+      box-shadow: inset 0 0 0 2px var(--accent);
     }
     .feed {
       display: grid;
@@ -82,8 +87,6 @@
       overflow: hidden;
       box-shadow: 0 2px 10px rgba(0,0,0,0.08);
       transition: all 0.4s ease;
-      display: flex;
-      flex-direction: column;
       position: relative;
       max-height: 340px;
       cursor: pointer;
@@ -93,77 +96,74 @@
       position: absolute;
       top: 0.75rem;
       right: 0.75rem;
-      border-radius: 999px;
       font-size: 1.75rem;
       color: var(--read);
-      text-shadow: 0 1px 4px rgba(0,10,10,0.5);
       display: none;
     }
-    .card.read .read-icon { display: inline-block; }
+    .card.read .read-icon { display: block; }
     .card img {
       width: 100%;
       height: 210px;
       object-fit: cover;
     }
-    .card-content {
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-    }
+    .card-content { padding: 1rem; }
     .card-content h2 {
-      font-size: 1.2rem;
-      margin: 0 0 0.5rem;
-      font-weight: 700;
-      color: #e8eeff;
+      margin: 0 0 0.5rem; font-weight: 700;
+      color: #e8eeff; font-size: 1.2rem;
     }
     .card-content .meta {
-      font-size: 0.75rem;
-      color: #999;
-      margin-bottom: 0.75rem;
+      font-size: 0.75rem; color: #999; margin-bottom: 0.75rem;
     }
     .full-content {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #aeafb1;
-      opacity: 0;
-      max-height: 0;
-      overflow: hidden;
-      margin-top: 0;
-      transition: all 0.4s ease;
+      font-size: 1rem; line-height: 1.6; color: #aeafb1;
+      opacity: 0; max-height: 0;
+      overflow: hidden; transition: all 0.4s ease;
     }
     .card.expanded .full-content {
-      opacity: 1;
-      margin-top: 1rem;
-      max-height: none;
+      opacity: 1; margin-top: 1rem; max-height: none;
     }
     .read-more {
-      display: inline-block;
-      margin-top: 1.25rem;
+      margin-top: 1rem;
       background: var(--accent);
       color: white;
       padding: 0.5rem 1rem;
-      text-decoration: none;
       border-radius: 8px;
-      font-weight: 600;
-      width: fit-content;
+      text-decoration: none;
     }
     .related {
-      font-size: 0.875rem;
       margin-top: 1rem;
-      padding-top: 1rem;
       border-top: 1px solid #ddd;
+      padding-top: 1rem;
     }
     .related a {
-      display: block;
-      color: #555;
-      margin-bottom: 0.5rem;
+      color: #ccc;
       text-decoration: underline;
+      font-size: 0.9rem;
+      display: block;
+      margin-bottom: 0.5rem;
     }
   </style>
 </head>
 <body>
 
-<header><h1>London News</h1></header>
+<header>
+  <h1>London News</h1>
+  <button class="menu-btn" onclick="settingsPanel.classList.toggle('active')">
+    <i class='bx bx-menu'></i>
+  </button>
+</header>
+
+<div id="settingsPanel" class="settings-panel">
+  <strong>Optional CBC Feeds</strong>
+  <label><input type="checkbox" value="https://rsshub.app/feed/http://feeds.cbc.ca/indepth"> Top Stories</label>
+  <label><input type="checkbox" value="https://rsshub.app/feed/http://feeds.cbc.ca/cbc/world"> World News</label>
+  <label><input type="checkbox" value="https://rsshub.app/feed/http://feeds.cbc.ca/cbc/canadanews"> Canada News</label>
+  <label><input type="checkbox" value="https://rsshub.app/feed/http://feeds.cbc.ca/cbc/politics"> Politics News</label>
+  <label><input type="checkbox" value="https://rsshub.app/feed/http://feeds.cbc.ca/cbc/business"> Business News</label>
+  <label><input type="checkbox" value="https://rsshub.app/feed/http://feeds.cbc.ca/cbc/health"> Health News</label>
+  <label><input type="checkbox" value="https://rsshub.app/feed/http://feeds.cbc.ca/itms-sports/cfl"> CFL News</label>
+  <label><input type="checkbox" value="https://rsshub.app/feed/http://feeds.cbc.ca/itms-sports/golf"> Golf News</label>
+</div>
 
 <div class="source-scroller-wrapper">
   <div class="source-scroller" id="sourceScroller"></div>
@@ -172,148 +172,130 @@
 <div class="feed" id="newsFeed"></div>
 
 <script>
-const sources = [
-  {
-    name: 'Global News',
-    url: 'https://globalnews.ca/london/feed',
-    logo: 'https://res.cloudinary.com/di8j84ent/image/upload/v1750268474/global_logo_kzow94.png',
-    fallbackImage: 'https://placehold.co/800x400?text=Global+News'
-  },
-  {
-    name: 'CTV News London',
-    url: 'https://london.ctvnews.ca/rss/ctv-news-london-1.1073369',
-    logo: 'https://res.cloudinary.com/di8j84ent/image/upload/v1750268474/ctv_logo_rdrmkx.png',
-    fallbackImage: 'https://placehold.co/800x400?text=CTV+News'
-  },
-  {
-    name: 'CBC News London',
-    url: 'https://www.cbc.ca/cmlink/rss-canada-london',
-    logo: 'https://res.cloudinary.com/di8j84ent/image/upload/v1750268474/cbc_logo_ulrcgd.png',
-    fallbackImage: 'https://placehold.co/800x400?text=CBC+News'
-  },
-  {
-    name: '106.9 The X',
-    url: 'https://www.1069thex.com/category/news-home-page/feed/',
-    logo: 'https://res.cloudinary.com/di8j84ent/image/upload/v1750272572/1069thex_pm9frs.png',
-    fallbackImage: 'https://placehold.co/800x400?text=106.9+The+X'
-  },
-  {
-    name: 'The London Free Press',
-    url: 'https://lfpress.com/feed',
-    logo: 'https://placehold.co/32x32?text=LFP',
-    fallbackImage: 'https://res.cloudinary.com/di8j84ent/image/upload/v1750274675/LFP_noimage_ksw7a8.webp'
-  }
+const defaultSources = [
+  {name: 'Global News', url: 'https://rsshub.app/feed/https://globalnews.ca/london/feed'},
+  {name: 'CTV News London', url: 'https://rsshub.app/feed/https://london.ctvnews.ca/rss/ctv-news-london-1.1073369'},
+  {name: 'CBC News London', url: 'https://rsshub.app/feed/https://www.cbc.ca/cmlink/rss-canada-london'},
+  {name: '106.9 The X', url: 'https://rsshub.app/feed/https://www.1069thex.com/category/news-home-page/feed/'},
+  {name: 'The London Free Press', url: 'https://rsshub.app/feed/https://lfpress.com/feed'}
 ];
 
-const state = {
-  read: new Set(JSON.parse(localStorage.getItem('readArticles') || '[]')),
-  filters: { source: 'all' }
-};
+const settingsPanel = document.getElementById('settingsPanel');
+const sourceScroller = document.getElementById('sourceScroller');
+const newsFeed = document.getElementById('newsFeed');
+const readSet = new Set(JSON.parse(localStorage.getItem('readArticles') || '[]'));
+let filter = 'all';
 
-function markAsRead(id) {
-  state.read.add(id);
-  localStorage.setItem('readArticles', JSON.stringify([...state.read]));
+function saveRead(id) {
+  readSet.add(id);
+  localStorage.setItem('readArticles', JSON.stringify([...readSet]));
 }
 
-function scrollToCard(card) {
-  const offset = card.getBoundingClientRect().top + window.scrollY - 20;
-  window.scrollTo({ top: offset, behavior: 'smooth' });
-}
+function renderSources(sources) {
+  sourceScroller.innerHTML = '';
+  const allBtn = document.createElement('button');
+  allBtn.textContent = 'All';
+  allBtn.classList.add('active');
+  allBtn.onclick = () => { filter = 'all'; switchActive(allBtn); filterArticles(); };
+  sourceScroller.appendChild(allBtn);
 
-function updateFilters() {
-  document.querySelectorAll('.card').forEach(card => {
-    const source = card.getAttribute('data-source');
-    let show = state.filters.source === 'all' || state.filters.source === source;
-    card.style.display = show ? '' : 'none';
+  sources.forEach(src => {
+    const btn = document.createElement('button');
+    btn.textContent = src.name.replace(/ London$/, '');
+    btn.onclick = () => { filter = src.name; switchActive(btn); filterArticles(); };
+    sourceScroller.appendChild(btn);
   });
 }
 
-const scroller = document.getElementById("sourceScroller");
-[{ name: 'All', logo: '' }, ...sources].forEach(source => {
-  const btn = document.createElement("button");
-  btn.title = source.name;
-  btn.onclick = () => {
-    state.filters.source = source.name === "All" ? "all" : source.name;
-    document.querySelectorAll("#sourceScroller button").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    updateFilters();
-  };
-  btn.innerHTML = source.logo
-    ? `<img src="${source.logo}" alt="${source.name}"><span>${source.name.replace(" London","")}</span>`
-    : `<i class='bx bx-news'></i><span>${source.name}</span>`;
-  scroller.appendChild(btn);
-});
-
-function areTitlesSimilar(a, b) {
-  const normalize = str => str.toLowerCase().replace(/[^a-z0-9]/g, '');
-  return normalize(a).includes(normalize(b)) || normalize(b).includes(normalize(a));
+function switchActive(activeBtn) {
+  sourceScroller.querySelectorAll('button').forEach(btn => btn.classList.remove('active'));
+  activeBtn.classList.add('active');
 }
 
-const feedContainer = document.getElementById("newsFeed");
+function filterArticles() {
+  document.querySelectorAll('.card').forEach(card => {
+    card.style.display = filter === 'all' || card.dataset.source === filter ? '' : 'none';
+  });
+}
 
-Promise.all(
-  sources.map(source =>
-    fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`)
-      .then(res => res.json())
-      .then(data => {
-        if (!data.items) return [];
-        return data.items.map(item => ({
-          title: item.title,
-          link: item.link,
-          date: new Date(item.pubDate),
-          source: source.name,
-          thumbnail: item.thumbnail || source.fallbackImage,
-          content: (item.content || item.description || "").replace(/<img[^>]*>/g, '').replace(/<\/?a[^>]*>/g, '')
-        }));
-      }).catch(() => [])
-  )
-).then(results => {
-  let articles = results.flat().sort((a, b) => b.date - a.date);
-  const clusters = [];
+async function fetchAndRender(sources) {
+  newsFeed.innerHTML = '';
+  const groups = await Promise.all(sources.map(async src => {
+    try {
+      const res = await fetch(src.url);
+      const data = await res.json();
+      return (data.items || []).map(item => ({
+        title: item.title,
+        link: item.link,
+        date: new Date(item.pubDate),
+        source: src.name,
+        thumbnail: item.thumbnail || '',
+        content: (item.content || item.description || '').replace(/<img[^>]*>/g, '').replace(/<\/?a[^>]*>/g, '')
+      }));
+    } catch {
+      return [];
+    }
+  }));
 
-  while (articles.length) {
-    const current = articles.shift();
-    const related = articles.filter(a => areTitlesSimilar(a.title, current.title));
-    articles = articles.filter(a => !related.includes(a));
-    clusters.push({ primary: current, related });
-  }
+  const articles = groups.flat().sort((a,b) => b.date - a.date);
+  const buffer = [...articles];
+  while (buffer.length) {
+    const head = buffer.shift();
+    const related = buffer.filter(x => x.title.toLowerCase().includes(head.title.toLowerCase()));
+    buffer = buffer.filter(x => !related.includes(x));
 
-  clusters.forEach(group => {
-    const item = group.primary;
-    const id = btoa(item.link);
     const card = document.createElement('div');
     card.className = 'card';
-    card.setAttribute('data-source', item.source);
+    card.dataset.source = head.source;
+
+    const id = btoa(head.link);
+    if (readSet.has(id)) card.classList.add('read');
+
     card.innerHTML = `
-      <img src="${item.thumbnail}" alt="thumbnail"><div class="read-icon"><i class="bx bxs-check-circle"></i></div>
+      <img src="${head.thumbnail}" alt="">
+      <div class="read-icon"><i class='bx bxs-check-circle'></i></div>
       <div class="card-content">
-        <h2>${item.title}</h2>
-        <div class="meta">${item.source} • ${item.date.toLocaleDateString()}</div>
+        <h2>${head.title}</h2>
+        <div class="meta">${head.source} • ${head.date.toLocaleDateString()}</div>
         <div class="full-content">
-          ${item.content}<br>
-          <a href="${item.link}" class="read-more" target="_blank">Read full article</a>
-          ${group.related.length ? '<div class="related"><strong>Related:</strong>' +
-            group.related.map(r => `<a href="${r.link}" target="_blank">${r.source} — ${r.date.toLocaleDateString()}</a>`).join('') +
-            '</div>' : ''}
+          ${head.content}<br>
+          <a href="${head.link}" class="read-more" target="_blank">Read full article</a>
+          ${related.length ? '<div class="related"><strong>Related:</strong>' +
+            related.map(r => `<a href="${r.link}" target="_blank">${r.source} — ${r.date.toLocaleDateString()}</a>`).join('') +
+          '</div>' : ''}
         </div>
       </div>`;
-    card.addEventListener("click", (e) => {
-      if (e.target.tagName !== "A") {
-        const wasExpanded = card.classList.contains("expanded");
-        document.querySelectorAll('.card.expanded').forEach(c => c.classList.remove("expanded"));
-        if (!wasExpanded) {
-          card.classList.add("expanded");
-          scrollToCard(card);
-          markAsRead(id);
-          card.classList.add("read");
+
+    card.onclick = e => {
+      if (e.target.tagName !== 'A') {
+        const expanded = card.classList.toggle('expanded');
+        if (expanded) {
+          card.scrollIntoView({behavior:'smooth', block:'start'});
+          saveRead(id);
+          card.classList.add('read');
         }
-        updateFilters();
       }
-    });
-    if (state.read.has(id)) card.classList.add("read");
-    feedContainer.appendChild(card);
-  });
-});
+    };
+
+    newsFeed.appendChild(card);
+  }
+
+  filterArticles();
+}
+
+function loadAll() {
+  const opts = Array.from(settingsPanel.querySelectorAll('input:checked')).map(cb => ({
+    name: cb.nextSibling.textContent + ' (CBC)',
+    url: cb.value
+  }));
+  const sources = [...defaultSources, ...opts];
+  renderSources(sources);
+  fetchAndRender(sources);
+}
+
+settingsPanel.querySelectorAll('input').forEach(cb => cb.addEventListener('change', loadAll));
+
+loadAll();
 </script>
 
 </body>
