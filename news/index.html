@@ -2,17 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>London News</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <style>
-    :root {
-      --accent: #43A047;
-    }
-    * {
-      box-sizing: border-box;
-    }
+    :root { --accent: #43A047; }
+    * { box-sizing: border-box; }
     body {
       font-family: 'Nunito', sans-serif;
       background: #f4f6f5;
@@ -38,9 +37,7 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
-    .source-scroller-wrapper::-webkit-scrollbar {
-      display: none;
-    }
+    .source-scroller-wrapper::-webkit-scrollbar { display: none; }
     .source-scroller {
       display: flex;
       gap: 0.75rem;
@@ -91,9 +88,7 @@
       max-height: 340px;
       cursor: pointer;
     }
-    .card.expanded {
-      max-height: 1000px;
-    }
+    .card.expanded { max-height: 1000px; }
     .read-icon {
       position: absolute;
       top: 0.75rem;
@@ -104,9 +99,7 @@
       text-shadow: 0 1px 4px rgba(0,10,10,0.5);
       display: none;
     }
-    .card.read .read-icon {
-      display: inline-block;
-    }
+    .card.read .read-icon { display: inline-block; }
     .card img {
       width: 100%;
       height: 180px;
@@ -170,9 +163,7 @@
 </head>
 <body>
 
-<header>
-  <h1>London News</h1>
-</header>
+<header><h1>London News</h1></header>
 
 <div class="source-scroller-wrapper">
   <div class="source-scroller" id="sourceScroller"></div>
@@ -181,20 +172,38 @@
 <div class="feed" id="newsFeed"></div>
 
 <script>
-const feeds = [
-  { url: 'https://globalnews.ca/london/feed', name: 'Global News' },
-  { url: 'https://london.ctvnews.ca/rss/ctv-news-london-1.1073369', name: 'CTV News London' },
-  { url: 'https://www.cbc.ca/cmlink/rss-canada-london', name: 'CBC News London' },
-  { url: 'https://www.1069thex.com/category/news-home-page/feed/', name: '106.9 The X' },
-  { url: 'https://lfpress.com/feed', name: 'The London Free Press' }
+const sources = [
+  {
+    name: 'Global News',
+    url: 'https://globalnews.ca/london/feed',
+    logo: 'https://res.cloudinary.com/di8j84ent/image/upload/v1750268474/global_logo_kzow94.png',
+    fallbackImage: 'https://placehold.co/800x400?text=Global+News'
+  },
+  {
+    name: 'CTV News London',
+    url: 'https://london.ctvnews.ca/rss/ctv-news-london-1.1073369',
+    logo: 'https://res.cloudinary.com/di8j84ent/image/upload/v1750268474/ctv_logo_rdrmkx.png',
+    fallbackImage: 'https://placehold.co/800x400?text=CTV+News'
+  },
+  {
+    name: 'CBC News London',
+    url: 'https://www.cbc.ca/cmlink/rss-canada-london',
+    logo: 'https://res.cloudinary.com/di8j84ent/image/upload/v1750268474/cbc_logo_ulrcgd.png',
+    fallbackImage: 'https://placehold.co/800x400?text=CBC+News'
+  },
+  {
+    name: '106.9 The X',
+    url: 'https://www.1069thex.com/category/news-home-page/feed/',
+    logo: 'https://res.cloudinary.com/di8j84ent/image/upload/v1750272572/1069thex_pm9frs.png',
+    fallbackImage: 'https://placehold.co/800x400?text=106.9+The+X'
+  },
+  {
+    name: 'The London Free Press',
+    url: 'https://lfpress.com/feed',
+    logo: 'https://placehold.co/32x32?text=LFP',
+    fallbackImage: 'https://res.cloudinary.com/di8j84ent/image/upload/v1750274675/LFP_noimage_ksw7a8.webp'
+  }
 ];
-
-const logoMap = {
-  "CBC News London": "https://res.cloudinary.com/di8j84ent/image/upload/v1750268474/cbc_logo_ulrcgd.png",
-  "Global News": "https://res.cloudinary.com/di8j84ent/image/upload/v1750268474/global_logo_kzow94.png",
-  "CTV News London": "https://res.cloudinary.com/di8j84ent/image/upload/v1750268474/ctv_logo_rdrmkx.png",
-  "106.9 The X": "https://res.cloudinary.com/di8j84ent/image/upload/v1750272572/1069thex_pm9frs.png"
-};
 
 const state = {
   read: new Set(JSON.parse(localStorage.getItem('readArticles') || '[]')),
@@ -214,14 +223,13 @@ function scrollToCard(card) {
 function updateFilters() {
   document.querySelectorAll('.card').forEach(card => {
     const source = card.getAttribute('data-source');
-    let show = true;
-    if (state.filters.source !== 'all' && state.filters.source !== source) show = false;
+    let show = state.filters.source === 'all' || state.filters.source === source;
     card.style.display = show ? '' : 'none';
   });
 }
 
 const scroller = document.getElementById("sourceScroller");
-[{ name: 'All', logo: '' }, ...feeds.map(f => ({ name: f.name, logo: logoMap[f.name] || '' }))].forEach(source => {
+[{ name: 'All', logo: '' }, ...sources].forEach(source => {
   const btn = document.createElement("button");
   btn.title = source.name;
   btn.onclick = () => {
@@ -244,8 +252,8 @@ function areTitlesSimilar(a, b) {
 const feedContainer = document.getElementById("newsFeed");
 
 Promise.all(
-  feeds.map(feed =>
-    fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(feed.url)}`)
+  sources.map(source =>
+    fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`)
       .then(res => res.json())
       .then(data => {
         if (!data.items) return [];
@@ -253,13 +261,8 @@ Promise.all(
           title: item.title,
           link: item.link,
           date: new Date(item.pubDate),
-          source: feed.name,
-          thumbnail: item.thumbnail || (
-  feed.name === "The London Free Press"
-    ? "https://res.cloudinary.com/di8j84ent/image/upload/v1750274675/LFP_noimage_ksw7a8.webp"
-    : "https://placehold.co/800x400?text=No+Image"
-),
-
+          source: source.name,
+          thumbnail: item.thumbnail || source.fallbackImage,
           content: (item.content || item.description || "").replace(/<img[^>]*>/g, '').replace(/<a[^>]*>(.*?)<\/a>/g, '$1')
         }));
       }).catch(() => [])
