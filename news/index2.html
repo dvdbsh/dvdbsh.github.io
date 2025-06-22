@@ -1,298 +1,473 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>News Alligator</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <style>
-    /* Material Design Dark Mode styling */
-    body {
-      font-family: "Roboto", sans-serif;
-      background-color: #121212;
-      color: #FFFFFF;
-      margin: 0;
-      padding: 0;
-    }
-
-    h1 {
-      text-align: left;
-      padding-top: 20px;
-      padding-left: 20px;
-      color: #FFFFFF;
-      margin: 0;
-      -webkit-app-region: drag;
-    }
-
-    #news-container {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      padding: 20px;
-    }
-
-    .article-card {
-      background-color: #212121;
-      border-radius: 20px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      margin: 10px;
-      width: 400px;
-      overflow: hidden;
-      position: relative;
-    }
-
-    .article-overlay {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      width: 40px;
-      height: 40px;
-      border-radius: 50%;
-      background-color: #f44336;
-      opacity: 0.9;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 1;
-      visibility: hidden;
-    }
-
-    .article-overlay i.material-icons {
-      color: #FFFFFF;
-      font-size: 20px;
-    }
-
-    .article-image {
-      width: 100%;
-      height: 250px;
-      object-fit: cover;
-      border-top-left-radius: 4px;
-      border-top-right-radius: 4px;
-    }
-
-    .article-image img {
-      width: 100%;
-      height: auto;
-    }
-
-    .article-content {
-      padding: 16px;
-    }
-
-    .article-date-source {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      font-size: 12px;
-      color: #9E9E9E;
-      margin-bottom: 8px;
-    }
-
-    .article-date-source .material-icons {
-      font-size: 15px;
-      margin-right: 4px;
-    }
-
-    .article-date {
-      margin-bottom: 4px;
-    }
-
-    .article-title {
-      font-size: 20px;
-      font-weight: bold;
-      margin: 10px 0;
-      color: #FFFFFF;
-    }
-
-    .article-link {
-      text-decoration: none;
-      color: #1E88E5;
-      display: inline-block;
-    }
-
-    .current-date {
-      color: #9E9E9E;
-      font-size: 14px;
-      margin-bottom: 0;
-      margin-top: 0px;
-      margin-left: 20px;
-    }
-
-    /* Set the status bar color */
-    @media (prefers-color-scheme: dark) {
-      /* For dark mode */
-      body {
-        background-color: #121212;
-      }
-    }
-  </style>
-
-  <!-- Add this meta tag to set the theme color -->
-  <meta name="theme-color" content="#121212">
-
-  <!-- Apple WebKit support -->
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>London News</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+  <style>
+    :root { --accent: #181526; --read: #1a8b31; --button: #e8eeff; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: #292a2d;
+      margin: 0;
+      padding: 0 1.5rem 60px;
+    }
+    header {
+      background: #1f1f1f;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+      margin: 0 -1.5rem 1.5rem;
+    }
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0;
+    }
+    .source-scroller-wrapper {
+      overflow-x: auto;
+      margin: 0 -1.5rem 1.5rem;
+      padding: 0 1.5rem;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .source-scroller-wrapper::-webkit-scrollbar { display: none; }
+    .source-scroller {
+      display: flex;
+      gap: 0.75rem;
+      min-width: max-content;
+    }
+.source-scroller button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background: #1f1f1f;
+  border: none;
+  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  font-family: 'Nunito', sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  color: #ffffff;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
 
-  <!-- App Icon -->
-  <link rel="apple-touch-icon" sizes="180x180" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689564176/apple-touch-icon_jq66yl.png">
+.source-scroller button img,
+.source-scroller button i {
+  height: 35px;
+  width: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border-radius: 5px;
+  object-fit: contain;
+}
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/x-icon" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689564176/favicon_hwojbp.ico">
+.source-scroller button i {
+	font-size: 1.3rem;
+	}
+    .source-scroller button.active {
+		background-color: #292a2d;
+      box-shadow: 0 0 0 2px #1f1f1f inset;
+    }
+    .feed {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+    }
+    .card {
+      background: #1f1f1f;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      transition: max-height 0.6s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      max-height: 340px;
+      cursor: pointer;
+    }
+    .card.expanded {
+      max-height: 1000px;
+    }
+    .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  font-size: 0.8rem;
+  color: #ffffff;
+  z-index: 2;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+    }
+	
+	.card-header > div:last-child {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+	
+    .read-icon {
+      display: inline-block;
+      font-size: 1.7rem;
+      margin-left: 0.4rem;
+      color: var(--read);
+	  text-shadow: 0 0px 10px rgba(25,25,25,0.7);
+    }
+    .card:not(.read) .read-icon {
+      display: none;
+    }
+	
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 210px;
+  overflow: hidden;
+}
 
+.card-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.card-image-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, rgba(25, 25, 25, 0.8), rgba(25, 25, 25, 0));
+  pointer-events: none;
+}
+	
+	
+    .card img {
+      width: 100%;
+      height: 210px;
+      object-fit: cover;
+    }
+    .card-content {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .card-content h2 {
+      font-size: 1.2rem;
+      margin: 0 0 0.5rem;
+      font-weight: 700;
+      color: #e8eeff;
+    }
+    .full-content {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #aeafb1;
+      opacity: 0;
+      max-height: 0;
+      overflow: hidden;
+      margin-top: 0;
+      transition: opacity 0.4s ease, max-height 0.6s ease, margin-top 0.4s ease;
+    }
+    .card.expanded .full-content {
+      opacity: 1;
+      margin-top: 1rem;
+      max-height: 800px;
+    }
+.read-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  background: var(--button);
+  color: var(--accent);
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  width: fit-content;
+  font-size: 1rem;
+}
+
+.read-more i {
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+    .related {
+      font-size: 0.875rem;
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid #ddd;
+    }
+    .related a {
+      display: block;
+      color: #555;
+      margin-bottom: 0.5rem;
+      text-decoration: underline;
+    }
+	
+	.source-logo-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.source-logo-name img {
+  height: 40px;
+  width: 40px;
+  border-radius: 5px;
+  object-fit: contain;
+}
+
+  </style>
 </head>
 <body>
-  <h1>News Alligator</h1>
-  <p id="current-date" class="current-date"></p>
-  <div id="news-container"></div>
 
-  <script>
-    // Array of RSS feed URLs
-    var feedUrls = [
-      'https://globalnews.ca/london/feed',
-      'https://london.ctvnews.ca/rss/ctv-news-london-1.1073369',
-      'https://www.cbc.ca/cmlink/rss-canada-london'
-    ];
+<header><h1>London News</h1></header>
 
-    const fetchRSSData = async (url) => {
-      try {
-        const response = await fetch(url);
-        const data = await response.text();
-        return data;
-      } catch (error) {
-        console.error('Error fetching RSS data:', error);
-        return '';
+<div class="source-scroller-wrapper">
+  <div class="source-scroller" id="sourceScroller"></div>
+</div>
+
+<div class="feed" id="newsFeed"></div>
+
+<script>
+const PEXELS_API_KEY = 'fB6vzEHx5CsDIVByIpuDfQ2QoliM9TYWyBqmkzPgj6nPeEuWdBvbtJIx';
+
+function formatArticleDate(pubDate) {
+  const date = new Date(pubDate);
+
+  const time = date.toLocaleTimeString([], {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
+
+  const today = new Date();
+  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const articleDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+
+  const diff = todayDate - articleDate;
+  const oneDay = 86400000;
+
+  if (diff === 0) {
+    return time;
+  } else if (diff === oneDay) {
+    return `Yesterday · ${time}`;
+  } else {
+    return date.toLocaleDateString('en-CA', {
+      month: 'short',
+      day: 'numeric'
+    });
+  }
+}
+
+function truncateWords(text, wordLimit) {
+  const words = text.trim().split(/\s+/);
+  return words.length > wordLimit
+    ? words.slice(0, wordLimit).join(" ") + "…"
+    : text;
+}
+
+async function getPexelsImage(query) {
+  try {
+    const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`, {
+      headers: { Authorization: PEXELS_API_KEY }
+    });
+    const data = await res.json();
+    return data.photos?.[0]?.src?.landscape || null;
+  } catch {
+    return null;
+  }
+}
+
+const sources = [
+  {
+    name: 'Global News',
+    url: 'https://globalnews.ca/london/feed',
+    logo: 'images/logos/global.png',
+    fallbackImage: 'https://placehold.co/800x400?text=Global+News'
+  },
+  {
+    name: 'CBC News London',
+    url: 'https://www.cbc.ca/cmlink/rss-canada-london',
+    logo: 'images/logos/cbc.png',
+    fallbackImage: 'https://placehold.co/800x400?text=CBC+News'
+  },
+  {
+    name: '106.9 The X',
+    url: 'https://www.1069thex.com/category/news-home-page/feed/',
+    logo: 'images/logos/1069thex.png',
+    fallbackImage: 'https://placehold.co/800x400?text=106.9+The+X'
+  },
+  {
+    name: 'The London Free Press',
+    url: 'https://lfpress.com/feed',
+    logo: 'images/logos/lfp.png',
+    fallbackImage: 'https://placehold.co/600x400/3F332A/A78873?text=The%20London%20Free%20Press&font=lora'
+  }
+];
+
+const state = {
+  read: new Set(JSON.parse(localStorage.getItem('readArticles') || '[]')),
+  filters: { source: 'all' }
+};
+
+function markAsRead(id) {
+  state.read.add(id);
+  localStorage.setItem('readArticles', JSON.stringify([...state.read]));
+}
+
+function scrollToCard(card) {
+  const offset = card.getBoundingClientRect().top + window.scrollY - 20;
+  window.scrollTo({ top: offset, behavior: 'smooth' });
+}
+
+function updateFilters() {
+  document.querySelectorAll('.card').forEach(card => {
+    const source = card.getAttribute('data-source');
+    let show = state.filters.source === 'all' || state.filters.source === source;
+    card.style.display = show ? '' : 'none';
+  });
+}
+
+const scroller = document.getElementById("sourceScroller");
+[{ name: 'All', logo: '' }, ...sources].forEach(source => {
+  const btn = document.createElement("button");
+  btn.title = source.name;
+  btn.onclick = () => {
+    state.filters.source = source.name === "All" ? "all" : source.name;
+    document.querySelectorAll("#sourceScroller button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    updateFilters();
+  };
+  btn.innerHTML = source.logo
+    ? `<img src="${source.logo}" alt="${source.name}"><span>${source.name.replace(" London","")}</span>`
+    : `<i class='bx bx-news'></i><span>${source.name}</span>`;
+  scroller.appendChild(btn);
+});
+
+function areTitlesSimilar(a, b) {
+  const normalize = str => str.toLowerCase().replace(/[^a-z0-9]/g, '');
+  return normalize(a).includes(normalize(b)) || normalize(b).includes(normalize(a));
+}
+
+const feedContainer = document.getElementById("newsFeed");
+
+Promise.all(
+  sources.map(source =>
+    fetch(`https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`)
+      .then(res => res.json())
+      .then(data => {
+        if (!data.items) return [];
+		return Promise.all(data.items.map(async item => {
+		  const cleanedContent = (item.content || item.description || "").replace(/<img[^>]*>/g, '').replace(/<\/?a[^>]*>/g, '');
+		  const fallback = sources.find(s => s.name === source.name)?.fallbackImage;
+
+		  let thumbnail = item.thumbnail && item.thumbnail.trim() !== '' ? item.thumbnail : null;
+		  if (!thumbnail) {
+			thumbnail = await getPexelsImage(item.title) || fallback;
+		  }
+
+		  return {
+			title: item.title,
+			link: item.link,
+			date: new Date(item.pubDate),
+			source: source.name,
+			thumbnail,
+			content: cleanedContent
+		  };
+		}));
+
+      }).catch(() => [])
+  )
+).then(results => {
+  let articles = results.flat().sort((a, b) => b.date - a.date);
+  const clusters = [];
+
+  while (articles.length) {
+    const current = articles.shift();
+    const related = articles.filter(a => areTitlesSimilar(a.title, current.title));
+    articles = articles.filter(a => !related.includes(a));
+    clusters.push({ primary: current, related });
+  }
+
+  clusters.forEach(async group => {
+    const item = group.primary;
+    const id = btoa(item.link);
+    const timeString = formatArticleDate(item.date);
+
+    if (!item.thumbnail) {
+      item.thumbnail = await getPexelsImage(item.title);
+      if (!item.thumbnail) {
+        item.thumbnail = sources.find(s => s.name === item.source)?.fallbackImage;
       }
-    };
+    }
 
-    const parseRSSData = (rssData) => {
-      const parser = new DOMParser();
-      const xmlDoc = parser.parseFromString(rssData, 'text/xml');
-      const items = xmlDoc.getElementsByTagName('item');
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.setAttribute('data-source', item.source);
+    card.innerHTML = `
+      <div class="card-image-wrapper">
+        <img src="${item.thumbnail}" alt="thumbnail">
+      </div>
+      
+      <div class="card-header">
+        <div class="source-logo-name">
+          <img src="${sources.find(s => s.name === item.source)?.logo || ''}" alt="${item.source}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+          <span style="display:none;">${item.source}</span>
+        </div>
+        <div>${timeString}<span class="read-icon"><i class="bx bxs-check-circle"></i></span></div>
+      </div>
 
-      const feedItems = [];
-      for (let i = 0; i < items.length; i++) {
-        const item = items[i];
-        const title = item.getElementsByTagName('title')[0].textContent;
-        const link = item.getElementsByTagName('link')[0].textContent;
-        const pubDate = item.getElementsByTagName('pubDate')[0].textContent;
-        const image = getImageURL(item);
+      <div class="card-content">
+        <h2>${truncateWords(item.title, 14)}</h2>
+        <div class="full-content">
+          ${truncateWords(item.content, 60)}<br>
+          <a href="${item.link}" class="read-more" target="_blank">Read full article <i class='bx bx-right-arrow-alt'></i></a>
+          ${group.related.length ? '<div class="related"><strong>Related:</strong>' +
+            group.related.map(r => `<a href="${r.link}" target="_blank">${r.source} — ${r.date.toLocaleDateString()}</a>`).join('') +
+            '</div>' : ''}
+        </div>
+      </div>`;
 
-        feedItems.push({ title: title, link: link, pubDate: pubDate, image: image });
-      }
-
-      return feedItems;
-    };
-
-    const getImageURL = (item) => {
-      let imageUrl = '';
-
-      const imageTags = item.getElementsByTagName('image');
-      if (imageTags.length > 0) {
-        imageUrl = imageTags[0].textContent;
-      } else {
-        const enclosureTags = item.getElementsByTagName('enclosure');
-        if (enclosureTags.length > 0) {
-          imageUrl = enclosureTags[0].getAttribute('url');
-        } else {
-          const contentTags = item.getElementsByTagName('content:encoded');
-          if (contentTags.length > 0) {
-            const contentHTML = contentTags[0].textContent;
-            const parser = new DOMParser();
-            const contentDoc = parser.parseFromString(contentHTML, 'text/html');
-            const imgElement = contentDoc.querySelector('img');
-            if (imgElement) {
-              imageUrl = imgElement.getAttribute('src');
-            }
-          }
+    card.addEventListener("click", (e) => {
+      if (e.target.tagName !== "A") {
+        const wasExpanded = card.classList.contains("expanded");
+        document.querySelectorAll('.card.expanded').forEach(c => c.classList.remove("expanded"));
+        if (!wasExpanded) {
+          card.classList.add("expanded");
+          scrollToCard(card);
+          markAsRead(id);
+          card.classList.add("read");
         }
+        updateFilters();
       }
+    });
 
-      return imageUrl;
-    };
+    if (state.read.has(id)) card.classList.add("read");
+    feedContainer.appendChild(card);
+  });
+});
+</script>
 
-    const displayNewsArticles = async () => {
-      try {
-        const combinedFeed = [];
 
-        for (let i = 0; i < feedUrls.length; i++) {
-          const rssData = await fetchRSSData(feedUrls[i]);
-          const feedItems = parseRSSData(rssData);
-          combinedFeed.push(...feedItems);
-        }
 
-        // Sort the combined feed by publication date in chronological order
-        combinedFeed.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-
-        const newsContainer = document.getElementById('news-container');
-        newsContainer.innerHTML = '';
-
-        for (const item of combinedFeed) {
-          const articleCard = document.createElement('div');
-          articleCard.classList.add('article-card');
-
-          if (item.image) {
-            const articleImage = document.createElement('div');
-            articleImage.classList.add('article-image');
-            articleCard.appendChild(articleImage);
-
-            const image = document.createElement('img');
-            image.src = item.image;
-            articleImage.appendChild(image);
-          }
-
-          const articleContent = document.createElement('div');
-          articleContent.classList.add('article-content');
-
-          const dateSourceElement = document.createElement('div');
-          dateSourceElement.classList.add('article-date-source');
-
-          const dateElement = document.createElement('p');
-          const formattedDate = formatDate(item.pubDate);
-          dateElement.classList.add('article-date');
-          dateElement.innerHTML = `<span class="material-icons">event</span>${formattedDate}`;
-          dateSourceElement.appendChild(dateElement);
-
-          articleContent.appendChild(dateSourceElement);
-
-          const titleElement = document.createElement('h2');
-          titleElement.classList.add('article-title');
-          titleElement.textContent = item.title || '';
-          articleContent.appendChild(titleElement);
-
-          const linkElement = document.createElement('a');
-          linkElement.classList.add('article-link');
-          linkElement.textContent = 'Read More';
-          linkElement.href = item.link || '';
-          linkElement.target = '_blank';
-          articleContent.appendChild(linkElement);
-
-          articleCard.appendChild(articleContent);
-          newsContainer.appendChild(articleCard);
-        }
-      } catch (error) {
-        console.error('Error displaying news articles:', error);
-      }
-    };
-
-    const formatDate = (dateString) => {
-      const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
-      const date = new Date(dateString);
-      return date.toLocaleDateString(undefined, options);
-    };
-
-    const displayCurrentDate = () => {
-      const currentDateElement = document.getElementById('current-date');
-      const currentDate = formatDate(new Date().toISOString());
-      currentDateElement.textContent = currentDate;
-    };
-
-    displayCurrentDate();
-    displayNewsArticles();
-
-    // Refresh the content every 5 minutes
-    setInterval(() => {
-      displayNewsArticles();
-    }, 5 * 60 * 1000);
-  </script>
 </body>
 </html>

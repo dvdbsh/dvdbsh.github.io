@@ -69,8 +69,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: 50%;
-  object-fit: cover;
+  border-radius: 5px;
+  object-fit: contain;
 }
 
 .source-scroller button i {
@@ -151,8 +151,8 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 50%;
-  background: linear-gradient(to bottom, rgba(25, 25, 25, 0.9), rgba(25, 25, 25, 0));
+  height: 40%;
+  background: linear-gradient(to bottom, rgba(25, 25, 25, 0.8), rgba(25, 25, 25, 0));
   pointer-events: none;
 }
 	
@@ -229,10 +229,10 @@
   gap: 0.5rem;
 }
 .source-logo-name img {
-  height: 45px;
-  width: 45px;
-  border-radius: 50%;
-  object-fit: cover;
+  height: 40px;
+  width: 40px;
+  border-radius: 5px;
+  object-fit: contain;
 }
 
   </style>
@@ -248,6 +248,37 @@
 <div class="feed" id="newsFeed"></div>
 
 <script>
+const PEXELS_API_KEY = 'fB6vzEHx5CsDIVByIpuDfQ2QoliM9TYWyBqmkzPgj6nPeEuWdBvbtJIx';
+
+function formatArticleDate(pubDate) {
+  const date = new Date(pubDate);
+  const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000);
+
+  const time = localDate.toLocaleTimeString([], {
+    hour: 'numeric',
+    minute: '2-digit',
+    hour12: true
+  });
+
+  const today = new Date();
+  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const articleDate = new Date(localDate.getFullYear(), localDate.getMonth(), localDate.getDate());
+
+  const diff = todayDate - articleDate;
+  const oneDay = 86400000;
+
+  if (diff === 0) {
+    return time;
+  } else if (diff === oneDay) {
+    return `Yesterday · ${time}`;
+  } else {
+    return localDate.toLocaleDateString('en-CA', {
+      month: 'short',
+      day: 'numeric'
+    });
+  }
+}
+
 function truncateWords(text, wordLimit) {
   const words = text.trim().split(/\s+/);
   return words.length > wordLimit
@@ -255,6 +286,17 @@ function truncateWords(text, wordLimit) {
     : text;
 }
 
+async function getPexelsImage(query) {
+  try {
+    const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`, {
+      headers: { Authorization: PEXELS_API_KEY }
+    });
+    const data = await res.json();
+    return data.photos?.[0]?.src?.landscape || null;
+  } catch {
+    return null;
+  }
+}
 
 const sources = [
   {
@@ -335,14 +377,25 @@ Promise.all(
       .then(res => res.json())
       .then(data => {
         if (!data.items) return [];
-        return data.items.map(item => ({
-          title: item.title,
-          link: item.link,
-          date: new Date(item.pubDate),
-          source: source.name,
-          thumbnail: item.thumbnail || source.fallbackImage,
-          content: (item.content || item.description || "").replace(/<img[^>]*>/g, '').replace(/<\/?a[^>]*>/g, '')
-        }));
+		return Promise.all(data.items.map(async item => {
+		  const cleanedContent = (item.content || item.description || "").replace(/<img[^>]*>/g, '').replace(/<\/?a[^>]*>/g, '');
+		  const fallback = sources.find(s => s.name === source.name)?.fallbackImage;
+
+		  let thumbnail = item.thumbnail && item.thumbnail.trim() !== '' ? item.thumbnail : null;
+		  if (!thumbnail) {
+			thumbnail = await getPexelsImage(item.title) || fallback;
+		  }
+
+		  return {
+			title: item.title,
+			link: item.link,
+			date: new Date(item.pubDate),
+			source: source.name,
+			thumbnail,
+			content: cleanedContent
+		  };
+		}));
+
       }).catch(() => [])
   )
 ).then(results => {
@@ -356,38 +409,45 @@ Promise.all(
     clusters.push({ primary: current, related });
   }
 
-  clusters.forEach(group => {
+  clusters.forEach(async group => {
     const item = group.primary;
     const id = btoa(item.link);
-    const timeString = item.date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
+    const timeString = formatArticleDate(item.date);
+
+    if (!item.thumbnail) {
+      item.thumbnail = await getPexelsImage(item.title);
+      if (!item.thumbnail) {
+        item.thumbnail = sources.find(s => s.name === item.source)?.fallbackImage;
+      }
+    }
 
     const card = document.createElement('div');
     card.className = 'card';
     card.setAttribute('data-source', item.source);
     card.innerHTML = `
-		<div class="card-image-wrapper">
-		  <img src="${item.thumbnail}" alt="thumbnail">
-		</div>
+      <div class="card-image-wrapper">
+        <img src="${item.thumbnail}" alt="thumbnail">
+      </div>
       
-<div class="card-header">
-  <div class="source-logo-name">
-    <img src="${sources.find(s => s.name === item.source)?.logo || ''}" alt="${item.source}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-    <span style="display:none;">${item.source}</span>
-  </div>
-  <div>${timeString}<span class="read-icon"><i class="bx bxs-check-circle"></i></span></div>
-</div>
+      <div class="card-header">
+        <div class="source-logo-name">
+          <img src="${sources.find(s => s.name === item.source)?.logo || ''}" alt="${item.source}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
+          <span style="display:none;">${item.source}</span>
+        </div>
+        <div>${timeString}<span class="read-icon"><i class="bx bxs-check-circle"></i></span></div>
+      </div>
 
       <div class="card-content">
-<h2>${truncateWords(item.title, 14)}</h2>
-<div class="full-content">
-  ${truncateWords(item.content, 60)}<br>
-
-          <a href="${item.link}" class="read-more" target="_blank">Read full article <i class='bx bx-right-arrow-alt' ></i></a>
+        <h2>${truncateWords(item.title, 14)}</h2>
+        <div class="full-content">
+          ${truncateWords(item.content, 60)}<br>
+          <a href="${item.link}" class="read-more" target="_blank">Read full article <i class='bx bx-right-arrow-alt'></i></a>
           ${group.related.length ? '<div class="related"><strong>Related:</strong>' +
             group.related.map(r => `<a href="${r.link}" target="_blank">${r.source} — ${r.date.toLocaleDateString()}</a>`).join('') +
             '</div>' : ''}
         </div>
       </div>`;
+
     card.addEventListener("click", (e) => {
       if (e.target.tagName !== "A") {
         const wasExpanded = card.classList.contains("expanded");
@@ -401,11 +461,14 @@ Promise.all(
         updateFilters();
       }
     });
+
     if (state.read.has(id)) card.classList.add("read");
     feedContainer.appendChild(card);
   });
 });
 </script>
+
+
 
 </body>
 </html>
