@@ -1,0 +1,476 @@
+[
+  {
+    "category": "National",
+    "organization": "CBC",
+    "sources": [
+      {
+        "name": "CBC Top Stories",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-topstories",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=CBC%20Top%20Stories&font=lora"
+      },
+      {
+        "name": "World News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-world",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=World%20News&font=lora"
+      },
+      {
+        "name": "Canada News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Canada%20News&font=lora"
+      },
+      {
+        "name": "Politics News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-politics",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Politics%20News&font=lora"
+      },
+      {
+        "name": "Business News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-business",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Business%20News&font=lora"
+      },
+      {
+        "name": "Health News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-health",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Health%20News&font=lora"
+      },
+      {
+        "name": "Arts News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-arts",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Arts%20News&font=lora"
+      },
+      {
+        "name": "Technology News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-technology",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Technology%20News&font=lora"
+      },
+      {
+        "name": "Indigenous News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-Indigenous",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Indigenous%20News&font=lora"
+      }
+    ]
+  },
+  {
+    "category": "Sports",
+    "organization": "CBC",
+    "sources": [
+      {
+        "name": "Sports News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-sports",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Sports%20News&font=lora"
+      },
+      {
+        "name": "MLB News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-sports-mlb",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=MLB%20News&font=lora"
+      },
+      {
+        "name": "NBA News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-sports-nba",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=NBA%20News&font=lora"
+      },
+      {
+        "name": "Curling News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-sports-curling",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Curling%20News&font=lora"
+      },
+      {
+        "name": "CFL News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-sports-cfl",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=CFL%20News&font=lora"
+      },
+      {
+        "name": "NFL News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-sports-nfl",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=NFL%20News&font=lora"
+      },
+      {
+        "name": "NHL News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-sports-nhl",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=NHL%20News&font=lora"
+      },
+      {
+        "name": "Soccer News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-sports-soccer",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Soccer%20News&font=lora"
+      },
+      {
+        "name": "Figureskating News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-sports-figureskating",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Figureskating%20News&font=lora"
+      },
+      {
+        "name": "Golf News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-sports-golf",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Golf%20News&font=lora"
+      },
+      {
+        "name": "Olympic News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-sports-olympics",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Olympic%20News&font=lora"
+      },
+      {
+        "name": "Skiing News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-sports-skiing",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Skiing%20News&font=lora"
+      },
+      {
+        "name": "Tennis News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-sports-tennis",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Tennis%20News&font=lora"
+      }
+    ]
+  },
+  {
+    "category": "Regional",
+    "organization": "CBC",
+    "sources": [
+      {
+        "name": "British Columbia News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-britishcolumbia",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=British%20Columbia%20News&font=lora"
+      },
+      {
+        "name": "Kamloops News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-kamloops",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Kamloops%20News&font=lora"
+      },
+      {
+        "name": "Calgary News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-calgary",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Calgary%20News&font=lora"
+      },
+      {
+        "name": "Edmonton News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-edmonton",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Edmonton%20News&font=lora"
+      },
+      {
+        "name": "Saskatchewan News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-saskatchewan",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Saskatchewan%20News&font=lora"
+      },
+      {
+        "name": "Saskatoon News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-saskatoon",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Saskatoon%20News&font=lora"
+      },
+      {
+        "name": "Manitoba News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-manitoba",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Manitoba%20News&font=lora"
+      },
+      {
+        "name": "Thunderbay News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-thunderbay",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Thunderbay%20News&font=lora"
+      },
+      {
+        "name": "Sudbury News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-sudbury",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Sudbury%20News&font=lora"
+      },
+      {
+        "name": "Windsor News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-windsor",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Windsor%20News&font=lora"
+      },
+      {
+        "name": "London News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-london",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=London%20News&font=lora"
+      },
+      {
+        "name": "Kitchener & Waterloo News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-kitchenerwaterloo",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Kitchener%20%26%20Waterloo%20News&font=lora"
+      },
+      {
+        "name": "Toronto News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-toronto",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Toronto%20News&font=lora"
+      },
+      {
+        "name": "Hamilton News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-hamiltonnews",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Hamilton%20News&font=lora"
+      },
+      {
+        "name": "Montreal News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-montreal",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Montreal%20News&font=lora"
+      },
+      {
+        "name": "New Brunswick News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-newbrunswick",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=New%20Brunswick%20News&font=lora"
+      },
+      {
+        "name": "Prince Edward Island News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-pei",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Prince%20Edward%20Island%20News&font=lora"
+      },
+      {
+        "name": "Nova Scotia News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-novascotia",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Nova%20Scotia%20News&font=lora"
+      },
+      {
+        "name": "Newfoundland & Labrador News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-newfoundland",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Newfoundland%20%26%20Labrador%20News&font=lora"
+      },
+      {
+        "name": "North News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-north",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=North%20News&font=lora"
+      },
+      {
+        "name": "Ottawa News",
+        "url": "https://www.cbc.ca/webfeed/rss/rss-canada-ottawa",
+        "logo": "images/logos/cbc.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Ottawa%20News&font=lora"
+      }
+    ]
+  },
+  {
+    "category": "Global News",
+    "organization": "Global",
+    "sources": [
+      {
+        "name": "Global News Main",
+        "url": "https://globalnews.ca/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Global%20News%20Main&font=lora"
+      },
+      {
+        "name": "Barrie",
+        "url": "https://globalnews.ca/barrie/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Barrie&font=lora"
+      },
+      {
+        "name": "BC",
+        "url": "https://globalnews.ca/bc/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=BC&font=lora"
+      },
+      {
+        "name": "Calgary",
+        "url": "https://globalnews.ca/calgary/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Calgary&font=lora"
+      },
+      {
+        "name": "Edmonton",
+        "url": "https://globalnews.ca/edmonton/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Edmonton&font=lora"
+      },
+      {
+        "name": "Guelph",
+        "url": "https://globalnews.ca/guelph/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Guelph&font=lora"
+      },
+      {
+        "name": "Halifax",
+        "url": "https://globalnews.ca/halifax/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Halifax&font=lora"
+      },
+      {
+        "name": "Hamilton",
+        "url": "https://globalnews.ca/hamilton/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Hamilton&font=lora"
+      },
+      {
+        "name": "Kingston",
+        "url": "https://globalnews.ca/kingston/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Kingston&font=lora"
+      },
+      {
+        "name": "Lethbridge",
+        "url": "https://globalnews.ca/lethbridge/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Lethbridge&font=lora"
+      },
+      {
+        "name": "London",
+        "url": "https://globalnews.ca/london/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=London&font=lora"
+      },
+      {
+        "name": "Montreal",
+        "url": "https://globalnews.ca/montreal/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Montreal&font=lora"
+      },
+      {
+        "name": "New Brunswick",
+        "url": "https://globalnews.ca/new‑brunswick/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=New%20Brunswick&font=lora"
+      },
+      {
+        "name": "Okanagan",
+        "url": "https://globalnews.ca/okanagan/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Okanagan&font=lora"
+      },
+      {
+        "name": "Ottawa",
+        "url": "https://globalnews.ca/ottawa/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Ottawa&font=lora"
+      },
+      {
+        "name": "Peterborough",
+        "url": "https://globalnews.ca/peterborough/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Peterborough&font=lora"
+      },
+      {
+        "name": "Regina",
+        "url": "https://globalnews.ca/regina/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Regina&font=lora"
+      },
+      {
+        "name": "Saskatoon",
+        "url": "https://globalnews.ca/saskatoon/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Saskatoon&font=lora"
+      },
+      {
+        "name": "Toronto",
+        "url": "https://globalnews.ca/toronto/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Toronto&font=lora"
+      },
+      {
+        "name": "Winnipeg",
+        "url": "https://globalnews.ca/winnipeg/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Winnipeg&font=lora"
+      },
+      {
+        "name": "World",
+        "url": "https://globalnews.ca/world/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=World&font=lora"
+      },
+      {
+        "name": "Canada",
+        "url": "https://globalnews.ca/canada/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Canada&font=lora"
+      },
+      {
+        "name": "Politics",
+        "url": "https://globalnews.ca/politics/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Politics&font=lora"
+      },
+      {
+        "name": "Money",
+        "url": "https://globalnews.ca/money/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Money&font=lora"
+      },
+      {
+        "name": "Health",
+        "url": "https://globalnews.ca/health/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Health&font=lora"
+      },
+      {
+        "name": "Entertainment",
+        "url": "https://globalnews.ca/entertainment/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Entertainment&font=lora"
+      },
+      {
+        "name": "Environment",
+        "url": "https://globalnews.ca/environment/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Environment&font=lora"
+      },
+      {
+        "name": "Lifestyle",
+        "url": "https://globalnews.ca/lifestyle/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Lifestyle&font=lora"
+      },
+      {
+        "name": "Perspectives",
+        "url": "https://globalnews.ca/perspectives/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Perspectives&font=lora"
+      },
+      {
+        "name": "Sports",
+        "url": "https://globalnews.ca/sports/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Sports&font=lora"
+      },
+      {
+        "name": "Commentary",
+        "url": "https://globalnews.ca/commentary/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=Commentary&font=lora"
+      },
+      {
+        "name": "U.S. News",
+        "url": "https://globalnews.ca/us/feed",
+        "logo": "images/logos/global.png",
+        "fallbackImage": "https://placehold.co/600x400/3F332A/A78873?text=U.S.%20News&font=lora"
+      }
+    ]
+  }
+]
