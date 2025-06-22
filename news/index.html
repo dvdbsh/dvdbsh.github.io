@@ -389,8 +389,7 @@ function markAsRead(id) {
 }
 
 function scrollToCard(card) {
-  const offset = card.getBoundingClientRect().top + window.scrollY - 20;
-  window.scrollTo({ top: offset, behavior: 'smooth' });
+  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
 }
 
 function updateFilters() {
@@ -435,19 +434,28 @@ const timeString = formatArticleDate(item.pubDate);
       </div>
     </div>`;
 
-  card.addEventListener("click", (e) => {
-    if (e.target.tagName !== "A") {
-      const wasExpanded = card.classList.contains("expanded");
-      document.querySelectorAll('.card.expanded').forEach(c => c.classList.remove("expanded"));
-      if (!wasExpanded) {
-        card.classList.add("expanded");
-        scrollToCard(card);
-        markAsRead(id);
-        card.classList.add("read");
-      }
-      updateFilters();
-    }
-  });
+	card.addEventListener("click", async (e) => {
+	  if (e.target.tagName !== "A") {
+		const wasExpanded = card.classList.contains("expanded");
+
+		document.querySelectorAll('.card.expanded').forEach(c => c.classList.remove("expanded"));
+
+		if (!wasExpanded) {
+		  await new Promise(requestAnimationFrame); // Wait for layout to update
+
+		  card.classList.add("expanded");
+		  markAsRead(id);
+		  card.classList.add("read");
+
+		  setTimeout(() => {
+			card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+		  }, 50);
+		}
+
+		updateFilters();
+	  }
+	});
+
 
   return { ...item, card };
 }
