@@ -151,10 +151,13 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 40%;
-  background: linear-gradient(to bottom, rgba(25, 25, 25, 0.8), rgba(25, 25, 25, 0));
+  bottom: 0;
+  background: 
+    radial-gradient(circle at top left, rgba(25,25,25,0.8), transparent 60%),
+    radial-gradient(circle at top right, rgba(25,25,25,0.8), transparent 60%);
   pointer-events: none;
 }
+
 	
 	
     .card img {
@@ -282,6 +285,10 @@
   font-size: 0.95rem;
   margin: 0.5rem 0;
 }
+.timestamp {
+  text-shadow: 0 0px 8px rgba(25,25,25,0.9);
+  font-weight: 600;
+}
 
 
   </style>
@@ -399,7 +406,9 @@ function createCard(item, sourceObj) {
   const id = btoa(item.link);
   if (allArticles.some(a => btoa(a.link) === id)) return null;
 
-  const timeString = formatArticleDate(item.pubDate);
+  if (!item.pubDate) item.pubDate = item.isoDate || item.published || item.date || new Date().toISOString();
+const timeString = formatArticleDate(item.pubDate);
+
   const card = document.createElement('div');
   card.className = 'card';
   card.setAttribute('data-id', id);
@@ -407,13 +416,16 @@ function createCard(item, sourceObj) {
   if (state.read.has(id)) card.classList.add("read");
 
   card.innerHTML = `
-    <div class="card-image-wrapper"><img src="${item.thumbnail}" alt="thumbnail"></div>
+    <div class="card-image-wrapper"><img src="${item.thumbnail}" alt="thumbnail" loading="lazy"
+     sizes="(max-width: 480px) 100vw, 50vw"
+     srcset="${item.thumbnail} 800w">
+</div>
     <div class="card-header">
       <div class="source-logo-name">
-        ${sourceObj?.logo ? `<img src="${sourceObj.logo}" alt="${sourceObj.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">` : ''}
+        ${sourceObj?.logo ? `<img src="${sourceObj.logo}" alt="${sourceObj.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">` : ''}
         <span style="${sourceObj?.logo ? 'display:none;' : ''}">${sourceObj?.name || 'Feed'}</span>
       </div>
-      <div>${timeString}<span class="read-icon"><i class="bx bxs-check-circle"></i></span></div>
+      <div class="timestamp">${timeString}<span class="read-icon"><i class="bx bxs-check-circle"></i></span></div>
     </div>
     <div class="card-content">
       <h2>${truncateWords(item.title, 14)}</h2>
@@ -468,24 +480,37 @@ document.getElementById("sourceScroller").innerHTML = '';
 
 Promise.all(
   sources.map(source =>
-    fetch(`https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`)
+    fetch(`https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`, { cache: "force-cache" })
       .then(res => res.json())
-      .then(async data => {
-        if (!data.items) return;
-        for (const item of data.items) {
-          if (!item.thumbnail) {
-            item.thumbnail = await getPexelsImage(item.title) || source.fallbackImage;
-          }
-          const entry = createCard(item, source);
-          if (entry) allArticles.push(entry);
-        }
-      })
+		.then(async data => {
+		  if (!data.items) return;
+		  for (const item of data.items) {
+			// Get image from known tags or fallback
+			if (!item.thumbnail) {
+			  const media = item["media:content"] || item["media:group"];
+			  if (Array.isArray(media)) {
+				const image = media.find(m => m.url && m.type?.includes("image"));
+				if (image?.url) {
+				  item.thumbnail = image.url;
+				}
+			  }
+
+			  if (!item.thumbnail) {
+				item.thumbnail = await getPexelsImage(item.title) || source.fallbackImage;
+			  }
+			}
+
+			const entry = createCard(item, source);
+			if (entry) allArticles.push(entry);
+		  }
+		})
+
   )
 ).then(() => renderSortedFeed());
 
 async function addOptionalFeed(feedUrl, feedName = 'Optional', feedLogo = null) {
 
-  const res = await fetch(`https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(feedUrl)}`);
+  const res = await fetch(`https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(feedUrl)}`, { cache: "force-cache" });
   const data = await res.json();
   if (!data.items) return;
 
@@ -493,7 +518,9 @@ async function addOptionalFeed(feedUrl, feedName = 'Optional', feedLogo = null) 
     const entry = createCard(item, { name: feedName, logo: feedLogo, fallbackImage: `https://placehold.co/800x400?text=${encodeURIComponent(feedName)}` });
     if (entry) allArticles.push(entry);
   }
+  allArticles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
   renderSortedFeed();
+
 }
 
 function removeOptionalFeed(feedUrl) {
@@ -522,8 +549,8 @@ document.querySelectorAll("#menuPanel input[type=checkbox]").forEach(checkbox =>
 fetch('feeds.json')
   .then(res => res.json())
   .then(feedData => {
+    const savedFeeds = JSON.parse(localStorage.getItem('selectedFeeds') || '[]');
     const menuPanel = document.getElementById("dynamicMenuContainer");
-
 
     Object.entries(feedData).forEach(([category, feeds]) => {
       const section = document.createElement('div');
@@ -540,13 +567,25 @@ fetch('feeds.json')
         checkbox.value = feed.url;
         checkbox.dataset.logo = feed.logo;
         checkbox.dataset.name = feed.name;
+
+        if (savedFeeds.includes(feed.url)) {
+          checkbox.checked = true;
+          addOptionalFeed(feed.url, feed.name, feed.logo);
+        }
+
         checkbox.addEventListener("change", () => {
           if (checkbox.checked) {
             addOptionalFeed(checkbox.value, feed.name, feed.logo);
           } else {
             removeOptionalFeed(checkbox.value);
           }
+
+          const selectedFeeds = Array.from(document.querySelectorAll('#menuPanel input[type=checkbox]'))
+            .filter(cb => cb.checked)
+            .map(cb => cb.value);
+          localStorage.setItem('selectedFeeds', JSON.stringify(selectedFeeds));
         });
+
         label.appendChild(checkbox);
         label.append(` ${feed.name}`);
         section.appendChild(label);
@@ -555,6 +594,7 @@ fetch('feeds.json')
       menuPanel.appendChild(section);
     });
   });
+
 
 </script>
 

@@ -33,7 +33,12 @@
       "name": "Global World",
       "url": "https://globalnews.ca/world/feed",
       "logo": "images/logos/global.png"
-    }
+    },
+    {
+      "name": "CNN Top Stories",
+      "url": "http://rss.cnn.com/rss/cnn_topstories.rss",
+      "logo": "images/logos/cnn.png"
+    }	
   ],
   "Politics": [
     {
