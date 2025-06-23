@@ -4,8 +4,8 @@
   "description": "A clean and fast London-based news aggregator.",
   "start_url": "/news/index.html",
   "display": "standalone",
-  "background_color": "#5f4f99",
-  "theme_color": "#5f4f99",
+  "background_color": "#1f1f1f",
+  "theme_color": "#1f1f1f",
   "orientation": "portrait",
   "icons": [
     {

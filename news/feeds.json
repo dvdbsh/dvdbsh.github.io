@@ -30,10 +30,20 @@
       "logo": "images/logos/cbc.png"
     },
     {
+      "name": "New York Times",
+      "url": "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+      "logo": "images/logos/nyt.png"
+    },
+    {
+      "name": "Vox",
+      "url": "https://morss.it/:proxy/https://www.vox.com/rss/index.xml",
+      "logo": "images/logos/vox.png"
+    },	
+    {
       "name": "Global World",
       "url": "https://globalnews.ca/world/feed",
       "logo": "images/logos/global.png"
-    },
+    },	
     {
       "name": "CNN Top Stories",
       "url": "http://rss.cnn.com/rss/cnn_topstories.rss",

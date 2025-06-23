@@ -69,7 +69,7 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  border-radius: 5px;
+  border-radius: 8px;
   object-fit: contain;
 }
 
@@ -87,7 +87,7 @@
     }
     .card {
       background: #1f1f1f;
-      border-radius: 16px;
+      border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 2px 10px rgba(0,0,0,0.08);
       transition: max-height 0.6s ease;
@@ -234,7 +234,7 @@
 .source-logo-name img {
   height: 40px;
   width: 40px;
-  border-radius: 5px;
+  border-radius: 8px;
   object-fit: contain;
 }
 
@@ -273,12 +273,60 @@
   margin-bottom: 1.5rem;
 }
 
-.menu-section h3 {
-  margin-bottom: 0.5rem;
-  font-size: 1rem;
-  border-bottom: 1px solid #444;
-  padding-bottom: 0.25rem;
+.menu-section .feed-list {
+  margin-top: 0.5rem;
 }
+.menu-section.collapsed .feed-list {
+  display: none;
+}
+
+
+.menu-section h3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-size: 1rem;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0.25rem;
+  border-bottom: 1px solid #444;
+}
+
+.menu-section h3 i {
+  transition: transform 0.2s ease;
+}
+
+.menu-section.collapsed h3 i {
+  transform: rotate(180deg);
+}
+
+
+.menu-section.collapsed label {
+  display: none;
+}
+
+
+#myFeedsSection {
+  margin-bottom: 2rem;
+  border-bottom: 1px solid #444;
+  padding-bottom: 1rem;
+}
+
+#myFeedsList button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  background: none;
+  color: white;
+  border: none;
+  padding: 0.25rem 0;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+#myFeedsList button:hover {
+  text-decoration: underline;
+}
+
 
 #menuPanel label {
   display: block;
@@ -289,6 +337,18 @@
   text-shadow: 0 0px 8px rgba(25,25,25,0.9);
   font-weight: 600;
 }
+
+.feed-icon {
+  font-size: 1.25rem;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.feed-checkbox {
+  display: none;
+}
+
 
 
   </style>
@@ -303,8 +363,13 @@
 
 <aside id="menuPanel">
   <h2>Optional Sources</h2>
+  <div id="myFeedsSection">
+    <h3>My Feeds</h3>
+    <div id="myFeedsList"></div>
+  </div>
   <div id="dynamicMenuContainer"></div>
 </aside>
+
 
 
 
@@ -559,49 +624,104 @@ fetch('feeds.json')
   .then(feedData => {
     const savedFeeds = JSON.parse(localStorage.getItem('selectedFeeds') || '[]');
     const menuPanel = document.getElementById("dynamicMenuContainer");
+    const myFeedsList = document.getElementById("myFeedsList");
+
+    const selectedFeedMap = new Map();
+
+    // Populate selectedFeedMap with saved feeds (names/logos will fill in below)
+    savedFeeds.forEach(url => selectedFeedMap.set(url, { url }));
+
+    // Update the "My Feeds" section
+    function updateMyFeedsList() {
+      myFeedsList.innerHTML = '';
+      selectedFeedMap.forEach((meta, url) => {
+        const btn = document.createElement('button');
+        btn.textContent = meta.name || url;
+        btn.onclick = () => {
+          const icon = document.querySelector(`.feed-icon[data-url="${url}"]`);
+          if (icon) {
+            icon.classList.remove('bx-checkbox-checked');
+            icon.classList.add('bx-checkbox');
+          }
+          selectedFeedMap.delete(url);
+          localStorage.setItem('selectedFeeds', JSON.stringify([...selectedFeedMap.keys()]));
+          removeOptionalFeed(url);
+          updateMyFeedsList();
+        };
+        myFeedsList.appendChild(btn);
+      });
+    }
 
     Object.entries(feedData).forEach(([category, feeds]) => {
       const section = document.createElement('div');
       section.className = 'menu-section';
 
+      const collapseState = localStorage.getItem(`menuCollapse-${category}`);
+      if (collapseState === null || collapseState === 'true') {
+        section.classList.add('collapsed');
+      }
+
       const heading = document.createElement('h3');
-      heading.textContent = category;
+      heading.innerHTML = `<span>${category}</span><i class='bx bx-down-arrow-alt'></i>`;
+      heading.onclick = () => {
+        section.classList.toggle('collapsed');
+        localStorage.setItem(`menuCollapse-${category}`, section.classList.contains('collapsed'));
+      };
       section.appendChild(heading);
+
+      const feedList = document.createElement('div');
+      feedList.className = 'feed-list';
 
       feeds.forEach(feed => {
         const label = document.createElement('label');
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.value = feed.url;
-        checkbox.dataset.logo = feed.logo;
-        checkbox.dataset.name = feed.name;
+        const icon = document.createElement('i');
+        icon.className = 'bx bx-checkbox feed-icon';
+        icon.dataset.url = feed.url;
+        icon.dataset.logo = feed.logo;
+        icon.dataset.name = feed.name;
 
         if (savedFeeds.includes(feed.url)) {
-          checkbox.checked = true;
+          icon.classList.remove('bx-checkbox');
+          icon.classList.add('bx-checkbox-checked');
+          selectedFeedMap.set(feed.url, feed);
           addOptionalFeed(feed.url, feed.name, feed.logo);
         }
 
-        checkbox.addEventListener("change", () => {
-          if (checkbox.checked) {
-            addOptionalFeed(checkbox.value, feed.name, feed.logo);
+        icon.addEventListener("click", () => {
+          const url = icon.dataset.url;
+          const name = icon.dataset.name;
+          const logo = icon.dataset.logo;
+
+          const isChecked = icon.classList.contains('bx-checkbox-checked');
+          icon.classList.toggle('bx-checkbox');
+          icon.classList.toggle('bx-checkbox-checked');
+
+          if (!isChecked) {
+            selectedFeedMap.set(url, { name, logo, url });
+            addOptionalFeed(url, name, logo);
           } else {
-            removeOptionalFeed(checkbox.value);
+            selectedFeedMap.delete(url);
+            removeOptionalFeed(url);
           }
 
-          const selectedFeeds = Array.from(document.querySelectorAll('#menuPanel input[type=checkbox]'))
-            .filter(cb => cb.checked)
-            .map(cb => cb.value);
-          localStorage.setItem('selectedFeeds', JSON.stringify(selectedFeeds));
+          localStorage.setItem('selectedFeeds', JSON.stringify([...selectedFeedMap.keys()]));
+          updateMyFeedsList();
         });
 
-        label.appendChild(checkbox);
-        label.append(` ${feed.name}`);
-        section.appendChild(label);
+        label.appendChild(icon);
+        label.append(feed.name);
+        feedList.appendChild(label);
       });
 
+      section.appendChild(feedList);
       menuPanel.appendChild(section);
     });
+
+    updateMyFeedsList();
   });
+
+
+
 
 
 </script>
