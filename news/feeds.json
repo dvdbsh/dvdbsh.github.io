@@ -36,8 +36,8 @@
     },
     {
       "name": "Vox",
-      "url": "https://morss.it/:proxy/https://www.vox.com/rss/index.xml",
-      "logo": "images/logos/vox.png"
+      "url": "https://www.vox.com/rss/index.xml",
+      "logo": "images/logos/nyt.png"
     },	
     {
       "name": "Global World",

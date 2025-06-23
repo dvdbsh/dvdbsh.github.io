@@ -553,33 +553,47 @@ document.getElementById("sourceScroller").innerHTML = '';
 
 Promise.all(
   sources.map(source =>
-    fetch(`https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`, { cache: "force-cache" })
-      .then(res => res.json())
-		.then(async data => {
-		  if (!data.items) return;
-		  for (const item of data.items) {
-			// Get image from known tags or fallback
-			if (!item.thumbnail) {
-			  const media = item["media:content"] || item["media:group"];
-			  if (Array.isArray(media)) {
-				const image = media.find(m => m.url && m.type?.includes("image"));
-				if (image?.url) {
-				  item.thumbnail = image.url;
-				}
-			  }
+    fetch(`https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`)
+      .then(res => {
+        if (!res.ok) throw new Error(`Failed to load ${source.name}`);
+        return res.json();
+      })
+      .then(async data => {
+        if (!data.items || !Array.isArray(data.items)) return;
 
-			  if (!item.thumbnail) {
-				item.thumbnail = await getPexelsImage(item.title) || source.fallbackImage;
-			  }
-			}
+        for (const item of data.items) {
+          // Fallback image logic
+          if (!item.thumbnail) {
+            const media = item["media:content"] || item["media:group"];
+            if (Array.isArray(media)) {
+              const image = media.find(m => m.url && m.type?.includes("image"));
+              if (image?.url) {
+                item.thumbnail = image.url;
+              }
+            }
 
-			const entry = createCard(item, source);
-			if (entry) allArticles.push(entry);
-		  }
-		})
+            // Try to parse from <content:encoded> HTML
+            if (!item.thumbnail && item.content) {
+              const imgMatch = item.content.match(/<img[^>]+src=['"]([^'"]+)['"]/i);
+              if (imgMatch) item.thumbnail = imgMatch[1];
+            }
 
+            // Last fallback
+            if (!item.thumbnail) {
+              item.thumbnail = await getPexelsImage(item.title) || source.fallbackImage;
+            }
+          }
+
+          const entry = createCard(item, source);
+          if (entry) allArticles.push(entry);
+        }
+      })
+      .catch(err => {
+        console.warn(`Feed error for ${source.name}:`, err.message);
+      })
   )
 ).then(() => renderSortedFeed());
+
 
 async function addOptionalFeed(feedUrl, feedName = 'Optional', feedLogo = null) {
 
