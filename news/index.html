@@ -382,18 +382,25 @@
 <script>
 const PEXELS_API_KEY = 'fB6vzEHx5CsDIVByIpuDfQ2QoliM9TYWyBqmkzPgj6nPeEuWdBvbtJIx';
 const feedContainer = document.getElementById("newsFeed");
-const allArticles = [];
+const sourceScroller = document.getElementById("sourceScroller");
+const dynamicMenu = document.getElementById("dynamicMenuContainer");
+const myFeedsList = document.getElementById("myFeedsList");
+
+const state = {
+  read: new Set(JSON.parse(localStorage.getItem('readArticles') || '[]')),
+  filters: { source: 'all' },
+  articles: [],
+  selectedFeeds: new Map()
+};
 
 function formatArticleDate(pubDate) {
   const date = new Date(pubDate);
   const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
-
   const today = new Date();
-  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const articleDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const diff = todayDate - articleDate;
+  const articleDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const diff = todayDay - articleDay;
   const oneDay = 86400000;
-
   if (diff === 0) return time;
   if (diff === oneDay) return `Yesterday · ${time}`;
   return date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
@@ -416,78 +423,29 @@ async function getPexelsImage(query) {
   }
 }
 
-const sources = [
-  {
-    name: 'Global News',
-    url: 'https://globalnews.ca/london/feed',
-    logo: 'images/logos/global.png',
-    fallbackImage: 'https://placehold.co/800x400?text=Global+News'
-  },
-  {
-    name: 'CBC News London',
-    url: 'https://www.cbc.ca/cmlink/rss-canada-london',
-    logo: 'images/logos/cbc.png',
-    fallbackImage: 'https://placehold.co/800x400?text=CBC+News'
-  },
-  {
-    name: '106.9 The X',
-    url: 'https://www.1069thex.com/category/news-home-page/feed/',
-    logo: 'images/logos/1069thex.png',
-    fallbackImage: 'https://placehold.co/800x400?text=106.9+The+X'
-  },
-  {
-    name: 'The London Free Press',
-    url: 'https://lfpress.com/feed',
-    logo: 'images/logos/lfp.png',
-    fallbackImage: 'https://placehold.co/600x400/3F332A/A78873?text=The%20London%20Free%20Press&font=lora'
-  }
-];
-
-const state = {
-  read: new Set(JSON.parse(localStorage.getItem('readArticles') || '[]')),
-  filters: { source: 'all' }
-};
-
 function markAsRead(id) {
   state.read.add(id);
   localStorage.setItem('readArticles', JSON.stringify([...state.read]));
 }
 
-function scrollToCard(card) {
-  card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-}
-
-function updateFilters() {
-  renderSortedFeed();
-}
-
-function areTitlesSimilar(a, b) {
-  const normalize = str => str.toLowerCase().replace(/[^a-z0-9]/g, '');
-  return normalize(a).includes(normalize(b)) || normalize(b).includes(normalize(a));
-}
-
-function createCard(item, sourceObj) {
+function createCard(item, source) {
   const id = btoa(item.link);
-  if (allArticles.some(a => btoa(a.link) === id)) return null;
-
+  if (state.articles.some(a => a.id === id)) return null;
   if (!item.pubDate) item.pubDate = item.isoDate || item.published || item.date || new Date().toISOString();
-const timeString = formatArticleDate(item.pubDate);
+  const timeString = formatArticleDate(item.pubDate);
 
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.setAttribute('data-id', id);
-  card.setAttribute('data-source', sourceObj?.name || 'Optional');
+  const card = document.createElement("div");
+  card.className = "card";
+  card.dataset.id = id;
+  card.dataset.source = source.name;
   if (state.read.has(id)) card.classList.add("read");
 
   card.innerHTML = `
-    <div class="card-image-wrapper"><img src="${item.thumbnail}" alt="thumbnail" loading="lazy"
-     sizes="(max-width: 480px) 100vw, 50vw"
-     srcset="${item.thumbnail} 800w">
-</div>
+    <div class="card-image-wrapper"><img src="${item.thumbnail}" alt="thumbnail" loading="lazy"></div>
     <div class="card-header">
       <div class="source-logo-name">
-        ${sourceObj?.logo ? `<img src="${sourceObj.logo}" alt="${sourceObj.name}" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">` : ''}
-        <span style="${sourceObj?.logo ? 'display:none;' : ''}">${sourceObj?.name || 'Feed'}</span>
+        ${source.logo ? `<img src="${source.logo}" alt="${source.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">` : ''}
+        <span style="${source.logo ? 'display:none;' : ''}">${source.name}</span>
       </div>
       <div class="timestamp">${timeString}<span class="read-icon"><i class="bx bxs-check-circle"></i></span></div>
     </div>
@@ -499,246 +457,157 @@ const timeString = formatArticleDate(item.pubDate);
       </div>
     </div>`;
 
-	card.addEventListener("click", async (e) => {
-	  if (e.target.tagName !== "A") {
-		const wasExpanded = card.classList.contains("expanded");
+  card.addEventListener("click", (e) => {
+    if (e.target.tagName !== "A") {
+      const expanded = card.classList.contains("expanded");
+      document.querySelectorAll('.card.expanded').forEach(c => c.classList.remove("expanded"));
+      if (!expanded) {
+        card.classList.add("expanded");
+        markAsRead(id);
+        card.classList.add("read");
+        setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
+      }
+    }
+  });
 
-		document.querySelectorAll('.card.expanded').forEach(c => c.classList.remove("expanded"));
-
-		if (!wasExpanded) {
-		  await new Promise(requestAnimationFrame); // Wait for layout to update
-
-		  card.classList.add("expanded");
-		  markAsRead(id);
-		  card.classList.add("read");
-
-		  setTimeout(() => {
-			card.scrollIntoView({ behavior: 'smooth', block: 'start' });
-		  }, 50);
-		}
-
-		updateFilters();
-	  }
-	});
-
-
-  return { ...item, card };
+  return { ...item, card, id };
 }
 
-function renderSortedFeed() {
-  const filtered = allArticles.filter(a =>
-    state.filters.source === 'all' || a.card.getAttribute('data-source') === state.filters.source
-  );
-
-  const sorted = filtered.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+function renderFeed() {
   feedContainer.innerHTML = '';
+  const filtered = state.articles.filter(a =>
+    state.filters.source === 'all' || a.card.dataset.source === state.filters.source
+  );
+  const sorted = filtered.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
   sorted.forEach(({ card }) => feedContainer.appendChild(card));
 }
 
-document.getElementById("sourceScroller").innerHTML = '';
-[{ name: 'All', logo: '' }, ...sources].forEach(source => {
-  const btn = document.createElement("button");
-  btn.title = source.name;
-  btn.onclick = () => {
-    state.filters.source = source.name === "All" ? "all" : source.name;
-    document.querySelectorAll("#sourceScroller button").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    updateFilters();
-  };
-  btn.innerHTML = source.logo
-    ? `<img src="${source.logo}" alt="${source.name}"><span>${source.name.replace(" London", "")}</span>`
-    : `<i class='bx bx-news'></i><span>${source.name}</span>`;
-  document.getElementById("sourceScroller").appendChild(btn);
-});
-
-Promise.all(
-  sources.map(source =>
-    fetch(`https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`)
-      .then(res => {
-        if (!res.ok) throw new Error(`Failed to load ${source.name}`);
-        return res.json();
-      })
-      .then(async data => {
-        if (!data.items || !Array.isArray(data.items)) return;
-
-        for (const item of data.items) {
-          // Fallback image logic
-          if (!item.thumbnail) {
-            const media = item["media:content"] || item["media:group"];
-            if (Array.isArray(media)) {
-              const image = media.find(m => m.url && m.type?.includes("image"));
-              if (image?.url) {
-                item.thumbnail = image.url;
-              }
-            }
-
-            // Try to parse from <content:encoded> HTML
-            if (!item.thumbnail && item.content) {
-              const imgMatch = item.content.match(/<img[^>]+src=['"]([^'"]+)['"]/i);
-              if (imgMatch) item.thumbnail = imgMatch[1];
-            }
-
-            // Last fallback
-            if (!item.thumbnail) {
-              item.thumbnail = await getPexelsImage(item.title) || source.fallbackImage;
-            }
-          }
-
-          const entry = createCard(item, source);
-          if (entry) allArticles.push(entry);
-        }
-      })
-      .catch(err => {
-        console.warn(`Feed error for ${source.name}:`, err.message);
-      })
-  )
-).then(() => renderSortedFeed());
-
-
-async function addOptionalFeed(feedUrl, feedName = 'Optional', feedLogo = null) {
-
-  const res = await fetch(`https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(feedUrl)}`, { cache: "force-cache" });
+async function loadFeed(source) {
+  const url = `https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`;
+  const res = await fetch(url, { cache: "force-cache" });
   const data = await res.json();
   if (!data.items) return;
 
   for (const item of data.items) {
-    const entry = createCard(item, { name: feedName, logo: feedLogo, fallbackImage: `https://placehold.co/800x400?text=${encodeURIComponent(feedName)}` });
-    if (entry) allArticles.push(entry);
-  }
-  allArticles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-  renderSortedFeed();
-
-}
-
-function removeOptionalFeed(feedUrl) {
-  const sourceKey = new URL(feedUrl).hostname.replace(/^www\./, '');
-  for (let i = allArticles.length - 1; i >= 0; i--) {
-    const src = new URL(allArticles[i].link).hostname.replace(/^www\./, '');
-    if (src === sourceKey) allArticles.splice(i, 1);
-  }
-  renderSortedFeed();
-}
-
-document.getElementById("menuToggle").addEventListener("click", () => {
-  document.getElementById("menuPanel").classList.toggle("open");
-});
-
-document.querySelectorAll("#menuPanel input[type=checkbox]").forEach(checkbox => {
-  checkbox.addEventListener("change", () => {
-    if (checkbox.checked) {
-      addOptionalFeed(checkbox.value);
-    } else {
-      removeOptionalFeed(checkbox.value);
+    if (!item.thumbnail) {
+      item.thumbnail = await getPexelsImage(item.title) || `https://placehold.co/800x400?text=${encodeURIComponent(source.name)}`;
     }
+    const entry = createCard(item, source);
+    if (entry) state.articles.push(entry);
+  }
+}
+
+function updateMyFeeds() {
+  myFeedsList.innerHTML = '';
+  state.selectedFeeds.forEach((meta, url) => {
+    const btn = document.createElement('button');
+    btn.textContent = meta.name || url;
+    btn.onclick = () => {
+      const icon = document.querySelector(`.feed-icon[data-url="${url}"]`);
+      if (icon) icon.classList.replace('bx-checkbox-checked', 'bx-checkbox');
+      state.selectedFeeds.delete(url);
+      localStorage.setItem('selectedFeeds', JSON.stringify([...state.selectedFeeds.keys()]));
+      state.articles = state.articles.filter(a => new URL(a.link).hostname !== new URL(url).hostname);
+      renderFeed();
+      updateMyFeeds();
+    };
+    myFeedsList.appendChild(btn);
   });
-});
+}
 
-fetch('feeds.json')
-  .then(res => res.json())
-  .then(feedData => {
-    const savedFeeds = JSON.parse(localStorage.getItem('selectedFeeds') || '[]');
-    const menuPanel = document.getElementById("dynamicMenuContainer");
-    const myFeedsList = document.getElementById("myFeedsList");
+function buildSourceScroller(defaultSources) {
+  [{ name: "All", logo: "" }, ...defaultSources].forEach(source => {
+    const btn = document.createElement("button");
+    btn.title = source.name;
+    btn.onclick = () => {
+      state.filters.source = source.name === "All" ? "all" : source.name;
+      document.querySelectorAll("#sourceScroller button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderFeed();
+    };
+    btn.innerHTML = source.logo
+      ? `<img src="${source.logo}" alt="${source.name}"><span>${source.name}</span>`
+      : `<i class='bx bx-news'></i><span>${source.name}</span>`;
+    sourceScroller.appendChild(btn);
+  });
+}
 
-    const selectedFeedMap = new Map();
+function buildSidebarMenu(feedData) {
+  const saved = JSON.parse(localStorage.getItem('selectedFeeds') || '[]');
+  Object.entries(feedData).forEach(([category, feeds]) => {
+    const section = document.createElement("div");
+    section.className = "menu-section";
+    if (localStorage.getItem(`menuCollapse-${category}`) !== "false") section.classList.add("collapsed");
 
-    // Populate selectedFeedMap with saved feeds (names/logos will fill in below)
-    savedFeeds.forEach(url => selectedFeedMap.set(url, { url }));
+    const heading = document.createElement("h3");
+    heading.innerHTML = `<span>${category}</span><i class='bx bx-down-arrow-alt'></i>`;
+    heading.onclick = () => {
+      section.classList.toggle("collapsed");
+      localStorage.setItem(`menuCollapse-${category}`, !section.classList.contains("collapsed"));
+    };
+    section.appendChild(heading);
 
-    // Update the "My Feeds" section
-    function updateMyFeedsList() {
-      myFeedsList.innerHTML = '';
-      selectedFeedMap.forEach((meta, url) => {
-        const btn = document.createElement('button');
-        btn.textContent = meta.name || url;
-        btn.onclick = () => {
-          const icon = document.querySelector(`.feed-icon[data-url="${url}"]`);
-          if (icon) {
-            icon.classList.remove('bx-checkbox-checked');
-            icon.classList.add('bx-checkbox');
-          }
-          selectedFeedMap.delete(url);
-          localStorage.setItem('selectedFeeds', JSON.stringify([...selectedFeedMap.keys()]));
-          removeOptionalFeed(url);
-          updateMyFeedsList();
-        };
-        myFeedsList.appendChild(btn);
-      });
-    }
+    const feedList = document.createElement("div");
+    feedList.className = "feed-list";
 
-    Object.entries(feedData).forEach(([category, feeds]) => {
-      const section = document.createElement('div');
-      section.className = 'menu-section';
+    feeds.forEach(feed => {
+      const label = document.createElement("label");
+      const icon = document.createElement("i");
+      icon.className = "bx bx-checkbox feed-icon";
+      icon.dataset.url = feed.url;
+      icon.dataset.name = feed.name;
+      icon.dataset.logo = feed.logo;
 
-      const collapseState = localStorage.getItem(`menuCollapse-${category}`);
-      if (collapseState === null || collapseState === 'true') {
-        section.classList.add('collapsed');
+      if (saved.includes(feed.url)) {
+        icon.classList.replace("bx-checkbox", "bx-checkbox-checked");
+        state.selectedFeeds.set(feed.url, feed);
+        loadFeed(feed).then(renderFeed);
       }
 
-      const heading = document.createElement('h3');
-      heading.innerHTML = `<span>${category}</span><i class='bx bx-down-arrow-alt'></i>`;
-      heading.onclick = () => {
-        section.classList.toggle('collapsed');
-        localStorage.setItem(`menuCollapse-${category}`, section.classList.contains('collapsed'));
-      };
-      section.appendChild(heading);
-
-      const feedList = document.createElement('div');
-      feedList.className = 'feed-list';
-
-      feeds.forEach(feed => {
-        const label = document.createElement('label');
-        const icon = document.createElement('i');
-        icon.className = 'bx bx-checkbox feed-icon';
-        icon.dataset.url = feed.url;
-        icon.dataset.logo = feed.logo;
-        icon.dataset.name = feed.name;
-
-        if (savedFeeds.includes(feed.url)) {
-          icon.classList.remove('bx-checkbox');
-          icon.classList.add('bx-checkbox-checked');
-          selectedFeedMap.set(feed.url, feed);
-          addOptionalFeed(feed.url, feed.name, feed.logo);
+      icon.addEventListener("click", () => {
+        const isChecked = icon.classList.contains("bx-checkbox-checked");
+        icon.classList.toggle("bx-checkbox", isChecked);
+        icon.classList.toggle("bx-checkbox-checked", !isChecked);
+        if (!isChecked) {
+          state.selectedFeeds.set(feed.url, feed);
+          loadFeed(feed).then(renderFeed);
+        } else {
+          state.selectedFeeds.delete(feed.url);
+          state.articles = state.articles.filter(a => new URL(a.link).hostname !== new URL(feed.url).hostname);
+          renderFeed();
         }
-
-        icon.addEventListener("click", () => {
-          const url = icon.dataset.url;
-          const name = icon.dataset.name;
-          const logo = icon.dataset.logo;
-
-          const isChecked = icon.classList.contains('bx-checkbox-checked');
-          icon.classList.toggle('bx-checkbox');
-          icon.classList.toggle('bx-checkbox-checked');
-
-          if (!isChecked) {
-            selectedFeedMap.set(url, { name, logo, url });
-            addOptionalFeed(url, name, logo);
-          } else {
-            selectedFeedMap.delete(url);
-            removeOptionalFeed(url);
-          }
-
-          localStorage.setItem('selectedFeeds', JSON.stringify([...selectedFeedMap.keys()]));
-          updateMyFeedsList();
-        });
-
-        label.appendChild(icon);
-        label.append(feed.name);
-        feedList.appendChild(label);
+        localStorage.setItem("selectedFeeds", JSON.stringify([...state.selectedFeeds.keys()]));
+        updateMyFeeds();
       });
 
-      section.appendChild(feedList);
-      menuPanel.appendChild(section);
+      label.appendChild(icon);
+      label.append(feed.name);
+      feedList.appendChild(label);
     });
 
-    updateMyFeedsList();
+    section.appendChild(feedList);
+    dynamicMenu.appendChild(section);
   });
 
+  updateMyFeeds();
+}
 
+document.getElementById("menuToggle").onclick = () => {
+  document.getElementById("menuPanel").classList.toggle("open");
+};
 
-
-
+fetch("feeds.json")
+  .then(res => res.json())
+  .then(async feedData => {
+    const flat = Object.values(feedData).flat();
+    const defaultSources = flat.slice(0, 4);
+    buildSourceScroller(defaultSources);
+    await Promise.all(defaultSources.map(loadFeed));
+    renderFeed();
+    buildSidebarMenu(feedData);
+  });
 </script>
+
 
 
 
