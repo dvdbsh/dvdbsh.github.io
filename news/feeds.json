@@ -32,5 +32,148 @@
       "url": "https://lfpress.com/feed",
       "logo": "images/logos/lfp.png"
     }
+  ],
+  "Sports": [
+    {
+      "name": "CBC Sports",
+      "url": "https://www.cbc.ca/cmlink/rss-sports",
+      "logo": "images/logos/cbc.png"
+    },
+    {
+      "name": "Global Sports",
+      "url": "https://globalnews.ca/sports/feed",
+      "logo": "images/logos/global.png"
+    }
+  ],
+  "World": [
+    {
+      "name": "CBC World",
+      "url": "https://www.cbc.ca/cmlink/rss-world",
+      "logo": "images/logos/cbc.png"
+    },
+    {
+      "name": "New York Times",
+      "url": "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+      "logo": "images/logos/nyt.png"
+    },
+    {
+      "name": "Vox",
+      "url": "https://www.vox.com/rss/index.xml",
+      "logo": "images/logos/nyt.png"
+    },
+    {
+      "name": "Global World",
+      "url": "https://globalnews.ca/world/feed",
+      "logo": "images/logos/global.png"
+    },
+    {
+      "name": "CNN Top Stories",
+      "url": "http://rss.cnn.com/rss/cnn_topstories.rss",
+      "logo": "images/logos/cnn.png"
+    }
+  ],
+  "Politics": [
+    {
+      "name": "CBC Politics",
+      "url": "https://www.cbc.ca/cmlink/rss-politics",
+      "logo": "images/logos/cbc.png"
+    },
+    {
+      "name": "Global Politics",
+      "url": "https://globalnews.ca/politics/feed",
+      "logo": "images/logos/global.png"
+    }
+  ],
+  "Business": [
+    {
+      "name": "CBC Business",
+      "url": "https://www.cbc.ca/cmlink/rss-business",
+      "logo": "images/logos/cbc.png"
+    },
+    {
+      "name": "Global Business",
+      "url": "https://globalnews.ca/business/feed",
+      "logo": "images/logos/global.png"
+    }
+  ],
+  "Health": [
+    {
+      "name": "CBC Health",
+      "url": "https://www.cbc.ca/cmlink/rss-health",
+      "logo": "images/logos/cbc.png"
+    },
+    {
+      "name": "Global Health",
+      "url": "https://globalnews.ca/health/feed",
+      "logo": "images/logos/global.png"
+    }
+  ],
+  "Tech & Science": [
+    {
+      "name": "CBC Technology & Science",
+      "url": "https://www.cbc.ca/cmlink/rss-technology",
+      "logo": "images/logos/cbc.png"
+    },
+    {
+      "name": "Global Tech",
+      "url": "https://globalnews.ca/tech/feed",
+      "logo": "images/logos/global.png"
+    }
+  ],
+  "Entertainment": [
+    {
+      "name": "CBC Arts & Entertainment",
+      "url": "https://www.cbc.ca/cmlink/rss-arts",
+      "logo": "images/logos/cbc.png"
+    },
+    {
+      "name": "Global Entertainment",
+      "url": "https://globalnews.ca/entertainment/feed",
+      "logo": "images/logos/global.png"
+    }
+  ],
+  "Canada": [
+    {
+      "name": "Global Toronto",
+      "url": "https://globalnews.ca/toronto/feed",
+      "logo": "images/logos/global.png"
+    },
+    {
+      "name": "Global BC",
+      "url": "https://globalnews.ca/bc/feed",
+      "logo": "images/logos/global.png"
+    },
+    {
+      "name": "Global Calgary",
+      "url": "https://globalnews.ca/calgary/feed",
+      "logo": "images/logos/global.png"
+    },
+    {
+      "name": "CBC Kitchener-Waterloo",
+      "url": "https://www.cbc.ca/cmlink/rss-canada-kitchenerwaterloo",
+      "logo": "images/logos/cbc.png"
+    },
+    {
+      "name": "CBC Ottawa",
+      "url": "https://www.cbc.ca/cmlink/rss-canada-ottawa",
+      "logo": "images/logos/cbc.png"
+    },
+    {
+      "name": "CBC Montreal",
+      "url": "https://www.cbc.ca/cmlink/rss-canada-montreal",
+      "logo": "images/logos/cbc.png"
+    },
+    {
+      "name": "CBC Vancouver",
+      "url": "https://www.cbc.ca/cmlink/rss-canada-britishcolumbia",
+      "logo": "images/logos/cbc.png"
+    },
+    {
+      "name": "CBC Calgary",
+      "url": "https://www.cbc.ca/cmlink/rss-canada-calgary",
+      "logo": "images/logos/cbc.png"
+    }
   ]
 }
+
+
