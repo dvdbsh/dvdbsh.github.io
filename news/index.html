@@ -243,51 +243,81 @@
       z-index: 1000;
       cursor: pointer;
     }
-    #menuPanel {
-      position: fixed;
-      top: 0;
-      right: -280px;
-      width: 260px;
-      height: 100%;
-      background: #1f1f1f;
-      color: white;
-      padding: 1.5rem;
-      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-      z-index: 999;
-      overflow-y: auto;
-      transition: right 0.3s ease;
-    }
-    #menuPanel.open {
-      right: 0;
-    }
-    .menu-section {
-      margin-bottom: 1.5rem;
-    }
-    .menu-section .feed-list {
-      margin-top: 0.5rem;
-    }
-    .menu-section.collapsed .feed-list {
-      display: none;
-    }
-    .menu-section h3 {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      cursor: pointer;
-      font-size: 1rem;
-      margin-bottom: 0.5rem;
-      padding-bottom: 0.25rem;
-      border-bottom: 1px solid #444;
-    }
-    .menu-section h3 i {
-      transition: transform 0.2s ease;
-    }
-    .menu-section.collapsed h3 i {
-      transform: rotate(180deg);
-    }
-    .menu-section.collapsed label {
-      display: none;
-    }
+#menuPanel {
+  position: fixed;
+  top: 0;
+  right: -100vw;
+  width: 100vw;
+  height: 100vh;
+  background: #1f1f1f;
+  color: white;
+  padding: 1.5rem;
+  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 999;
+  overflow-y: auto;
+  transition: right 0.3s ease;
+}
+
+/* Full screen on mobile */
+@media (max-width: 768px) {
+  #menuPanel {
+    width: 100vw;
+    height: 100vh;
+    right: -100vw;
+  }
+}
+
+/* Fixed width on desktop */
+@media (min-width: 769px) {
+  #menuPanel {
+    width: 400px;
+    height: 100vh;
+    right: -400px;
+  }
+}
+
+#menuPanel.open {
+  right: 0;
+}
+
+.feed-list label {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 1rem;
+  margin-bottom: 0.25rem;
+  border-radius: 12px;
+  background: #292a2d;
+  cursor: pointer;
+  font-size: 1rem;
+  min-height: 44px;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.feed-list label:hover,
+.feed-list label:focus-within {
+  background-color: #3c3c46;
+}
+
+.feed-icon {
+  font-size: 1.5rem !important;
+  min-width: 32px;
+  text-align: center;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+#newsFeed.no-feeds {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #888;
+  font-size: 1.2rem;
+  height: 200px; /* or suitable height */
+}
+
+
     #myFeedsSection {
       margin-bottom: 2rem;
       border-bottom: 1px solid #444;
@@ -336,7 +366,7 @@
 </button>
 
 <aside id="menuPanel">
-  <h2>Optional Sources</h2>
+  <h2>News Sources</h2>
   <div id="myFeedsSection">
     <h3>My Feeds</h3>
     <div id="myFeedsList"></div>
@@ -461,12 +491,24 @@ function truncateWords(text, wordLimit) {
 
 function renderFeed() {
   feedContainer.innerHTML = '';
+
   const filtered = state.articles.filter(a =>
     state.filters.source === 'all' || a.card.dataset.source === state.filters.source
   );
+
+  if (filtered.length === 0) {
+    feedContainer.classList.add('no-feeds');
+    feedContainer.textContent = "No feeds selected. Please select your feeds from the menu.";
+    return;
+  } else {
+    feedContainer.classList.remove('no-feeds');
+  }
+
   const sorted = filtered.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
   sorted.forEach(({ card }) => feedContainer.appendChild(card));
 }
+
+
 
 async function loadFeed(source) {
   const url = `https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`;
@@ -489,20 +531,31 @@ function updateMyFeeds() {
     const btn = document.createElement('button');
     btn.textContent = meta.name || url;
     btn.onclick = () => {
-      const icon = document.querySelector(`.feed-icon[data-url="${url}"]`);
-      if (icon) icon.classList.replace('bx-checkbox-checked', 'bx-checkbox');
+      // Remove feed from selectedFeeds
       state.selectedFeeds.delete(url);
       localStorage.setItem('selectedFeeds', JSON.stringify([...state.selectedFeeds.keys()]));
+
+      // Remove articles from that feed
       state.articles = state.articles.filter(a => new URL(a.link).hostname !== new URL(url).hostname);
+
+      // Update UI: scroller, feed list, my feeds list
+      buildSourceScroller(Array.from(state.selectedFeeds.values()));
       renderFeed();
       updateMyFeeds();
     };
     myFeedsList.appendChild(btn);
   });
+
+  // Also update scroller dynamically
+  buildSourceScroller(Array.from(state.selectedFeeds.values()));
 }
 
-function buildSourceScroller(defaultSources) {
-  [{ name: "All", logo: "" }, ...defaultSources].forEach(source => {
+
+function buildSourceScroller(selectedSources) {
+  // Always include "All" button
+  sourceScroller.innerHTML = ''; // clear first
+
+  [{ name: "All", logo: "" }, ...selectedSources].forEach(source => {
     const btn = document.createElement("button");
     btn.title = source.name;
     btn.onclick = () => {
@@ -516,7 +569,13 @@ function buildSourceScroller(defaultSources) {
       : `<i class='bx bx-news'></i><span>${source.name}</span>`;
     sourceScroller.appendChild(btn);
   });
+
+  // Default "All" active if any feeds selected
+  if(selectedSources.length > 0) {
+    sourceScroller.querySelector('button').classList.add('active');
+  }
 }
+
 
 function buildSidebarMenu(feedData) {
   const saved = JSON.parse(localStorage.getItem('selectedFeeds') || '[]');
@@ -536,40 +595,47 @@ function buildSidebarMenu(feedData) {
     const feedList = document.createElement("div");
     feedList.className = "feed-list";
 
-    feeds.forEach(feed => {
-      const label = document.createElement("label");
-      const icon = document.createElement("i");
-      icon.className = "bx bx-checkbox feed-icon";
-      icon.dataset.url = feed.url;
-      icon.dataset.name = feed.name;
-      icon.dataset.logo = feed.logo;
+	feeds.forEach(feed => {
+	  const label = document.createElement("label");
+	  label.tabIndex = 0; // Make label focusable for keyboard
 
-      if (saved.includes(feed.url)) {
-        icon.classList.replace("bx-checkbox", "bx-checkbox-checked");
-        state.selectedFeeds.set(feed.url, feed);
-        loadFeed(feed).then(renderFeed);
-      }
+	  const icon = document.createElement("i");
+	  icon.className = "bx bx-checkbox feed-icon";
+	  icon.dataset.url = feed.url;
+	  icon.dataset.name = feed.name;
+	  icon.dataset.logo = feed.logo;
 
-      icon.addEventListener("click", () => {
-        const isChecked = icon.classList.contains("bx-checkbox-checked");
-        icon.classList.toggle("bx-checkbox", isChecked);
-        icon.classList.toggle("bx-checkbox-checked", !isChecked);
-        if (!isChecked) {
-          state.selectedFeeds.set(feed.url, feed);
-          loadFeed(feed).then(renderFeed);
-        } else {
-          state.selectedFeeds.delete(feed.url);
-          state.articles = state.articles.filter(a => new URL(a.link).hostname !== new URL(feed.url).hostname);
-          renderFeed();
-        }
-        localStorage.setItem("selectedFeeds", JSON.stringify([...state.selectedFeeds.keys()]));
-        updateMyFeeds();
-      });
+	  if (saved.includes(feed.url)) {
+		icon.classList.replace("bx-checkbox", "bx-checkbox-checked");
+		state.selectedFeeds.set(feed.url, feed);
+		loadFeed(feed).then(renderFeed);
+	  }
 
-      label.appendChild(icon);
-      label.append(feed.name);
-      feedList.appendChild(label);
-    });
+		icon.addEventListener("click", () => {
+		  const isChecked = icon.classList.contains("bx-checkbox-checked");
+		  icon.classList.toggle("bx-checkbox", isChecked);
+		  icon.classList.toggle("bx-checkbox-checked", !isChecked);
+		  if (!isChecked) {
+			state.selectedFeeds.set(feed.url, feed);
+			loadFeed(feed).then(() => {
+			  updateMyFeeds();
+			  renderFeed();
+			});
+		  } else {
+			state.selectedFeeds.delete(feed.url);
+			state.articles = state.articles.filter(a => new URL(a.link).hostname !== new URL(feed.url).hostname);
+			updateMyFeeds();
+			renderFeed();
+		  }
+		  localStorage.setItem("selectedFeeds", JSON.stringify([...state.selectedFeeds.keys()]));
+		});
+
+
+	  label.appendChild(icon);
+	  label.appendChild(document.createTextNode(feed.name));
+	  feedList.appendChild(label);
+	});
+
 
     section.appendChild(feedList);
     dynamicMenu.appendChild(section);
@@ -586,12 +652,26 @@ fetch("feeds.json")
   .then(res => res.json())
   .then(async feedData => {
     const flat = Object.values(feedData).flat();
-    const defaultSources = flat.slice(0, 4);
-    buildSourceScroller(defaultSources);
-    await Promise.all(defaultSources.map(loadFeed));
+
+    // Get saved selected feeds URLs from localStorage (or empty array)
+    const saved = JSON.parse(localStorage.getItem('selectedFeeds') || '[]');
+
+    // Filter sources by saved selection
+    const selectedSources = flat.filter(feed => saved.includes(feed.url));
+
+    // Build scroller only with selected feeds + "All" button (which means show all selected)
+    buildSourceScroller(selectedSources);
+
+    // Load only selected feeds initially
+    await Promise.all(selectedSources.map(loadFeed));
+
+    // Render feed
     renderFeed();
+
+    // Build sidebar menu
     buildSidebarMenu(feedData);
   });
+
 </script>
 
 </body>
