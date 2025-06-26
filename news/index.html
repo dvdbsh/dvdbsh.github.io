@@ -10,8 +10,14 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
   <style>
-    :root { --accent: #181526; --read: #1a8b31; --button: #e8eeff; }
-    * { box-sizing: border-box; }
+    :root {
+      --accent: #181526;
+      --read: #1a8b31;
+      --button: #e8eeff;
+    }
+    * {
+      box-sizing: border-box;
+    }
     body {
       font-family: 'Nunito', sans-serif;
       background: #292a2d;
@@ -37,47 +43,47 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
-    .source-scroller-wrapper::-webkit-scrollbar { display: none; }
+    .source-scroller-wrapper::-webkit-scrollbar {
+      display: none;
+    }
     .source-scroller {
       display: flex;
       gap: 0.75rem;
       min-width: max-content;
     }
-.source-scroller button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: #1f1f1f;
-  border: none;
-  border-radius: 12px;
-  padding: 0.5rem 1rem;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 600;
-  font-size: 1rem;
-  color: #ffffff;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.source-scroller button img,
-.source-scroller button i {
-  height: 35px;
-  width: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  border-radius: 8px;
-  object-fit: contain;
-}
-
-.source-scroller button i {
-	font-size: 1.3rem;
-	}
+    .source-scroller button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      background: #1f1f1f;
+      border: none;
+      border-radius: 12px;
+      padding: 0.5rem 1rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      color: #ffffff;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .source-scroller button img,
+    .source-scroller button i {
+      height: 35px;
+      width: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+    .source-scroller button i {
+      font-size: 1.3rem;
+    }
     .source-scroller button.active {
-		background-color: #292a2d;
+      background-color: #292a2d;
       box-shadow: 0 0 0 2px #1f1f1f inset;
     }
     .feed {
@@ -90,7 +96,7 @@
       border-radius: 12px;
       overflow: hidden;
       box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      transition: max-height 0.6s ease;
+      transition: max-height 0.3s ease;
       display: flex;
       flex-direction: column;
       position: relative;
@@ -101,65 +107,57 @@
       max-height: 1000px;
     }
     .card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  font-size: 0.8rem;
-  color: #ffffff;
-  z-index: 2;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      font-size: 0.8rem;
+      color: #ffffff;
+      z-index: 2;
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
     }
-	
-	.card-header > div:last-child {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-	
+    .card-header > div:last-child {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
     .read-icon {
       display: inline-block;
       font-size: 1.7rem;
       margin-left: 0.4rem;
       color: var(--read);
-	  text-shadow: 0 0px 10px rgba(25,25,25,0.7);
+      text-shadow: 0 0px 10px rgba(25,25,25,0.7);
     }
     .card:not(.read) .read-icon {
       display: none;
     }
-	
-.card-image-wrapper {
-  position: relative;
-  width: 100%;
-  height: 210px;
-  overflow: hidden;
-}
-
-.card-image-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.card-image-wrapper::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at top left, rgba(25,25,25,0.8), transparent 60%),
-    radial-gradient(circle at top right, rgba(25,25,25,0.8), transparent 60%);
-  pointer-events: none;
-}
-
-	
-	
+    .card-image-wrapper {
+      position: relative;
+      width: 100%;
+      height: 210px;
+      overflow: hidden;
+    }
+    .card-image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .card-image-wrapper::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background:
+        radial-gradient(circle at top left, rgba(25,25,25,0.8), transparent 60%),
+        radial-gradient(circle at top right, rgba(25,25,25,0.8), transparent 60%);
+      pointer-events: none;
+    }
     .card img {
       width: 100%;
       height: 210px;
@@ -176,45 +174,41 @@
       font-weight: 700;
       color: #e8eeff;
     }
-.full-content {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #aeafb1;
-  max-height: 0;       /* collapsed */
-  overflow: hidden;
-  opacity: 0;
-  margin-top: 0;
-  transition: max-height 0.6s ease, opacity 0.4s ease, margin-top 0.4s ease;
-}
-
-.card.expanded .full-content {
-  max-height: 400px;  /* expanded height - adjust as needed */
-  opacity: 1;
-  margin-top: 1rem;
-}
-
-.read-more {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1.25rem;
-  background: var(--button);
-  color: var(--accent);
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: 600;
-  width: fit-content;
-  font-size: 1rem;
-}
-
-.read-more i {
-  font-size: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
+    .full-content {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #aeafb1;
+      max-height: 0;       /* collapsed */
+      overflow: hidden;
+      opacity: 0;
+      margin-top: 0;
+      transition: max-height 0.3s ease, opacity 0.4s ease, margin-top 0.4s ease;
+    }
+    .card.expanded .full-content {
+      max-height: 400px;  /* expanded height - adjust as needed */
+      opacity: 1;
+      margin-top: 1rem;
+    }
+    .read-more {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.25rem;
+      background: var(--button);
+      color: var(--accent);
+      padding: 0.5rem 1rem;
+      text-decoration: none;
+      border-radius: 8px;
+      font-weight: 600;
+      width: fit-content;
+      font-size: 1rem;
+    }
+    .read-more i {
+      font-size: 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
     .related {
       font-size: 0.875rem;
       margin-top: 1rem;
@@ -227,132 +221,110 @@
       margin-bottom: 0.5rem;
       text-decoration: underline;
     }
-	
-	.source-logo-name {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.source-logo-name img {
-  height: 40px;
-  width: 40px;
-  border-radius: 8px;
-  object-fit: contain;
-}
-
-#menuToggle {
-  position: fixed;
-  top: 1rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  font-size: 2rem;
-  color: white;
-  z-index: 1000;
-  cursor: pointer;
-}
-
-#menuPanel {
-  position: fixed;
-  top: 0;
-  right: -280px;
-  width: 260px;
-  height: 100%;
-  background: #1f1f1f;
-  color: white;
-  padding: 1.5rem;
-  box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-  z-index: 999;
-  overflow-y: auto;
-  transition: right 0.3s ease;
-}
-
-#menuPanel.open {
-  right: 0;
-}
-
-.menu-section {
-  margin-bottom: 1.5rem;
-}
-
-.menu-section .feed-list {
-  margin-top: 0.5rem;
-}
-.menu-section.collapsed .feed-list {
-  display: none;
-}
-
-
-.menu-section h3 {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  font-size: 1rem;
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.25rem;
-  border-bottom: 1px solid #444;
-}
-
-.menu-section h3 i {
-  transition: transform 0.2s ease;
-}
-
-.menu-section.collapsed h3 i {
-  transform: rotate(180deg);
-}
-
-
-.menu-section.collapsed label {
-  display: none;
-}
-
-
-#myFeedsSection {
-  margin-bottom: 2rem;
-  border-bottom: 1px solid #444;
-  padding-bottom: 1rem;
-}
-
-#myFeedsList button {
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: none;
-  color: white;
-  border: none;
-  padding: 0.25rem 0;
-  cursor: pointer;
-  font-size: 0.95rem;
-}
-#myFeedsList button:hover {
-  text-decoration: underline;
-}
-
-
-#menuPanel label {
-  display: block;
-  font-size: 0.95rem;
-  margin: 0.5rem 0;
-}
-.timestamp {
-  text-shadow: 0 0px 8px rgba(25,25,25,0.9);
-  font-weight: 600;
-}
-
-.feed-icon {
-  font-size: 1.25rem;
-  margin-right: 0.5rem;
-  vertical-align: middle;
-  cursor: pointer;
-}
-
-.feed-checkbox {
-  display: none;
-}
-
-
-
+    .source-logo-name {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .source-logo-name img {
+      height: 40px;
+      width: 40px;
+      border-radius: 8px;
+      object-fit: contain;
+    }
+    #menuToggle {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background: none;
+      border: none;
+      font-size: 2rem;
+      color: white;
+      z-index: 1000;
+      cursor: pointer;
+    }
+    #menuPanel {
+      position: fixed;
+      top: 0;
+      right: -280px;
+      width: 260px;
+      height: 100%;
+      background: #1f1f1f;
+      color: white;
+      padding: 1.5rem;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
+      z-index: 999;
+      overflow-y: auto;
+      transition: right 0.3s ease;
+    }
+    #menuPanel.open {
+      right: 0;
+    }
+    .menu-section {
+      margin-bottom: 1.5rem;
+    }
+    .menu-section .feed-list {
+      margin-top: 0.5rem;
+    }
+    .menu-section.collapsed .feed-list {
+      display: none;
+    }
+    .menu-section h3 {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      padding-bottom: 0.25rem;
+      border-bottom: 1px solid #444;
+    }
+    .menu-section h3 i {
+      transition: transform 0.2s ease;
+    }
+    .menu-section.collapsed h3 i {
+      transform: rotate(180deg);
+    }
+    .menu-section.collapsed label {
+      display: none;
+    }
+    #myFeedsSection {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid #444;
+      padding-bottom: 1rem;
+    }
+    #myFeedsList button {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: none;
+      color: white;
+      border: none;
+      padding: 0.25rem 0;
+      cursor: pointer;
+      font-size: 0.95rem;
+    }
+    #myFeedsList button:hover {
+      text-decoration: underline;
+    }
+    #menuPanel label {
+      display: block;
+      font-size: 0.95rem;
+      margin: 0.5rem 0;
+    }
+    .timestamp {
+      text-shadow: 0 0px 8px rgba(25,25,25,0.9);
+      font-weight: 600;
+    }
+    .feed-icon {
+      font-size: 1.25rem;
+      margin-right: 0.5rem;
+      vertical-align: middle;
+      cursor: pointer;
+    }
+    .feed-checkbox {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -452,7 +424,7 @@ function createCard(item, source) {
       <div class="timestamp">${timeString}<span class="read-icon"><i class="bx bxs-check-circle"></i></span></div>
     </div>
     <div class="card-content">
-      <h2>${item.title}</h2>
+      <h2>${truncateWords(item.title, 14)}</h2>
       <div class="full-content">
         ${stripHtmlTags(item.content).replace(/Read More/gi, '').trim()}<br>
         <a href="${item.link}" class="read-more" target="_blank">Read full article <i class='bx bx-right-arrow-alt'></i></a>
@@ -461,35 +433,30 @@ function createCard(item, source) {
 
 card.addEventListener("click", (e) => {
   if (e.target.tagName !== "A") {
-    const expanded = card.classList.contains("expanded");
-    if (!expanded) {
-      // Expand new card first
+    const isExpanded = card.classList.contains("expanded");
+    const currentlyExpanded = document.querySelector('.card.expanded');
+
+    if (!isExpanded) {
+      if (currentlyExpanded && currentlyExpanded !== card) {
+        currentlyExpanded.classList.remove("expanded");
+      }
       card.classList.add("expanded");
       markAsRead(id);
       card.classList.add("read");
-
-      // Collapse others except the newly expanded one
-      document.querySelectorAll('.card.expanded').forEach(c => {
-        if (c !== card) c.classList.remove("expanded");
-      });
-
-      // Scroll to top of card with offset
-      const yOffset = 60; // pixels of space from top
-      const cardRect = card.getBoundingClientRect();
-      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-      const y = cardRect.top + scrollTop - yOffset;
-
-      window.scrollTo({ top: y, behavior: 'smooth' });
+      // No scrolling here
     } else {
-      // Collapse expanded card
       card.classList.remove("expanded");
     }
   }
 });
 
 
-
   return { ...item, card, id };
+}
+
+function truncateWords(text, wordLimit) {
+  const words = text.trim().split(/\s+/);
+  return words.length > wordLimit ? words.slice(0, wordLimit).join(" ") + "…" : text;
 }
 
 function renderFeed() {
