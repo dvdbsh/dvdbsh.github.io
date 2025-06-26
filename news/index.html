@@ -176,21 +176,23 @@
       font-weight: 700;
       color: #e8eeff;
     }
-    .full-content {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #aeafb1;
-      opacity: 0;
-      max-height: 0;
-      overflow: hidden;
-      margin-top: 0;
-      transition: opacity 0.4s ease, max-height 0.6s ease, margin-top 0.4s ease;
-    }
-    .card.expanded .full-content {
-      opacity: 1;
-      margin-top: 1rem;
-      max-height: 800px;
-    }
+.full-content {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #aeafb1;
+  max-height: 0;       /* collapsed */
+  overflow: hidden;
+  opacity: 0;
+  margin-top: 0;
+  transition: max-height 0.6s ease, opacity 0.4s ease, margin-top 0.4s ease;
+}
+
+.card.expanded .full-content {
+  max-height: 400px;  /* expanded height - adjust as needed */
+  opacity: 1;
+  margin-top: 1rem;
+}
+
 .read-more {
   display: inline-flex;
   align-items: center;
@@ -370,9 +372,6 @@
   <div id="dynamicMenuContainer"></div>
 </aside>
 
-
-
-
 <div class="source-scroller-wrapper">
   <div class="source-scroller" id="sourceScroller"></div>
 </div>
@@ -393,6 +392,14 @@ const state = {
   selectedFeeds: new Map()
 };
 
+function stripHtmlTags(html) {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  // Remove image tags first
+  [...div.querySelectorAll('img')].forEach(img => img.remove());
+  return div.textContent || '';
+}
+
 function formatArticleDate(pubDate) {
   const date = new Date(pubDate);
   const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
@@ -404,11 +411,6 @@ function formatArticleDate(pubDate) {
   if (diff === 0) return time;
   if (diff === oneDay) return `Yesterday · ${time}`;
   return date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
-}
-
-function truncateWords(text, wordLimit) {
-  const words = text.trim().split(/\s+/);
-  return words.length > wordLimit ? words.slice(0, wordLimit).join(" ") + "…" : text;
 }
 
 async function getPexelsImage(query) {
@@ -450,25 +452,42 @@ function createCard(item, source) {
       <div class="timestamp">${timeString}<span class="read-icon"><i class="bx bxs-check-circle"></i></span></div>
     </div>
     <div class="card-content">
-      <h2>${truncateWords(item.title, 14)}</h2>
+      <h2>${item.title}</h2>
       <div class="full-content">
-        ${truncateWords(item.content, 60)}<br>
+        ${stripHtmlTags(item.content).replace(/Read More/gi, '').trim()}<br>
         <a href="${item.link}" class="read-more" target="_blank">Read full article <i class='bx bx-right-arrow-alt'></i></a>
       </div>
     </div>`;
 
-  card.addEventListener("click", (e) => {
-    if (e.target.tagName !== "A") {
-      const expanded = card.classList.contains("expanded");
-      document.querySelectorAll('.card.expanded').forEach(c => c.classList.remove("expanded"));
-      if (!expanded) {
-        card.classList.add("expanded");
-        markAsRead(id);
-        card.classList.add("read");
-        setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
-      }
+card.addEventListener("click", (e) => {
+  if (e.target.tagName !== "A") {
+    const expanded = card.classList.contains("expanded");
+    if (!expanded) {
+      // Expand new card first
+      card.classList.add("expanded");
+      markAsRead(id);
+      card.classList.add("read");
+
+      // Collapse others except the newly expanded one
+      document.querySelectorAll('.card.expanded').forEach(c => {
+        if (c !== card) c.classList.remove("expanded");
+      });
+
+      // Scroll to top of card with offset
+      const yOffset = 60; // pixels of space from top
+      const cardRect = card.getBoundingClientRect();
+      const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+      const y = cardRect.top + scrollTop - yOffset;
+
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    } else {
+      // Collapse expanded card
+      card.classList.remove("expanded");
     }
-  });
+  }
+});
+
+
 
   return { ...item, card, id };
 }
@@ -607,10 +626,6 @@ fetch("feeds.json")
     buildSidebarMenu(feedData);
   });
 </script>
-
-
-
-
 
 </body>
 </html>
