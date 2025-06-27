@@ -12,11 +12,22 @@
     }
   ],
   "Local": [
+
     {
       "name": "Global News",
       "url": "https://globalnews.ca/london/feed",
       "logo": "images/logos/global.png"
     },
+    {
+      "name": "CTV London",
+      "url": "https://www.ctvnews.ca/london/",
+      "logo": "images/logos/ctv.png"
+    },	
+    {
+      "name": "Reddit",
+      "url": "https://www.reddit.com/r/londonontario.rss",
+      "logo": "images/logos/global.png"
+    },	
     {
       "name": "CBC News London",
       "url": "https://www.cbc.ca/cmlink/rss-canada-london",
