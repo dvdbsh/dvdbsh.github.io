@@ -105,7 +105,7 @@ h1 {
   cursor: pointer;
 }
 .card.expanded {
-  max-height: 1200px;
+  max-height: 1000px;
 }
 .card-header {
   display: flex;
@@ -186,7 +186,7 @@ h1 {
   transition: max-height 0.3s ease, opacity 0.4s ease, margin-top 0.4s ease;
 }
 .card.expanded .full-content {
-  max-height: 1200px;  /* expanded height - adjust as needed */
+  max-height: 400px;  /* expanded height - adjust as needed */
   opacity: 1;
   margin-top: 1rem;
 }
@@ -217,41 +217,14 @@ h1 {
   font-size: 0.875rem;
   margin-top: 1rem;
   padding-top: 1rem;
+  border-top: 1px solid #ddd;
 }
 .related a {
   display: block;
-  color: #999;
+  color: #555;
   margin-bottom: 0.5rem;
   text-decoration: underline;
 }
-.related hr {
-  border: none;
-  border-top: 1px solid #444;
-  margin: 1em 0;
-  opacity: 0.5;
-}
-.related-carousel {
-  display: flex;
-  gap: 1rem;
-  overflow-x: auto;
-  height: 230px;
-  padding: 1rem 0;
-}
-.related-carousel .mini-card {
-  flex: 0 0 auto;
-  width: 200px;
-  height: 120px;
-  background: #222;
-  border-radius: 8px;
-}
-
-.mini-card img {
-  max-width: 200px;
-  max-height: 120px;
-  object-fit: fit;
-  }
-
-
 .source-logo-name {
   display: flex;
   align-items: center;
@@ -417,18 +390,10 @@ const state = {
   selectedFeeds: new Map()
 };
 
-function generateTitleKey(title) {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, '')
-    .replace(/\s+/g, ' ')
-    .replace(/\b(a|an|the|to|in|on|for|with|of|at|by|from|as|and|or|but|so|yet|cbc|global|news|update|breaking)\b/g, '')
-    .trim();
-}
-
 function stripHtmlTags(html) {
   const div = document.createElement('div');
   div.innerHTML = html;
+  // Remove image tags first
   [...div.querySelectorAll('img')].forEach(img => img.remove());
   return div.textContent || '';
 }
@@ -465,8 +430,6 @@ function markAsRead(id) {
 
 function createCard(item, source) {
   const id = btoa(item.link);
-  const relatedKey = generateTitleKey(item.title);
-
   if (state.articles.some(a => a.id === id)) return null;
   if (!item.pubDate) item.pubDate = item.isoDate || item.published || item.date || new Date().toISOString();
   const timeString = formatArticleDate(item.pubDate);
@@ -475,6 +438,7 @@ function createCard(item, source) {
   card.className = "card";
   card.dataset.id = id;
   card.dataset.source = source.name;
+  if (state.read.has(id)) card.classList.add("read");
 
   card.innerHTML = `
     <div class="card-image-wrapper"><img src="${item.thumbnail}" alt="thumbnail" loading="lazy"></div>
@@ -490,86 +454,31 @@ function createCard(item, source) {
       <div class="full-content">
         ${truncateWords(stripHtmlTags(item.content).replace(/Read More/gi, '').trim(), 40)}<br>
         <a href="${item.link}" class="read-more" target="_blank">Read full article <i class='bx bx-right-arrow-alt'></i></a>
-        <div class="related" id="related-${id}"></div>
       </div>
     </div>`;
 
-  card.addEventListener("click", (e) => {
-    if (e.target.tagName !== "A") {
-      const isExpanded = card.classList.contains("expanded");
-      const currentlyExpanded = document.querySelector('.card.expanded');
+card.addEventListener("click", (e) => {
+  if (e.target.tagName !== "A") {
+    const isExpanded = card.classList.contains("expanded");
+    const currentlyExpanded = document.querySelector('.card.expanded');
 
-      if (!isExpanded) {
-        if (currentlyExpanded && currentlyExpanded !== card) {
-          currentlyExpanded.classList.remove("expanded");
-        }
-        card.classList.add("expanded");
-        markAsRead(id);
-        card.classList.add("read");
-        renderRelatedArticles(id, relatedKey);
-      } else {
-        card.classList.remove("expanded");
+    if (!isExpanded) {
+      if (currentlyExpanded && currentlyExpanded !== card) {
+        currentlyExpanded.classList.remove("expanded");
       }
+      card.classList.add("expanded");
+      markAsRead(id);
+      card.classList.add("read");
+      // No scrolling here
+    } else {
+      card.classList.remove("expanded");
     }
-  });
-
-  console.log("CREATE CARD:", {
-    originalTitle: item.title,
-    relatedKey,
-    id
-  });
-
-  return { ...item, card, id, relatedKey };
-}
-
-function getOverlapScore(a, b) {
-  const setA = new Set(a.split(/\s+/));
-  const setB = new Set(b.split(/\s+/));
-  const intersection = [...setA].filter(word => setB.has(word));
-  return intersection.length / Math.max(setA.size, setB.size);
-}
-
-
-function renderRelatedArticles(currentId, relatedKey) {
-  const container = document.getElementById(`related-${currentId}`);
-  if (!relatedKey || !container) return;
-
-  const currentArticle = state.articles.find(a => a.id === currentId);
-  if (!currentArticle) return;
-
-  const relatedGroup = state.articles
-    .filter(a => a.id !== currentId)
-    .map(a => ({
-      ...a,
-      score: getOverlapScore(currentArticle.title, a.title)
-    }))
-    .filter(a => a.score > 0.2)
-    .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-
-  if (relatedGroup.length === 0) {
-    container.innerHTML = '';
-    return;
   }
+});
 
-  // Determine the newest article to feature as main
-  const [main, ...others] = relatedGroup;
 
-  container.innerHTML = `
-    <hr />
-    <strong>Related Stories:</strong>
-    <div class="related-carousel">
-      ${others.map(r => `
-        <div class="mini-card">
-          <img src="${r.thumbnail}" alt="" style="width:100%; border-radius:8px;">
-          <p style="margin:0.5rem 0 0; font-weight:600; font-size:0.9rem; color:white;">${truncateWords(r.title, 10)}</p>
-        </div>
-      `).join('')}
-    </div>
-  `;
+  return { ...item, card, id };
 }
-
-
-
 
 function truncateWords(text, wordLimit) {
   const words = text.trim().split(/\s+/);
@@ -578,10 +487,12 @@ function truncateWords(text, wordLimit) {
 
 function renderFeed() {
   feedContainer.innerHTML = '';
-  const filtered = state.articles.filter(a =>
-    (state.filters.source === 'all' || a.card.dataset.source === state.filters.source) &&
-    (!state.filters.unreadOnly || !a.card.classList.contains("read"))
-  );
+
+	const filtered = state.articles.filter(a =>
+	  (state.filters.source === 'all' || a.card.dataset.source === state.filters.source) &&
+	  (!state.filters.unreadOnly || !a.card.classList.contains("read"))
+	);
+
 
   if (filtered.length === 0) {
     feedContainer.classList.add('no-feeds');
@@ -594,6 +505,8 @@ function renderFeed() {
   const sorted = filtered.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
   sorted.forEach(({ card }) => feedContainer.appendChild(card));
 }
+
+
 
 async function loadFeed(source) {
   const url = `https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`;
@@ -615,35 +528,60 @@ function updateMyFeeds() {
   state.selectedFeeds.forEach((meta, url) => {
     const btn = document.createElement('button');
     btn.classList.add('menu-item');
+
     btn.innerHTML = `<i class='bx bx-no-entry'></i> ${meta.name || url}`;
 
     btn.onclick = (e) => {
+      // Prevent button click when clicking on the X icon
       if (e.target.tagName.toLowerCase() === 'i') {
+        // Remove feed from selectedFeeds
         state.selectedFeeds.delete(url);
         localStorage.setItem('selectedFeeds', JSON.stringify([...state.selectedFeeds.keys()]));
+
+        // Remove articles from that feed
         state.articles = state.articles.filter(a => new URL(a.link).hostname !== new URL(url).hostname);
+
+        // Update UI
         buildSourceScroller(Array.from(state.selectedFeeds.values()));
         renderFeed();
         updateMyFeeds();
+
+        // Stop event bubbling to prevent button click event
         e.stopPropagation();
+      } else {
+        // Optionally: handle button click if you want separate action (like filtering)
       }
     };
 
     myFeedsList.appendChild(btn);
   });
 
+  // Also update scroller dynamically
   buildSourceScroller(Array.from(state.selectedFeeds.values()));
 }
 
+
+
 function buildSourceScroller(selectedSources) {
-  sourceScroller.innerHTML = '';
+  // Always include "All" button
+  sourceScroller.innerHTML = ''; // clear first
+
   [{ name: "All", logo: "" }, { name: "Unread", logo: "" }, ...selectedSources].forEach(source => {
     const btn = document.createElement("button");
     btn.classList.add('menu-item');
     btn.title = source.name;
     btn.onclick = () => {
-      state.filters.source = source.name === "Unread" ? "all" : source.name;
-      state.filters.unreadOnly = source.name === "Unread";
+      if (source.name === "All") {
+  state.filters.source = "all";
+  state.filters.unreadOnly = false;
+} else if (source.name === "Unread") {
+  state.filters.source = "all";
+  state.filters.unreadOnly = true;
+} else {
+  state.filters.source = source.name;
+  state.filters.unreadOnly = false;
+}
+
       document.querySelectorAll("#sourceScroller button").forEach(b => b.classList.remove("active"));
       btn.classList.add("active");
       renderFeed();
@@ -654,10 +592,12 @@ function buildSourceScroller(selectedSources) {
     sourceScroller.appendChild(btn);
   });
 
-  if (selectedSources.length > 0) {
+  // Default "All" active if any feeds selected
+  if(selectedSources.length > 0) {
     sourceScroller.querySelector('button').classList.add('active');
   }
 }
+
 
 function buildSidebarMenu(feedData) {
   const saved = JSON.parse(localStorage.getItem('selectedFeeds') || '[]');
@@ -677,46 +617,48 @@ function buildSidebarMenu(feedData) {
     const feedList = document.createElement("div");
     feedList.className = "feed-list";
 
-    feeds.forEach(feed => {
-      const label = document.createElement("label");
-      label.classList.add('menu-item');
-      label.tabIndex = 0;
+	feeds.forEach(feed => {
+	  const label = document.createElement("label");
+	  label.classList.add('menu-item');
+	  label.tabIndex = 0; // Make label focusable for keyboard
 
-      const icon = document.createElement("i");
-      icon.className = "bx bx-checkbox feed-icon";
-      icon.dataset.url = feed.url;
-      icon.dataset.name = feed.name;
-      icon.dataset.logo = feed.logo;
+	  const icon = document.createElement("i");
+	  icon.className = "bx bx-checkbox feed-icon";
+	  icon.dataset.url = feed.url;
+	  icon.dataset.name = feed.name;
+	  icon.dataset.logo = feed.logo;
 
-      if (saved.includes(feed.url)) {
-        icon.classList.replace("bx-checkbox", "bx-checkbox-checked");
-        state.selectedFeeds.set(feed.url, feed);
-        loadFeed(feed).then(renderFeed);
-      }
+	  if (saved.includes(feed.url)) {
+		icon.classList.replace("bx-checkbox", "bx-checkbox-checked");
+		state.selectedFeeds.set(feed.url, feed);
+		loadFeed(feed).then(renderFeed);
+	  }
 
-      icon.addEventListener("click", () => {
-        const isChecked = icon.classList.contains("bx-checkbox-checked");
-        icon.classList.toggle("bx-checkbox", isChecked);
-        icon.classList.toggle("bx-checkbox-checked", !isChecked);
-        if (!isChecked) {
-          state.selectedFeeds.set(feed.url, feed);
-          loadFeed(feed).then(() => {
-            updateMyFeeds();
-            renderFeed();
-          });
-        } else {
-          state.selectedFeeds.delete(feed.url);
-          state.articles = state.articles.filter(a => new URL(a.link).hostname !== new URL(feed.url).hostname);
-          updateMyFeeds();
-          renderFeed();
-        }
-        localStorage.setItem("selectedFeeds", JSON.stringify([...state.selectedFeeds.keys()]));
-      });
+		icon.addEventListener("click", () => {
+		  const isChecked = icon.classList.contains("bx-checkbox-checked");
+		  icon.classList.toggle("bx-checkbox", isChecked);
+		  icon.classList.toggle("bx-checkbox-checked", !isChecked);
+		  if (!isChecked) {
+			state.selectedFeeds.set(feed.url, feed);
+			loadFeed(feed).then(() => {
+			  updateMyFeeds();
+			  renderFeed();
+			});
+		  } else {
+			state.selectedFeeds.delete(feed.url);
+			state.articles = state.articles.filter(a => new URL(a.link).hostname !== new URL(feed.url).hostname);
+			updateMyFeeds();
+			renderFeed();
+		  }
+		  localStorage.setItem("selectedFeeds", JSON.stringify([...state.selectedFeeds.keys()]));
+		});
 
-      label.appendChild(icon);
-      label.appendChild(document.createTextNode(feed.name));
-      feedList.appendChild(label);
-    });
+
+	  label.appendChild(icon);
+	  label.appendChild(document.createTextNode(feed.name));
+	  feedList.appendChild(label);
+	});
+
 
     section.appendChild(feedList);
     dynamicMenu.appendChild(section);
@@ -733,15 +675,27 @@ fetch("feeds.json")
   .then(res => res.json())
   .then(async feedData => {
     const flat = Object.values(feedData).flat();
+
+    // Get saved selected feeds URLs from localStorage (or empty array)
     const saved = JSON.parse(localStorage.getItem('selectedFeeds') || '[]');
+
+    // Filter sources by saved selection
     const selectedSources = flat.filter(feed => saved.includes(feed.url));
+
+    // Build scroller only with selected feeds + "All" button (which means show all selected)
     buildSourceScroller(selectedSources);
+
+    // Load only selected feeds initially
     await Promise.all(selectedSources.map(loadFeed));
+
+    // Render feed
     renderFeed();
+
+    // Build sidebar menu
     buildSidebarMenu(feedData);
   });
-</script>
 
+</script>
 
 </body>
 </html>
