@@ -9,6 +9,7 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+
   
   <style>
 :root {
@@ -351,11 +352,47 @@ h1 {
 .menu-section.collapsed h3 i {
   transform: rotate(180deg);
 }
+
+@keyframes spinner {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+#pullIndicator.loading::before {
+  content: '';
+  width: 16px;
+  height: 16px;
+  border: 2px solid white;
+  border-top-color: transparent;
+  border-radius: 50%;
+  margin-right: 0.5rem;
+  animation: spinner 1s linear infinite;
+}
+
   </style>
 </head>
 <body>
 
 <header><h1>London News</h1></header>
+
+<div id="pullIndicator" style="
+  position: fixed;
+  top: -50px;
+  left: 0;
+  right: 0;
+  height: 50px;
+  background: #1f1f1f;
+  color: white;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: top 0.3s ease;
+  z-index: 1000;
+">
+  <span id="pullText">Pull to refresh</span>
+</div>
+
 
 <button id="menuToggle" aria-label="Menu">
   <i class='bx bx-menu'></i>
@@ -367,12 +404,21 @@ h1 {
     <h3>My Feeds</h3>
     <div id="myFeedsList"></div>
   </div>
+	<button id="refreshFeedsButton" class="menu-item">
+	  <i class='bx bx-refresh'></i> Refresh Feeds
+	</button>
+  
   <div id="dynamicMenuContainer"></div>
 </aside>
 
 <div class="source-scroller-wrapper">
   <div class="source-scroller" id="sourceScroller"></div>
 </div>
+
+<div id="newArticlesBanner" style="display:none; text-align:center; background:#181526; color:#fff; padding:1rem; cursor:pointer; font-weight:600;">
+  🔄 New stories available – <span style="text-decoration:underline;">Click to load</span>
+</div>
+
 
 <div class="feed" id="newsFeed"></div>
 
@@ -382,18 +428,79 @@ const feedContainer = document.getElementById("newsFeed");
 const sourceScroller = document.getElementById("sourceScroller");
 const dynamicMenu = document.getElementById("dynamicMenuContainer");
 const myFeedsList = document.getElementById("myFeedsList");
+const banner = document.getElementById("newArticlesBanner");
 
 const state = {
-  read: new Set(JSON.parse(localStorage.getItem('readArticles') || '[]')),
+  read: new Set(),
   filters: { source: 'all' },
   articles: [],
-  selectedFeeds: new Map()
+  selectedFeeds: new Map(),
+  collapsedMenus: new Set()
 };
+
+let touchStartY = 0;
+let isPulling = false;
+let pullDistance = 0;
+
+const pullIndicator = document.getElementById('pullIndicator');
+const pullText = document.getElementById('pullText');
+
+document.addEventListener('touchstart', (e) => {
+  if (window.scrollY === 0) {
+    touchStartY = e.touches[0].clientY;
+    isPulling = true;
+    pullDistance = 0;
+  }
+}, { passive: true });
+
+document.addEventListener('touchmove', (e) => {
+  if (!isPulling) return;
+
+  const currentY = e.touches[0].clientY;
+  pullDistance = currentY - touchStartY;
+
+  if (pullDistance > 0) {
+    e.preventDefault(); // prevent native pull-to-refresh
+    const clamped = Math.min(pullDistance, 60);
+    pullIndicator.style.top = `${clamped - 50}px`;
+
+    if (pullDistance > 50) {
+      pullText.textContent = "Release to refresh";
+    } else {
+      pullText.textContent = "Pull to refresh";
+    }
+  }
+}, { passive: false });
+
+document.addEventListener('touchend', async () => {
+  if (pullDistance > 50) {
+    pullIndicator.classList.add("loading");
+    pullText.textContent = "Refreshing…";
+    pullIndicator.style.top = "0px";
+
+    // Refresh logic
+    state.articles = [];
+    feedContainer.innerHTML = '';
+    await Promise.all(Array.from(state.selectedFeeds.values()).map(loadFeed));
+    renderFeed();
+
+    // Hide
+    setTimeout(() => {
+      pullIndicator.classList.remove("loading");
+      pullIndicator.style.top = "-50px";
+      pullText.textContent = "Pull to refresh";
+    }, 800);
+  } else {
+    pullIndicator.style.top = "-50px";
+  }
+
+  isPulling = false;
+});
+
 
 function stripHtmlTags(html) {
   const div = document.createElement('div');
   div.innerHTML = html;
-  // Remove image tags first
   [...div.querySelectorAll('img')].forEach(img => img.remove());
   return div.textContent || '';
 }
@@ -407,7 +514,7 @@ function formatArticleDate(pubDate) {
   const diff = todayDay - articleDay;
   const oneDay = 86400000;
   if (diff === 0) return time;
-  if (diff === oneDay) return `Yesterday · ${time}`;
+  if (diff === oneDay) return `Yesterday • ${time}`;
   return date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
 }
 
@@ -423,9 +530,14 @@ async function getPexelsImage(query) {
   }
 }
 
+function truncateWords(text, wordLimit) {
+  const words = text.trim().split(/\s+/);
+  return words.length > wordLimit ? words.slice(0, wordLimit).join(" ") + "…" : text;
+}
+
 function markAsRead(id) {
   state.read.add(id);
-  localStorage.setItem('readArticles', JSON.stringify([...state.read]));
+  savePrefsToLocal();
 }
 
 function createCard(item, source) {
@@ -452,65 +564,48 @@ function createCard(item, source) {
     <div class="card-content">
       <h2>${truncateWords(item.title, 14)}</h2>
       <div class="full-content">
-        ${truncateWords(stripHtmlTags(item.content).replace(/Read More/gi, '').trim(), 40)}<br>
+        ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
         <a href="${item.link}" class="read-more" target="_blank">Read full article <i class='bx bx-right-arrow-alt'></i></a>
       </div>
     </div>`;
 
-card.addEventListener("click", (e) => {
-  if (e.target.tagName !== "A") {
-    const isExpanded = card.classList.contains("expanded");
-    const currentlyExpanded = document.querySelector('.card.expanded');
-
-    if (!isExpanded) {
-      if (currentlyExpanded && currentlyExpanded !== card) {
-        currentlyExpanded.classList.remove("expanded");
+  card.addEventListener("click", (e) => {
+    if (e.target.tagName !== "A") {
+      const isExpanded = card.classList.contains("expanded");
+      const currentlyExpanded = document.querySelector('.card.expanded');
+      if (!isExpanded) {
+        if (currentlyExpanded && currentlyExpanded !== card) currentlyExpanded.classList.remove("expanded");
+        card.classList.add("expanded");
+        markAsRead(id);
+        card.classList.add("read");
+      } else {
+        card.classList.remove("expanded");
       }
-      card.classList.add("expanded");
-      markAsRead(id);
-      card.classList.add("read");
-      // No scrolling here
-    } else {
-      card.classList.remove("expanded");
     }
-  }
-});
-
+  });
 
   return { ...item, card, id };
 }
 
-function truncateWords(text, wordLimit) {
-  const words = text.trim().split(/\s+/);
-  return words.length > wordLimit ? words.slice(0, wordLimit).join(" ") + "…" : text;
-}
-
 function renderFeed() {
   feedContainer.innerHTML = '';
-
-	const filtered = state.articles.filter(a =>
-	  (state.filters.source === 'all' || a.card.dataset.source === state.filters.source) &&
-	  (!state.filters.unreadOnly || !a.card.classList.contains("read"))
-	);
-
-
+  const filtered = state.articles.filter(a =>
+    (state.filters.source === 'all' || a.card.dataset.source === state.filters.source) &&
+    (!state.filters.unreadOnly || !a.card.classList.contains("read"))
+  );
   if (filtered.length === 0) {
     feedContainer.classList.add('no-feeds');
     feedContainer.textContent = "No feeds selected. Please select your feeds from the menu.";
     return;
-  } else {
-    feedContainer.classList.remove('no-feeds');
   }
-
-  const sorted = filtered.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-  sorted.forEach(({ card }) => feedContainer.appendChild(card));
+  feedContainer.classList.remove('no-feeds');
+  filtered.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
+          .forEach(({ card }) => feedContainer.appendChild(card));
 }
-
-
 
 async function loadFeed(source) {
   const url = `https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`;
-  const res = await fetch(url, { cache: "force-cache" });
+  const res = await fetch(url);
   const data = await res.json();
   if (!data.items) return;
 
@@ -523,142 +618,113 @@ async function loadFeed(source) {
   }
 }
 
+function savePrefsToLocal() {
+  try {
+    const selectedFeedsArray = [...state.selectedFeeds];
+    const readArray = [...state.read];
+
+    localStorage.setItem('selectedFeeds', JSON.stringify(selectedFeedsArray));
+    localStorage.setItem('readArticles', JSON.stringify(readArray));
+
+    // Sync to KV
+    fetch("https://rss-proxy.davidbusch-02.workers.dev/feeds/save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: localUserId, selectedFeeds: selectedFeedsArray })
+    });
+
+    fetch("https://rss-proxy.davidbusch-02.workers.dev/reads/save", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ userId: localUserId, readArticles: readArray })
+    });
+
+  } catch (e) {
+    console.warn("Failed to save preferences locally or remotely", e);
+  }
+}
+
+
+
+function buildSourceScroller(sources) {
+  sourceScroller.innerHTML = '';
+  [{ name: "All" }, { name: "Unread" }, ...sources].forEach(source => {
+    const btn = document.createElement("button");
+    btn.classList.add('menu-item');
+    btn.innerHTML = source.logo
+      ? `<img src="${source.logo}" alt="${source.name}"><span>${source.name}</span>`
+      : `<i class='bx bx-news'></i><span>${source.name}</span>`;
+    btn.onclick = () => {
+      state.filters.source = source.name === "All" || source.name === "Unread" ? "all" : source.name;
+      state.filters.unreadOnly = source.name === "Unread";
+      document.querySelectorAll("#sourceScroller button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      renderFeed();
+    };
+    sourceScroller.appendChild(btn);
+  });
+  if (sources.length > 0) sourceScroller.querySelector("button").classList.add("active");
+}
+
 function updateMyFeeds() {
   myFeedsList.innerHTML = '';
   state.selectedFeeds.forEach((meta, url) => {
     const btn = document.createElement('button');
     btn.classList.add('menu-item');
-
-    btn.innerHTML = `<i class='bx bx-no-entry'></i> ${meta.name || url}`;
-
+    btn.innerHTML = `<i class='bx bx-no-entry'></i> ${meta.name}`;
     btn.onclick = (e) => {
-      // Prevent button click when clicking on the X icon
       if (e.target.tagName.toLowerCase() === 'i') {
-        // Remove feed from selectedFeeds
         state.selectedFeeds.delete(url);
-        localStorage.setItem('selectedFeeds', JSON.stringify([...state.selectedFeeds.keys()]));
-
-        // Remove articles from that feed
         state.articles = state.articles.filter(a => new URL(a.link).hostname !== new URL(url).hostname);
-
-        // Update UI
-        buildSourceScroller(Array.from(state.selectedFeeds.values()));
-        renderFeed();
         updateMyFeeds();
-
-        // Stop event bubbling to prevent button click event
+        renderFeed();
         e.stopPropagation();
-      } else {
-        // Optionally: handle button click if you want separate action (like filtering)
       }
     };
-
     myFeedsList.appendChild(btn);
   });
-
-  // Also update scroller dynamically
+  savePrefsToLocal();
   buildSourceScroller(Array.from(state.selectedFeeds.values()));
 }
 
-
-
-function buildSourceScroller(selectedSources) {
-  // Always include "All" button
-  sourceScroller.innerHTML = ''; // clear first
-
-  [{ name: "All", logo: "" }, { name: "Unread", logo: "" }, ...selectedSources].forEach(source => {
-    const btn = document.createElement("button");
-    btn.classList.add('menu-item');
-    btn.title = source.name;
-    btn.onclick = () => {
-      if (source.name === "All") {
-  state.filters.source = "all";
-  state.filters.unreadOnly = false;
-} else if (source.name === "Unread") {
-  state.filters.source = "all";
-  state.filters.unreadOnly = true;
-} else {
-  state.filters.source = source.name;
-  state.filters.unreadOnly = false;
-}
-
-      document.querySelectorAll("#sourceScroller button").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      renderFeed();
-    };
-    btn.innerHTML = source.logo
-      ? `<img src="${source.logo}" alt="${source.name}"><span>${source.name}</span>`
-      : `<i class='bx bx-news'></i><span>${source.name}</span>`;
-    sourceScroller.appendChild(btn);
-  });
-
-  // Default "All" active if any feeds selected
-  if(selectedSources.length > 0) {
-    sourceScroller.querySelector('button').classList.add('active');
-  }
-}
-
-
 function buildSidebarMenu(feedData) {
-  const saved = JSON.parse(localStorage.getItem('selectedFeeds') || '[]');
   Object.entries(feedData).forEach(([category, feeds]) => {
     const section = document.createElement("div");
     section.className = "menu-section";
-    if (localStorage.getItem(`menuCollapse-${category}`) !== "false") section.classList.add("collapsed");
+    section.classList.add("collapsed");
 
     const heading = document.createElement("h3");
     heading.innerHTML = `<span>${category}</span><i class='bx bx-down-arrow-alt'></i>`;
-    heading.onclick = () => {
-      section.classList.toggle("collapsed");
-      localStorage.setItem(`menuCollapse-${category}`, !section.classList.contains("collapsed"));
-    };
+    heading.onclick = () => section.classList.toggle("collapsed");
     section.appendChild(heading);
 
     const feedList = document.createElement("div");
     feedList.className = "feed-list";
 
-	feeds.forEach(feed => {
-	  const label = document.createElement("label");
-	  label.classList.add('menu-item');
-	  label.tabIndex = 0; // Make label focusable for keyboard
+    feeds.forEach(feed => {
+      const label = document.createElement("label");
+      label.classList.add("menu-item");
+      const icon = document.createElement("i");
+      icon.className = state.selectedFeeds.has(feed.url) ? "bx bx-checkbox-checked feed-icon" : "bx bx-checkbox feed-icon";
 
-	  const icon = document.createElement("i");
-	  icon.className = "bx bx-checkbox feed-icon";
-	  icon.dataset.url = feed.url;
-	  icon.dataset.name = feed.name;
-	  icon.dataset.logo = feed.logo;
+      icon.onclick = async () => {
+        const isChecked = icon.classList.contains("bx-checkbox-checked");
+        icon.className = isChecked ? "bx bx-checkbox feed-icon" : "bx bx-checkbox-checked feed-icon";
+        if (!isChecked) {
+          state.selectedFeeds.set(feed.url, feed);
+          await loadFeed(feed);
+        } else {
+          state.selectedFeeds.delete(feed.url);
+          state.articles = state.articles.filter(a => new URL(a.link).hostname !== new URL(feed.url).hostname);
+        }
+        updateMyFeeds();
+        renderFeed();
+      };
 
-	  if (saved.includes(feed.url)) {
-		icon.classList.replace("bx-checkbox", "bx-checkbox-checked");
-		state.selectedFeeds.set(feed.url, feed);
-		loadFeed(feed).then(renderFeed);
-	  }
-
-		icon.addEventListener("click", () => {
-		  const isChecked = icon.classList.contains("bx-checkbox-checked");
-		  icon.classList.toggle("bx-checkbox", isChecked);
-		  icon.classList.toggle("bx-checkbox-checked", !isChecked);
-		  if (!isChecked) {
-			state.selectedFeeds.set(feed.url, feed);
-			loadFeed(feed).then(() => {
-			  updateMyFeeds();
-			  renderFeed();
-			});
-		  } else {
-			state.selectedFeeds.delete(feed.url);
-			state.articles = state.articles.filter(a => new URL(a.link).hostname !== new URL(feed.url).hostname);
-			updateMyFeeds();
-			renderFeed();
-		  }
-		  localStorage.setItem("selectedFeeds", JSON.stringify([...state.selectedFeeds.keys()]));
-		});
-
-
-	  label.appendChild(icon);
-	  label.appendChild(document.createTextNode(feed.name));
-	  feedList.appendChild(label);
-	});
-
+      label.appendChild(icon);
+      label.appendChild(document.createTextNode(feed.name));
+      feedList.appendChild(label);
+    });
 
     section.appendChild(feedList);
     dynamicMenu.appendChild(section);
@@ -667,35 +733,131 @@ function buildSidebarMenu(feedData) {
   updateMyFeeds();
 }
 
+function getOrCreateUserId() {
+  let id = localStorage.getItem('localUserId');
+  if (!id) {
+    id = crypto.randomUUID(); // generates a unique ID
+    localStorage.setItem('localUserId', id);
+  }
+  return id;
+}
+
+const localUserId = getOrCreateUserId(); // use this in all sync calls
+
+
+async function loadFromLocal() {
+  const feedRes = await fetch("feeds.json");
+  const feedData = await feedRes.json();
+  const flat = Object.values(feedData).flat();
+
+  let selected = [];
+  let read = [];
+
+  try {
+    selected = JSON.parse(localStorage.getItem("selectedFeeds") || '[]');
+    read = JSON.parse(localStorage.getItem("readArticles") || '[]');
+  } catch (e) {
+    console.warn("Could not parse from localStorage", e);
+  }
+
+  // If nothing in localStorage, try backup from Worker
+  if (selected.length === 0 && read.length === 0) {
+    try {
+      const [feedsRes, readsRes] = await Promise.all([
+        fetch("https://rss-proxy.davidbusch-02.workers.dev/feeds/load", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: localUserId })
+        }),
+        fetch("https://rss-proxy.davidbusch-02.workers.dev/reads/load", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ userId: localUserId })
+        })
+      ]);
+
+      const feedsJson = await feedsRes.json();
+      const readsJson = await readsRes.json();
+
+      selected = feedsJson.selectedFeeds || [];
+      read = readsJson.readArticles || [];
+    } catch (err) {
+      console.warn("Could not fetch backup prefs from server", err);
+    }
+  }
+
+  selected.forEach(([url, meta]) => state.selectedFeeds.set(url, meta));
+  state.read = new Set(read);
+
+  buildSidebarMenu(feedData);
+  await Promise.all(Array.from(state.selectedFeeds.values()).map(loadFeed));
+  renderFeed();
+  pollForNewStories();
+}
+
+
+
+let newArticles = [];
+
+function pollForNewStories() {
+  setInterval(async () => {
+    const currentIds = new Set(state.articles.map(a => a.id));
+    const newResults = [];
+
+    for (const [url, meta] of state.selectedFeeds.entries()) {
+      const res = await fetch(`https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(url)}`);
+      const data = await res.json();
+      if (!data.items) continue;
+
+      for (const item of data.items) {
+        const id = btoa(item.link);
+        if (!currentIds.has(id)) {
+          item.pubDate ||= item.isoDate || item.published || new Date().toISOString();
+          item.thumbnail ||= await getPexelsImage(item.title) || `https://placehold.co/800x400?text=${encodeURIComponent(meta.name)}`;
+          const entry = createCard(item, meta);
+          if (entry) newResults.push(entry);
+        }
+      }
+    }
+
+    if (newResults.length > 0) {
+      newArticles.push(...newResults);
+      banner.style.display = "block";
+    }
+  }, 180000);
+}
+
+banner.addEventListener("click", () => {
+  newArticles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+  for (const { card } of newArticles.reverse()) {
+    feedContainer.prepend(card);
+  }
+  state.articles.push(...newArticles);
+  newArticles = [];
+  banner.style.display = "none";
+});
+
 document.getElementById("menuToggle").onclick = () => {
   document.getElementById("menuPanel").classList.toggle("open");
 };
 
-fetch("feeds.json")
-  .then(res => res.json())
-  .then(async feedData => {
-    const flat = Object.values(feedData).flat();
+document.getElementById("refreshFeedsButton").onclick = async () => {
+  state.articles = [];
+  feedContainer.innerHTML = '';
+  await Promise.all(Array.from(state.selectedFeeds.values()).map(loadFeed));
+  renderFeed();
+};
 
-    // Get saved selected feeds URLs from localStorage (or empty array)
-    const saved = JSON.parse(localStorage.getItem('selectedFeeds') || '[]');
 
-    // Filter sources by saved selection
-    const selectedSources = flat.filter(feed => saved.includes(feed.url));
 
-    // Build scroller only with selected feeds + "All" button (which means show all selected)
-    buildSourceScroller(selectedSources);
 
-    // Load only selected feeds initially
-    await Promise.all(selectedSources.map(loadFeed));
-
-    // Render feed
-    renderFeed();
-
-    // Build sidebar menu
-    buildSidebarMenu(feedData);
-  });
+loadFromLocal();
 
 </script>
+
+
+
+
 
 </body>
 </html>
