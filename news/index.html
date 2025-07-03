@@ -45,6 +45,11 @@ h1 {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+.source-scroller::after {
+  content: "";
+  flex: 0 0 1.5rem; /* matches horizontal padding */
+}
+
 .source-scroller-wrapper::-webkit-scrollbar {
   display: none;
 }
@@ -260,6 +265,7 @@ h1 {
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
   z-index: 999;
   overflow-y: auto;
+  padding-bottom: 4rem;
   transition: right 0.3s ease;
 }
 /* Full screen on mobile */
