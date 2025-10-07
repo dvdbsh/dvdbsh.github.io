@@ -539,9 +539,17 @@ document.addEventListener('touchend', async () => {
 function stripHtmlTags(html) {
   const div = document.createElement('div');
   div.innerHTML = html;
-  [...div.querySelectorAll('img')].forEach(img => img.remove());
-  return div.textContent || '';
+
+  // Remove all images, links, and embedded tags
+  div.querySelectorAll('img, a, video, iframe, script, style').forEach(el => el.remove());
+
+  // Get plain text
+  const text = div.textContent || div.innerText || '';
+
+  // Remove leftover whitespace or line breaks
+  return text.replace(/\s+/g, ' ').trim();
 }
+
 
 function formatArticleDate(pubDate) {
   const date = new Date(pubDate);
