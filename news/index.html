@@ -98,6 +98,38 @@ h1 {
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
   gap: 1.5rem;
 }
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  background: #1f1f1f;
+  color: #e8eeff;
+  border-radius: 12px;
+  padding: 3rem 1rem;
+  margin: 2rem auto;
+  max-width: 400px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: #6f7cff;
+  margin-bottom: 1rem;
+}
+
+.empty-state p {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 0.25rem 0;
+}
+
+.empty-state span {
+  font-size: 1rem;
+  color: #aeafb1;
+}
+
 .card {
   background: #1f1f1f;
   border-radius: 12px;
@@ -601,7 +633,14 @@ function renderFeed() {
   );
   if (filtered.length === 0) {
     feedContainer.classList.add('no-feeds');
-    feedContainer.textContent = "No feeds selected. Please select your feeds from the menu.";
+	feedContainer.innerHTML = `
+	  <div class="empty-state">
+		<i class='bx bx-news'></i>
+		<p>No feeds selected.</p>
+		<span>Please select your feeds from the menu.</span>
+	  </div>
+	`;
+
     return;
   }
   feedContainer.classList.remove('no-feeds');
