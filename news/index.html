@@ -508,7 +508,7 @@ document.addEventListener('touchend', async () => {
     // Refresh logic
     state.articles = [];
     feedContainer.innerHTML = '';
-    await Promise.all(Array.from(state.selectedFeeds.values()).map(loadFeed));
+    adfte.selectedFeeds.values()).map(loadFeed));
     renderFeed();
 
     // Hide
@@ -913,7 +913,9 @@ async function loadFromLocal() {
   buildSidebarMenu(feedData);
   await Promise.all(Array.from(state.selectedFeeds.values()).map(loadFeed));
   renderFeed();
+  applyUltraBlurGradients(); // 
   pollForNewStories();
+
 }
 
 
