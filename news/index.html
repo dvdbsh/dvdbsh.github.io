@@ -185,18 +185,7 @@ h1 {
   object-fit: cover;
   display: block;
 }
-.card-image-wrapper::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    radial-gradient(circle at top left, rgba(25,25,25,0.8), transparent 55%),
-    radial-gradient(circle at top right, rgba(25,25,25,0.8), transparent 55%);
-  pointer-events: none;
-}
+
 .card img {
   width: 100%;
   height: 210px;
@@ -825,6 +814,56 @@ function getOrCreateUserId() {
 }
 
 const localUserId = getOrCreateUserId(); // use this in all sync calls
+
+async function applyUltraBlurGradients() {
+  const cards = document.querySelectorAll('.card-image-wrapper img');
+
+  for (const img of cards) {
+    if (!img.complete || img.dataset.ultrablurApplied) continue;
+    img.dataset.ultrablurApplied = true;
+
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const width = (canvas.width = img.naturalWidth);
+    const height = (canvas.height = img.naturalHeight);
+
+    // Draw image to canvas
+    ctx.drawImage(img, 0, 0, width, height);
+
+    // Helper to average pixels in a region
+    function avgColor(x, y, w, h) {
+      const data = ctx.getImageData(x, y, w, h).data;
+      let r = 0, g = 0, b = 0, count = data.length / 4;
+      for (let i = 0; i < data.length; i += 4) {
+        r += data[i];
+        g += data[i + 1];
+        b += data[i + 2];
+      }
+      return `rgb(${Math.round(r / count)}, ${Math.round(g / count)}, ${Math.round(b / count)})`;
+    }
+
+    const topLeft = avgColor(0, 0, width / 2, height / 2);
+    const topRight = avgColor(width / 2, 0, width / 2, height / 2);
+
+    const overlay = document.createElement('div');
+    overlay.style.position = 'absolute';
+    overlay.style.top = '0';
+    overlay.style.left = '0';
+    overlay.style.right = '0';
+    overlay.style.bottom = '0';
+    overlay.style.pointerEvents = 'none';
+    overlay.style.background = `
+      radial-gradient(circle at top left, ${topLeft}aa 0%, transparent 60%),
+      radial-gradient(circle at top right, ${topRight}aa 0%, transparent 60%)
+    `;
+    overlay.style.transition = 'opacity 0.5s ease';
+    img.parentElement.appendChild(overlay);
+  }
+}
+
+// Observe for when new cards are added dynamically
+const observer = new MutationObserver(() => applyUltraBlurGradients());
+observer.observe(document.getElementById('newsFeed'), { childList: true, subtree: true });
 
 
 async function loadFromLocal() {
