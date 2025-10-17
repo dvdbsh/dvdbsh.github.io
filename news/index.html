@@ -664,19 +664,41 @@ function renderFeed() {
 }
 
 async function loadFeed(source) {
-  const url = `https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`;
-  const res = await fetch(url);
-  const data = await res.json();
+  const cachedUrl = `https://rss-proxy.davidbusch-02.workers.dev/cached?url=${encodeURIComponent(source.url)}`;
+  const liveUrl = `https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`;
+
+  let data = null;
+
+  try {
+    // Try cached version first
+    const cachedRes = await fetch(cachedUrl);
+    if (cachedRes.ok) {
+      data = await cachedRes.json();
+      console.log("Loaded cached feed:", source.name);
+    }
+  } catch (err) {
+    console.warn("Cache fetch failed:", err);
+  }
+
+  // Fallback to live if cache is empty or invalid
+  if (!data || !data.items || data.items.length === 0) {
+    const liveRes = await fetch(liveUrl);
+    data = await liveRes.json();
+    console.log("Loaded live feed:", source.name);
+  }
+
   if (!data.items) return;
 
   for (const item of data.items) {
     if (!item.thumbnail) {
-      item.thumbnail = await getPexelsImage(item.title) || `https://placehold.co/800x400?text=${encodeURIComponent(source.name)}`;
+      item.thumbnail = await getPexelsImage(item.title) || 
+        `https://placehold.co/800x400?text=${encodeURIComponent(source.name)}`;
     }
     const entry = createCard(item, source);
     if (entry) state.articles.push(entry);
   }
 }
+
 
 function savePrefsToLocal() {
   try {
