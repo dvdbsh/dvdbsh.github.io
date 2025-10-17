@@ -9,946 +9,412 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-
-  
   <style>
-:root {
-  --accent: #181526;
-  --read: #1a8b31;
-  --button: #e8eeff;
-}
-* {
-  box-sizing: border-box;
-}
-body {
-  font-family: 'Nunito', sans-serif;
-  background: #292a2d;
-  margin: 0;
-  padding: 0 1.5rem 60px;
-  padding-bottom: 80px;
-}
-header {
-  position: fixed;          /* stays in place */
-  bottom: 0;                /* attach to bottom instead of top */
-  left: 0;
-  right: 0;
-  z-index: 900;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  background: rgba(31,31,31,0.6);
-  padding: 1rem 1.5rem;
-  border-top: 1px solid rgba(255,255,255,0.06); /* replace bottom border with top one */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 90px;
-}
+    :root {
+      --accent: #181526;
+      --button: #e8eeff;
+      --surface: #1f1f1f;
+      --bg: #292a2d;
+    }
+    * { box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: #fff;
+      margin: 0;
+      padding: 0 1.5rem;
+      /* keep content above the fixed bottom header */
+      padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
+    }
 
-h1 {
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #ffffff;
-  margin-top: 5;
-}
-.source-scroller-wrapper {
-  overflow-x: auto;
-  margin: 0 -1.5rem 1.5rem;
-  padding: 0 1.5rem;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.source-scroller::after {
-  content: "";
-  flex: 0 0 1.5rem; /* matches horizontal padding */
-}
+    /* Top title/date (optional, keep if you like) */
+    .page-top {
+      padding: 1rem 0 0.25rem;
+    }
+    .page-top h1 {
+      font-size: 1.5rem;
+      font-weight: 800;
+      margin: 0;
+    }
+    .page-top .date {
+      opacity: 0.8;
+      font-weight: 600;
+      margin-top: 0.25rem;
+    }
 
-.source-scroller-wrapper::-webkit-scrollbar {
-  display: none;
-}
-.source-scroller {
-  display: flex;
-  gap: 0.75rem;
-  min-width: max-content;
-}
-.source-scroller button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: #1f1f1f;
-  border: none;
-  border-radius: 20px;
-  padding: 0.5rem 1rem;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 600;
-  font-size: 1rem;
-  color: #ffffff;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-.source-scroller button img,
-.source-scroller button i {
-  height: 35px;
-  width: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  border-radius: 20px;
-  object-fit: contain;
-}
-.source-scroller button i {
-  font-size: 1.3rem;
-}
-.source-scroller button.active {
-  background-color: #292a2d;
-  box-shadow: 0 0 0 2px #1f1f1f inset;
-}
-.feed {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 1.5rem;
-}
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  background: #1f1f1f;
-  color: #e8eeff;
-  border-radius: 20px;
-  padding: 3rem 1rem;
-  margin: 2rem auto;
-  max-width: 400px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-}
+    /* Source scroller */
+    .source-scroller-wrapper {
+      overflow-x: auto;
+      margin: 0 -1.5rem 1rem;
+      padding: 0 1.5rem;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+    .source-scroller-wrapper::-webkit-scrollbar { display: none; }
+    .source-scroller {
+      display: flex;
+      gap: 0.75rem;
+      min-width: max-content;
+    }
+    .source-scroller::after { content: ""; flex: 0 0 1.5rem; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--surface);
+      border: none;
+      border-radius: 20px;
+      padding: 0.5rem 0.9rem;
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #ffffff;
+      white-space: nowrap;
+      cursor: pointer;
+      transition: transform 0.06s ease;
+    }
+    .chip:active { transform: translateY(1px); }
+    .chip img, .chip i {
+      height: 28px; width: 28px;
+      border-radius: 50%;
+      object-fit: contain;
+      display: block;
+      flex-shrink: 0;
+    }
+    .chip i { display: grid; place-items: center; font-size: 1.1rem; }
+    .chip.active {
+      background-color: #292a2d;
+      box-shadow: 0 0 0 2px #1f1f1f inset;
+    }
 
-.empty-state i {
-  font-size: 3rem;
-  color: #6f7cff;
-  margin-bottom: 1rem;
-}
+    /* Feed grid */
+    .feed {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.5rem;
+      padding-bottom: 1rem;
+    }
 
-.empty-state p {
-  font-size: 1.4rem;
-  font-weight: 700;
-  margin: 0.25rem 0;
-}
+    /* Card */
+    .card {
+      background: var(--surface);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+      transition: max-height 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      max-height: 340px;
+      cursor: pointer;
+    }
+    .card.expanded { max-height: 1000px; }
 
-.empty-state span {
-  font-size: 1rem;
-  color: #aeafb1;
-}
+    .card-image-wrapper {
+      position: relative;
+      width: 100%;
+      height: 210px;
+      overflow: hidden;
+    }
+    .card-image-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .card-image-wrapper::after {
+      content: "";
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(25,25,25,0.8), transparent 55%),
+        radial-gradient(circle at top right, rgba(25,25,25,0.8), transparent 55%);
+      pointer-events: none;
+    }
 
-.card {
-  background: #1f1f1f;
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  transition: max-height 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  max-height: 340px;
-  cursor: pointer;
-}
-.card.expanded {
-  max-height: 1000px;
-}
-.card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  font-size: 0.8rem;
-  color: #ffffff;
-  z-index: 2;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-}
-.card-header > div:last-child {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.read-icon {
-  display: inline-block;
-  font-size: 1.4rem;
-  margin-left: 0.4rem;
-  color: var(--read);
-  text-shadow: 0 0px 10px rgba(25,25,25,0.7);
-}
-.card:not(.read) .read-icon {
-  display: none;
-}
-.card-image-wrapper {
-  position: relative;
-  width: 100%;
-  height: 210px;
-  overflow: hidden;
-}
-.card-image-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-.card-image-wrapper::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background:
-    radial-gradient(circle at top left, rgba(25,25,25,0.8), transparent 55%),
-    radial-gradient(circle at top right, rgba(25,25,25,0.8), transparent 55%);
-  pointer-events: none;
-}
-.card img {
-  width: 100%;
-  height: 210px;
-  object-fit: cover;
-}
-.card-content {
-  padding: 1rem;
-  display: flex;
-  flex-direction: column;
-}
-.card-content h2 {
-  font-size: 1.2rem;
-  margin: 0 0 0.5rem;
-  font-weight: 700;
-  color: #e8eeff;
-}
-.full-content {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #aeafb1;
-  max-height: 0;       /* collapsed */
-  overflow: hidden;
-  opacity: 0;
-  margin-top: 0;
-  transition: max-height 0.3s ease, opacity 0.4s ease, margin-top 0.4s ease;
-}
-.card.expanded .full-content {
-  max-height: 400px;  /* expanded height - adjust as needed */
-  opacity: 1;
-  margin-top: 1rem;
-}
-.timestamp {
- font-weight: 600;
- }
-.read-more {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1.25rem;
-  background: var(--button);
-  color: var(--accent);
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  border-radius: 20px;
-  font-weight: 600;
-  width: fit-content;
-  font-size: 1rem;
-}
-.read-more i {
-  font-size: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.related {
-  font-size: 0.875rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #ddd;
-}
-.related a {
-  display: block;
-  color: #555;
-  margin-bottom: 0.5rem;
-  text-decoration: underline;
-}
-.source-logo-name {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.source-logo-name img {
-  height: 40px;
-  width: 40px;
-  border-radius: 20px;
-  object-fit: contain;
-}
-#menuToggle {
-  position: absolute;  /* keeps it anchored inside the header */
-  top: 1rem;
-  right: 1.5rem;
-  background: none;
-  border: none;
-  font-size: 2rem;
-  color: white;
-  z-index: 1001;       /* slightly above header content */
-  cursor: pointer;
-}
+    .card-header {
+      position: absolute; top: 0; left: 0; right: 0;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.6rem 0.9rem;
+      font-size: 0.8rem;
+      color: #ffffff;
+      z-index: 2;
+    }
+    .source-logo-name { display: flex; align-items: center; gap: 0.5rem; }
+    .source-logo-name img { height: 32px; width: 32px; border-radius: 50%; object-fit: contain; }
+    .timestamp { font-weight: 700; }
 
-#menuPanel {
-  position: fixed;
-  top: 0;
-  right: -100vw;
-  width: 100vw;
-  height: 100vh;
-  backdrop-filter: blur(10px); /* frosted glass blur */
-  -webkit-backdrop-filter: blur(10px); /* Safari support */
-  background: rgba(31, 31, 31, 0.6);  /* semi-transparent tint */
-  color: white;
-  padding: 1.5rem;
-  z-index: 2000;
-  overflow-y: auto;
-  padding-bottom: 4rem;
-  transition: right 0.3s ease;
-}
-/* Full screen on mobile */
-@media (max-width: 768px) {
-  #menuPanel {
-    width: 100vw;
-    height: 100vh;
-    right: -100vw;
-  }
-}
-/* Fixed width on desktop */
-@media (min-width: 769px) {
-  #menuPanel {
-    width: 400px;
-    height: 100vh;
-    right: -400px;
-  }
-}
-#menuPanel.open {
-  right: 0;
-}
-/* open button in header */
-#menuOpenBtn{
-  position:absolute; right:1.5rem;
-  background:none; border:0; font-size:2rem; color:#fff; cursor:pointer; z-index:1001;
-}
+    .card-content { padding: 1rem; display: flex; flex-direction: column; }
+    .card-content h2 {
+      font-size: 1.2rem; margin: 0 0 0.5rem; font-weight: 800; color: #e8eeff;
+    }
+    .full-content {
+      font-size: 1rem; line-height: 1.6; color: #aeafb1;
+      max-height: 0; overflow: hidden; opacity: 0; margin-top: 0;
+      transition: max-height 0.3s ease, opacity 0.4s ease, margin-top 0.4s ease;
+    }
+    .card.expanded .full-content { max-height: 400px; opacity: 1; margin-top: 0.75rem; }
 
-/* close button inside the slide-out panel */
-#menuCloseBtn {
-  position: absolute;
-  bottom: 4.5rem;
-  right: 1rem;
-  background: none;
-  border: none;
-  font-size: 2rem;
-  color: #fff;
-  cursor: pointer;
-  z-index: 9999; /* force above backdrop filter */
-  isolation: isolate; /* ensures z-index applies above backdrop-filter context */
-}
+    .read-more {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      margin-top: 1rem; background: var(--button); color: var(--accent);
+      padding: 0.5rem 1rem; text-decoration: none; border-radius: 20px;
+      font-weight: 700; width: fit-content; font-size: 1rem;
+    }
 
+    /* Bottom header (nav) */
+    header {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 900;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      background: rgba(31,31,31,0.6);
+      padding: 1rem max(1.5rem, env(safe-area-inset-left, 0px)) calc(1rem + env(safe-area-inset-bottom, 0px)) max(1.5rem, env(safe-area-inset-right, 0px));
+      border-top: 1px solid rgba(255,255,255,0.06);
+      display: flex; justify-content: space-between; align-items: center;
+      height: 90px;
+    }
+    header .brand { display: flex; align-items: center; gap: 0.75rem; }
+    header .brand h1 { font-size: 1.25rem; font-weight: 900; margin: 0; }
+    #refreshBtn {
+      background: none; border: 0; color: #fff; font-size: 1.75rem; cursor: pointer;
+      display: grid; place-items: center;
+    }
 
-/* make sure panel sits above header */
-#menuPanel{ z-index:2000; }
-
-/* Unified style for all menu items (labels and buttons) */
-.menu-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1rem;
-  margin-bottom: 0.5rem;
-  border-radius: 20px;
-  background: #292a2d;
-  cursor: pointer;
-  font-size: 1.2rem;
-  user-select: none;
-  transition: background-color 0.2s ease;
-  color: white;
-  border: none;
-  text-align: left;
-}
-
-.menu-item:hover,
-.menu-item:focus-within {
-  background-color: #3c3c46;
-  outline: none;
-}
-.feed-icon {
-  font-size: 1.8rem;
-}
-#myFeedsList button {
-  display: flex;
-  align-items: center;
-  gap: 1rem; /* same gap as labels */
-  width: 100%;
-  text-align: left;
-  background: #292a2d;
-  color: white;
-  border: none;
-  padding: 1rem;
-  cursor: pointer;
-  font-size: 1.2rem;
-  border-radius: 20px;
-  margin-bottom: 0.5rem; /* same margin as labels */
-}
-/* Red X icon next to followed feeds */
-#myFeedsList button i.bx-no-entry {
-  color: #f44336;
-  cursor: pointer;
-  flex-shrink: 0;
-  font-size: 1.5rem; /* slightly bigger, matches label icons */
-  line-height: 1; /* remove extra vertical space */
-  margin: 0; /* reset margins */
-}
-/* Collapsible submenu */
-.menu-section.collapsed .feed-list {
-  display: none;
-}
-.menu-section h3 {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  cursor: pointer;
-  font-size: 1.2rem; /* bigger */
-  margin-bottom: 0.5rem;
-  padding-bottom: 0.25rem;
-  border-bottom: 1px solid #444;
-  user-select: none;
-}
-.menu-section h3 i {
-  transition: transform 0.2s ease;
-}
-.menu-section.collapsed h3 i {
-  transform: rotate(180deg);
-}
-
-@keyframes spinner {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-#pullIndicator.loading::before {
-  content: '';
-  width: 16px;
-  height: 16px;
-  border: 2px solid white;
-  border-top-color: transparent;
-  border-radius: 50%;
-  margin-right: 0.5rem;
-  animation: spinner 1s linear infinite;
-}
-
+    /* Empty state (if no feeds) */
+    .empty-state {
+      background: var(--surface);
+      border-radius: 20px;
+      padding: 3rem 1rem;
+      margin: 2rem auto;
+      max-width: 400px;
+      text-align: center;
+      color: #e8eeff;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    }
+    .empty-state i { font-size: 3rem; color: #6f7cff; margin-bottom: 1rem; }
+    .empty-state p { font-size: 1.4rem; font-weight: 800; margin: 0.25rem 0; }
+    .empty-state span { font-size: 1rem; color: #aeafb1; }
   </style>
 </head>
 <body>
-  <h1><span id="currentDate"></span></h1>
-<header>
-  <h1>London News</h1>
-  <button id="menuOpenBtn" aria-label="Open menu">
-    <i class='bx bx-menu'></i>
-  </button>
-</header>
-
-
-
-<div id="pullIndicator" style="
-  position: fixed;
-  top: -50px;
-  left: 0;
-  right: 0;
-  height: 50px;
-  background: #1f1f1f;
-  color: white;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: top 0.3s ease;
-  z-index: 1000;
-">
-  <span id="pullText">Pull to refresh</span>
-</div>
-
-
-
-<aside id="menuPanel">
-  <button id="menuCloseBtn" aria-label="Close menu">
-    <i class='bx bx-x'></i>
-  </button>
-  <h2>News Sources</h2>
-  <div id="myFeedsSection">
-    <h3>My Feeds</h3>
-    <div id="myFeedsList"></div>
+  <div class="page-top">
+    <h1><div class="date" id="currentDate"></div></h1>
   </div>
-	<button id="refreshFeedsButton" class="menu-item">
-	  <i class='bx bx-refresh'></i> Refresh Feeds
-	</button>
-  
-  <div id="dynamicMenuContainer"></div>
-</aside>
 
-<div class="source-scroller-wrapper">
-  <div class="source-scroller" id="sourceScroller"></div>
-</div>
+  <div class="source-scroller-wrapper">
+    <div class="source-scroller" id="sourceScroller"></div>
+  </div>
 
-<div id="newArticlesBanner" style="display:none; text-align:center; background:#181526; color:#fff; padding:1rem; cursor:pointer; font-weight:600;">
-  🔄 New stories available – <span style="text-decoration:underline;">Click to load</span>
-</div>
+  <div class="feed" id="newsFeed"></div>
 
-
-<div class="feed" id="newsFeed"></div>
-
-<script>
-const PEXELS_API_KEY = 'fB6vzEHx5CsDIVByIpuDfQ2QoliM9TYWyBqmkzPgj6nPeEuWdBvbtJIx';
-const feedContainer = document.getElementById("newsFeed");
-const sourceScroller = document.getElementById("sourceScroller");
-const dynamicMenu = document.getElementById("dynamicMenuContainer");
-const myFeedsList = document.getElementById("myFeedsList");
-const banner = document.getElementById("newArticlesBanner");
-
-const state = {
-  read: new Set(),
-  filters: { source: 'all' },
-  articles: [],
-  selectedFeeds: new Map(),
-  collapsedMenus: new Set()
-};
-
-
-
-function stripHtmlTags(html) {
-  if (!html) return '';
-
-  // Decode HTML entities that might have been escaped (Google News issue)
-  const txt = document.createElement('textarea');
-  txt.innerHTML = html;
-  let decoded = txt.value;
-
-  // Remove anchor tags entirely (including hashtags or href content)
-  decoded = decoded.replace(/<a[^>]*>(.*?)<\/a>/gi, '$1');
-
-  // Remove all remaining tags
-  decoded = decoded.replace(/<\/?[^>]+(>|$)/g, '');
-
-  // Collapse extra spaces and line breaks
-  decoded = decoded.replace(/\s+/g, ' ').trim();
-
-  return decoded;
-}
-
-
-
-function formatArticleDate(pubDate) {
-  const date = new Date(pubDate);
-  const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
-  const today = new Date();
-  const articleDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const diff = todayDay - articleDay;
-  const oneDay = 86400000;
-  if (diff === 0) return time;
-  if (diff === oneDay) return `Yesterday • ${time}`;
-  return date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
-}
-
-async function getPexelsImage(query) {
-  try {
-    const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`, {
-      headers: { Authorization: PEXELS_API_KEY }
-    });
-    const data = await res.json();
-    return data.photos?.[0]?.src?.landscape || null;
-  } catch {
-    return null;
-  }
-}
-
-function truncateWords(text, wordLimit) {
-  const words = text.trim().split(/\s+/);
-  return words.length > wordLimit ? words.slice(0, wordLimit).join(" ") + "…" : text;
-}
-
-function markAsRead(id) {
-  state.read.add(id);
-  savePrefsToLocal();
-}
-
-function createCard(item, source) {
-  const id = btoa(item.link);
-  if (state.articles.some(a => a.id === id)) return null;
-  if (!item.pubDate) item.pubDate = item.isoDate || item.published || item.date || new Date().toISOString();
-  const timeString = formatArticleDate(item.pubDate);
-
-  const card = document.createElement("div");
-  card.className = "card";
-  card.dataset.id = id;
-  card.dataset.source = source.name;
-  if (state.read.has(id)) card.classList.add("read");
-
-  card.innerHTML = `
-    <div class="card-image-wrapper"><img src="${item.thumbnail}" alt="thumbnail" loading="lazy"></div>
-    <div class="card-header">
-      <div class="source-logo-name">
-        ${source.logo ? `<img src="${source.logo}" alt="${source.name}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">` : ''}
-        <span style="${source.logo ? 'display:none;' : ''}">${source.name}</span>
-      </div>
-      <div class="timestamp">${timeString}<span class="read-icon"><i class="bx bxs-check-circle"></i></span></div>
+  <header>
+    <div class="brand">
+      <i class='bx bx-news' style="font-size:1.6rem;"></i>
+      <h1>London News</h1>
     </div>
-    <div class="card-content">
-      <h2>${truncateWords(item.title, 14)}</h2>
-      <div class="full-content">
-        ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
-        <a href="${item.link}" class="read-more" target="_blank">Read full article <i class='bx bx-right-arrow-alt'></i></a>
-      </div>
-    </div>`;
+    <button id="refreshBtn" aria-label="Refresh">
+      <i class='bx bx-refresh'></i>
+    </button>
+  </header>
 
-  card.addEventListener("click", (e) => {
-    if (e.target.tagName !== "A") {
-      const isExpanded = card.classList.contains("expanded");
-      const currentlyExpanded = document.querySelector('.card.expanded');
-      if (!isExpanded) {
-        if (currentlyExpanded && currentlyExpanded !== card) currentlyExpanded.classList.remove("expanded");
-        card.classList.add("expanded");
-        markAsRead(id);
-        card.classList.add("read");
-      } else {
-        card.classList.remove("expanded");
+  <script>
+    // ---- Config ----
+    const PEXELS_API_KEY = 'fB6vzEHx5CsDIVByIpuDfQ2QoliM9TYWyBqmkzPgj6nPeEuWdBvbtJIx'; // keep yours
+    const feedContainer = document.getElementById("newsFeed");
+    const sourceScroller = document.getElementById("sourceScroller");
+
+    const state = {
+      filters: { source: 'all' },
+      articles: [],
+      allSources: []  // from feeds.json
+    };
+
+    // Date at top
+    (function setDate(){
+      const el = document.getElementById("currentDate");
+      const today = new Date();
+      el.textContent = today.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+    })();
+
+    // Helpers
+    function stripHtmlTags(html) {
+      if (!html) return '';
+      const txt = document.createElement('textarea');
+      txt.innerHTML = html;
+      let decoded = txt.value;
+      decoded = decoded.replace(/<a[^>]*>(.*?)<\/a>/gi, '$1');
+      decoded = decoded.replace(/<\/?[^>]+(>|$)/g, '');
+      decoded = decoded.replace(/\s+/g, ' ').trim();
+      return decoded;
+    }
+
+    function truncateWords(text, wordLimit) {
+      const words = (text || '').trim().split(/\s+/);
+      return words.length > wordLimit ? words.slice(0, wordLimit).join(" ") + "…" : text;
+    }
+
+    function formatArticleDate(pubDate) {
+      const date = new Date(pubDate);
+      const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+      const today = new Date();
+      const articleDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+      const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      const diff = todayDay - articleDay;
+      const oneDay = 86400000;
+      if (diff === 0) return time;
+      if (diff === oneDay) return `Yesterday • ${time}`;
+      return date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
+    }
+
+    async function getPexelsImage(query) {
+      try {
+        const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`, {
+          headers: { Authorization: PEXELS_API_KEY }
+        });
+        const data = await res.json();
+        return data.photos?.[0]?.src?.landscape || null;
+      } catch {
+        return null;
       }
     }
-  });
 
-  return { ...item, card, id };
-}
+    function createCard(item, source) {
+      const id = btoa(item.link);
+      if (state.articles.some(a => a.id === id)) return null;
 
-function renderFeed() {
-  feedContainer.innerHTML = '';
-  const filtered = state.articles.filter(a =>
-    (state.filters.source === 'all' || a.card.dataset.source === state.filters.source) &&
-    (!state.filters.unreadOnly || !a.card.classList.contains("read"))
-  );
-  if (filtered.length === 0) {
-    feedContainer.classList.add('no-feeds');
-	feedContainer.innerHTML = `
-	  <div class="empty-state">
-		<i class='bx bx-news'></i>
-		<p>No feeds selected.</p>
-		<span>Please select your feeds from the menu.</span>
-	  </div>
-	`;
+      item.pubDate ||= item.isoDate || item.published || item.date || new Date().toISOString();
+      const timeString = formatArticleDate(item.pubDate);
 
-    return;
-  }
-  feedContainer.classList.remove('no-feeds');
-  filtered.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
-          .forEach(({ card }) => feedContainer.appendChild(card));
-}
+      const card = document.createElement("div");
+      card.className = "card";
+      card.dataset.id = id;
+      card.dataset.source = source.name;
 
-async function loadFeed(source) {
-  const cachedUrl = `https://rss-proxy.davidbusch-02.workers.dev/cached?url=${encodeURIComponent(source.url)}`;
-  const liveUrl = `https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`;
+      card.innerHTML = `
+        <div class="card-image-wrapper"><img src="${item.thumbnail}" alt="thumbnail" loading="lazy"></div>
+        <div class="card-header">
+          <div class="source-logo-name">
+            ${source.logo ? `<img src="${source.logo}" alt="${source.name}" onerror="this.style.display='none';">` : ''}
+            <span>${source.name}</span>
+          </div>
+          <div class="timestamp">${timeString}</div>
+        </div>
+        <div class="card-content">
+          <h2>${truncateWords(item.title, 14)}</h2>
+          <div class="full-content">
+            ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
+            <a href="${item.link}" class="read-more" target="_blank" rel="noopener">Read full article <i class='bx bx-right-arrow-alt'></i></a>
+          </div>
+        </div>`;
 
-  let data = null;
-
-  try {
-    // Try cached version first
-    const cachedRes = await fetch(cachedUrl);
-    if (cachedRes.ok) {
-      data = await cachedRes.json();
-      console.log("Loaded cached feed:", source.name);
-    }
-  } catch (err) {
-    console.warn("Cache fetch failed:", err);
-  }
-
-  // Fallback to live if cache is empty or invalid
-  if (!data || !data.items || data.items.length === 0) {
-    const liveRes = await fetch(liveUrl);
-    data = await liveRes.json();
-    console.log("Loaded live feed:", source.name);
-  }
-
-  if (!data.items) return;
-
-  for (const item of data.items) {
-    if (!item.thumbnail) {
-      item.thumbnail = await getPexelsImage(item.title) || 
-        `https://placehold.co/800x400?text=${encodeURIComponent(source.name)}`;
-    }
-    const entry = createCard(item, source);
-    if (entry) state.articles.push(entry);
-  }
-}
-
-
-function savePrefsToLocal() {
-  try {
-    const selectedFeedsArray = [...state.selectedFeeds];
-    const readArray = [...state.read];
-
-    localStorage.setItem('selectedFeeds', JSON.stringify(selectedFeedsArray));
-    localStorage.setItem('readArticles', JSON.stringify(readArray));
-
-    // Sync to KV
-    fetch("https://rss-proxy.davidbusch-02.workers.dev/feeds/save", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: localUserId, selectedFeeds: selectedFeedsArray })
-    });
-
-    fetch("https://rss-proxy.davidbusch-02.workers.dev/reads/save", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ userId: localUserId, readArticles: readArray })
-    });
-
-  } catch (e) {
-    console.warn("Failed to save preferences locally or remotely", e);
-  }
-}
-
-
-
-function buildSourceScroller(sources) {
-  sourceScroller.innerHTML = '';
-  [{ name: "All" }, { name: "Unread" }, ...sources].forEach(source => {
-    const btn = document.createElement("button");
-    btn.classList.add('menu-item');
-    btn.innerHTML = source.logo
-      ? `<img src="${source.logo}" alt="${source.name}"><span>${source.name}</span>`
-      : `<i class='bx bx-news'></i><span>${source.name}</span>`;
-    btn.onclick = () => {
-      state.filters.source = source.name === "All" || source.name === "Unread" ? "all" : source.name;
-      state.filters.unreadOnly = source.name === "Unread";
-      document.querySelectorAll("#sourceScroller button").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      renderFeed();
-    };
-    sourceScroller.appendChild(btn);
-  });
-  if (sources.length > 0) sourceScroller.querySelector("button").classList.add("active");
-}
-
-function updateMyFeeds() {
-  myFeedsList.innerHTML = '';
-  state.selectedFeeds.forEach((meta, url) => {
-    const btn = document.createElement('button');
-    btn.classList.add('menu-item');
-    btn.innerHTML = `<i class='bx bx-no-entry'></i> ${meta.name}`;
-    btn.onclick = (e) => {
-      if (e.target.tagName.toLowerCase() === 'i') {
-        state.selectedFeeds.delete(url);
-        state.articles = state.articles.filter(a => new URL(a.link).hostname !== new URL(url).hostname);
-        updateMyFeeds();
-        renderFeed();
-        e.stopPropagation();
-      }
-    };
-    myFeedsList.appendChild(btn);
-  });
-  savePrefsToLocal();
-  buildSourceScroller(Array.from(state.selectedFeeds.values()));
-}
-
-function buildSidebarMenu(feedData) {
-  Object.entries(feedData).forEach(([category, feeds]) => {
-    const section = document.createElement("div");
-    section.className = "menu-section";
-    section.classList.add("collapsed");
-
-    const heading = document.createElement("h3");
-    heading.innerHTML = `<span>${category}</span><i class='bx bx-down-arrow-alt'></i>`;
-    heading.onclick = () => section.classList.toggle("collapsed");
-    section.appendChild(heading);
-
-    const feedList = document.createElement("div");
-    feedList.className = "feed-list";
-
-    feeds.forEach(feed => {
-      const label = document.createElement("label");
-      label.classList.add("menu-item");
-      const icon = document.createElement("i");
-      icon.className = state.selectedFeeds.has(feed.url) ? "bx bx-checkbox-checked feed-icon" : "bx bx-checkbox feed-icon";
-
-      icon.onclick = async () => {
-        const isChecked = icon.classList.contains("bx-checkbox-checked");
-        icon.className = isChecked ? "bx bx-checkbox feed-icon" : "bx bx-checkbox-checked feed-icon";
-        if (!isChecked) {
-          state.selectedFeeds.set(feed.url, feed);
-          await loadFeed(feed);
-        } else {
-          state.selectedFeeds.delete(feed.url);
-          state.articles = state.articles.filter(a => new URL(a.link).hostname !== new URL(feed.url).hostname);
+      card.addEventListener("click", (e) => {
+        if (e.target.tagName !== "A") {
+          card.classList.toggle("expanded");
         }
-        updateMyFeeds();
+      });
+
+      return { ...item, card, id };
+    }
+
+    function renderFeed() {
+      feedContainer.innerHTML = '';
+      const filtered = state.articles.filter(a =>
+        (state.filters.source === 'all' || a.card.dataset.source === state.filters.source)
+      );
+
+      if (filtered.length === 0) {
+        feedContainer.innerHTML = `
+          <div class="empty-state">
+            <i class='bx bx-news'></i>
+            <p>No stories.</p>
+            <span>Try refreshing.</span>
+          </div>`;
+        return;
+      }
+
+      filtered
+        .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
+        .forEach(({ card }) => feedContainer.appendChild(card));
+    }
+
+    function buildSourceScroller(sources) {
+      sourceScroller.innerHTML = '';
+      const allBtn = document.createElement('button');
+      allBtn.className = 'chip active';
+      allBtn.innerHTML = `<i class='bx bx-globe'></i><span>All</span>`;
+      allBtn.onclick = () => {
+        state.filters.source = 'all';
+        [...sourceScroller.querySelectorAll('.chip')].forEach(b => b.classList.remove('active'));
+        allBtn.classList.add('active');
         renderFeed();
       };
+      sourceScroller.appendChild(allBtn);
 
-      label.appendChild(icon);
-      label.appendChild(document.createTextNode(feed.name));
-      feedList.appendChild(label);
-    });
-
-    section.appendChild(feedList);
-    dynamicMenu.appendChild(section);
-  });
-
-  updateMyFeeds();
-}
-
-function getOrCreateUserId() {
-  let id = localStorage.getItem('localUserId');
-  if (!id) {
-    id = crypto.randomUUID(); // generates a unique ID
-    localStorage.setItem('localUserId', id);
-  }
-  return id;
-}
-
-const localUserId = getOrCreateUserId(); // use this in all sync calls
-
-
-async function loadFromLocal() {
-  const feedRes = await fetch("feeds.json");
-  const feedData = await feedRes.json();
-  const flat = Object.values(feedData).flat();
-
-  let selected = [];
-  let read = [];
-
-  try {
-    selected = JSON.parse(localStorage.getItem("selectedFeeds") || '[]');
-    read = JSON.parse(localStorage.getItem("readArticles") || '[]');
-  } catch (e) {
-    console.warn("Could not parse from localStorage", e);
-  }
-
-  // If nothing in localStorage, try backup from Worker
-  if (selected.length === 0 && read.length === 0) {
-    try {
-      const [feedsRes, readsRes] = await Promise.all([
-        fetch("https://rss-proxy.davidbusch-02.workers.dev/feeds/load", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: localUserId })
-        }),
-        fetch("https://rss-proxy.davidbusch-02.workers.dev/reads/load", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ userId: localUserId })
-        })
-      ]);
-
-      const feedsJson = await feedsRes.json();
-      const readsJson = await readsRes.json();
-
-      selected = feedsJson.selectedFeeds || [];
-      read = readsJson.readArticles || [];
-    } catch (err) {
-      console.warn("Could not fetch backup prefs from server", err);
+      sources.forEach(source => {
+        const btn = document.createElement('button');
+        btn.className = 'chip';
+        btn.innerHTML = source.logo
+          ? `<img src="${source.logo}" alt="${source.name}"><span>${source.name}</span>`
+          : `<i class='bx bx-news'></i><span>${source.name}</span>`;
+        btn.onclick = () => {
+          state.filters.source = source.name;
+          [...sourceScroller.querySelectorAll('.chip')].forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          renderFeed();
+        };
+        sourceScroller.appendChild(btn);
+      });
     }
-  }
 
-  selected.forEach(([url, meta]) => state.selectedFeeds.set(url, meta));
-  state.read = new Set(read);
+    async function loadFeed(source) {
+      const cachedUrl = `https://rss-proxy.davidbusch-02.workers.dev/cached?url=${encodeURIComponent(source.url)}`;
+      const liveUrl   = `https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`;
 
-  buildSidebarMenu(feedData);
-  await Promise.all(Array.from(state.selectedFeeds.values()).map(loadFeed));
-  renderFeed();
-  pollForNewStories();
-}
+      let data = null;
+      try {
+        const cachedRes = await fetch(cachedUrl);
+        if (cachedRes.ok) data = await cachedRes.json();
+      } catch {}
 
-
-
-let newArticles = [];
-
-function pollForNewStories() {
-  setInterval(async () => {
-    const currentIds = new Set(state.articles.map(a => a.id));
-    const newResults = [];
-
-    for (const [url, meta] of state.selectedFeeds.entries()) {
-      const res = await fetch(`https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(url)}`);
-      const data = await res.json();
-      if (!data.items) continue;
+      if (!data || !data.items || data.items.length === 0) {
+        const liveRes = await fetch(liveUrl);
+        data = await liveRes.json();
+      }
+      if (!data.items) return;
 
       for (const item of data.items) {
-        const id = btoa(item.link);
-        if (!currentIds.has(id)) {
-          item.pubDate ||= item.isoDate || item.published || new Date().toISOString();
-          item.thumbnail ||= await getPexelsImage(item.title) || `https://placehold.co/800x400?text=${encodeURIComponent(meta.name)}`;
-          const entry = createCard(item, meta);
-          if (entry) newResults.push(entry);
+        if (!item.thumbnail) {
+          item.thumbnail = await getPexelsImage(item.title) ||
+            `https://placehold.co/800x400?text=${encodeURIComponent(source.name)}`;
         }
+        const entry = createCard(item, source);
+        if (entry) state.articles.push(entry);
       }
     }
 
-    if (newResults.length > 0) {
-      newArticles.push(...newResults);
-      banner.style.display = "block";
+    async function loadAllFeeds() {
+      state.articles = [];
+      const feedRes = await fetch("feeds.json");
+      const feedData = await feedRes.json();
+      state.allSources = Object.values(feedData).flat(); // all categories combined
+
+      buildSourceScroller(state.allSources);
+      await Promise.all(state.allSources.map(loadFeed));
+      renderFeed();
     }
-  }, 180000);
-}
 
-banner.addEventListener("click", () => {
-  newArticles.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-  for (const { card } of newArticles.reverse()) {
-    feedContainer.prepend(card);
-  }
-  state.articles.push(...newArticles);
-  newArticles = [];
-  banner.style.display = "none";
-});
+    // Refresh button
+    document.getElementById('refreshBtn').addEventListener('click', async () => {
+      // simple visual nudge
+      const icon = document.querySelector('#refreshBtn i');
+      icon.classList.add('bx-spin');
+      await loadAllFeeds();
+      icon.classList.remove('bx-spin');
+    });
 
-const menuPanel = document.getElementById('menuPanel');
-document.getElementById('menuOpenBtn').addEventListener('click', () => {
-  menuPanel.classList.add('open');
-  document.getElementById('menuOpenBtn').setAttribute('aria-expanded', 'true');
-});
-document.getElementById('menuCloseBtn').addEventListener('click', () => {
-  menuPanel.classList.remove('open');
-  document.getElementById('menuOpenBtn').setAttribute('aria-expanded', 'false');
-});
-
-// optional: close on ESC
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') menuPanel.classList.remove('open');
-});
-
-
-document.getElementById("refreshFeedsButton").onclick = async () => {
-  state.articles = [];
-  feedContainer.innerHTML = '';
-  await Promise.all(Array.from(state.selectedFeeds.values()).map(loadFeed));
-  renderFeed();
-};
-
-
-
-
-loadFromLocal();
-
-</script>
-
-<script>
-  const dateEl = document.getElementById("currentDate");
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric"
-  });
-  dateEl.textContent = formattedDate;
-</script>
-
-
-
-
+    // Boot
+    loadAllFeeds();
+  </script>
 </body>
 </html>
