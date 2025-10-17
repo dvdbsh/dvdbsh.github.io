@@ -20,6 +20,21 @@
 * {
   box-sizing: border-box;
 }
+/* Creates a blurred safe-area behind the iOS status bar */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-top); /* matches the notch height on iPhones */
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(31, 31, 31, 0.6);
+  z-index: 899; /* just below the header (which is 900) */
+  pointer-events: none;
+}
+
 body {
   font-family: 'Nunito', sans-serif;
   background: #292a2d;
