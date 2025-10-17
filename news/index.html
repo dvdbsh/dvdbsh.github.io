@@ -229,14 +229,11 @@
     allSources: []
   };
 
-  // Date at top
   (function setDate(){
     const el = document.getElementById("currentDate");
     const today = new Date();
     el.textContent = today.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric"
+      year: "numeric", month: "long", day: "numeric"
     });
   })();
 
@@ -306,14 +303,18 @@
         <h2>${truncateWords(item.title, 14)}</h2>
         <div class="full-content">
           ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
-          <a href="${item.link}" class="read-more" target="_blank" rel="noopener">Read full article <i class='bx bx-right-arrow-alt'></i></a>
+          <a href="${item.link}" class="read-more" target="_blank" rel="noopener">
+            Read full article <i class='bx bx-right-arrow-alt'></i>
+          </a>
         </div>
       </div>`;
 
+    // Only allow one expanded card at a time
     card.addEventListener("click", (e) => {
-      if (e.target.tagName !== "A") {
-        card.classList.toggle("expanded");
-      }
+      if (e.target.tagName === "A") return;
+      const expanded = document.querySelector(".card.expanded");
+      if (expanded && expanded !== card) expanded.classList.remove("expanded");
+      card.classList.toggle("expanded");
     });
 
     return { ...item, card, id };
@@ -409,7 +410,6 @@
       state.allSources = Object.values(feedData).flat();
       buildSourceScroller(state.allSources);
 
-      // load all feeds
       await Promise.all(state.allSources.map(loadFeed));
       renderFeed();
     } catch (err) {
@@ -429,9 +429,9 @@
     icon.classList.remove('bx-spin');
   });
 
-  // Initial load defaults to 'all'
   loadAllFeeds();
 </script>
+
 
 </body>
 </html>
