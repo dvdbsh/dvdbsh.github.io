@@ -521,64 +521,6 @@ const state = {
   collapsedMenus: new Set()
 };
 
-let touchStartY = 0;
-let isPulling = false;
-let pullDistance = 0;
-
-const pullIndicator = document.getElementById('pullIndicator');
-const pullText = document.getElementById('pullText');
-
-document.addEventListener('touchstart', (e) => {
-  if (window.scrollY === 0) {
-    touchStartY = e.touches[0].clientY;
-    isPulling = true;
-    pullDistance = 0;
-  }
-}, { passive: true });
-
-document.addEventListener('touchmove', (e) => {
-  if (!isPulling) return;
-
-  const currentY = e.touches[0].clientY;
-  pullDistance = currentY - touchStartY;
-
-  if (pullDistance > 0) {
-    e.preventDefault(); // prevent native pull-to-refresh
-    const clamped = Math.min(pullDistance, 60);
-    pullIndicator.style.top = `${clamped - 50}px`;
-
-    if (pullDistance > 50) {
-      pullText.textContent = "Release to refresh";
-    } else {
-      pullText.textContent = "Pull to refresh";
-    }
-  }
-}, { passive: false });
-
-document.addEventListener('touchend', async () => {
-  if (pullDistance > 50) {
-    pullIndicator.classList.add("loading");
-    pullText.textContent = "Refreshing…";
-    pullIndicator.style.top = "0px";
-
-    // Refresh logic
-    state.articles = [];
-    feedContainer.innerHTML = '';
-    await Promise.all(Array.from(state.selectedFeeds.values()).map(loadFeed));
-    renderFeed();
-
-    // Hide
-    setTimeout(() => {
-      pullIndicator.classList.remove("loading");
-      pullIndicator.style.top = "-50px";
-      pullText.textContent = "Pull to refresh";
-    }, 800);
-  } else {
-    pullIndicator.style.top = "-50px";
-  }
-
-  isPulling = false;
-});
 
 
 function stripHtmlTags(html) {
