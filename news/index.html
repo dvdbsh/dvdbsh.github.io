@@ -218,203 +218,220 @@
     </button>
   </header>
 
-  <script>
-    // ---- Config ----
-    const PEXELS_API_KEY = 'fB6vzEHx5CsDIVByIpuDfQ2QoliM9TYWyBqmkzPgj6nPeEuWdBvbtJIx'; // keep yours
-    const feedContainer = document.getElementById("newsFeed");
-    const sourceScroller = document.getElementById("sourceScroller");
+<script>
+  const PEXELS_API_KEY = 'fB6vzEHx5CsDIVByIpuDfQ2QoliM9TYWyBqmkzPgj6nPeEuWdBvbtJIx';
+  const feedContainer = document.getElementById("newsFeed");
+  const sourceScroller = document.getElementById("sourceScroller");
 
-    const state = {
-      filters: { source: 'all' },
-      articles: [],
-      allSources: []  // from feeds.json
-    };
+  const state = {
+    filters: { source: 'all' },
+    articles: [],
+    allSources: []
+  };
 
-    // Date at top
-    (function setDate(){
-      const el = document.getElementById("currentDate");
-      const today = new Date();
-      el.textContent = today.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
-    })();
+  // Date at top
+  (function setDate(){
+    const el = document.getElementById("currentDate");
+    const today = new Date();
+    el.textContent = today.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric"
+    });
+  })();
 
-    // Helpers
-    function stripHtmlTags(html) {
-      if (!html) return '';
-      const txt = document.createElement('textarea');
-      txt.innerHTML = html;
-      let decoded = txt.value;
-      decoded = decoded.replace(/<a[^>]*>(.*?)<\/a>/gi, '$1');
-      decoded = decoded.replace(/<\/?[^>]+(>|$)/g, '');
-      decoded = decoded.replace(/\s+/g, ' ').trim();
-      return decoded;
+  function stripHtmlTags(html) {
+    if (!html) return '';
+    const txt = document.createElement('textarea');
+    txt.innerHTML = html;
+    let decoded = txt.value;
+    decoded = decoded.replace(/<a[^>]*>(.*?)<\/a>/gi, '$1');
+    decoded = decoded.replace(/<\/?[^>]+(>|$)/g, '');
+    decoded = decoded.replace(/\s+/g, ' ').trim();
+    return decoded;
+  }
+
+  function truncateWords(text, wordLimit) {
+    const words = (text || '').trim().split(/\s+/);
+    return words.length > wordLimit ? words.slice(0, wordLimit).join(" ") + "…" : text;
+  }
+
+  function formatArticleDate(pubDate) {
+    const date = new Date(pubDate);
+    const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+    const today = new Date();
+    const articleDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    const diff = todayDay - articleDay;
+    const oneDay = 86400000;
+    if (diff === 0) return time;
+    if (diff === oneDay) return `Yesterday • ${time}`;
+    return date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
+  }
+
+  async function getPexelsImage(query) {
+    try {
+      const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`, {
+        headers: { Authorization: PEXELS_API_KEY }
+      });
+      const data = await res.json();
+      return data.photos?.[0]?.src?.landscape || null;
+    } catch {
+      return null;
     }
+  }
 
-    function truncateWords(text, wordLimit) {
-      const words = (text || '').trim().split(/\s+/);
-      return words.length > wordLimit ? words.slice(0, wordLimit).join(" ") + "…" : text;
-    }
+  function createCard(item, source) {
+    const id = btoa(item.link);
+    if (state.articles.some(a => a.id === id)) return null;
 
-    function formatArticleDate(pubDate) {
-      const date = new Date(pubDate);
-      const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
-      const today = new Date();
-      const articleDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-      const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-      const diff = todayDay - articleDay;
-      const oneDay = 86400000;
-      if (diff === 0) return time;
-      if (diff === oneDay) return `Yesterday • ${time}`;
-      return date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
-    }
+    item.pubDate ||= item.isoDate || item.published || item.date || new Date().toISOString();
+    const timeString = formatArticleDate(item.pubDate);
 
-    async function getPexelsImage(query) {
-      try {
-        const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`, {
-          headers: { Authorization: PEXELS_API_KEY }
-        });
-        const data = await res.json();
-        return data.photos?.[0]?.src?.landscape || null;
-      } catch {
-        return null;
-      }
-    }
+    const card = document.createElement("div");
+    card.className = "card";
+    card.dataset.id = id;
+    card.dataset.source = source.name;
 
-    function createCard(item, source) {
-      const id = btoa(item.link);
-      if (state.articles.some(a => a.id === id)) return null;
-
-      item.pubDate ||= item.isoDate || item.published || item.date || new Date().toISOString();
-      const timeString = formatArticleDate(item.pubDate);
-
-      const card = document.createElement("div");
-      card.className = "card";
-      card.dataset.id = id;
-      card.dataset.source = source.name;
-
-      card.innerHTML = `
-        <div class="card-image-wrapper"><img src="${item.thumbnail}" alt="thumbnail" loading="lazy"></div>
-        <div class="card-header">
-          <div class="source-logo-name">
-            ${source.logo ? `<img src="${source.logo}" alt="${source.name}" onerror="this.style.display='none';">` : ''}
-            <span>${source.name}</span>
-          </div>
-          <div class="timestamp">${timeString}</div>
+    card.innerHTML = `
+      <div class="card-image-wrapper"><img src="${item.thumbnail}" alt="thumbnail" loading="lazy"></div>
+      <div class="card-header">
+        <div class="source-logo-name">
+          ${source.logo ? `<img src="${source.logo}" alt="${source.name}" onerror="this.style.display='none';">` : ''}
+          <span>${source.name}</span>
         </div>
-        <div class="card-content">
-          <h2>${truncateWords(item.title, 14)}</h2>
-          <div class="full-content">
-            ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
-            <a href="${item.link}" class="read-more" target="_blank" rel="noopener">Read full article <i class='bx bx-right-arrow-alt'></i></a>
-          </div>
-        </div>`;
+        <div class="timestamp">${timeString}</div>
+      </div>
+      <div class="card-content">
+        <h2>${truncateWords(item.title, 14)}</h2>
+        <div class="full-content">
+          ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
+          <a href="${item.link}" class="read-more" target="_blank" rel="noopener">Read full article <i class='bx bx-right-arrow-alt'></i></a>
+        </div>
+      </div>`;
 
-      card.addEventListener("click", (e) => {
-        if (e.target.tagName !== "A") {
-          card.classList.toggle("expanded");
-        }
-      });
-
-      return { ...item, card, id };
-    }
-
-    function renderFeed() {
-      feedContainer.innerHTML = '';
-      const filtered = state.articles.filter(a =>
-        (state.filters.source === 'all' || a.card.dataset.source === state.filters.source)
-      );
-
-      if (filtered.length === 0) {
-        feedContainer.innerHTML = `
-          <div class="empty-state">
-            <i class='bx bx-news'></i>
-            <p>No stories.</p>
-            <span>Try refreshing.</span>
-          </div>`;
-        return;
+    card.addEventListener("click", (e) => {
+      if (e.target.tagName !== "A") {
+        card.classList.toggle("expanded");
       }
-
-      filtered
-        .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
-        .forEach(({ card }) => feedContainer.appendChild(card));
-    }
-
-    function buildSourceScroller(sources) {
-      sourceScroller.innerHTML = '';
-      const allBtn = document.createElement('button');
-      allBtn.className = 'chip active';
-      allBtn.innerHTML = `<i class='bx bx-globe'></i><span>All</span>`;
-      allBtn.onclick = () => {
-        state.filters.source = 'all';
-        [...sourceScroller.querySelectorAll('.chip')].forEach(b => b.classList.remove('active'));
-        allBtn.classList.add('active');
-        renderFeed();
-      };
-      sourceScroller.appendChild(allBtn);
-
-      sources.forEach(source => {
-        const btn = document.createElement('button');
-        btn.className = 'chip';
-        btn.innerHTML = source.logo
-          ? `<img src="${source.logo}" alt="${source.name}"><span>${source.name}</span>`
-          : `<i class='bx bx-news'></i><span>${source.name}</span>`;
-        btn.onclick = () => {
-          state.filters.source = source.name;
-          [...sourceScroller.querySelectorAll('.chip')].forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          renderFeed();
-        };
-        sourceScroller.appendChild(btn);
-      });
-    }
-
-    async function loadFeed(source) {
-      const cachedUrl = `https://rss-proxy.davidbusch-02.workers.dev/cached?url=${encodeURIComponent(source.url)}`;
-      const liveUrl   = `https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`;
-
-      let data = null;
-      try {
-        const cachedRes = await fetch(cachedUrl);
-        if (cachedRes.ok) data = await cachedRes.json();
-      } catch {}
-
-      if (!data || !data.items || data.items.length === 0) {
-        const liveRes = await fetch(liveUrl);
-        data = await liveRes.json();
-      }
-      if (!data.items) return;
-
-      for (const item of data.items) {
-        if (!item.thumbnail) {
-          item.thumbnail = await getPexelsImage(item.title) ||
-            `https://placehold.co/800x400?text=${encodeURIComponent(source.name)}`;
-        }
-        const entry = createCard(item, source);
-        if (entry) state.articles.push(entry);
-      }
-    }
-
-    async function loadAllFeeds() {
-      state.articles = [];
-      const feedRes = await fetch("feeds.json");
-      const feedData = await feedRes.json();
-      state.allSources = Object.values(feedData).flat(); // all categories combined
-
-      buildSourceScroller(state.allSources);
-      await Promise.all(state.allSources.map(loadFeed));
-      renderFeed();
-    }
-
-    // Refresh button
-    document.getElementById('refreshBtn').addEventListener('click', async () => {
-      // simple visual nudge
-      const icon = document.querySelector('#refreshBtn i');
-      icon.classList.add('bx-spin');
-      await loadAllFeeds();
-      icon.classList.remove('bx-spin');
     });
 
-    // Boot
-    loadAllFeeds();
-  </script>
+    return { ...item, card, id };
+  }
+
+  function renderFeed() {
+    feedContainer.innerHTML = '';
+    const filtered = state.articles.filter(a =>
+      state.filters.source === 'all' || a.card.dataset.source === state.filters.source
+    );
+
+    if (filtered.length === 0) {
+      feedContainer.innerHTML = `
+        <div class="empty-state">
+          <i class='bx bx-news'></i>
+          <p>No stories.</p>
+          <span>Try refreshing.</span>
+        </div>`;
+      return;
+    }
+
+    filtered
+      .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
+      .forEach(({ card }) => feedContainer.appendChild(card));
+  }
+
+  function buildSourceScroller(sources) {
+    sourceScroller.innerHTML = '';
+    const allBtn = document.createElement('button');
+    allBtn.className = 'chip active';
+    allBtn.innerHTML = `<i class='bx bx-globe'></i><span>All</span>`;
+    allBtn.onclick = () => {
+      state.filters.source = 'all';
+      [...sourceScroller.querySelectorAll('.chip')].forEach(b => b.classList.remove('active'));
+      allBtn.classList.add('active');
+      renderFeed();
+    };
+    sourceScroller.appendChild(allBtn);
+
+    sources.forEach(source => {
+      const btn = document.createElement('button');
+      btn.className = 'chip';
+      btn.innerHTML = source.logo
+        ? `<img src="${source.logo}" alt="${source.name}"><span>${source.name}</span>`
+        : `<i class='bx bx-news'></i><span>${source.name}</span>`;
+      btn.onclick = () => {
+        state.filters.source = source.name;
+        [...sourceScroller.querySelectorAll('.chip')].forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        renderFeed();
+      };
+      sourceScroller.appendChild(btn);
+    });
+  }
+
+  async function loadFeed(source) {
+    const cachedUrl = `https://rss-proxy.davidbusch-02.workers.dev/cached?url=${encodeURIComponent(source.url)}`;
+    const liveUrl   = `https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`;
+
+    let data = null;
+    try {
+      const cachedRes = await fetch(cachedUrl);
+      if (cachedRes.ok) data = await cachedRes.json();
+    } catch {}
+
+    if (!data || !data.items || data.items.length === 0) {
+      const liveRes = await fetch(liveUrl);
+      data = await liveRes.json();
+    }
+    if (!data.items) return;
+
+    for (const item of data.items) {
+      if (!item.thumbnail) {
+        item.thumbnail = await getPexelsImage(item.title) ||
+          `https://placehold.co/800x400?text=${encodeURIComponent(source.name)}`;
+      }
+      const entry = createCard(item, source);
+      if (entry) state.articles.push(entry);
+    }
+  }
+
+  async function loadAllFeeds() {
+    feedContainer.innerHTML = `
+      <div class="empty-state">
+        <i class='bx bx-loader bx-spin'></i>
+        <p>Loading feeds…</p>
+      </div>`;
+    state.articles = [];
+
+    try {
+      const feedRes = await fetch("feeds.json");
+      const feedData = await feedRes.json();
+      state.allSources = Object.values(feedData).flat();
+      buildSourceScroller(state.allSources);
+
+      // load all feeds
+      await Promise.all(state.allSources.map(loadFeed));
+      renderFeed();
+    } catch (err) {
+      feedContainer.innerHTML = `
+        <div class="empty-state">
+          <i class='bx bx-error'></i>
+          <p>Error loading feeds</p>
+          <span>${err.message}</span>
+        </div>`;
+    }
+  }
+
+  document.getElementById('refreshBtn').addEventListener('click', async () => {
+    const icon = document.querySelector('#refreshBtn i');
+    icon.classList.add('bx-spin');
+    await loadAllFeeds();
+    icon.classList.remove('bx-spin');
+  });
+
+  // Initial load defaults to 'all'
+  loadAllFeeds();
+</script>
+
 </body>
 </html>
