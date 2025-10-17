@@ -41,7 +41,7 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 70px;
+  height: 90px;
 }
 
 h1 {
@@ -340,10 +340,19 @@ h1 {
 }
 
 /* close button inside the slide-out panel */
-#menuCloseBtn{
-  position:absolute; bottom:1rem; right:1rem;
-  background:none; border:0; font-size:2rem; color:#fff; cursor:pointer;
+#menuCloseBtn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 2rem;
+  color: #fff;
+  cursor: pointer;
+  z-index: 9999; /* force above backdrop filter */
+  isolation: isolate; /* ensures z-index applies above backdrop-filter context */
 }
+
 
 /* make sure panel sits above header */
 #menuPanel{ z-index:2000; }
