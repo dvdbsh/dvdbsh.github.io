@@ -25,6 +25,7 @@ body {
   background: #292a2d;
   margin: 0;
   padding: 0 1.5rem 60px;
+  padding-bottom: 80px;
 }
 header {
   position: fixed;          /* stays in place */
@@ -47,7 +48,7 @@ h1 {
   font-size: 1.5rem;
   font-weight: 800;
   color: #ffffff;
-  margin: 5;
+  margin-top: 5;
 }
 .source-scroller-wrapper {
   overflow-x: auto;
@@ -438,9 +439,9 @@ h1 {
   </style>
 </head>
 <body>
-  <h1>London News</h1>
+  <h1><span id="currentDate"></span></h1>
 <header>
-
+  <h1>London News</h1>
   <button id="menuOpenBtn" aria-label="Open menu">
     <i class='bx bx-menu'></i>
   </button>
@@ -984,6 +985,16 @@ loadFromLocal();
 
 </script>
 
+<script>
+  const dateEl = document.getElementById("currentDate");
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric"
+  });
+  dateEl.textContent = formattedDate;
+</script>
 
 
 
