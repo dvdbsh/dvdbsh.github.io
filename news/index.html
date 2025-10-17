@@ -27,13 +27,14 @@ body::before {
   top: 0;
   left: 0;
   right: 0;
-  height: env(safe-area-inset-top); /* matches the notch height on iPhones */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  background: rgba(31, 31, 31, 0.6);
-  z-index: 899; /* just below the header (which is 900) */
+  height: calc(env(safe-area-inset-top) + 10px); /* includes notch area + small overlap */
+  backdrop-filter: blur(12px) brightness(0.9);
+  -webkit-backdrop-filter: blur(12px) brightness(0.9);
+  background: rgba(25, 25, 25, 0.7);
+  z-index: 899;
   pointer-events: none;
 }
+
 
 body {
   font-family: 'Nunito', sans-serif;
@@ -447,7 +448,8 @@ h1 {
 
   </style>
 </head>
-<body>
+<body style="background: #292a2d; margin: 0; padding-top: env(safe-area-inset-top);">
+
 
 <header>
   <h1>London News</h1>
