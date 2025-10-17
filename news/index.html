@@ -36,7 +36,6 @@ header {
   padding: 1rem 1.5rem;
   margin: 0 -1.5rem 1.5rem;
   box-shadow: 0 1px 8px rgba(0,0,0,0.25);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
 }
 
 h1 {
@@ -299,11 +298,13 @@ h1 {
   right: -100vw;
   width: 100vw;
   height: 100vh;
-  background: #1f1f1f;
+  backdrop-filter: blur(10px); /* frosted glass blur */
+  -webkit-backdrop-filter: blur(10px); /* Safari support */
+  background: rgba(31, 31, 31, 0.6);  /* semi-transparent tint */
   color: white;
   padding: 1.5rem;
   box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
-  z-index: 999;
+  z-index: 2000;
   overflow-y: auto;
   padding-bottom: 4rem;
   transition: right 0.3s ease;
@@ -446,9 +447,6 @@ h1 {
 </div>
 
 
-<button id="menuToggle" aria-label="Menu">
-  <i class='bx bx-menu'></i>
-</button>
 
 <aside id="menuPanel">
   <h2>News Sources</h2>
