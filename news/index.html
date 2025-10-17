@@ -508,7 +508,7 @@ document.addEventListener('touchend', async () => {
     // Refresh logic
     state.articles = [];
     feedContainer.innerHTML = '';
-    adfte.selectedFeeds.values()).map(loadFeed));
+    await Promise.all(Array.from(state.selectedFeeds.values()).map(loadFeed));
     renderFeed();
 
     // Hide
