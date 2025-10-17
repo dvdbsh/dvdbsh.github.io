@@ -6,18 +6,8 @@
       "logo": "images/logos/global.png"
     },
     {
-      "name": "CTV London",
-      "url": "https://london.ctvnews.ca/rss/ctv-news-london-1.1073369",
-      "logo": "images/logos/ctv.png"
-    },
-    {
-      "name": "Reddit r/LondonOntario",
-      "url": "https://www.reddit.com/r/londonontario.rss",
-      "logo": "images/logos/reddit.png"
-    },
-    {
       "name": "CBC News London",
-      "url": "https://www.cbc.ca/cmlink/rss-canada-london",
+      "url": "https://www.cbc.ca/webfeed/rss/rss-canada-london",
       "logo": "images/logos/cbc.png"
     },
     {
