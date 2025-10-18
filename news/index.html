@@ -172,14 +172,14 @@
     /* Bottom header (nav) */
 header {
   position: fixed;
-  bottom: -430px;
+  bottom: 0;
   left: 0;
   right: 0;
   z-index: 900;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   background: rgba(70,70,70,0.6);
-  border: 1px solid rgba(255,255,255,0.06);
+  border-top: 1px solid rgba(255,255,255,0.06);
 
   /* NEW: safely extend the background behind iOS browser bar */
   padding-bottom: calc(1rem + env(safe-area-inset-bottom));
@@ -189,9 +189,8 @@ header {
 
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-
-  height: 500px;
+  align-items: center;
+  height: 90px;
 }
 
     header .brand { display: flex; align-items: center; gap: 0.75rem; }
