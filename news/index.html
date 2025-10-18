@@ -25,7 +25,7 @@
       margin: 0;
       padding: 0 1.5rem;
       /* keep content above the fixed bottom header */
-      padding-bottom: calc(120px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: calc(90px + env(safe-area-inset-bottom, 0px));
     }
 
     /* Top title/date (optional, keep if you like) */
@@ -347,63 +347,28 @@ function renderFeed() {
   applyDynamicCardColors();
 }
 
-async function applyDynamicCardColors() {
-  const cards = document.querySelectorAll('.card');
+function applyDynamicCardColors() {
+  const colorThief = new ColorThief();
+  const cards = document.querySelectorAll('.card img');
 
-  for (const card of cards) {
-    const img = card.querySelector('.card-image-wrapper img');
-    if (!img) continue;
+  cards.forEach(img => {
+    if (img.complete) setColor(img);
+    else img.addEventListener('load', () => setColor(img));
+  });
 
-    // Use a CORS-friendly URL for color extraction
-    let imgUrl = img.src;
-    if (!imgUrl.includes('images.weserv.nl')) {
-      imgUrl = `https://images.weserv.nl/?url=${encodeURIComponent(imgUrl)}&w=100&h=100&fit=cover`;
-    }
-
+  function setColor(img) {
     try {
-      const color = await getAverageColor(imgUrl);
-      card.style.backgroundColor = color;
+      const [r, g, b] = colorThief.getColor(img);
+      const darkR = Math.max(r - 20, 0);
+      const darkG = Math.max(g - 20, 0);
+      const darkB = Math.max(b - 20, 0);
+      const bg = `linear-gradient(180deg, rgba(${r},${g},${b},0.95) 0%, rgba(${darkR},${darkG},${darkB},0.85) 100%)`;
+      img.closest('.card').style.background = bg;
     } catch (err) {
-      console.warn('Failed to get average color for', imgUrl, err);
+      console.warn('Color extraction failed for', img.src, err);
     }
   }
 }
-
-async function getAverageColor(imageUrl) {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.src = imageUrl;
-
-    img.onload = () => {
-      const canvas = document.createElement('canvas');
-      canvas.width = img.width;
-      canvas.height = img.height;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(img, 0, 0, img.width, img.height);
-      const data = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-
-      let r = 0, g = 0, b = 0, count = 0;
-      for (let i = 0; i < data.length; i += 4) {
-        r += data[i];
-        g += data[i + 1];
-        b += data[i + 2];
-        count++;
-      }
-      r = Math.round(r / count);
-      g = Math.round(g / count);
-      b = Math.round(b / count);
-
-      resolve(`rgb(${r}, ${g}, ${b})`);
-    };
-
-    img.onerror = reject;
-  });
-}
-
-
-
-
 
 
   function buildSourceScroller(sources) {
@@ -496,7 +461,7 @@ async function getAverageColor(imageUrl) {
 
   loadAllFeeds();
   
-  
+ 
 </script>
 <script src="https://unpkg.com/colorthief/dist/color-thief.umd.js"></script>
 
