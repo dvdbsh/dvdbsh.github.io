@@ -181,6 +181,37 @@
       background: none; border: 0; color: #fff; font-size: 1.75rem; cursor: pointer;
       display: grid; place-items: center;
     }
+	
+	#refreshBtn,
+#backToTopBtn {
+  background: none;
+  border: 0;
+  color: #fff;
+  font-size: 1.75rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 0.3s ease;
+}
+
+#backToTopBtn {
+  font-size: 1.6rem;
+}
+
+#refreshBtn:hover,
+#backToTopBtn:hover {
+  transform: scale(1.1);
+}
+
+.bx-spin-reverse {
+  animation: spinReverse 1s linear infinite;
+}
+
+@keyframes spinReverse {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
 
     /* Empty state (if no feeds) */
     .empty-state {
@@ -209,15 +240,21 @@
 
   <div class="feed" id="newsFeed"></div>
 
-  <header>
-    <div class="brand">
-      <i class='bx bx-news' style="font-size:1.6rem;"></i>
-      <h1>London News</h1>
-    </div>
+<header>
+  <div class="brand">
+    <i class='bx bx-news' style="font-size:1.6rem;"></i>
+    <h1>London News</h1>
+  </div>
+  <div style="display:flex; gap:1rem;">
     <button id="refreshBtn" aria-label="Refresh">
       <i class='bx bx-refresh'></i>
     </button>
-  </header>
+    <button id="backToTopBtn" aria-label="Back to top">
+      <i class='bx bx-up-arrow-alt'></i>
+    </button>
+  </div>
+</header>
+
 
 <script>
   const PEXELS_API_KEY = 'fB6vzEHx5CsDIVByIpuDfQ2QoliM9TYWyBqmkzPgj6nPeEuWdBvbtJIx';
@@ -450,12 +487,26 @@ function applyDynamicCardColors() {
     }
   }
 
-  document.getElementById('refreshBtn').addEventListener('click', async () => {
-    const icon = document.querySelector('#refreshBtn i');
-    icon.classList.add('bx-spin');
-    await loadAllFeeds();
-    icon.classList.remove('bx-spin');
-  });
+document.getElementById('refreshBtn').addEventListener('click', async () => {
+  const icon = document.querySelector('#refreshBtn i');
+  icon.classList.add('bx-spin-reverse'); // spin counter-clockwise
+  await loadAllFeeds();
+  icon.classList.remove('bx-spin-reverse');
+});
+
+document.getElementById('backToTopBtn').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+const backToTopBtn = document.getElementById('backToTopBtn');
+window.addEventListener('scroll', () => {
+  backToTopBtn.style.opacity = window.scrollY > 400 ? '1' : '0';
+  backToTopBtn.style.pointerEvents = window.scrollY > 400 ? 'auto' : 'none';
+});
+backToTopBtn.style.transition = 'opacity 0.3s ease';
+backToTopBtn.style.opacity = '0';
+backToTopBtn.style.pointerEvents = 'none';
+
 
   loadAllFeeds();
   
