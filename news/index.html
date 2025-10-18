@@ -323,26 +323,53 @@
     return { ...item, card, id };
   }
 
-  function renderFeed() {
-    feedContainer.innerHTML = '';
-    const filtered = state.articles.filter(a =>
-      state.filters.source === 'all' || a.card.dataset.source === state.filters.source
-    );
+function renderFeed() {
+  feedContainer.innerHTML = '';
+  const filtered = state.articles.filter(a =>
+    state.filters.source === 'all' || a.card.dataset.source === state.filters.source
+  );
 
-    if (filtered.length === 0) {
-      feedContainer.innerHTML = `
-        <div class="empty-state">
-          <i class='bx bx-news'></i>
-          <p>No stories.</p>
-          <span>Try refreshing.</span>
-        </div>`;
-      return;
-    }
-
-    filtered
-      .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
-      .forEach(({ card }) => feedContainer.appendChild(card));
+  if (filtered.length === 0) {
+    feedContainer.innerHTML = `
+      <div class="empty-state">
+        <i class='bx bx-news'></i>
+        <p>No stories.</p>
+        <span>Try refreshing.</span>
+      </div>`;
+    return;
   }
+
+  filtered
+    .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
+    .forEach(({ card }) => feedContainer.appendChild(card));
+
+  // Apply dynamic card background colours
+  applyDynamicCardColors();
+}
+
+function applyDynamicCardColors() {
+  const colorThief = new ColorThief();
+  const cards = document.querySelectorAll('.card img');
+
+  cards.forEach(img => {
+    if (img.complete) setColor(img);
+    else img.addEventListener('load', () => setColor(img));
+  });
+
+  function setColor(img) {
+    try {
+      const [r, g, b] = colorThief.getColor(img);
+      const darkR = Math.max(r - 20, 0);
+      const darkG = Math.max(g - 20, 0);
+      const darkB = Math.max(b - 20, 0);
+      const bg = `linear-gradient(180deg, rgba(${r},${g},${b},0.95) 0%, rgba(${darkR},${darkG},${darkB},0.85) 100%)`;
+      img.closest('.card').style.background = bg;
+    } catch (err) {
+      console.warn('Color extraction failed for', img.src, err);
+    }
+  }
+}
+
 
   function buildSourceScroller(sources) {
     sourceScroller.innerHTML = '';
@@ -433,7 +460,33 @@
   });
 
   loadAllFeeds();
+  
+function applyDynamicCardColors() {
+  const colorThief = new ColorThief();
+  const cards = document.querySelectorAll('.article-card img');
+
+  cards.forEach(img => {
+    if (img.complete) setColor(img);
+    else img.addEventListener('load', () => setColor(img));
+  });
+
+  function setColor(img) {
+    try {
+      const [r, g, b] = colorThief.getColor(img);
+      // Optional: darken the background slightly for text contrast
+      const bg = `linear-gradient(180deg, rgba(${r},${g},${b},0.95) 0%, rgba(${r - 20},${g - 20},${b - 20},0.85) 100%)`;
+      img.closest('.article-card').style.background = bg;
+    } catch (err) {
+      console.warn('Color extraction failed for', img.src, err);
+    }
+  }
+}
+
+applyDynamicCardColors();
+
+  
 </script>
+<script src="https://unpkg.com/colorthief/dist/color-thief.umd.js"></script>
 
 
 </body>
