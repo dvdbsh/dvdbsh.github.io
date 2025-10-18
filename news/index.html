@@ -28,7 +28,10 @@
       margin: 0;
       padding: 0 1.5rem;
     }
-	
+	body {
+	  /* Ensure the frosted footer can extend into the safe area */
+	  padding-bottom: env(safe-area-inset-bottom);
+	}	
 
     /* Top title/date (optional, keep if you like) */
     .page-top {
@@ -169,24 +172,27 @@
     /* Bottom header (nav) */
 header {
   position: fixed;
+  bottom: -430px;
   left: 0;
   right: 0;
-  bottom: 0;
   z-index: 900;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(70,70,70,0.6);
+  border: 1px solid rgba(255,255,255,0.06);
 
-  /* Full-height glass look */
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  background: rgba(30, 30, 30, 0.45);
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  /* NEW: safely extend the background behind iOS browser bar */
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding-top: 1rem;
+  padding-left: max(1.5rem, env(safe-area-inset-left));
+  padding-right: max(1.5rem, env(safe-area-inset-right));
 
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  padding: 1rem 1.5rem;
-  height: 70px;
-}
+  align-items: flex-start;
 
+  height: 500px;
+}
 
     header .brand { display: flex; align-items: center; gap: 0.75rem; }
     header .brand h1 { font-size: 1.25rem; font-weight: 900; margin: 0; }
@@ -240,20 +246,6 @@ header {
     .empty-state i { font-size: 3rem; color: #3c7a41; margin-bottom: 1rem; }
     .empty-state p { font-size: 1.4rem; font-weight: 800; margin: 0.25rem 0; }
     .empty-state span { font-size: 1rem; color: #aeafb1; }
-	
-.frosted-overlay {
-  position: fixed;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 100vh; /* extend full screen bottom */
-  pointer-events: none;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  background: rgba(30, 30, 30, 0.4);
-  z-index: 800; /* just below header */
-}
-	
   </style>
 </head>
 <body>
@@ -565,7 +557,6 @@ backToTopBtn.style.pointerEvents = 'none';
  
 </script>
 <script src="https://unpkg.com/colorthief/dist/color-thief.umd.js"></script>
-<div class="frosted-overlay"></div>
 
 
 </body>
