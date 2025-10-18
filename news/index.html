@@ -39,8 +39,10 @@
     }
     .page-top .date {
       opacity: 0.8;
-      font-weight: 600;
+      font-weight: 900;
       margin-top: 0.25rem;
+	  margin-bottom: 0.75rem;
+	  font-size: 1.5rem;
     }
 
     /* Source scroller */
@@ -84,7 +86,8 @@
     .chip i { display: grid; place-items: center; font-size: 1.1rem; }
     .chip.active {
       background-color: #292a2d;
-      box-shadow: 0 0 0 2px #1f1f1f inset;
+      box-shadow: 1px solid rgba(255,255,255,0.06) inset;
+	  
     }
 
     /* Feed grid */
@@ -168,7 +171,7 @@
       z-index: 900;
       backdrop-filter: blur(10px);
       -webkit-backdrop-filter: blur(10px);
-      background: rgba(31,31,31,0.6);
+      background: rgba(70,70,70,0.6);
       padding: 1rem max(1.5rem, env(safe-area-inset-left, 0px)) calc(1rem + env(safe-area-inset-bottom, 0px)) max(1.5rem, env(safe-area-inset-right, 0px));
       border-top: 1px solid rgba(255,255,255,0.06);
       display: flex; justify-content: space-between; align-items: center;
@@ -199,7 +202,7 @@
 </head>
 <body>
   <div class="page-top">
-    <h1><div class="date" id="currentDate"></div></h1>
+    <div class="date" id="currentDate"></div>
   </div>
 
   <div class="source-scroller-wrapper">
