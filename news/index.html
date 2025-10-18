@@ -461,29 +461,6 @@ function applyDynamicCardColors() {
 
   loadAllFeeds();
   
-function applyDynamicCardColors() {
-  const colorThief = new ColorThief();
-  const cards = document.querySelectorAll('.article-card img');
-
-  cards.forEach(img => {
-    if (img.complete) setColor(img);
-    else img.addEventListener('load', () => setColor(img));
-  });
-
-  function setColor(img) {
-    try {
-      const [r, g, b] = colorThief.getColor(img);
-      // Optional: darken the background slightly for text contrast
-      const bg = `linear-gradient(180deg, rgba(${r},${g},${b},0.95) 0%, rgba(${r - 20},${g - 20},${b - 20},0.85) 100%)`;
-      img.closest('.article-card').style.background = bg;
-    } catch (err) {
-      console.warn('Color extraction failed for', img.src, err);
-    }
-  }
-}
-
-applyDynamicCardColors();
-
   
 </script>
 <script src="https://unpkg.com/colorthief/dist/color-thief.umd.js"></script>
