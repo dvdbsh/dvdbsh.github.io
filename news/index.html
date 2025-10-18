@@ -349,9 +349,9 @@ function renderFeed() {
 
 function applyDynamicCardColors() {
   const colorThief = new ColorThief();
-  const cards = document.querySelectorAll('.card img');
+  const images = document.querySelectorAll('.card .card-image-wrapper img');
 
-  cards.forEach(img => {
+  images.forEach(img => {
     if (img.complete) setColor(img);
     else img.addEventListener('load', () => setColor(img));
   });
@@ -359,16 +359,17 @@ function applyDynamicCardColors() {
   function setColor(img) {
     try {
       const [r, g, b] = colorThief.getColor(img);
-      const darkR = Math.max(r - 20, 0);
-      const darkG = Math.max(g - 20, 0);
-      const darkB = Math.max(b - 20, 0);
-      const bg = `linear-gradient(180deg, rgba(${r},${g},${b},0.95) 0%, rgba(${darkR},${darkG},${darkB},0.85) 100%)`;
-      img.closest('.card').style.background = bg;
+      const darkR = Math.max(r - 25, 0);
+      const darkG = Math.max(g - 25, 0);
+      const darkB = Math.max(b - 25, 0);
+      const gradient = `linear-gradient(180deg, rgba(${r},${g},${b},0.9) 0%, rgba(${darkR},${darkG},${darkB},0.95) 100%)`;
+      img.closest('.card').style.background = gradient;
     } catch (err) {
       console.warn('Color extraction failed for', img.src, err);
     }
   }
 }
+
 
 
   function buildSourceScroller(sources) {
