@@ -348,26 +348,30 @@ function renderFeed() {
 }
 
 function applyDynamicCardColors() {
-  const cards = document.querySelectorAll('.card .card-image-wrapper');
+  const cards = document.querySelectorAll('.card');
 
-  cards.forEach(wrapper => {
-    const img = wrapper.querySelector('img');
+  cards.forEach(card => {
+    const img = card.querySelector('.card-image-wrapper img');
     if (!img) return;
 
-    // Create a blurred overlay behind the image
+    // Create a blurred background layer for the entire card
     const overlay = document.createElement('div');
     overlay.style.position = 'absolute';
     overlay.style.inset = '0';
     overlay.style.backgroundImage = `url(${img.src})`;
     overlay.style.backgroundSize = 'cover';
     overlay.style.backgroundPosition = 'center';
-    overlay.style.filter = 'blur(30px) brightness(60%)';
-    overlay.style.transform = 'scale(1.2)';
+    overlay.style.filter = 'blur(40px) brightness(45%)';
+    overlay.style.transform = 'scale(1.3)';
     overlay.style.zIndex = '-1';
-    wrapper.style.position = 'relative';
-    wrapper.prepend(overlay);
+    overlay.style.opacity = '0.8';
+    overlay.style.transition = 'opacity 0.4s ease';
+
+    card.style.position = 'relative';
+    card.prepend(overlay);
   });
 }
+
 
 
 
