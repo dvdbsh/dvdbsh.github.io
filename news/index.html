@@ -394,16 +394,41 @@ function applyDynamicCardColors() {
   function setColor(img) {
     try {
       const [r, g, b] = colorThief.getColor(img);
-      const darkR = Math.max(r - 20, 0);
-      const darkG = Math.max(g - 20, 0);
-      const darkB = Math.max(b - 20, 0);
-      const bg = `linear-gradient(180deg, rgba(${r},${g},${b},0.95) 0%, rgba(${darkR},${darkG},${darkB},0.85) 100%)`;
-      img.closest('.card').style.background = bg;
+      const [adjR, adjG, adjB] = adjustForContrast(r, g, b);
+
+      const gradient = `
+        linear-gradient(180deg, rgba(${adjR},${adjG},${adjB},0.95) 0%, 
+        rgba(${Math.max(adjR - 25, 0)},${Math.max(adjG - 25, 0)},${Math.max(adjB - 25, 0)},0.9) 100%)
+      `;
+      img.closest('.card').style.background = gradient;
     } catch (err) {
       console.warn('Color extraction failed for', img.src, err);
     }
   }
+
+  // Ensure extracted color is dark enough for light text
+  function adjustForContrast(r, g, b) {
+    // Convert to perceived brightness (0–255 scale)
+    let brightness = (0.299 * r + 0.587 * g + 0.114 * b);
+
+    // If brightness is too high, darken proportionally
+    if (brightness > 160) {
+      const factor = 160 / brightness;
+      r = Math.round(r * factor);
+      g = Math.round(g * factor);
+      b = Math.round(b * factor);
+    }
+
+    // Optionally desaturate overly vivid colors slightly for smoother look
+    const avg = (r + g + b) / 3;
+    r = Math.round((r + avg) / 2);
+    g = Math.round((g + avg) / 2);
+    b = Math.round((b + avg) / 2);
+
+    return [r, g, b];
+  }
 }
+
 
 
   function buildSourceScroller(sources) {
