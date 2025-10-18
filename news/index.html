@@ -28,10 +28,7 @@
       margin: 0;
       padding: 0 1.5rem;
     }
-	body {
-	  /* Ensure the frosted footer can extend into the safe area */
-	  padding-bottom: env(safe-area-inset-bottom);
-	}	
+	
 
     /* Top title/date (optional, keep if you like) */
     .page-top {
@@ -181,11 +178,7 @@ header {
   background: rgba(70,70,70,0.6);
   border: 1px solid rgba(255,255,255,0.06);
 
-  /* NEW: safely extend the background behind iOS browser bar */
-  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
-  padding-top: 1rem;
-  padding-left: max(1.5rem, env(safe-area-inset-left));
-  padding-right: max(1.5rem, env(safe-area-inset-right));
+
 
   display: flex;
   justify-content: space-between;
