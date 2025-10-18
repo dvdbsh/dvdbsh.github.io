@@ -11,6 +11,11 @@
       "logo": "images/logos/cbc.png"
     },
     {
+      "name": "CTV News",
+      "url": "https://news.google.com/rss/search?q=London+Ontario&hl=en-CA&gl=CA&ceid=CA:en",
+      "logo": "images/logos/ctv.png"
+    },		
+    {
       "name": "106.9 The X",
       "url": "https://www.1069thex.com/category/news-home-page/feed/",
       "logo": "images/logos/1069thex.png"
