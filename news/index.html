@@ -176,34 +176,23 @@ header {
   left: 0;
   right: 0;
   z-index: 900;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  background: rgba(40, 40, 40, 0.55);
-  background-attachment: fixed;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding: 1rem max(1.5rem, env(safe-area-inset-left))
-           calc(1rem + env(safe-area-inset-bottom))
-           max(1.5rem, env(safe-area-inset-right));
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(70,70,70,0.6);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 20px;
+
+  /* NEW: safely extend the background behind iOS browser bar */
+  padding-bottom: calc(1rem + env(safe-area-inset-bottom));
+  padding-top: 1rem;
+  padding-left: max(1.5rem, env(safe-area-inset-left));
+  padding-right: max(1.5rem, env(safe-area-inset-right));
+
   display: flex;
   justify-content: space-between;
   align-items: center;
   height: 90px;
-  -webkit-transform: translateZ(0);
 }
-header::after {
-  content: "";
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: calc(env(safe-area-inset-bottom) + 30px);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  background: rgba(40, 40, 40, 0.4);
-  pointer-events: none;
-  z-index: -1;
-}
-
 
     header .brand { display: flex; align-items: center; gap: 0.75rem; }
     header .brand h1 { font-size: 1.25rem; font-weight: 900; margin: 0; }
