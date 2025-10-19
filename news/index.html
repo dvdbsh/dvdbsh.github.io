@@ -12,265 +12,404 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <style>
-    :root {
-      --accent: #181526;
-      --button: #e8eeff;
-      --surface: #1f1f1f;
-      --bg: #292a2d;
-    }
-    * { box-sizing: border-box; }
-html, body {
-  height: 100%;
-}
+<style>
+  /* =========================================================
+     ROOT VARIABLES & GLOBAL RESETS
+  ========================================================= */
+  :root {
+    --accent: #181526;
+    --button: #e8eeff;
+    --surface: #1f1f1f;
+    --bg: #292a2d;
+  }
 
-body {
-  font-family: 'Nunito', sans-serif;
-  background: var(--bg);
-  color: #fff;
-  margin: 0;
-  padding: env(safe-area-inset-top) 1.5rem env(safe-area-inset-bottom);
-  /* This ensures the frosted footer and translucent status bar blend cleanly */
-}
+  * {
+    box-sizing: border-box;
+  }
 
-    /* Top title/date (optional, keep if you like) */
-    .page-top {
-      padding: 1rem 0 0.25rem;
-    }
-    .page-top h1 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin: 0;
-    }
-    .page-top .date {
-      opacity: 0.8;
-      font-weight: 900;
-      margin-top: 0.25rem;
-	  margin-bottom: 0.75rem;
-	  font-size: 1.5rem;
-    }
+  html, body {
+    height: 100%;
+  }
 
-    /* Source scroller */
-    .source-scroller-wrapper {
-      overflow-x: auto;
-      margin: 0 -1.5rem 1rem;
-      padding: 0 1.5rem;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    .source-scroller-wrapper::-webkit-scrollbar { display: none; }
-    .source-scroller {
-      display: flex;
-      gap: 0.75rem;
-      min-width: max-content;
-    }
-    .source-scroller::after { content: ""; flex: 0 0 1.5rem; }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: var(--surface);
-      border: none;
-      border-radius: 20px;
-      padding: 0.5rem 0.9rem;
-      font-weight: 700;
-      font-size: 0.95rem;
-      color: #ffffff;
-      white-space: nowrap;
-      cursor: pointer;
-      transition: transform 0.06s ease;
-    }
-    .chip:active { transform: translateY(1px); }
-    .chip img, .chip i {
-      height: 28px; width: 28px;
-      border-radius: 50%;
-      object-fit: contain;
-      display: block;
-      flex-shrink: 0;
-    }
-    .chip i { display: grid; place-items: center; font-size: 1.1rem; }
-    .chip.active {
-      background-color: #292a2d;
-      box-shadow: 0 0 0 2px #1f1f1f inset;
-	  
-    }
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--bg);
+    color: #fff;
+    margin: 0;
+    padding: env(safe-area-inset-top) 1.5rem env(safe-area-inset-bottom);
+  }
 
-    /* Feed grid */
-    .feed {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
-      padding-bottom: 150px;
-    }
+  /* =========================================================
+     PAGE HEADER (Date / Title)
+  ========================================================= */
+  .page-top {
+    padding: 1rem 0 0.25rem;
+  }
 
-    /* Card */
-    .card {
-      background: var(--surface);
-      border-radius: 20px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      transition: max-height 0.3s ease;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      max-height: 340px;
-      cursor: pointer;
-    }
+  .page-top h1 {
+    font-size: 1.5rem;
+    font-weight: 800;
+    margin: 0;
+  }
 
-/* No-image card: unified gradient background (no fake image section) */
+  .page-top .date {
+    opacity: 0.8;
+    font-weight: 900;
+    margin-top: 0.25rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+  }
+
+  /* =========================================================
+     SOURCE SCROLLER
+  ========================================================= */
+  .source-scroller-wrapper {
+    overflow-x: auto;
+    margin: 0 -1.5rem 1rem;
+    padding: 0 1.5rem;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .source-scroller-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .source-scroller {
+    display: flex;
+    gap: 0.75rem;
+    min-width: max-content;
+  }
+
+  .source-scroller::after {
+    content: "";
+    flex: 0 0 1.5rem;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--surface);
+    border: none;
+    border-radius: 20px;
+    padding: 0.5rem 0.9rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    color: #fff;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: transform 0.06s ease;
+  }
+
+  .chip:active {
+    transform: translateY(1px);
+  }
+
+  .chip img,
+  .chip i {
+    height: 28px;
+    width: 28px;
+    border-radius: 50%;
+    object-fit: contain;
+    display: block;
+    flex-shrink: 0;
+  }
+
+  .chip i {
+    display: grid;
+    place-items: center;
+    font-size: 1.1rem;
+  }
+
+  .chip.active {
+    background-color: #292a2d;
+    box-shadow: 0 0 0 2px #1f1f1f inset;
+  }
+
+  /* =========================================================
+     FEED GRID
+  ========================================================= */
+  .feed {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    padding-bottom: 150px;
+  }
+
+  /* =========================================================
+     CARD BASE STYLES
+  ========================================================= */
+  .card {
+    background: var(--surface);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    transition: max-height 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    max-height: 340px;
+    cursor: pointer;
+
+    /* fixes gradient stretching */
+    background-size: 100% 340px;
+    background-repeat: no-repeat;
+    background-position: top;
+	background-attachment: fixed;
+  }
+
+  .card.expanded {
+    max-height: 1000px;
+  }
+
+  /* =========================================================
+     NO-IMAGE CARDS (uses unified gradient background)
+  ========================================================= */
 .card.no-image {
+  background-color: var(--source-color, #5e0f0f);
   position: relative;
-  border-radius: 20px;
-  overflow: hidden;
-  background: linear-gradient(180deg, #5e0f0f 0%, #7a1818 100%);
-  transition: max-height 0.3s ease;
-  max-height: 340px;
-  cursor: pointer;
 }
 
-.card.no-image.expanded {
-  max-height: 1000px;
-}
 
-.card.no-image .card-header {
+  .card.no-image .card-content {
+    padding: 1.5rem 1rem 1rem; /* pushes text below header */
+  }
+
+  /* =========================================================
+     IMAGE WRAPPER
+  ========================================================= */
+  .card-image-wrapper {
+    position: relative;
+    width: 100%;
+    height: 210px;
+    overflow: hidden;
+  }
+
+  .card-image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .card-image-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at top left, rgba(25,25,25,0.8), transparent 55%),
+      radial-gradient(circle at top right, rgba(25,25,25,0.8), transparent 55%);
+    pointer-events: none;
+  }
+
+	/* =========================================================
+	   CARD GRADIENT OVERLAY (dynamic darker-to-transparent layer)
+	========================================================= */
+
+.card-gradient-overlay {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.6rem 0.9rem;
-  font-size: 0.8rem;
-  color: #fff;
-  z-index: 2;
+  height: 210px; /* lock gradient to image area height */
+  z-index: 0;
+  border-radius: 20px 20px 0 0;
+  background-attachment: fixed;
+  mix-blend-mode: multiply;
+  pointer-events: none;
 }
 
-.card.no-image .card-content {
-  padding: 4.5rem 1rem 1rem; /* push title below header */
-}
-
-
-	
-    .card.expanded { max-height: 1000px; }
-
-    .card-image-wrapper {
-      position: relative;
-      width: 100%;
-      height: 210px;
-      overflow: hidden;
-    }
-    .card-image-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      display: block;
-    }
-    .card-image-wrapper::after {
-      content: "";
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(circle at top left, rgba(25,25,25,0.8), transparent 55%),
-        radial-gradient(circle at top right, rgba(25,25,25,0.8), transparent 55%);
-      pointer-events: none;
-    }
-
-    .card-header {
-      position: absolute; top: 0; left: 0; right: 0;
-      display: flex; justify-content: space-between; align-items: center;
-      padding: 0.6rem 0.9rem;
-      font-size: 0.8rem;
-      color: #ffffff;
-      z-index: 2;
-    }
-    .source-logo-name { display: flex; align-items: center; gap: 0.5rem; font-weight: 700; }
-    .source-logo-name img { height: 32px; width: 32px; border-radius: 50%; object-fit: contain; }
-    .timestamp { font-weight: 700; }
-
-    .card-content { padding: 1rem; display: flex; flex-direction: column; }
-    .card-content h2 {
-      font-size: 1.2rem; margin: 0 0 0.5rem; font-weight: 800; color: #ffffff;
-    }
-    .full-content {
-      font-size: 1rem; line-height: 1.6; color: #e8eeff;
-      max-height: 0; overflow: hidden; opacity: 0; margin-top: 0;
-      transition: max-height 0.3s ease, opacity 0.4s ease, margin-top 0.4s ease;
-    }
-    .card.expanded .full-content { max-height: 400px; opacity: 1; margin-top: 0.75rem; }
-
-    .read-more {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      margin-top: 1rem; background: var(--button); color: var(--accent);
-      padding: 0.5rem 1rem; text-decoration: none; border-radius: 20px;
-      font-weight: 700; width: fit-content; font-size: 1rem;
-    }
-
-    /* Bottom header (nav) */
-    header {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      z-index: 900;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      background: rgba(70,70,70,0.6);
-      padding: 1rem max(1.5rem, env(safe-area-inset-left, 0px)) calc(1rem + env(safe-area-inset-bottom, 0px)) max(1.5rem, env(safe-area-inset-right, 0px));
-      border-top: 1px solid rgba(255,255,255,0.06);
-      display: flex; justify-content: space-between; align-items: center;
-      height: 90px;
-    }
-    header .brand { display: flex; align-items: center; gap: 0.75rem; }
-    header .brand h1 { font-size: 1.25rem; font-weight: 900; margin: 0; }
-    #refreshBtn {
-      background: none; border: 0; color: #fff; font-size: 1.75rem; cursor: pointer;
-      display: grid; place-items: center;
-    }
-	
-	#refreshBtn,
-#backToTopBtn {
-  background: none;
-  border: 0;
-  color: #fff;
-  font-size: 1.75rem;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  transition: transform 0.3s ease;
-}
-
-#backToTopBtn {
-  font-size: 1.6rem;
-}
-
-#refreshBtn:hover,
-#backToTopBtn:hover {
-  transform: scale(1.1);
-}
-
-.bx-spin-reverse {
-  animation: spinReverse 1s linear infinite;
-}
-
-@keyframes spinReverse {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
+.card > *:not(.card-gradient-overlay) {
+  position: relative;
+  z-index: 1;
 }
 
 
-    /* Empty state (if no feeds) */
-    .empty-state {
-      background: var(--surface);
-      border-radius: 20px;
-      padding: 3rem 1rem;
-      margin: 2rem auto;
-      max-width: 400px;
-      text-align: center;
-      color: #e8eeff;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-    }
-    .empty-state i { font-size: 3rem; color: #3c7a41; margin-bottom: 1rem; }
-    .empty-state p { font-size: 1.4rem; font-weight: 800; margin: 0.25rem 0; }
-    .empty-state span { font-size: 1rem; color: #aeafb1; }
-  </style>
+
+
+  /* =========================================================
+     CARD HEADER (source name + timestamp)
+  ========================================================= */
+  .card-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.6rem 0.9rem;
+    font-size: 0.8rem;
+    color: #fff;
+    z-index: 2;
+  }
+
+  .source-logo-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+  }
+
+  .source-logo-name img {
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    object-fit: contain;
+  }
+
+  .timestamp {
+    font-weight: 700;
+  }
+
+  /* =========================================================
+     CARD CONTENT (title + body)
+  ========================================================= */
+  .card-content {
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card-content h2 {
+    font-size: 1.2rem;
+    margin: 0 0 0.5rem;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .full-content {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #e8eeff;
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    margin-top: 0;
+    transition: max-height 0.3s ease, opacity 0.4s ease, margin-top 0.4s ease;
+  }
+
+  .card.expanded .full-content {
+    max-height: 400px;
+    opacity: 1;
+    margin-top: 0.75rem;
+  }
+
+  .read-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 1rem;
+    background: var(--button);
+    color: var(--accent);
+    padding: 0.5rem 1rem;
+    text-decoration: none;
+    border-radius: 20px;
+    font-weight: 700;
+    width: fit-content;
+    font-size: 1rem;
+  }
+
+  /* =========================================================
+     BOTTOM HEADER (FROSTED NAV BAR)
+  ========================================================= */
+  header {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 900;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    background: rgba(70,70,70,0.6);
+    padding: 1rem max(1.5rem, env(safe-area-inset-left, 0px))
+             calc(1rem + env(safe-area-inset-bottom, 0px))
+             max(1.5rem, env(safe-area-inset-right, 0px));
+    border-top: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 90px;
+  }
+
+  header .brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  header .brand h1 {
+    font-size: 1.25rem;
+    font-weight: 900;
+    margin: 0;
+  }
+
+  /* =========================================================
+     NAV BUTTONS (refresh / back to top)
+  ========================================================= */
+  #refreshBtn,
+  #backToTopBtn {
+    background: none;
+    border: 0;
+    color: #fff;
+    font-size: 1.75rem;
+    cursor: pointer;
+    display: grid;
+    place-items: center;
+    transition: transform 0.3s ease;
+  }
+
+  #backToTopBtn {
+    font-size: 1.6rem;
+  }
+
+  #refreshBtn:hover,
+  #backToTopBtn:hover {
+    transform: scale(1.1);
+  }
+
+  .bx-spin-reverse {
+    animation: spinReverse 1s linear infinite;
+  }
+
+  @keyframes spinReverse {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(-360deg); }
+  }
+
+  /* =========================================================
+     EMPTY STATE
+  ========================================================= */
+  .empty-state {
+    background: var(--surface);
+    border-radius: 20px;
+    padding: 3rem 1rem;
+    margin: 2rem auto;
+    max-width: 400px;
+    text-align: center;
+    color: #e8eeff;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  }
+
+  .empty-state i {
+    font-size: 3rem;
+    color: #3c7a41;
+    margin-bottom: 1rem;
+  }
+
+  .empty-state p {
+    font-size: 1.4rem;
+    font-weight: 800;
+    margin: 0.25rem 0;
+  }
+
+  .empty-state span {
+    font-size: 1rem;
+    color: #aeafb1;
+  }
+</style>
+
 </head>
 <body>
   <div class="page-top">
@@ -469,51 +608,68 @@ card.innerHTML = `
     applyDynamicCardColors();
   }
 
-  function applyDynamicCardColors() {
-    const colorThief = new ColorThief();
-    const cards = document.querySelectorAll('.card img');
+function applyDynamicCardColors() {
+  const colorThief = new ColorThief();
+  const cards = document.querySelectorAll('.card img');
 
-    cards.forEach(img => {
-      if (img.complete) setColor(img);
-      else img.addEventListener('load', () => setColor(img));
-    });
+  cards.forEach(img => {
+    if (img.complete) setColor(img);
+    else img.addEventListener('load', () => setColor(img));
+  });
 
-    function setColor(img) {
-      try {
-        const [r, g, b] = colorThief.getColor(img);
-        const [adjR, adjG, adjB] = adjustForContrast(r, g, b);
-        const gradient = `
-          linear-gradient(180deg, rgba(${adjR},${adjG},${adjB},0.95) 0%, 
-          rgba(${Math.max(adjR - 25, 0)},${Math.max(adjG - 25, 0)},${Math.max(adjB - 25, 0)},0.9) 100%)
-        `;
-        img.closest('.card').style.background = gradient;
-		const card = img.closest('.card');
-		if (card.classList.contains('no-image')) {
-		  card.style.background = `
-			linear-gradient(180deg, rgba(${adjR},${adjG},${adjB},0.8) 0%,
-			rgba(${Math.max(adjR - 40, 0)},${Math.max(adjG - 40, 0)},${Math.max(adjB - 40, 0)},0.95) 100%)`;
-		}
+  function setColor(img) {
+    try {
+      const [r, g, b] = colorThief.getColor(img);
+      const [adjR, adjG, adjB] = adjustForContrast(r, g, b);
 
-      } catch (err) {
-        console.warn('Color extraction failed for', img.src, err);
-      }
-    }
+      // Define readable variables for the two colours
+      const sourceColor = `rgb(${adjR}, ${adjG}, ${adjB})`;
+      const darkSourceColor = `rgb(${Math.max(adjR - 40, 0)}, ${Math.max(adjG - 40, 0)}, ${Math.max(adjB - 40, 0)})`;
 
-    function adjustForContrast(r, g, b) {
-      let brightness = (0.299 * r + 0.587 * g + 0.114 * b);
-      if (brightness > 160) {
-        const factor = 160 / brightness;
-        r = Math.round(r * factor);
-        g = Math.round(g * factor);
-        b = Math.round(b * factor);
-      }
-      const avg = (r + g + b) / 3;
-      r = Math.round((r + avg) / 2);
-      g = Math.round((g + avg) / 2);
-      b = Math.round((b + avg) / 2);
-      return [r, g, b];
+      const card = img.closest('.card');
+
+      // Set the solid base colour
+      card.style.backgroundColor = sourceColor;
+
+      // Overlay darker-to-transparent gradient
+      const overlay = document.createElement("div");
+      overlay.className = "card-gradient-overlay";
+      overlay.style.position = "absolute";
+      overlay.style.inset = "0";
+      overlay.style.pointerEvents = "none";
+      overlay.style.background = `linear-gradient(180deg, ${darkSourceColor} 0%, rgba(0,0,0,0) 100%)`;
+
+      // Save readable colour variables on the card
+      card.style.setProperty("--source-color", sourceColor);
+      card.style.setProperty("--dark-source-color", darkSourceColor);
+
+      // Remove any previous overlays before adding
+      const oldOverlay = card.querySelector(".card-gradient-overlay");
+      if (oldOverlay) oldOverlay.remove();
+      card.insertBefore(overlay, card.firstChild);
+
+
+    } catch (err) {
+      console.warn("Color extraction failed for", img.src, err);
     }
   }
+
+  function adjustForContrast(r, g, b) {
+    let brightness = (0.299 * r + 0.587 * g + 0.114 * b);
+    if (brightness > 160) {
+      const factor = 160 / brightness;
+      r = Math.round(r * factor);
+      g = Math.round(g * factor);
+      b = Math.round(b * factor);
+    }
+    const avg = (r + g + b) / 3;
+    r = Math.round((r + avg) / 2);
+    g = Math.round((g + avg) / 2);
+    b = Math.round((b + avg) / 2);
+    return [r, g, b];
+  }
+}
+
 
   function generatePlaceholderFromLogoColor(logoUrl, sourceName) {
     return new Promise((resolve) => {
