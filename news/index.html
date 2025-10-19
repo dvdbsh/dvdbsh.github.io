@@ -170,24 +170,41 @@ body {
     }
 
     /* Bottom header (nav) */
-    header {
-      position: fixed;
-      bottom: 0; left: 0; right: 0;
-      z-index: 900;
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      background: rgba(70,70,70,0.6);
-      padding: 1rem max(1.5rem, env(safe-area-inset-left, 0px)) calc(1rem + env(safe-area-inset-bottom, 0px)) max(1.5rem, env(safe-area-inset-right, 0px));
-      border-top: 1px solid rgba(255,255,255,0.06);
-      display: flex; justify-content: space-between; align-items: center;
-      height: 90px;
-    }
-    header .brand { display: flex; align-items: center; gap: 0.75rem; }
-    header .brand h1 { font-size: 1.25rem; font-weight: 900; margin: 0; }
-    #refreshBtn {
-      background: none; border: 0; color: #fff; font-size: 1.75rem; cursor: pointer;
-      display: grid; place-items: center;
-    }
+header {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  background: rgba(70, 70, 70, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 90px;
+
+  /* Extend blur behind iOS bottom bar */
+  padding: 1rem max(1.5rem, env(safe-area-inset-left))
+           calc(1rem + env(safe-area-inset-bottom))
+           max(1.5rem, env(safe-area-inset-right));
+}
+
+header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: env(safe-area-inset-bottom);
+  background: rgba(70, 70, 70, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  pointer-events: none;
+  z-index: -1;
+}
+
 	
 	#refreshBtn,
 #backToTopBtn {
