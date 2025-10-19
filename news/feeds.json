@@ -11,6 +11,11 @@
       "logo": "images/logos/cbc.png"
     },
     {
+      "name": "London Free Press",
+      "url": "https://lfpress.com/feed",
+      "logo": "images/logos/lfp.png"
+    },	
+    {
       "name": "CTV News",
       "url": "https://news.google.com/rss/search?q=site:https://www.ctvnews.ca/london/+when:7d&hl=en-CA&gl=CA&ceid=CA:en",
       "logo": "images/logos/ctv.png"
