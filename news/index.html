@@ -116,6 +116,30 @@ body {
       max-height: 340px;
       cursor: pointer;
     }
+	.card.no-image {
+	  height: 210px;
+	  background: linear-gradient(
+		180deg,
+		rgba(60, 60, 60, 0.85) 0%,
+		rgba(30, 30, 30, 0.95) 100%
+	  );
+	  display: flex;
+	  flex-direction: column;
+	  justify-content: flex-end;
+	  position: relative;
+	}
+
+	.card.no-image .card-header {
+	  position: relative;
+	  background: none;
+	  padding: 0.6rem 1rem;
+	}
+
+	.card.no-image .card-content {
+	  background: transparent;
+	  padding: 1rem;
+	}
+	
     .card.expanded { max-height: 1000px; }
 
     .card-image-wrapper {
@@ -363,24 +387,39 @@ body {
     card.dataset.id = id;
     card.dataset.source = source.name;
 
-    card.innerHTML = `
-      <div class="card-image-wrapper"><img src="${item.thumbnail}" alt="thumbnail" loading="lazy"></div>
-      <div class="card-header">
-        <div class="source-logo-name">
-          ${source.logo ? `<img src="${source.logo}" alt="${source.name}" onerror="this.style.display='none';">` : ''}
-          <span>${source.name}</span>
-        </div>
-        <div class="timestamp">${timeString}</div>
-      </div>
-      <div class="card-content">
-        <h2>${truncateWords(item.title, 14)}</h2>
-        <div class="full-content">
-          ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
-          <a href="${item.link}" class="read-more" target="_blank" rel="noopener">
-            Read full article <i class='bx bx-right-arrow-alt'></i>
-          </a>
-        </div>
-      </div>`;
+	const hasImage = item.thumbnail && !item.thumbnail.includes('placehold.co');
+	let imageSection = '';
+
+	if (hasImage) {
+	  imageSection = `
+		<div class="card-image-wrapper">
+		  <img src="${item.thumbnail}" alt="thumbnail" loading="lazy">
+		</div>`;
+	}
+
+	card.className = hasImage ? "card" : "card no-image";
+	card.dataset.id = id;
+	card.dataset.source = source.name;
+
+	card.innerHTML = `
+	  ${imageSection}
+	  <div class="card-header">
+		<div class="source-logo-name">
+		  ${source.logo ? `<img src="${source.logo}" alt="${source.name}" onerror="this.style.display='none';">` : ''}
+		  <span>${source.name}</span>
+		</div>
+		<div class="timestamp">${timeString}</div>
+	  </div>
+	  <div class="card-content">
+		<h2>${truncateWords(item.title, 14)}</h2>
+		<div class="full-content">
+		  ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
+		  <a href="${item.link}" class="read-more" target="_blank" rel="noopener">
+			Read full article <i class='bx bx-right-arrow-alt'></i>
+		  </a>
+		</div>
+	  </div>`;
+
 
     card.addEventListener("click", (e) => {
       if (e.target.tagName === "A") return;
@@ -433,6 +472,13 @@ body {
           rgba(${Math.max(adjR - 25, 0)},${Math.max(adjG - 25, 0)},${Math.max(adjB - 25, 0)},0.9) 100%)
         `;
         img.closest('.card').style.background = gradient;
+		const card = img.closest('.card');
+		if (card.classList.contains('no-image')) {
+		  card.style.background = `
+			linear-gradient(180deg, rgba(${adjR},${adjG},${adjB},0.8) 0%,
+			rgba(${Math.max(adjR - 40, 0)},${Math.max(adjG - 40, 0)},${Math.max(adjB - 40, 0)},0.95) 100%)`;
+		}
+
       } catch (err) {
         console.warn('Color extraction failed for', img.src, err);
       }
