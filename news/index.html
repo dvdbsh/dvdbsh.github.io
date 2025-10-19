@@ -520,12 +520,10 @@ function generatePlaceholderFromLogoColor(logoUrl, sourceName) {
 
     for (const item of data.items) {
         if (!item.thumbnail) {
-          // Try to generate a branded placeholder based on logo colour
-          const placeholder = await generatePlaceholderFromLogoColor(source.logo, source.name);
           item.thumbnail =
-            (await getPexelsImage(item.title)) ||
-            placeholder;
+            await generatePlaceholderFromLogoColor(source.logo, source.name);
     }
+
 
       const entry = createCard(item, source);
       if (entry) state.articles.push(entry);
