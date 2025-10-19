@@ -116,21 +116,6 @@ body {
       max-height: 340px;
       cursor: pointer;
     }
-/* Same layout as normal cards, we just paint a gradient slab in the image area */
-.card.no-image .card-image-wrapper {
-  position: relative;
-  width: 100%;
-  height: 210px;          /* matches image cards */
-  overflow: hidden;
-}
-
-.noimg-bg {
-  position: absolute;
-  inset: 0;
-  /* gradient is set inline from JS */
-}
-
-	
     .card.expanded { max-height: 1000px; }
 
     .card-image-wrapper {
@@ -289,7 +274,6 @@ body {
     allSources: []
   };
 
-  // Set date at top of page
   (function setDate(){
     const el = document.getElementById("currentDate");
     const today = new Date();
@@ -298,32 +282,6 @@ body {
     });
   })();
 
-  // Toast element for update message
-  const toast = document.createElement("div");
-  toast.style.position = "fixed";
-  toast.style.bottom = "110px";
-  toast.style.left = "50%";
-  toast.style.transform = "translateX(-50%)";
-  toast.style.background = "rgba(255,255,255,0.1)";
-  toast.style.backdropFilter = "blur(10px)";
-  toast.style.border = "1px solid rgba(255,255,255,0.2)";
-  toast.style.color = "#fff";
-  toast.style.padding = "0.6rem 1.2rem";
-  toast.style.borderRadius = "20px";
-  toast.style.fontWeight = "700";
-  toast.style.opacity = "0";
-  toast.style.transition = "opacity 0.4s ease";
-  toast.style.zIndex = "9999";
-  toast.textContent = "Updated just now";
-  document.body.appendChild(toast);
-
-  function showToast(message = "Updated just now") {
-    toast.textContent = message;
-    toast.style.opacity = "1";
-    setTimeout(() => (toast.style.opacity = "0"), 2500);
-  }
-
-  // Utilities
   function stripHtmlTags(html) {
     if (!html) return '';
     const txt = document.createElement('textarea');
@@ -364,8 +322,9 @@ body {
       return null;
     }
   }
+  
+  
 
-  // Card builder
   function createCard(item, source) {
     const id = btoa(item.link);
     if (state.articles.some(a => a.id === id)) return null;
@@ -378,73 +337,26 @@ body {
     card.dataset.id = id;
     card.dataset.source = source.name;
 
-// helpers for colours
-function hexToRgb(hex) {
-  const m = (hex || '').replace('#','').match(/^([0-9a-f]{6})$/i);
-  if (!m) return [31,31,31]; // safe fallback
-  const int = parseInt(m[1], 16);
-  return [(int >> 16) & 255, (int >> 8) & 255, int & 255];
-}
-function darken([r,g,b], by = 35) {
-  return [Math.max(r - by, 0), Math.max(g - by, 0), Math.max(b - by, 0)];
-}
-
-const hasImage = item.thumbnail && !item.thumbnail.includes('placehold.co');
-
-// If this item used our placeholder URL, extract the hex to drive the top colour
-let topRGB = [31,31,31];
-if (!hasImage && item.thumbnail && item.thumbnail.includes('placehold.co')) {
-  // URL format: .../800x400/<HEX>/ffffff?text=...
-  const parts = item.thumbnail.split('/');
-  const hex = parts[parts.length - 2]; // the HEX segment
-  topRGB = hexToRgb(hex);
-}
-const bottomRGB = darken(topRGB, 45);
-
-let imageSection = '';
-if (hasImage) {
-  imageSection = `
-    <div class="card-image-wrapper">
-      <img src="${item.thumbnail}" alt="thumbnail" loading="lazy">
-    </div>`;
-} else {
-  imageSection = `
-    <div class="card-image-wrapper">
-      <div class="noimg-bg"
-           style="background: linear-gradient(
-             180deg,
-             rgba(${topRGB[0]},${topRGB[1]},${topRGB[2]},0.92) 0%,
-             rgba(${bottomRGB[0]},${bottomRGB[1]},${bottomRGB[2]},0.96) 100%
-           );">
+    card.innerHTML = `
+      <div class="card-image-wrapper"><img src="${item.thumbnail}" alt="thumbnail" loading="lazy"></div>
+      <div class="card-header">
+        <div class="source-logo-name">
+          ${source.logo ? `<img src="${source.logo}" alt="${source.name}" onerror="this.style.display='none';">` : ''}
+          <span>${source.name}</span>
+        </div>
+        <div class="timestamp">${timeString}</div>
       </div>
-    </div>`;
-}
+      <div class="card-content">
+        <h2>${truncateWords(item.title, 14)}</h2>
+        <div class="full-content">
+          ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
+          <a href="${item.link}" class="read-more" target="_blank" rel="noopener">
+            Read full article <i class='bx bx-right-arrow-alt'></i>
+          </a>
+        </div>
+      </div>`;
 
-card.className = hasImage ? "card" : "card no-image";
-card.dataset.id = id;
-card.dataset.source = source.name;
-
-card.innerHTML = `
-  ${imageSection}
-  <div class="card-header">
-    <div class="source-logo-name">
-      ${source.logo ? `<img src="${source.logo}" alt="${source.name}" onerror="this.style.display='none';">` : ''}
-      <span>${source.name}</span>
-    </div>
-    <div class="timestamp">${timeString}</div>
-  </div>
-  <div class="card-content">
-    <h2>${truncateWords(item.title, 14)}</h2>
-    <div class="full-content">
-      ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
-      <a href="${item.link}" class="read-more" target="_blank" rel="noopener">
-        Read full article <i class='bx bx-right-arrow-alt'></i>
-      </a>
-    </div>
-  </div>`;
-
-
-
+    // Only allow one expanded card at a time
     card.addEventListener("click", (e) => {
       if (e.target.tagName === "A") return;
       const expanded = document.querySelector(".card.expanded");
@@ -455,102 +367,113 @@ card.innerHTML = `
     return { ...item, card, id };
   }
 
-  function renderFeed() {
-    feedContainer.innerHTML = '';
-    const filtered = state.articles.filter(a =>
-      state.filters.source === 'all' || a.card.dataset.source === state.filters.source
-    );
+function renderFeed() {
+  feedContainer.innerHTML = '';
+  const filtered = state.articles.filter(a =>
+    state.filters.source === 'all' || a.card.dataset.source === state.filters.source
+  );
 
-    if (filtered.length === 0) {
-      feedContainer.innerHTML = `
-        <div class="empty-state">
-          <i class='bx bx-news'></i>
-          <p>No stories.</p>
-          <span>Try refreshing.</span>
-        </div>`;
-      return;
-    }
-
-    filtered
-      .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
-      .forEach(({ card }) => feedContainer.appendChild(card));
-
-    applyDynamicCardColors();
+  if (filtered.length === 0) {
+    feedContainer.innerHTML = `
+      <div class="empty-state">
+        <i class='bx bx-news'></i>
+        <p>No stories.</p>
+        <span>Try refreshing.</span>
+      </div>`;
+    return;
   }
 
-  function applyDynamicCardColors() {
-    const colorThief = new ColorThief();
-    const cards = document.querySelectorAll('.card img');
+  filtered
+    .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
+    .forEach(({ card }) => feedContainer.appendChild(card));
 
-    cards.forEach(img => {
-      if (img.complete) setColor(img);
-      else img.addEventListener('load', () => setColor(img));
-    });
+  // Apply dynamic card background colours
+  applyDynamicCardColors();
+}
 
-    function setColor(img) {
+function applyDynamicCardColors() {
+  const colorThief = new ColorThief();
+  const cards = document.querySelectorAll('.card img');
+
+  cards.forEach(img => {
+    if (img.complete) setColor(img);
+    else img.addEventListener('load', () => setColor(img));
+  });
+
+  function setColor(img) {
+    try {
+      const [r, g, b] = colorThief.getColor(img);
+      const [adjR, adjG, adjB] = adjustForContrast(r, g, b);
+
+      const gradient = `
+        linear-gradient(180deg, rgba(${adjR},${adjG},${adjB},0.95) 0%, 
+        rgba(${Math.max(adjR - 25, 0)},${Math.max(adjG - 25, 0)},${Math.max(adjB - 25, 0)},0.9) 100%)
+      `;
+      img.closest('.card').style.background = gradient;
+    } catch (err) {
+      console.warn('Color extraction failed for', img.src, err);
+    }
+  }
+
+  // Ensure extracted color is dark enough for light text
+  function adjustForContrast(r, g, b) {
+    // Convert to perceived brightness (0–255 scale)
+    let brightness = (0.299 * r + 0.587 * g + 0.114 * b);
+
+    // If brightness is too high, darken proportionally
+    if (brightness > 160) {
+      const factor = 160 / brightness;
+      r = Math.round(r * factor);
+      g = Math.round(g * factor);
+      b = Math.round(b * factor);
+    }
+
+    // Optionally desaturate overly vivid colors slightly for smoother look
+    const avg = (r + g + b) / 3;
+    r = Math.round((r + avg) / 2);
+    g = Math.round((g + avg) / 2);
+    b = Math.round((b + avg) / 2);
+
+    return [r, g, b];
+  }
+}
+
+function generatePlaceholderFromLogoColor(logoUrl, sourceName) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = logoUrl;
+
+    img.onload = () => {
       try {
+        const colorThief = new ColorThief();
         const [r, g, b] = colorThief.getColor(img);
-        const [adjR, adjG, adjB] = adjustForContrast(r, g, b);
-        const gradient = `
-          linear-gradient(180deg, rgba(${adjR},${adjG},${adjB},0.95) 0%, 
-          rgba(${Math.max(adjR - 25, 0)},${Math.max(adjG - 25, 0)},${Math.max(adjB - 25, 0)},0.9) 100%)
-        `;
-        img.closest('.card').style.background = gradient;
-		const card = img.closest('.card');
-		if (card.classList.contains('no-image')) {
-		  card.style.background = `
-			linear-gradient(180deg, rgba(${adjR},${adjG},${adjB},0.8) 0%,
-			rgba(${Math.max(adjR - 40, 0)},${Math.max(adjG - 40, 0)},${Math.max(adjB - 40, 0)},0.95) 100%)`;
-		}
 
+        // Darken the extracted colour further for richer contrast
+        const darken = 0.55; // lower = darker, try 0.45–0.65 for tuning
+        const dr = Math.round(r * darken);
+        const dg = Math.round(g * darken);
+        const db = Math.round(b * darken);
+
+        // Convert to hex
+        const bgColor = `${dr.toString(16).padStart(2, '0')}${dg
+          .toString(16)
+          .padStart(2, '0')}${db.toString(16).padStart(2, '0')}`;
+
+        const text = encodeURIComponent(sourceName);
+        resolve(`https://placehold.co/800x400/${bgColor}/ffffff?text=${text}`);
       } catch (err) {
-        console.warn('Color extraction failed for', img.src, err);
-      }
-    }
-
-    function adjustForContrast(r, g, b) {
-      let brightness = (0.299 * r + 0.587 * g + 0.114 * b);
-      if (brightness > 160) {
-        const factor = 160 / brightness;
-        r = Math.round(r * factor);
-        g = Math.round(g * factor);
-        b = Math.round(b * factor);
-      }
-      const avg = (r + g + b) / 3;
-      r = Math.round((r + avg) / 2);
-      g = Math.round((g + avg) / 2);
-      b = Math.round((b + avg) / 2);
-      return [r, g, b];
-    }
-  }
-
-  function generatePlaceholderFromLogoColor(logoUrl, sourceName) {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.crossOrigin = 'Anonymous';
-      img.src = logoUrl;
-      img.onload = () => {
-        try {
-          const colorThief = new ColorThief();
-          const [r, g, b] = colorThief.getColor(img);
-          const darken = 0.55;
-          const dr = Math.round(r * darken);
-          const dg = Math.round(g * darken);
-          const db = Math.round(b * darken);
-          const bgColor = `${dr.toString(16).padStart(2, '0')}${dg
-            .toString(16)
-            .padStart(2, '0')}${db.toString(16).padStart(2, '0')}`;
-          const text = encodeURIComponent(sourceName);
-          resolve(`https://placehold.co/800x400/${bgColor}/ffffff?text=${text}`);
-        } catch (err) {
-          resolve(`https://placehold.co/800x400/1f1f1f/ffffff?text=${encodeURIComponent(sourceName)}`);
-        }
-      };
-      img.onerror = () => {
+        console.warn('ColorThief failed for logo:', logoUrl, err);
         resolve(`https://placehold.co/800x400/1f1f1f/ffffff?text=${encodeURIComponent(sourceName)}`);
-      };
-    });
-  }
+      }
+    };
+
+    img.onerror = () => {
+      resolve(`https://placehold.co/800x400/1f1f1f/ffffff?text=${encodeURIComponent(sourceName)}`);
+    };
+  });
+}
+
 
   function buildSourceScroller(sources) {
     sourceScroller.innerHTML = '';
@@ -584,8 +507,8 @@ card.innerHTML = `
   async function loadFeed(source) {
     const cachedUrl = `https://rss-proxy.davidbusch-02.workers.dev/cached?url=${encodeURIComponent(source.url)}`;
     const liveUrl   = `https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`;
-    let data = null;
 
+    let data = null;
     try {
       const cachedRes = await fetch(cachedUrl);
       if (cachedRes.ok) data = await cachedRes.json();
@@ -598,24 +521,14 @@ card.innerHTML = `
     if (!data.items) return;
 
     for (const item of data.items) {
-      if (!item.thumbnail) {
-        item.thumbnail = await generatePlaceholderFromLogoColor(source.logo, source.name);
-      }
+        if (!item.thumbnail) {
+          item.thumbnail =
+            await generatePlaceholderFromLogoColor(source.logo, source.name);
+    }
+
+
       const entry = createCard(item, source);
       if (entry) state.articles.push(entry);
-    }
-  }
-
-  // Try cached feed instantly
-  const saved = localStorage.getItem('feedCache');
-  const savedAt = localStorage.getItem('feedTimestamp');
-  if (saved && savedAt && Date.now() - savedAt < 1000 * 60 * 30) {
-    try {
-      state.articles = JSON.parse(saved);
-      renderFeed();
-      console.log("Loaded feed from local cache");
-    } catch (e) {
-      console.warn("Local cache corrupted, refetching");
     }
   }
 
@@ -632,11 +545,9 @@ card.innerHTML = `
       const feedData = await feedRes.json();
       state.allSources = Object.values(feedData).flat();
       buildSourceScroller(state.allSources);
+
       await Promise.all(state.allSources.map(loadFeed));
       renderFeed();
-      localStorage.setItem('feedCache', JSON.stringify(state.articles));
-      localStorage.setItem('feedTimestamp', Date.now());
-      showToast();
     } catch (err) {
       feedContainer.innerHTML = `
         <div class="empty-state">
@@ -647,29 +558,31 @@ card.innerHTML = `
     }
   }
 
-  document.getElementById('refreshBtn').addEventListener('click', async () => {
-    const icon = document.querySelector('#refreshBtn i');
-    icon.classList.add('bx-spin-reverse');
-    await loadAllFeeds();
-    icon.classList.remove('bx-spin-reverse');
-  });
+document.getElementById('refreshBtn').addEventListener('click', async () => {
+  const icon = document.querySelector('#refreshBtn i');
+  icon.classList.add('bx-spin-reverse'); // spin counter-clockwise
+  await loadAllFeeds();
+  icon.classList.remove('bx-spin-reverse');
+});
 
-  document.getElementById('backToTopBtn').addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+document.getElementById('backToTopBtn').addEventListener('click', () => {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+});
 
-  const backToTopBtn = document.getElementById('backToTopBtn');
-  window.addEventListener('scroll', () => {
-    backToTopBtn.style.opacity = window.scrollY > 400 ? '1' : '0';
-    backToTopBtn.style.pointerEvents = window.scrollY > 400 ? 'auto' : 'none';
-  });
-  backToTopBtn.style.transition = 'opacity 0.3s ease';
-  backToTopBtn.style.opacity = '0';
-  backToTopBtn.style.pointerEvents = 'none';
+const backToTopBtn = document.getElementById('backToTopBtn');
+window.addEventListener('scroll', () => {
+  backToTopBtn.style.opacity = window.scrollY > 400 ? '1' : '0';
+  backToTopBtn.style.pointerEvents = window.scrollY > 400 ? 'auto' : 'none';
+});
+backToTopBtn.style.transition = 'opacity 0.3s ease';
+backToTopBtn.style.opacity = '0';
+backToTopBtn.style.pointerEvents = 'none';
+
 
   loadAllFeeds();
+  
+ 
 </script>
-
 <script src="https://unpkg.com/colorthief/dist/color-thief.umd.js"></script>
 
 
