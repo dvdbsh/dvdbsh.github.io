@@ -3,6 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
   <title>London News</title>
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="favicon.ico">
@@ -18,18 +20,18 @@
       --bg: #292a2d;
     }
     * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      font-family: 'Nunito', sans-serif;
-      background: var(--bg);
-      color: #fff;
-      margin: 0;
-      padding: 0 1.5rem;
-    }
-	body {
-	  /* Ensure the frosted footer can extend into the safe area */
-	  padding-bottom: env(safe-area-inset-bottom);
-	}	
+html, body {
+  height: 100%;
+}
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: #fff;
+  margin: 0;
+  padding: env(safe-area-inset-top) 1.5rem env(safe-area-inset-bottom);
+  /* This ensures the frosted footer and translucent status bar blend cleanly */
+}
 
     /* Top title/date (optional, keep if you like) */
     .page-top {
