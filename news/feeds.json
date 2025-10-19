@@ -12,7 +12,7 @@
     },
     {
       "name": "CTV News",
-      "url": "https://news.google.com/rss/search?q=site:https://www.ctvnews.ca/london/",
+      "url": "https://news.google.com/rss/search?q=site:https://www.ctvnews.ca/london/+when:7d&hl=en-CA&gl=CA&ceid=CA:en",
       "logo": "images/logos/ctv.png"
     },		
     {
@@ -22,17 +22,17 @@
     },
     {
       "name": "City of London Newsroom",
-      "url": "https://news.google.com/rss/search?q=site:https://london.ca/newsroom",
+      "url": "https://news.google.com/rss/search?q=site:https://london.ca/newsroom+when:7d&hl=en-CA&gl=CA&ceid=CA:en",
       "logo": "images/logos/CoL.png"
     },	
     {
       "name": "London Police Service",
-      "url": "https://news.google.com/rss/search?q=site:https://x.com/lpsmediaoffice",
+      "url": "https://news.google.com/rss/search?q=site:https://x.com/lpsmediaoffice+when:7d&hl=en-CA&gl=CA&ceid=CA:en",
       "logo": "images/logos/lps.png"
     },
     {
       "name": "London Fire Department",
-      "url": "https://news.google.com/rss/search?q=site:https://x.com/LdnOntFire",
+      "url": "https://news.google.com/rss/search?q=site:https://x.com/LdnOntFire+when:7d&hl=en-CA&gl=CA&ceid=CA:en",
       "logo": "images/logos/lfd.png"
     }	
   ]
