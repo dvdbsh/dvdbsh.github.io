@@ -130,12 +130,39 @@
   /* =========================================================
      FEED GRID
   ========================================================= */
+.feed {
+  /* Masonry via CSS columns */
+  column-width: 340px;        /* target column width */
+  column-gap: 1.5rem;         /* same spacing you already use */
+  padding-bottom: 150px;
+}
+
+@supports not (grid-template-rows: masonry) {
   .feed {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 1.5rem;
-    padding-bottom: 150px;
+    display: masonry;
+    column-gap: 1.5rem;
   }
+  .card {
+    break-inside: avoid;
+    margin-bottom: 1.5rem;
+  }
+}
+/* Make cards flow inside columns like masonry items */
+.card {
+  display: inline-block;      /* required for column masonry */
+  width: 100%;
+  margin: 0 0 1.5rem;         /* vertical gap between items */
+  vertical-align: top;
+  transition: transform 0.25s ease, opacity 0.25s ease; /* optional nicety */
+}
+
+.card { break-inside: avoid; }  /* prevent splitting across columns */
+
+/* Optional: tighten single-column on very small screens */
+@media (max-width: 700px) {
+  .feed { column-width: 320px; }
+}
+
 
   /* =========================================================
      CARD BASE STYLES
@@ -149,7 +176,6 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    max-height: 340px;
     cursor: pointer;
 
     /* fixes gradient stretching */
@@ -172,9 +198,9 @@
 }
 
 
-  .card.no-image .card-content {
-    padding: 1.5rem 1rem 1rem; /* pushes text below header */
-  }
+.card.no-image .card-content {
+  padding: 1rem;
+}
 
   /* =========================================================
      IMAGE WRAPPER
@@ -193,15 +219,7 @@
     display: block;
   }
 
-  .card-image-wrapper::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background:
-      radial-gradient(circle at top left, rgba(25,25,25,0.8), transparent 55%),
-      radial-gradient(circle at top right, rgba(25,25,25,0.8), transparent 55%);
-    pointer-events: none;
-  }
+
 
 	/* =========================================================
 	   CARD GRADIENT OVERLAY (dynamic darker-to-transparent layer)
@@ -601,9 +619,24 @@ card.innerHTML = `
       return;
     }
 
-    filtered
-      .sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate))
-      .forEach(({ card }) => feedContainer.appendChild(card));
+// Sort newest → oldest
+const sorted = filtered.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
+
+// Create a new array that simulates left→right, top→bottom reading order
+const columns = Math.max(1, Math.floor(feedContainer.offsetWidth / 360));
+
+const ordered = [];
+
+for (let i = 0; i < sorted.length; i++) {
+  const colIndex = i % columns;
+  const rowIndex = Math.floor(i / columns);
+  if (!ordered[rowIndex]) ordered[rowIndex] = [];
+  ordered[rowIndex][colIndex] = sorted[i];
+}
+
+// Flatten row-major order into a single array
+ordered.flat().forEach(item => feedContainer.appendChild(item.card));
+
 
     applyDynamicCardColors();
   }
