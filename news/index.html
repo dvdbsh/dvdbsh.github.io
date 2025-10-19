@@ -449,12 +449,7 @@
   font-size: 2.8rem;
   flex-shrink: 0;
   position: relative;
-  top: 0.15rem;
-  filter:
-    drop-shadow(2px 2px 0 #e8eeff)
-    drop-shadow(-2px 2px 0 #e8eeff)
-    drop-shadow(2px -2px 0 #e8eeff)
-    drop-shadow(-2px -2px 0 #e8eeff)
+  top: 0.5rem;
 }
 
 
@@ -735,7 +730,7 @@ card.innerHTML = `
   </div>
 <div class="card-content">
   <div class="topic-title">
-    <h2>${truncateWords(item.title, 18)}</h2>
+    <h2>${truncateWords(item.title, 15)}</h2>
     <span class="emoji">${emoji}</span>
   </div>
   
