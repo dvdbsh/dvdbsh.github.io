@@ -321,27 +321,7 @@
     }
   }
   
-  async function getOpenGraphImage(url) {
-  try {
-    const res = await fetch(`https://rss-proxy.davidbusch-02.workers.dev/fetch?url=${encodeURIComponent(url)}`);
-    const html = await res.text();
-
-    const match = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i);
-    if (match && match[1]) {
-      return match[1];
-    }
-
-    // fallback to twitter:image if present
-    const tw = html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i);
-    if (tw && tw[1]) {
-      return tw[1];
-    }
-  } catch (err) {
-    console.warn("Failed to fetch OG image:", err);
-  }
-  return null;
-}
-
+  
 
   function createCard(item, source) {
     const id = btoa(item.link);
@@ -456,6 +436,41 @@ function applyDynamicCardColors() {
   }
 }
 
+function generatePlaceholderFromLogoColor(logoUrl, sourceName) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = logoUrl;
+
+    img.onload = () => {
+      try {
+        const colorThief = new ColorThief();
+        const [r, g, b] = colorThief.getColor(img);
+
+        // Darken the extracted colour further for richer contrast
+        const darken = 0.55; // lower = darker, try 0.45–0.65 for tuning
+        const dr = Math.round(r * darken);
+        const dg = Math.round(g * darken);
+        const db = Math.round(b * darken);
+
+        // Convert to hex
+        const bgColor = `${dr.toString(16).padStart(2, '0')}${dg
+          .toString(16)
+          .padStart(2, '0')}${db.toString(16).padStart(2, '0')}`;
+
+        const text = encodeURIComponent(sourceName);
+        resolve(`https://placehold.co/800x400/${bgColor}/ffffff?text=${text}`);
+      } catch (err) {
+        console.warn('ColorThief failed for logo:', logoUrl, err);
+        resolve(`https://placehold.co/800x400/1f1f1f/ffffff?text=${encodeURIComponent(sourceName)}`);
+      }
+    };
+
+    img.onerror = () => {
+      resolve(`https://placehold.co/800x400/1f1f1f/ffffff?text=${encodeURIComponent(sourceName)}`);
+    };
+  });
+}
 
 
   function buildSourceScroller(sources) {
@@ -505,13 +520,12 @@ function applyDynamicCardColors() {
 
     for (const item of data.items) {
         if (!item.thumbnail) {
-          // Try fetching OG image from article
-          const ogImage = await getOpenGraphImage(item.link);
+          // Try to generate a branded placeholder based on logo colour
+          const placeholder = await generatePlaceholderFromLogoColor(source.logo, source.name);
           item.thumbnail =
-            ogImage ||
             (await getPexelsImage(item.title)) ||
-            `https://placehold.co/800x400?text=${encodeURIComponent(source.name)}`;
-        }
+            placeholder;
+    }
 
       const entry = createCard(item, source);
       if (entry) state.articles.push(entry);
