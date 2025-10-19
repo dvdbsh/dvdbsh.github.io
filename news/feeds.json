@@ -12,7 +12,7 @@
     },
     {
       "name": "CTV News",
-      "url": "https://news.google.com/rss/search?q=London+Ontario&hl=en-CA&gl=CA&ceid=CA:en",
+      "url": "https://news.google.com/rss/search?q=site:https://www.ctvnews.ca/london/+when:7d&hl=en-CA&gl=CA&ceid=CA:en",
       "logo": "images/logos/ctv.png"
     },		
     {
@@ -29,6 +29,11 @@
       "name": "London Police Service",
       "url": "https://news.google.com/rss/search?q=site:https://x.com/lpsmediaoffice+when:7d&hl=en-CA&gl=CA&ceid=CA:en",
       "logo": "images/logos/lps.png"
-    }
+    },
+    {
+      "name": "London Fire Department",
+      "url": "https://news.google.com/rss/search?q=site:https://x.com/LdnOntFire+when:7d&hl=en-CA&gl=CA&ceid=CA:en",
+      "logo": "images/logos/lfd.png"
+    }	
   ]
 }
