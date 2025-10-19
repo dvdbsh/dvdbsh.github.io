@@ -116,29 +116,20 @@ body {
       max-height: 340px;
       cursor: pointer;
     }
-	.card.no-image {
-	  height: 210px;
-	  background: linear-gradient(
-		180deg,
-		rgba(60, 60, 60, 0.85) 0%,
-		rgba(30, 30, 30, 0.95) 100%
-	  );
-	  display: flex;
-	  flex-direction: column;
-	  justify-content: flex-end;
-	  position: relative;
-	}
+/* Same layout as normal cards, we just paint a gradient slab in the image area */
+.card.no-image .card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 210px;          /* matches image cards */
+  overflow: hidden;
+}
 
-	.card.no-image .card-header {
-	  position: relative;
-	  background: none;
-	  padding: 0.6rem 1rem;
-	}
+.noimg-bg {
+  position: absolute;
+  inset: 0;
+  /* gradient is set inline from JS */
+}
 
-	.card.no-image .card-content {
-	  background: transparent;
-	  padding: 1rem;
-	}
 	
     .card.expanded { max-height: 1000px; }
 
@@ -387,38 +378,71 @@ body {
     card.dataset.id = id;
     card.dataset.source = source.name;
 
-	const hasImage = item.thumbnail && !item.thumbnail.includes('placehold.co');
-	let imageSection = '';
+// helpers for colours
+function hexToRgb(hex) {
+  const m = (hex || '').replace('#','').match(/^([0-9a-f]{6})$/i);
+  if (!m) return [31,31,31]; // safe fallback
+  const int = parseInt(m[1], 16);
+  return [(int >> 16) & 255, (int >> 8) & 255, int & 255];
+}
+function darken([r,g,b], by = 35) {
+  return [Math.max(r - by, 0), Math.max(g - by, 0), Math.max(b - by, 0)];
+}
 
-	if (hasImage) {
-	  imageSection = `
-		<div class="card-image-wrapper">
-		  <img src="${item.thumbnail}" alt="thumbnail" loading="lazy">
-		</div>`;
-	}
+const hasImage = item.thumbnail && !item.thumbnail.includes('placehold.co');
 
-	card.className = hasImage ? "card" : "card no-image";
-	card.dataset.id = id;
-	card.dataset.source = source.name;
+// If this item used our placeholder URL, extract the hex to drive the top colour
+let topRGB = [31,31,31];
+if (!hasImage && item.thumbnail && item.thumbnail.includes('placehold.co')) {
+  // URL format: .../800x400/<HEX>/ffffff?text=...
+  const parts = item.thumbnail.split('/');
+  const hex = parts[parts.length - 2]; // the HEX segment
+  topRGB = hexToRgb(hex);
+}
+const bottomRGB = darken(topRGB, 45);
 
-	card.innerHTML = `
-	  ${imageSection}
-	  <div class="card-header">
-		<div class="source-logo-name">
-		  ${source.logo ? `<img src="${source.logo}" alt="${source.name}" onerror="this.style.display='none';">` : ''}
-		  <span>${source.name}</span>
-		</div>
-		<div class="timestamp">${timeString}</div>
-	  </div>
-	  <div class="card-content">
-		<h2>${truncateWords(item.title, 14)}</h2>
-		<div class="full-content">
-		  ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
-		  <a href="${item.link}" class="read-more" target="_blank" rel="noopener">
-			Read full article <i class='bx bx-right-arrow-alt'></i>
-		  </a>
-		</div>
-	  </div>`;
+let imageSection = '';
+if (hasImage) {
+  imageSection = `
+    <div class="card-image-wrapper">
+      <img src="${item.thumbnail}" alt="thumbnail" loading="lazy">
+    </div>`;
+} else {
+  imageSection = `
+    <div class="card-image-wrapper">
+      <div class="noimg-bg"
+           style="background: linear-gradient(
+             180deg,
+             rgba(${topRGB[0]},${topRGB[1]},${topRGB[2]},0.92) 0%,
+             rgba(${bottomRGB[0]},${bottomRGB[1]},${bottomRGB[2]},0.96) 100%
+           );">
+      </div>
+    </div>`;
+}
+
+card.className = hasImage ? "card" : "card no-image";
+card.dataset.id = id;
+card.dataset.source = source.name;
+
+card.innerHTML = `
+  ${imageSection}
+  <div class="card-header">
+    <div class="source-logo-name">
+      ${source.logo ? `<img src="${source.logo}" alt="${source.name}" onerror="this.style.display='none';">` : ''}
+      <span>${source.name}</span>
+    </div>
+    <div class="timestamp">${timeString}</div>
+  </div>
+  <div class="card-content">
+    <h2>${truncateWords(item.title, 14)}</h2>
+    <div class="full-content">
+      ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
+      <a href="${item.link}" class="read-more" target="_blank" rel="noopener">
+        Read full article <i class='bx bx-right-arrow-alt'></i>
+      </a>
+    </div>
+  </div>`;
+
 
 
     card.addEventListener("click", (e) => {
