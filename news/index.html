@@ -426,6 +426,40 @@
     font-size: 1rem;
     color: #aeafb1;
   }
+  
+.topic-title {
+  display: flex;
+  align-items: flex-end;       /* top align the sticker with the title */
+  gap: 0.6rem;
+  margin-bottom: 0.4rem;
+}
+
+.topic-title h2 {
+  margin: 0;
+  flex: 1;                       /* lets title wrap beside the emoji */
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fff;
+  line-height: 1.3;
+  word-break: break-word;
+}
+
+/* Sticker-style emoji */
+.topic-title .emoji {
+  font-size: 2.8rem;
+  flex-shrink: 0;
+  position: relative;
+  top: 0.15rem;
+  filter:
+    drop-shadow(2px 2px 0 #e8eeff)
+    drop-shadow(-2px 2px 0 #e8eeff)
+    drop-shadow(2px -2px 0 #e8eeff)
+    drop-shadow(-2px -2px 0 #e8eeff)
+}
+
+
+
+  
 </style>
 
 </head>
@@ -530,6 +564,117 @@
     if (diff === oneDay) return `Yesterday • ${time}`;
     return date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
   }
+  
+// =========================================================
+// SMART TOPIC + EMOJI MAPPING (London News edition)
+// =========================================================
+const TOPIC_EMOJIS = {
+  "sports": "🏒",
+  "crime": "🚔",
+  "health": "🏥",
+  "politics": "🏛️",
+  "education": "🎓",
+  "weather": "🌧️",
+  "local": "🏙️",
+  "business": "💼",
+  "culture": "🎨",
+  "arts": "🎭",
+  "entertainment": "🎬",
+  "science": "🔬",
+  "technology": "💻",
+  "environment": "🌿",
+  "power": "⚡",
+  "future": "🔮",
+  "food": "🍽️",
+  "animals": "🐾",
+  "transportation": "🚗",
+  "housing": "🏠",
+  "fire": "🔥",
+  "event": "🎪",
+  "community": "🤝",
+  "finance": "💰",
+  "crime_police": "🚨",
+  "religion": "⛪",
+  "default": "📰"
+};
+
+
+// =========================================================
+// INTELLIGENT TOPIC INFERENCE (based on article title)
+// =========================================================
+function inferTopic(item) {
+  const title = (item.title || "").toLowerCase();
+
+  // SPORTS
+  if (title.match(/\b(jays|leafs|knights|ohl|game|score|win|loss|goal|team|mustangs|hockey|football|sports|marathon|championship|argonauts|stampeders|bullpen)\b/))
+    return "sports";
+
+  // CRIME & POLICE
+  if (title.match(/\b(police|charged|arrest|investigation|shooting|murder|stabbing|suspect|opp|court|crime|assault|collision|crash|impaired|drugs|seized|trafficking|homicide|break-and-enter|wanted|fentanyl|charges)\b/))
+    return "crime";
+
+  // HEALTH
+  if (title.match(/\b(hospital|covid|health|mental|care|patient|doctor|nurse|disease|illness|virus|vaccine|measles|outbreak|clinic|wellness|medical)\b/))
+    return "health";
+
+  // POLITICS / GOVERNMENT
+  if (title.match(/\b(mayor|council|election|government|politics|minister|city hall|funding|budget|policy|federal|provincial|politician|bill|legislation|mp|mpp|parliament)\b/))
+    return "politics";
+
+  // EDUCATION / TECH TRENDS
+  if (title.match(/\b(school|student|college|university|teacher|education|principal|tiktok|social media|online safety|copycat|trend|cyber|technology|internet|digital|ai|artificial intelligence)\b/))
+    return "education";
+
+  // WEATHER / ENVIRONMENT / CLIMATE
+  if (title.match(/\b(storm|snow|rain|weather|forecast|sunny|temperature|wind|climate|environment|wildfire|heatwave|tree|planting|seedling|ltvca|conservation|forest|green|sustainability|carbon)\b/))
+    return "environment";
+
+  // BUSINESS / ECONOMY / JOBS
+  if (title.match(/\b(business|bank|market|job|economy|investment|funding|profit|company|employment|layoff|money|financial|goods|manufacturing|shelves|locally-made|trade)\b/))
+    return "business";
+
+  // CULTURE / ARTS / ENTERTAINMENT / BOOKS
+  if (title.match(/\b(festival|concert|art|music|movie|film|show|performance|theatre|gallery|culture|comedy|book|author|write|media|tv|series|drama|entertainment|creative|comics|literature)\b/))
+    return "culture";
+
+  // FOOD
+  if (title.match(/\b(food|restaurant|menu|chef|dine|eatery|coffee|chocolate|drink|cafe|bake|culinary)\b/))
+    return "food";
+
+  // COMMUNITY / EVENTS / CHARITY
+  if (title.match(/\b(local|london|londoner|londoners|downtown|community|neighbourhood|event|festival|fundraiser|volunteer|giveaway|donation|motionball|charity|campaign|rally|initiative|celebrate|coat|goodwill)\b/))
+    return "community";
+
+  // FIRE / EMERGENCY
+  if (title.match(/\b(fire|blaze|rescue|structure fire|house fire|burned|flames|crews dispatched)\b/))
+    return "fire";
+
+  // HOUSING / DEVELOPMENT / INFRASTRUCTURE
+  if (title.match(/\b(housing|rent|condo|home|apartment|real estate|development|construction|affordable|project|building|loophole)\b/))
+    return "housing";
+
+  // TRANSPORTATION / BORDER / TRAVEL
+  if (title.match(/\b(road|highway|traffic|train|transit|bus|closure|border|airport|customs|travel|passport|inspection|flight)\b/))
+    return "transportation";
+
+  // SCIENCE / TECHNOLOGY / FUTURE
+  if (title.match(/\b(science|research|innovation|ai|artificial intelligence|technology|robot|future|data|digital|device|cyber)\b/))
+    return title.includes("future") ? "future" : "technology";
+
+  // ANIMALS / WILDLIFE
+  if (title.match(/\b(animal|dog|cat|wildlife|bird|pet|swan|zoo|species)\b/))
+    return "animals";
+
+  // RELIGION / FAITH
+  if (title.match(/\b(church|temple|faith|religion|mosque|prayer)\b/))
+    return "religion";
+
+  return "default";
+}
+
+
+
+  
 
   async function getPexelsImage(query) {
     try {
@@ -550,6 +695,13 @@
 
     item.pubDate ||= item.isoDate || item.published || item.date || new Date().toISOString();
     const timeString = formatArticleDate(item.pubDate);
+	
+	// infer topic + emoji
+	const topic = inferTopic(item);
+	const emoji = TOPIC_EMOJIS[topic] || TOPIC_EMOJIS.default;
+	item.topic = topic;
+	item.emoji = emoji;
+	
 
     const card = document.createElement("div");
     card.className = "card";
@@ -581,15 +733,20 @@ card.innerHTML = `
     </div>
     <div class="timestamp">${timeString}</div>
   </div>
-  <div class="card-content">
-    <h2>${truncateWords(item.title, 14)}</h2>
-    <div class="full-content">
-      ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
-      <a href="${item.link}" class="read-more" target="_blank" rel="noopener">
-        Read full article <i class='bx bx-right-arrow-alt'></i>
-      </a>
-    </div>
-  </div>`;
+<div class="card-content">
+  <div class="topic-title">
+    <h2>${truncateWords(item.title, 18)}</h2>
+    <span class="emoji">${emoji}</span>
+  </div>
+  
+  <div class="full-content">
+    ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
+    <a href="${item.link}" class="read-more" target="_blank" rel="noopener">
+      Read full article <i class='bx bx-right-arrow-alt'></i>
+    </a>
+  </div>
+</div>
+`;
 
 
 
