@@ -227,16 +227,15 @@
   height: 100%;
   background: linear-gradient(
     to top,
-    var(--source-color, #1f1f1f) 0%,
-    color-mix(in srgb, var(--source-color, #1f1f1f) 85%, black 15%) 10%,
-    rgba(0, 0, 0, 0.25) 25%,
-    rgba(0, 0, 0, 0.1) 40%,
-    rgba(0, 0, 0, 0) 60%
+    var(--source-color) 0%,
+    rgba(0, 0, 0, 0) 15%,
+    rgba(0, 0, 0, 0) 35%,
+    rgba(0, 0, 0, 0) 40%,
+    rgba(0, 0, 0, 0) 50%
   );
   pointer-events: none;
   z-index: 1;
 }
-
 
 
 
@@ -250,11 +249,10 @@
   top: 0;
   left: 0;
   right: 0;
-  height: 210px; /* lock gradient to image area height */
+  height: 100%; /* lock gradient to image area height */
   z-index: 0;
 
   background-attachment: fixed;
-  mix-blend-mode: multiply;
   pointer-events: none;
 }
 
@@ -837,29 +835,35 @@ function applyDynamicCardColors() {
       card.style.backgroundColor = sourceColor;
 
       // Overlay darker-to-transparent gradient
-      const overlay = document.createElement("div");
-      overlay.className = "card-gradient-overlay";
-      overlay.style.position = "absolute";
-      overlay.style.inset = "0";
-      overlay.style.pointerEvents = "none";
-if (img.closest('.card') && !img.closest('.card').classList.contains('no-image')) {
-  overlay.style.background = `
-    linear-gradient(to bottom, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0) 35%),
-    linear-gradient(to top, ${darkSourceColor} 0%, rgba(0,0,0,0) 60%)
-  `;
-} else {
-  overlay.style.background = `linear-gradient(180deg, ${darkSourceColor} 0%, rgba(0,0,0,0) 100%)`;
-}
+const overlay = document.createElement("div");
+overlay.className = "card-gradient-overlay";
+overlay.style.position = "absolute";
+overlay.style.left = "0";
+overlay.style.right = "0";
+overlay.style.bottom = "0";
+overlay.style.height = "100%";
 
+overlay.style.pointerEvents = "none";
+overlay.style.background = `
+  linear-gradient(
+    to top,
+    rgba(0,0,0,0.25) 0%,
+    rgba(0,0,0,0.15) 15%,
+    rgba(0,0,0,0.05) 25%,
+    rgba(0,0,0,0) 40%
+  )
+`;
+overlay.style.mixBlendMode = "multiply";
 
-      // Save readable colour variables on the card
-      card.style.setProperty("--source-color", sourceColor);
-      card.style.setProperty("--dark-source-color", darkSourceColor);
+// Save readable colour variables on the card
+card.style.setProperty("--source-color", sourceColor);
+card.style.setProperty("--dark-source-color", darkSourceColor);
 
-      // Remove any previous overlays before adding
-      const oldOverlay = card.querySelector(".card-gradient-overlay");
-      if (oldOverlay) oldOverlay.remove();
-      card.insertBefore(overlay, card.firstChild);
+// Remove any previous overlays before adding
+const oldOverlay = card.querySelector(".card-gradient-overlay");
+if (oldOverlay) oldOverlay.remove();
+card.insertBefore(overlay, card.firstChild);
+
 
 
     } catch (err) {
