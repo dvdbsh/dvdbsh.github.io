@@ -163,7 +163,7 @@ body {
 
 
 /* =========================================================
-   IMAGE WRAPPER + GRADIENT
+   IMAGE WRAPPER + MULTIPLY COLOUR OVERLAY
 ========================================================= */
 .card-image-wrapper {
   position: relative;
@@ -179,24 +179,19 @@ body {
   display: block;
 }
 
-/* smooth image-to-card fade */
+/* Replace the old gradient with a multiply overlay */
 .card-image-wrapper::after {
   content: "";
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  background: linear-gradient(
-    to top,
-    var(--source-color) 0%,
-    var(--source-color) 25%,
-    rgba(0, 0, 0, 0.3) 55%,
-    rgba(0, 0, 0, 0.6) 100%
-  );
+  inset: 0;
+  background: var(--source-color, rgba(0, 0, 0, 0.4));
+  mix-blend-mode: multiply;
   pointer-events: none;
-  z-index: 0;
+  z-index: 1;
 }
+
+
+
 
 
 /* =========================================================
@@ -283,22 +278,27 @@ body {
 .card.expanded .full-content {
   max-height: 400px;
   opacity: 1;
-  margin-top: 0.75rem;
+  margin-top: 1.75rem;
 }
 .read-more {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   margin-top: 1rem;
-  background: var(--button);
-  color: var(--accent);
+  background: var(--dark-source-color, var(--button));
+  color: #fff;
   padding: 0.5rem 1rem;
   text-decoration: none;
   border-radius: 20px;
   font-weight: 700;
   width: fit-content;
   font-size: 1rem;
+  transition: background 0.3s ease, transform 0.2s ease;
 }
+.read-more:hover {
+  background: var(--dark-source-color, #444);
+}
+
 
 /* =========================================================
    TOPIC TITLE
@@ -317,12 +317,18 @@ body {
   color: #fff;
   line-height: 1;
   word-break: break-word;
+    text-shadow:
+    0 0 10px rgba(0,0,0,0.55),
+    0 0 25px rgba(0,0,0,0.45); /* added softer halo */
 }
 .topic-title .emoji {
   font-size: 2.8rem;
   flex-shrink: 0;
   position: relative;
   top: 0.5rem;
+    text-shadow:
+    0 0 10px rgba(0,0,0,0.55),
+    0 0 25px rgba(0,0,0,0.45); /* added softer halo */
 }
 
 /* =========================================================
@@ -494,6 +500,30 @@ header .brand h1 {
     decoded = decoded.replace(/\s+/g, ' ').trim();
     return decoded;
   }
+  
+  function cleanTitle(title, sourceName) {
+  if (!title) return "";
+  return title
+    .replace(new RegExp(`[-|–|:|•]?\\s*${sourceName}\\s*$`, "i"), "")
+    .trim();
+}
+
+function normalizeHeadline(text) {
+  if (!text) return "";
+
+  // Detect if it's mostly uppercase (ignoring numbers & punctuation)
+  const letters = text.replace(/[^a-zA-Z]/g, "");
+  const upperRatio = letters.replace(/[a-z]/g, "").length / (letters.length || 1);
+  
+  // Only fix if the majority is uppercase (e.g., >80%)
+  if (upperRatio > 0.8) {
+    // Convert to lowercase, then capitalize the first letter of each sentence
+    text = text.toLowerCase().replace(/(^\w|\.\s+\w)/g, c => c.toUpperCase());
+  }
+
+  return text;
+}
+
 
   function truncateWords(text, wordLimit) {
     const words = (text || '').trim().split(/\s+/);
@@ -683,7 +713,7 @@ card.innerHTML = `
   </div>
 <div class="card-content">
   <div class="topic-title">
-    <h2>${truncateWords(item.title, 12)}</h2>
+    <h2>${truncateWords(normalizeHeadline(cleanTitle(item.title, source.name)), 12)}</h2>
     <span class="emoji">${emoji}</span>
   </div>
   
@@ -758,7 +788,7 @@ function applyDynamicCardColors() {
   function setColor(img) {
     try {
       const [r, g, b] = colorThief.getColor(img);
-      const [adjR, adjG, adjB] = adjustForContrast(r, g, b);
+      const [adjR, adjG, adjB] = beautifyColor(r, g, b);
 
       // Define readable variables for the two colours
       const sourceColor = `rgb(${adjR}, ${adjG}, ${adjB})`;
@@ -770,56 +800,104 @@ function applyDynamicCardColors() {
       card.style.backgroundColor = sourceColor;
 
       // Overlay darker-to-transparent gradient
-const overlay = document.createElement("div");
-overlay.className = "card-gradient-overlay";
-overlay.style.position = "absolute";
-overlay.style.left = "0";
-overlay.style.right = "0";
-overlay.style.bottom = "0";
-overlay.style.height = "100%";
+      const overlay = document.createElement("div");
+      overlay.className = "card-gradient-overlay";
+      overlay.style.position = "absolute";
+      overlay.style.left = "0";
+      overlay.style.right = "0";
+      overlay.style.bottom = "0";
+      overlay.style.height = "100%";
+      overlay.style.pointerEvents = "none";
+      overlay.style.background = `
+        linear-gradient(
+          to top,
+          rgba(0,0,0,0.20) 0%,
+          rgba(0,0,0,0.05) 25%,
+          rgba(0,0,0,0) 30%
+        )
+      `;
+      overlay.style.mixBlendMode = "multiply";
 
-overlay.style.pointerEvents = "none";
-overlay.style.background = `
-  linear-gradient(
-    to top,
-    rgba(0,0,0,0.20) 0%,
-    rgba(0,0,0,0.05) 25%,
-    rgba(0,0,0,0) 30%
-  )
-`;
-overlay.style.mixBlendMode = "multiply";
+      // Save readable colour variables on the card
+      card.style.setProperty("--source-color", sourceColor);
+      card.style.setProperty("--dark-source-color", darkSourceColor);
 
-// Save readable colour variables on the card
-card.style.setProperty("--source-color", sourceColor);
-card.style.setProperty("--dark-source-color", darkSourceColor);
-
-// Remove any previous overlays before adding
-const oldOverlay = card.querySelector(".card-gradient-overlay");
-if (oldOverlay) oldOverlay.remove();
-card.insertBefore(overlay, card.firstChild);
-
-
-
+      // Remove any previous overlays before adding
+      const oldOverlay = card.querySelector(".card-gradient-overlay");
+      if (oldOverlay) oldOverlay.remove();
+      card.insertBefore(overlay, card.firstChild);
     } catch (err) {
       console.warn("Color extraction failed for", img.src, err);
     }
   }
+} // ✅ properly closes applyDynamicCardColors()
 
-  function adjustForContrast(r, g, b) {
-    let brightness = (0.299 * r + 0.587 * g + 0.114 * b);
-    if (brightness > 160) {
-      const factor = 160 / brightness;
-      r = Math.round(r * factor);
-      g = Math.round(g * factor);
-      b = Math.round(b * factor);
+
+
+// -------------------------------------------------------------
+// Beautify colour helper (keep hue, refine lightness/saturation)
+// -------------------------------------------------------------
+function beautifyColor(r, g, b) {
+  // Convert RGB to HSL
+  r /= 255;
+  g /= 255;
+  b /= 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  let h, s;
+  let l = (max + min) / 2;
+
+  if (max === min) {
+    h = s = 0; // grey
+  } else {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    switch (max) {
+      case r:
+        h = (g - b) / d + (g < b ? 6 : 0);
+        break;
+      case g:
+        h = (b - r) / d + 2;
+        break;
+      case b:
+        h = (r - g) / d + 4;
+        break;
     }
-    const avg = (r + g + b) / 3;
-    r = Math.round((r + avg) / 2);
-    g = Math.round((g + avg) / 2);
-    b = Math.round((b + avg) / 2);
-    return [r, g, b];
+    h /= 6;
   }
+
+  // --- BEAUTIFICATION ---
+  s = Math.min(0.7, s * 1.2); // slightly boost saturation
+  l = Math.min(0.6, l * 1.3); // gently brighten
+
+  // Convert HSL back to RGB
+  const hue2rgb = (p, q, t) => {
+    if (t < 0) t += 1;
+    if (t > 1) t -= 1;
+    if (t < 1 / 6) return p + (q - p) * 6 * t;
+    if (t < 1 / 2) return q;
+    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+    return p;
+  };
+
+  let r2, g2, b2;
+  if (s === 0) {
+    r2 = g2 = b2 = l;
+  } else {
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    const p = 2 * l - q;
+    r2 = hue2rgb(p, q, h + 1 / 3);
+    g2 = hue2rgb(p, q, h);
+    b2 = hue2rgb(p, q, h - 1 / 3);
+  }
+
+  return [
+    Math.round(r2 * 255),
+    Math.round(g2 * 255),
+    Math.round(b2 * 255)
+  ];
 }
+
 
 
   function generatePlaceholderFromLogoColor(logoUrl, sourceName) {
