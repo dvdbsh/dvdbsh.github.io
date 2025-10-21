@@ -13,211 +13,165 @@
   <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
   <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
 <style>
-  /* =========================================================
-     ROOT VARIABLES & GLOBAL RESETS
-  ========================================================= */
-  :root {
-    --accent: #181526;
-    --button: #e8eeff;
-    --surface: #1f1f1f;
-    --bg: #292a2d;
-  }
+/* =========================================================
+   ROOT VARIABLES & GLOBAL RESETS
+========================================================= */
+:root {
+  --accent: #181526;
+  --button: #e8eeff;
+  --surface: #1f1f1f;
+  --bg: #292a2d;
+}
 
-  * {
-    box-sizing: border-box;
-  }
+* { box-sizing: border-box; }
 
-  html, body {
-    height: 100%;
-  }
+html, body { height: 100%; }
 
-  body {
-    font-family: 'Nunito', sans-serif;
-    background: var(--bg);
-    color: #fff;
-    margin: 0;
-    padding: env(safe-area-inset-top) 1.5rem env(safe-area-inset-bottom);
-  }
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--bg);
+  color: #fff;
+  margin: 0;
+  padding: env(safe-area-inset-top) 1.5rem env(safe-area-inset-bottom);
+}
 
-  /* =========================================================
-     PAGE HEADER (Date / Title)
-  ========================================================= */
-  .page-top {
-    padding: 1rem 0 0.25rem;
-  }
+/* =========================================================
+   PAGE HEADER
+========================================================= */
+.page-top {
+  padding: 1rem 0 0.25rem;
+}
+.page-top h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin: 0;
+}
+.page-top .date {
+  opacity: 0.8;
+  font-weight: 900;
+  margin-top: 0.25rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.5rem;
+}
 
-  .page-top h1 {
-    font-size: 1.5rem;
-    font-weight: 800;
-    margin: 0;
-  }
+/* =========================================================
+   SOURCE SCROLLER
+========================================================= */
+.source-scroller-wrapper {
+  overflow-x: auto;
+  margin: 0 -1.5rem 1rem;
+  padding: 0 1.5rem;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.source-scroller-wrapper::-webkit-scrollbar { display: none; }
 
-  .page-top .date {
-    opacity: 0.8;
-    font-weight: 900;
-    margin-top: 0.25rem;
-    margin-bottom: 0.75rem;
-    font-size: 1.5rem;
-  }
+.source-scroller {
+  display: flex;
+  gap: 0.75rem;
+  min-width: max-content;
+}
+.source-scroller::after { content: ""; flex: 0 0 1.5rem; }
 
-  /* =========================================================
-     SOURCE SCROLLER
-  ========================================================= */
-  .source-scroller-wrapper {
-    overflow-x: auto;
-    margin: 0 -1.5rem 1rem;
-    padding: 0 1.5rem;
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-  }
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--surface);
+  border: none;
+  border-radius: 20px;
+  padding: 0.5rem 0.9rem;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: transform 0.06s ease;
+}
+.chip:active { transform: translateY(1px); }
 
-  .source-scroller-wrapper::-webkit-scrollbar {
-    display: none;
-  }
+.chip img, .chip i {
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+.chip i { display: grid; place-items: center; font-size: 1.1rem; }
 
-  .source-scroller {
-    display: flex;
-    gap: 0.75rem;
-    min-width: max-content;
-  }
+.chip.active {
+  background-color: #292a2d;
+  box-shadow: 0 0 0 2px #1f1f1f inset;
+}
 
-  .source-scroller::after {
-    content: "";
-    flex: 0 0 1.5rem;
-  }
-
-  .chip {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    background: var(--surface);
-    border: none;
-    border-radius: 20px;
-    padding: 0.5rem 0.9rem;
-    font-weight: 700;
-    font-size: 0.95rem;
-    color: #fff;
-    white-space: nowrap;
-    cursor: pointer;
-    transition: transform 0.06s ease;
-  }
-
-  .chip:active {
-    transform: translateY(1px);
-  }
-
-  .chip img,
-  .chip i {
-    height: 28px;
-    width: 28px;
-    border-radius: 50%;
-    object-fit: contain;
-    display: block;
-    flex-shrink: 0;
-  }
-
-  .chip i {
-    display: grid;
-    place-items: center;
-    font-size: 1.1rem;
-  }
-
-  .chip.active {
-    background-color: #292a2d;
-    box-shadow: 0 0 0 2px #1f1f1f inset;
-  }
-
-  /* =========================================================
-     FEED GRID
-  ========================================================= */
+/* =========================================================
+   FEED GRID (CSS Masonry)
+========================================================= */
 .feed {
-  /* Masonry via CSS columns */
-  column-width: 340px;        /* target column width */
-  column-gap: 1.5rem;         /* same spacing you already use */
+  column-width: 340px;
+  column-gap: 1.5rem;
   padding-bottom: 150px;
 }
-
 @supports not (grid-template-rows: masonry) {
-  .feed {
-    display: masonry;
-    column-gap: 1.5rem;
-  }
-  .card {
-    break-inside: avoid;
-    margin-bottom: 1.5rem;
-  }
+  .feed { display: masonry; column-gap: 1.5rem; }
+  .card { break-inside: avoid; margin-bottom: 1.5rem; }
 }
-/* Make cards flow inside columns like masonry items */
 .card {
-  display: inline-block;      /* required for column masonry */
+  display: inline-block;
   width: 100%;
-  margin: 0 0 1.5rem;         /* vertical gap between items */
+  margin: 0 0 1.5rem;
   vertical-align: top;
-  transition: transform 0.25s ease, opacity 0.25s ease; /* optional nicety */
+  transition: transform 0.25s ease, opacity 0.25s ease;
+  break-inside: avoid;
 }
-
-.card { break-inside: avoid; }  /* prevent splitting across columns */
-
-/* Optional: tighten single-column on very small screens */
 @media (max-width: 700px) {
   .feed { column-width: 320px; }
 }
 
+/* =========================================================
+   CARD BASE
+========================================================= */
+.card {
+  background: var(--surface);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  transition: max-height 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  cursor: pointer;
+  background-size: 100% 340px;
+  background-repeat: no-repeat;
+  background-position: top;
+}
+.card.expanded { max-height: 1000px; }
 
-  /* =========================================================
-     CARD BASE STYLES
-  ========================================================= */
-  .card {
-    background: var(--surface);
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    transition: max-height 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    position: relative;
-    cursor: pointer;
-
-    /* fixes gradient stretching */
-    background-size: 100% 340px;
-    background-repeat: no-repeat;
-    background-position: top;
-	background-attachment: fixed;
-  }
-
-  .card.expanded {
-    max-height: 1000px;
-  }
-
-  /* =========================================================
-     NO-IMAGE CARDS (uses unified gradient background)
-  ========================================================= */
+/* =========================================================
+   NO-IMAGE CARDS
+========================================================= */
 .card.no-image {
   background-color: var(--source-color, #5e0f0f);
   position: relative;
 }
+.card.no-image .card-content { padding: 1rem; }
 
-
-.card.no-image .card-content {
-  padding: 1rem;
+/* =========================================================
+   IMAGE WRAPPER + GRADIENT
+========================================================= */
+.card-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 210px;
+  overflow: hidden;
+}
+.card-image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
-  /* =========================================================
-     IMAGE WRAPPER
-  ========================================================= */
-  .card-image-wrapper {
-    position: relative;
-    width: 100%;
-    height: 210px;
-    overflow: hidden;
-  }
-
-  .card-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
 .card-image-wrapper::after {
   content: "";
   position: absolute;
@@ -225,244 +179,127 @@
   left: 0;
   right: 0;
   height: 100%;
-  background: linear-gradient(
-    to top,
-    var(--source-color) 0%,
-    rgba(0, 0, 0, 0) 15%,
-    rgba(0, 0, 0, 0) 35%,
-    rgba(0, 0, 0, 0) 40%,
-    rgba(0, 0, 0, 0) 50%
-  );
-  pointer-events: none;
-  z-index: 1;
+background: linear-gradient(
+  to top,
+  var(--source-color) 0%,
+  var(--source-color) 10%,
+  rgba(0, 0, 0, 0) 55%,
+  rgba(0, 0, 0, 0.65) 100%
+);
+pointer-events: none;
+  z-index: 0; 
 }
 
 
-
-
-	/* =========================================================
-	   CARD GRADIENT OVERLAY (dynamic darker-to-transparent layer)
-	========================================================= */
-
-.card-gradient-overlay {
+/* =========================================================
+   CARD HEADER (Source name + timestamp)
+========================================================= */
+.card .card-header {
   position: absolute;
+  top: 8px;
+  left: 8px;
+  right: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.8rem;
+  color: #fff;
+  z-index: 3;
+}
+
+/* For no-image cards, keep header visually consistent */
+.card.no-image .card-header {
+  position: relative;
   top: 0;
   left: 0;
   right: 0;
-  height: 100%; /* lock gradient to image area height */
-  z-index: 0;
-
-  background-attachment: fixed;
-  pointer-events: none;
+  padding: 0.6rem 0.9rem;
+  z-index: 3;
+  background: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.card > *:not(.card-gradient-overlay) {
-  position: relative;
+.source-logo-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 700;
+}
+.source-logo-name img {
+  height: 32px;
+  width: 32px;
+  border-radius: 50%;
+  object-fit: contain;
+}
+.timestamp { font-weight: 700; }
+
+/* =========================================================
+   CARD CONTENT (Title + body)
+========================================================= */
+.card-content {
+  padding: 1rem;
+  padding-top: 0;
+  display: flex;
+  flex-direction: column;
   z-index: 1;
 }
+.card-content h2 {
+  font-size: 1.2rem;
+  margin: 0 0 0.5rem;
+  font-weight: 800;
+  color: #fff;
+}
+.full-content {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: #e8eeff;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  margin-top: 0;
+  transition: max-height 0.3s ease, opacity 0.4s ease, margin-top 0.4s ease;
+}
+.card.expanded .full-content {
+  max-height: 400px;
+  opacity: 1;
+  margin-top: 0.75rem;
+}
+.read-more {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  background: var(--button);
+  color: var(--accent);
+  padding: 0.5rem 1rem;
+  text-decoration: none;
+  border-radius: 20px;
+  font-weight: 700;
+  width: fit-content;
+  font-size: 1rem;
+}
 
-
-
-
-  /* =========================================================
-     CARD HEADER (source name + timestamp)
-  ========================================================= */
-  .card-header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.6rem 0.9rem;
-    font-size: 0.8rem;
-    color: #fff;
-    z-index: 2;
-  }
-
-  .source-logo-name {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 700;
-  }
-
-  .source-logo-name img {
-    height: 32px;
-    width: 32px;
-    border-radius: 50%;
-    object-fit: contain;
-  }
-
-  .timestamp {
-    font-weight: 700;
-  }
-
-  /* =========================================================
-     CARD CONTENT (title + body)
-  ========================================================= */
-  .card-content {
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .card-content h2 {
-    font-size: 1.2rem;
-    margin: 0 0 0.5rem;
-    font-weight: 800;
-    color: #fff;
-  }
-
-  .full-content {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: #e8eeff;
-    max-height: 0;
-    overflow: hidden;
-    opacity: 0;
-    margin-top: 0;
-    transition: max-height 0.3s ease, opacity 0.4s ease, margin-top 0.4s ease;
-  }
-
-  .card.expanded .full-content {
-    max-height: 400px;
-    opacity: 1;
-    margin-top: 0.75rem;
-  }
-
-  .read-more {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    margin-top: 1rem;
-    background: var(--button);
-    color: var(--accent);
-    padding: 0.5rem 1rem;
-    text-decoration: none;
-    border-radius: 20px;
-    font-weight: 700;
-    width: fit-content;
-    font-size: 1rem;
-  }
-
-  /* =========================================================
-     BOTTOM HEADER (FROSTED NAV BAR)
-  ========================================================= */
-  header {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 900;
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
-    background: rgba(70,70,70,0.6);
-    padding: 1rem max(1.5rem, env(safe-area-inset-left, 0px))
-             calc(1rem + env(safe-area-inset-bottom, 0px))
-             max(1.5rem, env(safe-area-inset-right, 0px));
-    border-top: 1px solid rgba(255,255,255,0.06);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 90px;
-  }
-
-  header .brand {
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  header .brand h1 {
-    font-size: 1.25rem;
-    font-weight: 900;
-    margin: 0;
-  }
-
-  /* =========================================================
-     NAV BUTTONS (refresh / back to top)
-  ========================================================= */
-  #refreshBtn,
-  #backToTopBtn {
-    background: none;
-    border: 0;
-    color: #fff;
-    font-size: 1.75rem;
-    cursor: pointer;
-    display: grid;
-    place-items: center;
-    transition: transform 0.3s ease;
-  }
-
-  #backToTopBtn {
-    font-size: 1.6rem;
-  }
-
-  #refreshBtn:hover,
-  #backToTopBtn:hover {
-    transform: scale(1.1);
-  }
-
-  .bx-spin-reverse {
-    animation: spinReverse 1s linear infinite;
-  }
-
-  @keyframes spinReverse {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(-360deg); }
-  }
-
-  /* =========================================================
-     EMPTY STATE
-  ========================================================= */
-  .empty-state {
-    background: var(--surface);
-    border-radius: 20px;
-    padding: 3rem 1rem;
-    margin: 2rem auto;
-    max-width: 400px;
-    text-align: center;
-    color: #e8eeff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-  }
-
-  .empty-state i {
-    font-size: 3rem;
-    color: #3c7a41;
-    margin-bottom: 1rem;
-  }
-
-  .empty-state p {
-    font-size: 1.4rem;
-    font-weight: 800;
-    margin: 0.25rem 0;
-  }
-
-  .empty-state span {
-    font-size: 1rem;
-    color: #aeafb1;
-  }
-  
+/* =========================================================
+   TOPIC TITLE
+========================================================= */
 .topic-title {
   display: flex;
-  align-items: flex-end;       /* top align the sticker with the title */
+  align-items: flex-end;
   gap: 0.6rem;
   margin-bottom: 0.4rem;
 }
-
 .topic-title h2 {
   margin: 0;
-  flex: 1;                       /* lets title wrap beside the emoji */
+  flex: 1;
   font-size: 1.2rem;
   font-weight: 800;
   color: #fff;
   line-height: 1.3;
   word-break: break-word;
 }
-
-/* Sticker-style emoji */
 .topic-title .emoji {
   font-size: 2.8rem;
   flex-shrink: 0;
@@ -470,10 +307,90 @@
   top: 0.5rem;
 }
 
+/* =========================================================
+   BOTTOM HEADER (FROSTED NAV BAR)
+========================================================= */
+header {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 900;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  background: rgba(70,70,70,0.6);
+  padding: 1rem max(1.5rem, env(safe-area-inset-left, 0px))
+           calc(1rem + env(safe-area-inset-bottom, 0px))
+           max(1.5rem, env(safe-area-inset-right, 0px));
+  border-top: 1px solid rgba(255,255,255,0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 90px;
+}
+header .brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+header .brand h1 {
+  font-size: 1.25rem;
+  font-weight: 900;
+  margin: 0;
+}
 
+/* =========================================================
+   NAV BUTTONS
+========================================================= */
+#refreshBtn, #backToTopBtn {
+  background: none;
+  border: 0;
+  color: #fff;
+  font-size: 1.75rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: transform 0.3s ease;
+}
+#backToTopBtn { font-size: 1.6rem; }
+#refreshBtn:hover, #backToTopBtn:hover { transform: scale(1.1); }
+.bx-spin-reverse {
+  animation: spinReverse 1s linear infinite;
+}
+@keyframes spinReverse {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
 
-  
+/* =========================================================
+   EMPTY STATE
+========================================================= */
+.empty-state {
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 3rem 1rem;
+  margin: 2rem auto;
+  max-width: 400px;
+  text-align: center;
+  color: #e8eeff;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+.empty-state i {
+  font-size: 3rem;
+  color: #3c7a41;
+  margin-bottom: 1rem;
+}
+.empty-state p {
+  font-size: 1.4rem;
+  font-weight: 800;
+  margin: 0.25rem 0;
+}
+.empty-state span {
+  font-size: 1rem;
+  color: #aeafb1;
+}
 </style>
+
 
 </head>
 <body>
@@ -847,10 +764,9 @@ overlay.style.pointerEvents = "none";
 overlay.style.background = `
   linear-gradient(
     to top,
-    rgba(0,0,0,0.25) 0%,
-    rgba(0,0,0,0.15) 15%,
+    rgba(0,0,0,0.20) 0%,
     rgba(0,0,0,0.05) 25%,
-    rgba(0,0,0,0) 40%
+    rgba(0,0,0,0) 30%
   )
 `;
 overlay.style.mixBlendMode = "multiply";
