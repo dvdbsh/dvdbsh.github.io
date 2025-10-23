@@ -244,10 +244,7 @@ body{
 }
 
 .source-name {
-  font-weight: 800;
-  font-size: 0.8rem;
-  letter-spacing: 0.2px;
-  opacity: 0.95;
+  display: none;
 }
 
 
@@ -266,8 +263,8 @@ body{
   line-height:1;
   font-weight:900;
   text-shadow:
-  0 0 5px rgba(0,0,0,0.55),
-  0 0 10px rgba(0,0,0,0.35);
+  0 0 5px rgba(36,36,36,0.55),
+  0 0 10px rgba(36,36,36,1);
 
 }
 .info .meta{
@@ -329,6 +326,7 @@ body{
   background:rgba(255,255,255,0.04);
   border:1px dashed rgba(255,255,255,0.15);
   padding:2rem;
+  margin:20px;
   border-radius:16px;
   text-align:center;
   color:#e8eeff;
@@ -343,6 +341,40 @@ body{
 @keyframes bx-reverse-spin {
   0%   { transform: rotate(0deg); }
   100% { transform: rotate(-360deg); }
+}
+/* ============================================
+   MOBILE EDGE-TO-EDGE LAYOUT
+============================================ */
+@media (max-width: 768px) {
+	body {
+	  padding: calc(52.8px + env(safe-area-inset-top)) 16px calc(116px + env(safe-area-inset-bottom));
+	  }
+  .grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin: 0;
+    width: 100vw;
+    max-width: none;
+    margin-left: calc(-1 * 16px);  /* removes body padding */
+    margin-right: calc(-1 * 16px);
+  }
+
+  .card {
+    border-radius: 0;
+    height: auto;
+    min-height: 360px;
+    width: 100%;
+    margin: 0;
+  }
+
+  .info {
+    padding: 1rem 1.25rem;
+  }
+
+  .content {
+    padding: 1.25rem;
+  }
 }
 
 
@@ -664,9 +696,10 @@ function makeCardDOM(item, source) {
   h2.textContent = truncateWords(normalizeHeadline(cleanTitle(item.title, source.name)), 18);
   const meta = document.createElement('div');
   meta.className = 'meta';
-  meta.textContent = formatArticleDate(item.pubDate);
+  meta.textContent = `${formatArticleDate(item.pubDate)} • ${source.name}`;
   info.appendChild(h2);
   info.appendChild(meta);
+
 
   // --- Content section (expanded view) ---
   const content = document.createElement('div');
@@ -862,9 +895,11 @@ refreshBtn.addEventListener('click',()=>{
   icon.classList.add('bx-spin');
   setTimeout(()=>icon.classList.remove('bx-spin'),1500);
 });
+
 </script>
 
 
 </body>
 </html>
  
+
