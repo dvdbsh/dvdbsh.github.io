@@ -218,10 +218,12 @@ body{
   content:"";
   position:absolute;
   inset:0;
-  background:var(--overlay-color);
+  background:var(--source-color, rgba(0,0,0,0.25));
+  mix-blend-mode: overlay;
   transition:backdrop-filter var(--transition-speed) ease, background var(--transition-speed) ease;
   z-index:1;
 }
+
 
 .source-header {
   position: absolute;
@@ -286,14 +288,13 @@ body{
   flex-direction:column;
   justify-content:flex-end;
   opacity:0;
-  transform:scale(0.98);
   z-index:3;
   pointer-events:none;
   transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
 }
 .content p{
-  font-size:1.3rem;
-  line-height:1.5;
+  font-size:1.2rem;
+  line-height:1.2;
   margin-bottom:1rem;
   color:#e8eeff;
 }
@@ -310,14 +311,43 @@ body{
 .content a:hover{ background:#ddd; transform:scale(1.05); }
 
 /* Active state */
-.card.active::before{
-  /* Use the per-card dark color if present; fallback to darker black */
-  backdrop-filter: blur(var(--blur-amount));
-  background: color-mix(in oklab, var(--dark-source-color, rgba(0,0,0,0.8)) 55%, transparent);
+/* --- Base overlay setup --- */
+.card::before,
+.card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  transition: all var(--transition-speed) ease;
 }
+
+/* Overlay colour (multiply tint) */
+.card::before {
+  background: var(--source-color, rgba(0,0,0,0.25));
+  mix-blend-mode: multiply;
+}
+
+/* Blur layer (initially off) */
+.card::after {
+  backdrop-filter: none;
+}
+
+/* Active: enable blur, keep the overlay tint */
+.card.active::after {
+  backdrop-filter: blur(var(--blur-amount));
+}
+
+.card.active .source-header {
+  opacity: 0;
+  transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+  pointer-events: none;
+}
+
+
+
 .card.active .info{ opacity:0; }
 .card.active .content{
-  opacity:1; transform:scale(1); pointer-events:auto;
+  opacity:1; pointer-events:auto;
 }
 
 /* Empty state */
@@ -500,18 +530,14 @@ function normalizeHeadline(text) {
     .trim();
 }
 
-function formatArticleDate(pubDate){
+function formatArticleDate(pubDate) {
   const date = new Date(pubDate);
+  if (isNaN(date)) return ''; // safety
+  const day = date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
   const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
-  const today = new Date();
-  const articleDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  const todayDay = new Date(today.getMonth(), today.getDate());
-  const diff = todayDay - articleDay;
-  const oneDay = 86400000;
-  if (diff === 0) return time;
-  if (diff === oneDay) return `Yesterday • ${time}`;
-  return date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
+  return `${day} ${time}`;
 }
+
 
 /* Color utilities for faithful-but-pretty colours */
 function beautifyColor(r,g,b){
@@ -592,43 +618,75 @@ async function getGradientFromLogo(logoUrl) {
     const img = new Image();
     img.crossOrigin = 'Anonymous';
     img.src = logoUrl;
+
     img.onload = () => {
       try {
         const thief = new ColorThief();
-        const [r, g, b] = thief.getColor(img); // main hue only
+        let palette = thief.getPalette(img, 8);
+        if (!palette || !palette.length) throw new Error("No palette found");
 
-        // --- generate 3 tones ---
-        const [h, s, l] = rgbToHsl(r, g, b);
-        const base = hslToRgb(h, s, l);
-        const light = hslToRgb(h, s * 0.8, Math.min(1, l * 1.4));
-        const dark = hslToRgb(h, s, Math.max(0, l * 0.45));
+        // Compute vibrancy scores
+        const rgbToHsl = (r,g,b) => {
+          r/=255; g/=255; b/=255;
+          const max=Math.max(r,g,b), min=Math.min(r,g,b);
+          let h,s,l=(max+min)/2;
+          if(max===min){h=s=0;}
+          else{
+            const d=max-min;
+            s=l>0.5?d/(2-max-min):d/(max+min);
+            switch(max){
+              case r:h=(g-b)/d+(g<b?6:0);break;
+              case g:h=(b-r)/d+2;break;
+              case b:h=(r-g)/d+4;break;
+            }
+            h/=6;
+          }
+          return {h,s,l};
+        };
 
-        const rgb = (arr) => `rgb(${arr[0]}, ${arr[1]}, ${arr[2]})`;
-        const sourceColor = rgb(base);
-        const lightSourceColor = rgb(light);
-        const darkSourceColor = rgb(dark);
+        const scored = palette.map(([r,g,b])=>{
+          const {s,l}=rgbToHsl(r,g,b);
+          const distance = Math.sqrt(
+            (r-128)**2 + (g-128)**2 + (b-128)**2
+          )/255; // prefer colours far from neutral grey
+          const score = (s*1.3) + (distance*0.7) - Math.abs(l-0.5);
+          return {rgb:[r,g,b],score};
+        }).sort((a,b)=>b.score-a.score);
 
-        // --- mesh-like composite gradient ---
-        const gradient = `
-          radial-gradient(at 20% 30%, ${lightSourceColor}, transparent 60%),
-          radial-gradient(at 80% 70%, ${sourceColor}, ${darkSourceColor} 80%)
-        `;
+        const [r,g,b] = scored[0].rgb;
 
-        resolve({ gradient, sourceColor, darkSourceColor, lightSourceColor });
-      } catch (err) {
+        // create tones
+        const {h,s,l} = rgbToHsl(r,g,b);
+        const light = hslToRgb(h, s*0.9, Math.min(1,l*1.4));
+        const dark = hslToRgb(h, s, Math.max(0,l*0.45));
+        const rgbStr = ([r,g,b])=>`rgb(${r},${g},${b})`;
+
         resolve({
-          gradient: 'radial-gradient(circle, #444, #222)',
-          sourceColor: 'rgb(68,68,68)',
+          gradient: `
+            radial-gradient(at 20% 30%, ${rgbStr(light)}, transparent 60%),
+            radial-gradient(at 80% 70%, ${rgbStr([r,g,b])}, ${rgbStr(dark)} 80%)
+          `,
+          sourceColor: rgbStr([r,g,b]),
+          darkSourceColor: rgbStr(dark),
+          lightSourceColor: rgbStr(light)
+        });
+
+      } catch (err) {
+        // fallback colour
+        resolve({
+          gradient: 'radial-gradient(circle, #555, #222)',
+          sourceColor: 'rgb(85,85,85)',
           darkSourceColor: 'rgb(34,34,34)',
-          lightSourceColor: 'rgb(90,90,90)'
+          lightSourceColor: 'rgb(110,110,110)'
         });
       }
     };
+
     img.onerror = () => resolve({
-      gradient: 'radial-gradient(circle, #444, #222)',
-      sourceColor: 'rgb(68,68,68)',
+      gradient: 'radial-gradient(circle, #555, #222)',
+      sourceColor: 'rgb(85,85,85)',
       darkSourceColor: 'rgb(34,34,34)',
-      lightSourceColor: 'rgb(90,90,90)'
+      lightSourceColor: 'rgb(110,110,110)'
     });
   });
 }
@@ -672,6 +730,10 @@ function makeCardDOM(item, source) {
       card.style.setProperty('--dark-source-color', source._colors.darkSourceColor);
     }
   }
+    if (source._colors?.sourceColor) {
+    card.style.setProperty('--source-color', source._colors.sourceColor);
+  }
+
 
   // --- Source header (logo + name) ---
   const header = document.createElement('div');
@@ -709,7 +771,7 @@ function makeCardDOM(item, source) {
     stripHtmlTags(item.content || item.description || '')
       .replace(/Read More/gi, '')
       .trim(),
-    28
+    44
   );
   const a = document.createElement('a');
   a.href = item.link;
