@@ -8,7 +8,6 @@
 <title>London News</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-<-- <link rel="manifest" href="manifest.json"> -->
 <link rel="icon" href="favicon.ico">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -17,7 +16,7 @@
 :root{
   --blur-amount: 10px;
   --transition-speed: 0.25s;
-  --overlay-color: rgba(0,0,0,0.35);
+  --overlay-color: rgba(0,0,0,0.25);
   --font: 'Nunito', sans-serif;
 }
 
@@ -27,7 +26,7 @@ html,body{height:100%}
 body{
   margin:0;
   font-family:var(--font);
-  background:#181526;
+  background:#292a2d;
   color:#fff;
   display:flex;
   flex-direction:column;
@@ -35,21 +34,79 @@ body{
   padding: calc(16px + env(safe-area-inset-top)) 16px calc(116px + env(safe-area-inset-bottom));
 }
 
-/* Top bar (Refresh + date) */
-.topbar{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  max-width:1200px;
-  width:100%;
-  margin:0 auto 1rem;
+/* ==============================
+   FROSTED TOP BAR
+============================== */
+
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  background: rgba(24, 21, 38, 0.6);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  z-index: 1000;
+  transition: transform 0.45s ease, opacity 0.35s ease;
 }
-.topbar .date{
-  font-size: 1.9rem;
-  font-weight:900;
-  opacity:0.9;
-  letter-spacing:0.2px;
+
+.topbar.hidden {
+  transform: translateY(-100%);
+  opacity: 0;
 }
+
+/* Logo group */
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  position: relative;
+  top: 0px; /* nudges group down slightly */
+}
+
+.logo-icon {
+  width: 45px;
+  object-fit: contain;
+  position: relative;
+  top: -4px; /* visually centers icon with text baseline */
+}
+
+.logo-text {
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0.25px;
+  color: #fff;
+  opacity: 0.95;
+  display: flex;
+  align-items: center;
+  height: 28px;
+}
+
+/* Date text */
+.topbar .date {
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+  opacity: 0.95;
+  display: flex;
+  align-items: center;
+  height: 28px;
+}
+
+.topbar.hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+
+
 .controls{
   display:flex;
   gap:0.6rem;
@@ -98,9 +155,8 @@ body{
 }
 
 .float-btn {
-  width: 48px;
-  height: 48px;
-  border: none;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
   background: rgba(255,255,255,0.08);
   border: 1px solid rgba(255,255,255,0.2);
@@ -135,6 +191,7 @@ body{
   width:100%;
   max-width:1200px;
   margin:0 auto;
+  margin-top: 72px;
 }
 
 /* Card base */
@@ -267,6 +324,7 @@ body{
   color:#e8eeff;
   font-weight:800;
 }
+
 /* Counter-clockwise spin for refresh icon */
 .bx-spin {
   animation: bx-reverse-spin 2s linear infinite !important;
@@ -277,13 +335,19 @@ body{
   100% { transform: rotate(-360deg); }
 }
 
+
 </style>
 </head>
 <body>
 
-<div class="topbar">
+<div class="topbar" id="topbar">
+  <div class="logo">
+    <img src="images/LN-logo-svg.svg" alt="London News Logo" class="logo-icon">
+    <span class="logo-text">London News</span>
+  </div>
   <div class="date" id="currentDate"></div>
 </div>
+
 
 <div class="grid" id="grid"></div>
 
@@ -291,7 +355,7 @@ body{
 
 <div class="floating-controls">
   <button id="backToTopBtn" class="float-btn">
-    <i class='bx bx-chevron-up'></i>
+    <i class='bx bx-up-arrow-alt'></i>
   </button>
   <button id="refreshBtn" class="float-btn">
     <i class='bx bx-refresh'></i>
@@ -756,25 +820,7 @@ async function loadAllFeeds(){
   }
 })();
 
-/* ---------- Events ---------- */
-// Refresh button
-document.getElementById('refreshBtn').addEventListener('click', async () => {
-  const icon = document.querySelector('#refreshBtn i');
-  icon.classList.add('bx-spin');
-  await loadAllFeeds();
-  icon.classList.remove('bx-spin');
-});
 
-// Back to Top button
-const backBtn = document.getElementById('backToTopBtn');
-backBtn.addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 400) backBtn.classList.add('visible');
-  else backBtn.classList.remove('visible');
-});
 
 /* ---------- First load ---------- */
 loadAllFeeds();
@@ -782,6 +828,39 @@ loadAllFeeds();
 
 <!-- ColorThief for logo-based palette -->
 <script src="https://unpkg.com/colorthief/dist/color-thief.umd.js"></script>
+<script>
+/* Date */
+(function setDate(){
+  const el=document.getElementById("currentDate");
+  const today=new Date();
+  el.textContent=today.toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});
+})();
+
+/* Scroll Hide/Show for Frosted Topbar */
+let lastScroll=0;
+const topbar=document.getElementById('topbar');
+window.addEventListener('scroll',()=>{
+  const curr=window.scrollY;
+  if(curr>lastScroll && curr>80){ topbar.classList.add('hidden'); }
+  else if(curr<lastScroll-10){ topbar.classList.remove('hidden'); }
+  lastScroll=curr;
+});
+
+/* Button Logic */
+const backBtn=document.getElementById('backToTopBtn');
+window.addEventListener('scroll',()=>{
+  if(window.scrollY>400) backBtn.classList.add('visible');
+  else backBtn.classList.remove('visible');
+});
+backBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+const refreshBtn=document.getElementById('refreshBtn');
+refreshBtn.addEventListener('click',()=>{
+  const icon=refreshBtn.querySelector('i');
+  icon.classList.add('bx-spin');
+  setTimeout(()=>icon.classList.remove('bx-spin'),1500);
+});
+</script>
 
 
 </body>

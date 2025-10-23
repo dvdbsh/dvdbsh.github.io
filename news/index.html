@@ -1,1053 +1,869 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <title>London News</title>
-  <link rel="manifest" href="manifest.json">
-  <link rel="icon" href="favicon.ico">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
+<title>London News</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+<link rel="icon" href="favicon.ico">
+<link rel="manifest" href="manifest.json">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+
 <style>
-/* =========================================================
-   ROOT VARIABLES & GLOBAL RESETS
-========================================================= */
-:root {
-  --accent: #181526;
-  --button: #e8eeff;
-  --surface: #1f1f1f;
-  --bg: #292a2d;
+:root{
+  --blur-amount: 10px;
+  --transition-speed: 0.25s;
+  --overlay-color: rgba(0,0,0,0.25);
+  --font: 'Nunito', sans-serif;
 }
 
-* { box-sizing: border-box; }
-
-html, body { height: 100%; }
-
-body {
-  font-family: 'Nunito', sans-serif;
-  background: var(--bg);
-  color: #fff;
-  margin: 0;
-  padding: env(safe-area-inset-top) 1.5rem env(safe-area-inset-bottom);
+/* Page */
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family:var(--font);
+  background:#292a2d;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  padding: calc(16px + env(safe-area-inset-top)) 16px calc(116px + env(safe-area-inset-bottom));
 }
 
-/* =========================================================
-   PAGE HEADER
-========================================================= */
-.page-top {
-  padding: 1rem 0 0.25rem;
-}
-.page-top h1 {
-  font-size: 1.5rem;
-  font-weight: 800;
-  margin: 0;
-}
-.page-top .date {
-  opacity: 0.8;
-  font-weight: 900;
-  margin-top: 0.25rem;
-  margin-bottom: 0.75rem;
-  font-size: 1.5rem;
-}
+/* ==============================
+   FROSTED TOP BAR
+============================== */
 
-/* =========================================================
-   SOURCE SCROLLER
-========================================================= */
-.source-scroller-wrapper {
-  overflow-x: auto;
-  margin: 0 -1.5rem 1rem;
-  padding: 0 1.5rem;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-.source-scroller-wrapper::-webkit-scrollbar { display: none; }
-
-.source-scroller {
-  display: flex;
-  gap: 0.75rem;
-  min-width: max-content;
-}
-.source-scroller::after { content: ""; flex: 0 0 1.5rem; }
-
-.chip {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: var(--surface);
-  border: none;
-  border-radius: 20px;
-  padding: 0.5rem 0.9rem;
-  font-weight: 700;
-  font-size: 0.95rem;
-  color: #fff;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: transform 0.06s ease;
-}
-.chip:active { transform: translateY(1px); }
-
-.chip img, .chip i {
-  height: 28px;
-  width: 28px;
-  border-radius: 50%;
-  object-fit: contain;
-  flex-shrink: 0;
-}
-.chip i { display: grid; place-items: center; font-size: 1.1rem; }
-
-.chip.active {
-  background-color: #292a2d;
-  box-shadow: 0 0 0 2px #1f1f1f inset;
-}
-
-/* =========================================================
-   FEED GRID (CSS Masonry)
-========================================================= */
-.feed {
-  column-width: 340px;
-  column-gap: 1.5rem;
-  padding-bottom: 150px;
-}
-@supports not (grid-template-rows: masonry) {
-  .feed { display: masonry; column-gap: 1.5rem; }
-  .card { break-inside: avoid; margin-bottom: 1.5rem; }
-}
-.card {
-  display: inline-block;
-  width: 100%;
-  margin: 0 0 1.5rem;
-  vertical-align: top;
-  transition: transform 0.25s ease, opacity 0.25s ease;
-  break-inside: avoid;
-}
-@media (max-width: 700px) {
-  .feed { column-width: 320px; }
-}
-
-/* =========================================================
-   CARD BASE
-========================================================= */
-.card {
-  background: var(--surface);
-  border-radius: 20px;
-  overflow: hidden;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-  transition: max-height 0.3s ease;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  cursor: pointer;
-  background-size: 100% 340px;
-  background-repeat: no-repeat;
-  background-position: top;
-}
-.card.expanded { max-height: 1000px; }
-
-/* =========================================================
-   NO-IMAGE CARDS
-========================================================= */
-.card.no-image {
-  background-color: var(--source-color, #5e0f0f);
-  position: relative;
-}
-
-.card.no-image .card-content {
-  margin-top: 0; /* remove the upward pull */
-  background: none; /* remove overlay background */
-  padding-top: 1rem; /* restore normal spacing */
-}
-
-
-/* =========================================================
-   IMAGE WRAPPER + MULTIPLY COLOUR OVERLAY
-========================================================= */
-.card-image-wrapper {
-  position: relative;
-  width: 100%;
-  height: 280px;
-  overflow: hidden;
-}
-
-.card-image-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-/* Replace the old gradient with a multiply overlay */
-.card-image-wrapper::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--source-color, rgba(0, 0, 0, 0.4));
-  mix-blend-mode: multiply;
-  pointer-events: none;
-  z-index: 1;
-}
-
-
-
-
-
-/* =========================================================
-   CARD HEADER (Source name + timestamp)
-========================================================= */
-.card .card-header {
-  position: absolute;
-  top: 8px;
-  left: 8px;
-  right: 8px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.4rem 0.6rem;
-  font-size: 0.8rem;
-  color: #fff;
-  z-index: 3;
-}
-
-/* For no-image cards, keep header visually consistent */
-.card.no-image .card-header {
-  position: relative;
+.topbar {
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  padding: 0.6rem 0.9rem;
-  z-index: 3;
-  background: none;
+  height: 72px;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
+  padding: 0 1.5rem;
+  background: rgba(24, 21, 38, 0.6);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  z-index: 1000;
+  transition: transform 0.45s ease, opacity 0.35s ease;
 }
 
-.source-logo-name {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-weight: 700;
-}
-.source-logo-name img {
-  height: 32px;
-  width: 32px;
-  border-radius: 50%;
-  object-fit: contain;
-}
-.timestamp { font-weight: 700; }
-
-/* =========================================================
-   CARD CONTENT (Title + body)
-========================================================= */
-/* let title overlap image */
-.card-content {
-  position: relative;
-  margin-top: -100px; /* pulls content upward over gradient */
-  padding: 1rem;
-  z-index: 2; /* above image gradient */
-  background: linear-gradient(
-    to top,
-    var(--source-color) 30%,
-    rgba(0,0,0,0) 100%
-  );
-  border-top-left-radius: 0;
-  border-top-right-radius: 0;
-}
-
-/* tighten spacing since it sits higher */
-.card-content h2 {
-  font-size: 1.75rem;
-  font-size: 1.75rem;
-  margin-top: 0.2rem;
-  font-weight: 800;
-  color: #fff;
-}
-.full-content {
-  font-size: 1rem;
-  line-height: 1.6;
-  color: #e8eeff;
-  max-height: 0;
-  overflow: hidden;
+.topbar.hidden {
+  transform: translateY(-100%);
   opacity: 0;
-  margin-top: 0;
-  transition: max-height 0.3s ease, opacity 0.4s ease, margin-top 0.4s ease;
-}
-.card.expanded .full-content {
-  max-height: 400px;
-  opacity: 1;
-  margin-top: 1.75rem;
-}
-.read-more {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  background: var(--dark-source-color, var(--button));
-  color: #fff;
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  border-radius: 20px;
-  font-weight: 700;
-  width: fit-content;
-  font-size: 1rem;
-  transition: background 0.3s ease, transform 0.2s ease;
-}
-.read-more:hover {
-  background: var(--dark-source-color, #444);
 }
 
-
-/* =========================================================
-   TOPIC TITLE
-========================================================= */
-.topic-title {
+/* Logo group */
+.logo {
   display: flex;
-  align-items: flex-end;
-  gap: 0.6rem;
-  margin-bottom: 0.4rem;
-}
-.topic-title h2 {
-  margin: 0;
-  flex: 1;
-  font-size: 1.5rem;
-  font-weight: 800;
-  color: #fff;
-  line-height: 1;
-  word-break: break-word;
-  text-shadow:
-    0 0 10px var(--dark-source-color),
-    0 0 25px var(--dark-source-color);
-}
-.topic-title .emoji {
-  font-size: 2.8rem;
-  flex-shrink: 0;
+  align-items: center;
+  gap: 0.65rem;
   position: relative;
-  top: 0.5rem;
-  text-shadow:
-    0 0 10px var(--dark-source-color),
-    0 0 25px var(--dark-source-color);
+  top: 0px; /* nudges group down slightly */
 }
 
-/* =========================================================
-   BOTTOM HEADER (FROSTED NAV BAR)
-========================================================= */
-header {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 900;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  background: rgba(70,70,70,0.6);
-  padding: 1rem max(1.5rem, env(safe-area-inset-left, 0px))
-           calc(1rem + env(safe-area-inset-bottom, 0px))
-           max(1.5rem, env(safe-area-inset-right, 0px));
-  border-top: 1px solid rgba(255,255,255,0.06);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 90px;
-}
-header .brand {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-}
-header .brand h1 {
-  font-size: 1.25rem;
-  font-weight: 900;
-  margin: 0;
+.logo-icon {
+  width: 45px;
+  object-fit: contain;
+  position: relative;
+  top: -4px; /* visually centers icon with text baseline */
 }
 
-/* =========================================================
-   NAV BUTTONS
-========================================================= */
-#refreshBtn, #backToTopBtn {
-  background: none;
-  border: 0;
-  color: #fff;
-  font-size: 1.75rem;
-  cursor: pointer;
-  display: grid;
-  place-items: center;
-  transition: transform 0.3s ease;
-}
-#backToTopBtn { font-size: 1.6rem; }
-#refreshBtn:hover, #backToTopBtn:hover { transform: scale(1.1); }
-.bx-spin-reverse {
-  animation: spinReverse 1s linear infinite;
-}
-@keyframes spinReverse {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(-360deg); }
-}
-
-/* =========================================================
-   EMPTY STATE
-========================================================= */
-.empty-state {
-  background: var(--surface);
-  border-radius: 20px;
-  padding: 3rem 1rem;
-  margin: 2rem auto;
-  max-width: 400px;
-  text-align: center;
-  color: #e8eeff;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-}
-.empty-state i {
-  font-size: 3rem;
-  color: #3c7a41;
-  margin-bottom: 1rem;
-}
-.empty-state p {
-  font-size: 1.4rem;
+.logo-text {
+  font-size: 1.15rem;
   font-weight: 800;
-  margin: 0.25rem 0;
+  line-height: 1;
+  letter-spacing: 0.25px;
+  color: #fff;
+  opacity: 0.95;
+  display: flex;
+  align-items: center;
+  height: 28px;
 }
-.empty-state span {
+
+/* Date text */
+.topbar .date {
+  font-size: 1.15rem;
+  font-weight: 800;
+  line-height: 1;
+  color: #fff;
+  opacity: 0.95;
+  display: flex;
+  align-items: center;
+  height: 28px;
+}
+
+.topbar.hidden {
+  transform: translateY(-100%);
+  opacity: 0;
+}
+
+
+
+.controls{
+  display:flex;
+  gap:0.6rem;
+}
+.btn{
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.15);
+  color:#fff;
+  border-radius:999px;
+  padding:0.5rem 0.9rem;
+  cursor:pointer;
+  font-weight:800;
   font-size: 1rem;
-  color: #aeafb1;
+  transition:transform .2s, background .25s, border-color .25s;
 }
+.btn:hover{ transform:translateY(-1px); background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.25); }
+.btn i{ font-style:normal; }
+
+/* Toast */
+.toast{
+  position:fixed;
+  bottom:110px;
+  left:50%;
+  transform:translateX(-50%);
+  background:rgba(255,255,255,0.08);
+  border:1px solid rgba(255,255,255,0.2);
+  color:#fff;
+  padding:0.6rem 1.2rem;
+  border-radius:20px;
+  font-weight:800;
+  opacity:0;
+  transition:opacity .35s ease;
+  z-index:9999;
+  backdrop-filter: blur(10px);
+}
+
+/* Floating Buttons */
+.floating-controls {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  z-index: 9999;
+}
+
+.float-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 1.4rem;
+  cursor: pointer;
+  backdrop-filter: blur(10px);
+  transition: background 0.25s, transform 0.25s, opacity 0.25s;
+}
+
+.float-btn:hover {
+  background: rgba(255,255,255,0.15);
+  transform: scale(1.08);
+}
+
+#backToTopBtn {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#backToTopBtn.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+/* Grid */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1.5rem;
+  width:100%;
+  max-width:1200px;
+  margin:0 auto;
+  margin-top: 72px;
+}
+
+/* Card base */
+.card{
+  position:relative;
+  height:320px;
+  border-radius:16px;
+  overflow:hidden;
+  cursor:pointer;
+  background-size:cover;
+  background-position:center;
+  background-blend-mode: soft-light;
+  filter:saturate(0.9) contrast(0.95);
+  transition:filter var(--transition-speed) ease, transform .25s ease;
+}
+.card:hover,
+.card.active{ filter:saturate(1) contrast(1.05); }
+
+/* overlay */
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:var(--overlay-color);
+  transition:backdrop-filter var(--transition-speed) ease, background var(--transition-speed) ease;
+  z-index:1;
+}
+
+.source-header {
+  position: absolute;
+  top: 0.8rem;
+  left: 0.9rem;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: rgba(0, 0, 0, 0.35);
+  padding: 0.35rem 0.7rem;
+  border-radius: 12px;
+  backdrop-filter: blur(6px);
+}
+
+.source-logo {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  border-radius: 3px;
+}
+
+.source-name {
+  font-weight: 800;
+  font-size: 0.8rem;
+  letter-spacing: 0.2px;
+  opacity: 0.95;
+}
+
+
+/* Info (title/meta) */
+.info{
+  position:absolute;
+  bottom:0; left:0; right:0;
+  padding:1.2rem;
+  z-index:2;
+  transition:opacity var(--transition-speed) ease;
+}
+.info h2{
+  margin:0;
+  font-size:1.75rem;
+  line-height:1;
+  font-weight:900;
+}
+.info .meta{
+  font-size:0.9rem;
+  opacity:0.85;
+  margin-top:0.4rem;
+  font-weight:700;
+}
+
+/* Content (expanded) */
+.content{
+  position:absolute;
+  inset:0;
+  padding:1.5rem;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  opacity:0;
+  transform:scale(0.98);
+  z-index:3;
+  pointer-events:none;
+  transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+}
+.content p{
+  font-size:1.3rem;
+  line-height:1.5;
+  margin-bottom:1rem;
+  color:#e8eeff;
+}
+.content a{
+  text-decoration:none;
+  align-self:flex-start;
+  background:#fff;
+  color:#000;
+  border-radius:24px;
+  padding:0.6rem 1.2rem;
+  font-weight:800;
+  transition:background .25s, transform .25s;
+}
+.content a:hover{ background:#ddd; transform:scale(1.05); }
+
+/* Active state */
+.card.active::before{
+  /* Use the per-card dark color if present; fallback to darker black */
+  backdrop-filter: blur(var(--blur-amount));
+  background: color-mix(in oklab, var(--dark-source-color, rgba(0,0,0,0.8)) 55%, transparent);
+}
+.card.active .info{ opacity:0; }
+.card.active .content{
+  opacity:1; transform:scale(1); pointer-events:auto;
+}
+
+/* Empty state */
+.empty{
+  grid-column:1/-1;
+  background:rgba(255,255,255,0.04);
+  border:1px dashed rgba(255,255,255,0.15);
+  padding:2rem;
+  border-radius:16px;
+  text-align:center;
+  color:#e8eeff;
+  font-weight:800;
+}
+
+/* Counter-clockwise spin for refresh icon */
+.bx-spin {
+  animation: bx-reverse-spin 2s linear infinite !important;
+}
+
+@keyframes bx-reverse-spin {
+  0%   { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
+
+
 </style>
-
-
 </head>
 <body>
-  <div class="page-top">
-    <div class="date" id="currentDate"></div>
-  </div>
 
-  <div class="source-scroller-wrapper">
-    <div class="source-scroller" id="sourceScroller"></div>
+<div class="topbar" id="topbar">
+  <div class="logo">
+    <img src="images/LN-logo-svg.svg" alt="London News Logo" class="logo-icon">
+    <span class="logo-text">London News</span>
   </div>
+  <div class="date" id="currentDate"></div>
+</div>
 
-  <div class="feed" id="newsFeed"></div>
 
-<header>
-  <div class="brand">
-    <i class='bx bx-news' style="font-size:1.6rem;"></i>
-    <h1>London News</h1>
-  </div>
-  <div style="display:flex; gap:1rem;">
-    <button id="backToTopBtn" aria-label="Back to top">
-      <i class='bx bx-up-arrow-alt'></i>
-    </button>
-    <button id="refreshBtn" aria-label="Refresh">
-      <i class='bx bx-refresh'></i>
-    </button>
-  </div>
-</header>
+<div class="grid" id="grid"></div>
 
+<div class="toast" id="toast">Updated just now</div>
+
+<div class="floating-controls">
+  <button id="backToTopBtn" class="float-btn">
+    <i class='bx bx-up-arrow-alt'></i>
+  </button>
+  <button id="refreshBtn" class="float-btn">
+    <i class='bx bx-refresh'></i>
+  </button>
+</div>
 
 <script>
-  const PEXELS_API_KEY = 'fB6vzEHx5CsDIVByIpuDfQ2QoliM9TYWyBqmkzPgj6nPeEuWdBvbtJIx';
-  const feedContainer = document.getElementById("newsFeed");
-  const sourceScroller = document.getElementById("sourceScroller");
+/* ---------- Config ---------- */
+const PEXELS_API_KEY = 'fB6vzEHx5CsDIVByIpuDfQ2QoliM9TYWyBqmkzPgj6nPeEuWdBvbtJIx';
+const gridEl = document.getElementById('grid');
+const toastEl = document.getElementById('toast');
 
-  const state = {
-    filters: { source: 'all' },
-    articles: [],
-    allSources: []
-  };
+/* ---------- State ---------- */
+const state = {
+  articles: [],
+  allSources: [],
+  openCard: null
+};
 
-  // Set date at top of page
-  (function setDate(){
-    const el = document.getElementById("currentDate");
-    const today = new Date();
-    el.textContent = today.toLocaleDateString("en-US", {
-      year: "numeric", month: "long", day: "numeric"
-    });
-  })();
+/* ---------- Date at top ---------- */
+(function setDate(){
+  const el = document.getElementById("currentDate");
+  const today = new Date();
+  el.textContent = today.toLocaleDateString("en-US", {
+    year: "numeric", month: "long", day: "numeric"
+  });
+})();
 
-  // Toast element for update message
-  const toast = document.createElement("div");
-  toast.style.position = "fixed";
-  toast.style.bottom = "110px";
-  toast.style.left = "50%";
-  toast.style.transform = "translateX(-50%)";
-  toast.style.background = "rgba(255,255,255,0.1)";
-  toast.style.backdropFilter = "blur(10px)";
-  toast.style.border = "1px solid rgba(255,255,255,0.2)";
-  toast.style.color = "#fff";
-  toast.style.padding = "0.6rem 1.2rem";
-  toast.style.borderRadius = "20px";
-  toast.style.fontWeight = "700";
-  toast.style.opacity = "0";
-  toast.style.transition = "opacity 0.4s ease";
-  toast.style.zIndex = "9999";
-  toast.textContent = "Updated just now";
-  document.body.appendChild(toast);
+/* ---------- Toast ---------- */
+function showToast(msg="Updated just now"){
+  toastEl.textContent = msg;
+  toastEl.style.opacity = '1';
+  setTimeout(()=> toastEl.style.opacity = '0', 2200);
+}
 
-  function showToast(message = "Updated just now") {
-    toast.textContent = message;
-    toast.style.opacity = "1";
-    setTimeout(() => (toast.style.opacity = "0"), 2500);
-  }
+/* ---------- Helpers ---------- */
+function stripHtmlTags(html) {
+  if (!html) return '';
+  const txt = document.createElement('textarea');
+  txt.innerHTML = html;
+  let decoded = txt.value;
 
-  // Utilities
-  function stripHtmlTags(html) {
-    if (!html) return '';
-    const txt = document.createElement('textarea');
-    txt.innerHTML = html;
-    let decoded = txt.value;
-    decoded = decoded.replace(/<a[^>]*>(.*?)<\/a>/gi, '$1');
-    decoded = decoded.replace(/<\/?[^>]+(>|$)/g, '');
-    decoded = decoded.replace(/\s+/g, ' ').trim();
-    return decoded;
-  }
-  
-  function cleanTitle(title, sourceName) {
+  // Decode any double-encoded entities (e.g., &#039; inside RSS)
+  const temp = document.createElement('textarea');
+  temp.innerHTML = decoded;
+  decoded = temp.value;
+
+  // Remove HTML tags and collapse whitespace
+  decoded = decoded.replace(/<\/?[^>]+(>|$)/g, '');
+  decoded = decoded.replace(/\s+/g, ' ').trim();
+
+  // Replace leftover entities that browsers don’t decode automatically
+  decoded = decoded
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&amp;/gi, '&')
+    .replace(/&quot;/gi, '"')
+    .replace(/&#039;/gi, "'")
+    .replace(/&rsquo;/gi, "'")
+    .replace(/&lsquo;/gi, "'")
+    .replace(/&ldquo;/gi, '"')
+    .replace(/&rdquo;/gi, '"')
+    .replace(/&hellip;/gi, '…')
+    .replace(/&mdash;/gi, '-')
+    .replace(/&ndash;/gi, '-');
+
+  return decoded.trim();
+}
+
+function truncateWords(text, n){
+  const words = (text||'').trim().split(/\s+/);
+  return words.length>n ? words.slice(0,n).join(' ') + '…' : text;
+}
+function decodeEntities(text) {
+  if (!text) return '';
+  const txt = document.createElement('textarea');
+  txt.innerHTML = text;
+  return txt.value;
+}
+
+function cleanTitle(title, sourceName) {
   if (!title) return "";
-  return title
-    .replace(new RegExp(`[-|–|:|•]?\\s*${sourceName}\\s*$`, "i"), "")
-    .trim();
+  title = decodeEntities(title);
+  return title.replace(new RegExp(`[-|–|:|•]?\\s*${sourceName}\\s*$`, "i"), "").trim();
 }
 
 function normalizeHeadline(text) {
   if (!text) return "";
-
-  // Detect if it's mostly uppercase (ignoring numbers & punctuation)
+  text = decodeEntities(text); // decode again here just in case
   const letters = text.replace(/[^a-zA-Z]/g, "");
   const upperRatio = letters.replace(/[a-z]/g, "").length / (letters.length || 1);
-  
-  // Only fix if the majority is uppercase (e.g., >80%)
   if (upperRatio > 0.8) {
-    // Convert to lowercase, then capitalize the first letter of each sentence
-    text = text.toLowerCase().replace(/(^\w|\.\s+\w)/g, c => c.toUpperCase());
+    text = text.toLowerCase();
+    text = text.replace(/^([“"‘'(\[]*)([a-z])/, (_, p, f) => p + f.toUpperCase());
+    text = text.replace(/([.!?]\s+)([a-z])/g, (_, s, c) => s + c.toUpperCase());
   }
-
-  return text;
+  return text
+    .replace(/&nbsp;/gi, ' ')
+    .replace(/&#039;/gi, "'")
+    .replace(/&quot;/gi, '"')
+    .replace(/&amp;/gi, '&')
+    .replace(/&rsquo;/gi, "'")
+    .replace(/&lsquo;/gi, "'")
+    .replace(/&ldquo;/gi, '"')
+    .replace(/&rdquo;/gi, '"')
+    .replace(/&hellip;/gi, '…')
+    .replace(/&mdash;/gi, '-')
+    .replace(/&ndash;/gi, '-')
+    .trim();
 }
 
-
-  function truncateWords(text, wordLimit) {
-    const words = (text || '').trim().split(/\s+/);
-    return words.length > wordLimit ? words.slice(0, wordLimit).join(" ") + "…" : text;
-  }
-
-  function formatArticleDate(pubDate) {
-    const date = new Date(pubDate);
-    const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
-    const today = new Date();
-    const articleDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-    const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    const diff = todayDay - articleDay;
-    const oneDay = 86400000;
-    if (diff === 0) return time;
-    if (diff === oneDay) return `Yesterday • ${time}`;
-    return date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
-  }
-  
-// =========================================================
-// SMART TOPIC + EMOJI MAPPING (London News edition)
-// =========================================================
-const TOPIC_EMOJIS = {
-  "sports": "🏒",
-  "crime": "🚔",
-  "health": "🏥",
-  "politics": "🏛️",
-  "education": "🎓",
-  "weather": "🌧️",
-  "local": "🏙️",
-  "business": "💼",
-  "culture": "🎨",
-  "arts": "🎭",
-  "entertainment": "🎬",
-  "science": "🔬",
-  "technology": "💻",
-  "environment": "🌿",
-  "power": "⚡",
-  "future": "🔮",
-  "food": "🍽️",
-  "animals": "🐾",
-  "transportation": "🚗",
-  "housing": "🏠",
-  "fire": "🔥",
-  "event": "🎪",
-  "community": "🤝",
-  "finance": "💰",
-  "crime_police": "🚨",
-  "religion": "⛪",
-  "default": "📰"
-};
-
-
-// =========================================================
-// INTELLIGENT TOPIC INFERENCE (based on article title)
-// =========================================================
-function inferTopic(item) {
-  const title = (item.title || "").toLowerCase();
-
-  // SPORTS
-  if (title.match(/\b(jays|leafs|knights|ohl|game|score|win|loss|goal|team|mustangs|hockey|football|sports|marathon|championship|argonauts|stampeders|bullpen)\b/))
-    return "sports";
-
-  // CRIME & POLICE
-  if (title.match(/\b(police|charged|arrest|investigation|shooting|murder|stabbing|suspect|opp|court|crime|assault|collision|crash|impaired|drugs|seized|trafficking|homicide|break-and-enter|wanted|fentanyl|charges)\b/))
-    return "crime";
-
-  // HEALTH
-  if (title.match(/\b(hospital|covid|health|mental|care|patient|doctor|nurse|disease|illness|virus|vaccine|measles|outbreak|clinic|wellness|medical)\b/))
-    return "health";
-
-  // POLITICS / GOVERNMENT
-  if (title.match(/\b(mayor|council|election|government|politics|minister|city hall|funding|budget|policy|federal|provincial|politician|bill|legislation|mp|mpp|parliament)\b/))
-    return "politics";
-
-  // EDUCATION / TECH TRENDS
-  if (title.match(/\b(school|student|college|university|teacher|education|principal|tiktok|social media|online safety|copycat|trend|cyber|technology|internet|digital|ai|artificial intelligence)\b/))
-    return "education";
-
-  // WEATHER / ENVIRONMENT / CLIMATE
-  if (title.match(/\b(storm|snow|rain|weather|forecast|sunny|temperature|wind|climate|environment|wildfire|heatwave|tree|planting|seedling|ltvca|conservation|forest|green|sustainability|carbon)\b/))
-    return "environment";
-
-  // BUSINESS / ECONOMY / JOBS
-  if (title.match(/\b(business|bank|market|job|economy|investment|funding|profit|company|employment|layoff|money|financial|goods|manufacturing|shelves|locally-made|trade)\b/))
-    return "business";
-
-  // CULTURE / ARTS / ENTERTAINMENT / BOOKS
-  if (title.match(/\b(festival|concert|art|music|movie|film|show|performance|theatre|gallery|culture|comedy|book|author|write|media|tv|series|drama|entertainment|creative|comics|literature)\b/))
-    return "culture";
-
-  // FOOD
-  if (title.match(/\b(food|restaurant|menu|chef|dine|eatery|coffee|chocolate|drink|cafe|bake|culinary)\b/))
-    return "food";
-
-  // COMMUNITY / EVENTS / CHARITY
-  if (title.match(/\b(local|london|londoner|londoners|downtown|community|neighbourhood|event|festival|fundraiser|volunteer|giveaway|donation|motionball|charity|campaign|rally|initiative|celebrate|coat|goodwill)\b/))
-    return "community";
-
-  // FIRE / EMERGENCY
-  if (title.match(/\b(fire|blaze|rescue|structure fire|house fire|burned|flames|crews dispatched)\b/))
-    return "fire";
-
-  // HOUSING / DEVELOPMENT / INFRASTRUCTURE
-  if (title.match(/\b(housing|rent|condo|home|apartment|real estate|development|construction|affordable|project|building|loophole)\b/))
-    return "housing";
-
-  // TRANSPORTATION / BORDER / TRAVEL
-  if (title.match(/\b(road|highway|traffic|train|transit|bus|closure|border|airport|customs|travel|passport|inspection|flight)\b/))
-    return "transportation";
-
-  // SCIENCE / TECHNOLOGY / FUTURE
-  if (title.match(/\b(science|research|innovation|ai|artificial intelligence|technology|robot|future|data|digital|device|cyber)\b/))
-    return title.includes("future") ? "future" : "technology";
-
-  // ANIMALS / WILDLIFE
-  if (title.match(/\b(animal|dog|cat|wildlife|bird|pet|swan|zoo|species)\b/))
-    return "animals";
-
-  // RELIGION / FAITH
-  if (title.match(/\b(church|temple|faith|religion|mosque|prayer)\b/))
-    return "religion";
-
-  return "default";
+function formatArticleDate(pubDate){
+  const date = new Date(pubDate);
+  const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+  const today = new Date();
+  const articleDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
+  const todayDay = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+  const diff = todayDay - articleDay;
+  const oneDay = 86400000;
+  if (diff === 0) return time;
+  if (diff === oneDay) return `Yesterday • ${time}`;
+  return date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
 }
 
-
-
-  
-
-  async function getPexelsImage(query) {
-    try {
-      const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`, {
-        headers: { Authorization: PEXELS_API_KEY }
-      });
-      const data = await res.json();
-      return data.photos?.[0]?.src?.landscape || null;
-    } catch {
-      return null;
+/* Color utilities for faithful-but-pretty colours */
+function beautifyColor(r,g,b){
+  r/=255; g/=255; b/=255;
+  const max=Math.max(r,g,b), min=Math.min(r,g,b);
+  let h,s,l=(max+min)/2;
+  if(max===min){ h=s=0; }
+  else{
+    const d=max-min;
+    s = l>0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max){
+      case r: h=(g-b)/d + (g<b?6:0); break;
+      case g: h=(b-r)/d + 2; break;
+      case b: h=(r-g)/d + 4; break;
     }
+    h/=6;
   }
-
-  // Card builder
-  function createCard(item, source) {
-    const id = btoa(item.link);
-    if (state.articles.some(a => a.id === id)) return null;
-
-    item.pubDate ||= item.isoDate || item.published || item.date || new Date().toISOString();
-    const timeString = formatArticleDate(item.pubDate);
-	
-	// infer topic + emoji
-	const topic = inferTopic(item);
-	const emoji = TOPIC_EMOJIS[topic] || TOPIC_EMOJIS.default;
-	item.topic = topic;
-	item.emoji = emoji;
-	
-
-    const card = document.createElement("div");
-    card.className = "card";
-    card.dataset.id = id;
-    card.dataset.source = source.name;
-
-const hasImage = item.thumbnail && !item.thumbnail.includes('placehold.co');
-let imageSection = '';
-
-if (hasImage) {
-  imageSection = `
-    <div class="card-image-wrapper">
-      <img src="${item.thumbnail}" alt="thumbnail" loading="lazy">
-    </div>`;
-} else {
-  imageSection = ''; // no image section at all
-}
-
-card.className = hasImage ? "card" : "card no-image";
-card.dataset.id = id;
-card.dataset.source = source.name;
-
-card.innerHTML = `
-  ${imageSection}
-  <div class="card-header">
-    <div class="source-logo-name">
-      ${source.logo ? `<img src="${source.logo}" alt="${source.name}" onerror="this.style.display='none';">` : ''}
-      <span>${source.name}</span>
-    </div>
-    <div class="timestamp">${timeString}</div>
-  </div>
-<div class="card-content">
-  <div class="topic-title">
-    <h2>${truncateWords(cleanTitle(item.title, source.name), 12)}</h2>
-    <span class="emoji">${emoji}</span>
-  </div>
-  
-  <div class="full-content">
-    ${truncateWords(stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(), 40)}<br>
-    <a href="${item.link}" class="read-more" target="_blank" rel="noopener">
-      Read full article <i class='bx bx-right-arrow-alt'></i>
-    </a>
-  </div>
-</div>
-`;
-
-
-
-    card.addEventListener("click", (e) => {
-      if (e.target.tagName === "A") return;
-      const expanded = document.querySelector(".card.expanded");
-      if (expanded && expanded !== card) expanded.classList.remove("expanded");
-      card.classList.toggle("expanded");
-    });
-
-    return { ...item, card, id };
-  }
-
-  function renderFeed() {
-    feedContainer.innerHTML = '';
-    const filtered = state.articles.filter(a =>
-      state.filters.source === 'all' || a.card.dataset.source === state.filters.source
-    );
-
-    if (filtered.length === 0) {
-      feedContainer.innerHTML = `
-        <div class="empty-state">
-          <i class='bx bx-news'></i>
-          <p>No stories.</p>
-          <span>Try refreshing.</span>
-        </div>`;
-      return;
-    }
-
-// Sort newest → oldest
-const sorted = filtered.sort((a, b) => new Date(b.pubDate) - new Date(a.pubDate));
-
-// Create a new array that simulates left→right, top→bottom reading order
-const columns = Math.max(1, Math.floor(feedContainer.offsetWidth / 360));
-
-const ordered = [];
-
-for (let i = 0; i < sorted.length; i++) {
-  const colIndex = i % columns;
-  const rowIndex = Math.floor(i / columns);
-  if (!ordered[rowIndex]) ordered[rowIndex] = [];
-  ordered[rowIndex][colIndex] = sorted[i];
-}
-
-// Flatten row-major order into a single array
-ordered.flat().forEach(item => feedContainer.appendChild(item.card));
-
-
-    applyDynamicCardColors();
-  }
-
-function applyDynamicCardColors() {
-  const colorThief = new ColorThief();
-  const cards = document.querySelectorAll('.card img');
-
-  cards.forEach(img => {
-    if (img.complete) setColor(img);
-    else img.addEventListener('load', () => setColor(img));
-  });
-
-  function setColor(img) {
-    try {
-      const [r, g, b] = colorThief.getColor(img);
-      const [adjR, adjG, adjB] = beautifyColor(r, g, b);
-
-      // Define readable variables for the two colours
-      const sourceColor = `rgb(${adjR}, ${adjG}, ${adjB})`;
-      const darkSourceColor = `rgb(${Math.max(adjR - 40, 0)}, ${Math.max(adjG - 40, 0)}, ${Math.max(adjB - 40, 0)})`;
-
-      const card = img.closest('.card');
-
-      // Set the solid base colour
-      card.style.backgroundColor = sourceColor;
-
-      // Overlay darker-to-transparent gradient
-      const overlay = document.createElement("div");
-      overlay.className = "card-gradient-overlay";
-      overlay.style.position = "absolute";
-      overlay.style.left = "0";
-      overlay.style.right = "0";
-      overlay.style.bottom = "0";
-      overlay.style.height = "100%";
-      overlay.style.pointerEvents = "none";
-      overlay.style.background = `
-        linear-gradient(
-          to top,
-          rgba(0,0,0,0.20) 0%,
-          rgba(0,0,0,0.05) 25%,
-          rgba(0,0,0,0) 30%
-        )
-      `;
-      overlay.style.mixBlendMode = "multiply";
-
-      // Save readable colour variables on the card
-      card.style.setProperty("--source-color", sourceColor);
-      card.style.setProperty("--dark-source-color", darkSourceColor);
-
-      // Remove any previous overlays before adding
-      const oldOverlay = card.querySelector(".card-gradient-overlay");
-      if (oldOverlay) oldOverlay.remove();
-      card.insertBefore(overlay, card.firstChild);
-    } catch (err) {
-      console.warn("Color extraction failed for", img.src, err);
-    }
-  }
-} // ✅ properly closes applyDynamicCardColors()
-
-
-
-// -------------------------------------------------------------
-// Beautify colour helper (keep hue, refine lightness/saturation)
-// -------------------------------------------------------------
-function beautifyColor(r, g, b) {
-  // Convert RGB to HSL
-  r /= 255;
-  g /= 255;
-  b /= 255;
-  const max = Math.max(r, g, b);
-  const min = Math.min(r, g, b);
-  let h, s;
-  let l = (max + min) / 2;
-
-  if (max === min) {
-    h = s = 0; // grey
-  } else {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    switch (max) {
-      case r:
-        h = (g - b) / d + (g < b ? 6 : 0);
-        break;
-      case g:
-        h = (b - r) / d + 2;
-        break;
-      case b:
-        h = (r - g) / d + 4;
-        break;
-    }
-    h /= 6;
-  }
-
-  // --- BEAUTIFICATION ---
-  s = Math.min(0.7, s * 1.2); // slightly boost saturation
-  l = Math.min(0.6, l * 1.3); // gently brighten
-
-  // Convert HSL back to RGB
-  const hue2rgb = (p, q, t) => {
-    if (t < 0) t += 1;
-    if (t > 1) t -= 1;
-    if (t < 1 / 6) return p + (q - p) * 6 * t;
-    if (t < 1 / 2) return q;
-    if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+  s = Math.min(0.7, s*1.2);
+  l = Math.min(0.6, l*1.3);
+  const hue2rgb=(p,q,t)=>{
+    if(t<0) t+=1; if(t>1) t-=1;
+    if(t<1/6) return p+(q-p)*6*t;
+    if(t<1/2) return q;
+    if(t<2/3) return p+(q-p)*(2/3 - t)*6;
     return p;
   };
-
-  let r2, g2, b2;
-  if (s === 0) {
-    r2 = g2 = b2 = l;
-  } else {
-    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-    const p = 2 * l - q;
-    r2 = hue2rgb(p, q, h + 1 / 3);
-    g2 = hue2rgb(p, q, h);
-    b2 = hue2rgb(p, q, h - 1 / 3);
+  let r2,g2,b2;
+  if(s===0){ r2=g2=b2=l; }
+  else{
+    const q=l<0.5 ? l*(1+s) : l + s - l*s;
+    const p=2*l-q;
+    r2=hue2rgb(p,q,h+1/3);
+    g2=hue2rgb(p,q,h);
+    b2=hue2rgb(p,q,h-1/3);
   }
+  return [Math.round(r2*255),Math.round(g2*255),Math.round(b2*255)];
+}
+function rgbToHsl(r,g,b){
+  r/=255; g/=255; b/=255;
+  const max=Math.max(r,g,b), min=Math.min(r,g,b);
+  let h,s,l=(max+min)/2;
+  if(max===min){ h=s=0; }
+  else{
+    const d=max-min;
+    s = l>0.5 ? d/(2-max-min) : d/(max+min);
+    switch(max){
+      case r: h=(g-b)/d + (g<b?6:0); break;
+      case g: h=(b-r)/d + 2; break;
+      case b: h=(r-g)/d + 4; break;
+    }
+    h/=6;
+  }
+  return [h,s,l];
+}
+function hslToRgb(h,s,l){
+  const hue2rgb=(p,q,t)=>{
+    if(t<0) t+=1; if(t>1) t-=1;
+    if(t<1/6) return p+(q-p)*6*t;
+    if(t<1/2) return q;
+    if(t<2/3) return p+(q-p)*(2/3 - t)*6;
+    return p;
+  };
+  let r,g,b;
+  if(s===0){ r=g=b=l; }
+  else{
+    const q=l<0.5 ? l*(1+s) : l + s - l*s;
+    const p=2*l-q;
+    r=hue2rgb(p,q,h+1/3);
+    g=hue2rgb(p,q,h);
+    b=hue2rgb(p,q,h-1/3);
+  }
+  return [Math.round(r*255),Math.round(g*255),Math.round(b*255)];
+}
 
-  return [
-    Math.round(r2 * 255),
-    Math.round(g2 * 255),
-    Math.round(b2 * 255)
-  ];
+/* Extract brand-ish colours from the source logo (with fallbacks) */
+async function getGradientFromLogo(logoUrl) {
+  return new Promise(resolve => {
+    const img = new Image();
+    img.crossOrigin = 'Anonymous';
+    img.src = logoUrl;
+    img.onload = () => {
+      try {
+        const thief = new ColorThief();
+        const [r, g, b] = thief.getColor(img); // main hue only
+
+        // --- generate 3 tones ---
+        const [h, s, l] = rgbToHsl(r, g, b);
+        const base = hslToRgb(h, s, l);
+        const light = hslToRgb(h, s * 0.8, Math.min(1, l * 1.4));
+        const dark = hslToRgb(h, s, Math.max(0, l * 0.45));
+
+        const rgb = (arr) => `rgb(${arr[0]}, ${arr[1]}, ${arr[2]})`;
+        const sourceColor = rgb(base);
+        const lightSourceColor = rgb(light);
+        const darkSourceColor = rgb(dark);
+
+        // --- mesh-like composite gradient ---
+        const gradient = `
+          radial-gradient(at 20% 30%, ${lightSourceColor}, transparent 60%),
+          radial-gradient(at 80% 70%, ${sourceColor}, ${darkSourceColor} 80%)
+        `;
+
+        resolve({ gradient, sourceColor, darkSourceColor, lightSourceColor });
+      } catch (err) {
+        resolve({
+          gradient: 'radial-gradient(circle, #444, #222)',
+          sourceColor: 'rgb(68,68,68)',
+          darkSourceColor: 'rgb(34,34,34)',
+          lightSourceColor: 'rgb(90,90,90)'
+        });
+      }
+    };
+    img.onerror = () => resolve({
+      gradient: 'radial-gradient(circle, #444, #222)',
+      sourceColor: 'rgb(68,68,68)',
+      darkSourceColor: 'rgb(34,34,34)',
+      lightSourceColor: 'rgb(90,90,90)'
+    });
+  });
 }
 
 
 
-  function generatePlaceholderFromLogoColor(logoUrl, sourceName) {
-    return new Promise((resolve) => {
-      const img = new Image();
-      img.crossOrigin = 'Anonymous';
-      img.src = logoUrl;
-      img.onload = () => {
-        try {
-          const colorThief = new ColorThief();
-          const [r, g, b] = colorThief.getColor(img);
-          const darken = 0.55;
-          const dr = Math.round(r * darken);
-          const dg = Math.round(g * darken);
-          const db = Math.round(b * darken);
-          const bgColor = `${dr.toString(16).padStart(2, '0')}${dg
-            .toString(16)
-            .padStart(2, '0')}${db.toString(16).padStart(2, '0')}`;
-          const text = encodeURIComponent(sourceName);
-          resolve(`https://placehold.co/800x400/${bgColor}/ffffff?text=${text}`);
-        } catch (err) {
-          resolve(`https://placehold.co/800x400/1f1f1f/ffffff?text=${encodeURIComponent(sourceName)}`);
-        }
-      };
-      img.onerror = () => {
-        resolve(`https://placehold.co/800x400/1f1f1f/ffffff?text=${encodeURIComponent(sourceName)}`);
-      };
+/* Optional Pexels fallback (kept from your previous build) */
+async function getPexelsImage(query){
+  try{
+    const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`, {
+      headers: { Authorization: PEXELS_API_KEY }
     });
+    const data = await res.json();
+    return data.photos?.[0]?.src?.landscape || null;
+  }catch{
+    return null;
   }
+}
 
-  function buildSourceScroller(sources) {
-    sourceScroller.innerHTML = '';
-    const allBtn = document.createElement('button');
-    allBtn.className = 'chip active';
-    allBtn.innerHTML = `<i class='bx bx-globe'></i><span>All</span>`;
-    allBtn.onclick = () => {
-      state.filters.source = 'all';
-      [...sourceScroller.querySelectorAll('.chip')].forEach(b => b.classList.remove('active'));
-      allBtn.classList.add('active');
-      renderFeed();
-    };
-    sourceScroller.appendChild(allBtn);
+/* ---------- Rendering ---------- */
+function makeCardDOM(item, source) {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.dataset.source = source.name;
 
-    sources.forEach(source => {
-      const btn = document.createElement('button');
-      btn.className = 'chip';
-      btn.innerHTML = source.logo
-        ? `<img src="${source.logo}" alt="${source.name}"><span>${source.name}</span>`
-        : `<i class='bx bx-news'></i><span>${source.name}</span>`;
-      btn.onclick = () => {
-        state.filters.source = source.name;
-        [...sourceScroller.querySelectorAll('.chip')].forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        renderFeed();
-      };
-      sourceScroller.appendChild(btn);
-    });
-  }
+  const hasImage = !!(item.thumbnail && !item.thumbnail.includes('placehold.co'));
 
-  async function loadFeed(source) {
-    const cachedUrl = `https://rss-proxy.davidbusch-02.workers.dev/cached?url=${encodeURIComponent(source.url)}`;
-    const liveUrl   = `https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`;
-    let data = null;
-
-    try {
-      const cachedRes = await fetch(cachedUrl);
-      if (cachedRes.ok) data = await cachedRes.json();
-    } catch {}
-
-    if (!data || !data.items || data.items.length === 0) {
-      const liveRes = await fetch(liveUrl);
-      data = await liveRes.json();
+  // --- Background ---
+  if (hasImage) {
+    card.style.backgroundImage = `url('${item.thumbnail}')`;
+  } else {
+    if (source._colors?.gradient) {
+      card.style.background = source._colors.gradient;
+    } else if (item.sourceColor) {
+      card.style.backgroundColor = item.sourceColor;
+    } else {
+      card.style.background = 'radial-gradient(circle, #444, #222)';
     }
-    if (!data.items) return;
 
-    for (const item of data.items) {
-      if (!item.thumbnail) {
-        item.thumbnail = await generatePlaceholderFromLogoColor(source.logo, source.name);
-      }
-      const entry = createCard(item, source);
-      if (entry) state.articles.push(entry);
+    if (source._colors?.darkSourceColor) {
+      card.style.setProperty('--dark-source-color', source._colors.darkSourceColor);
     }
   }
 
-  // Try cached feed instantly
-  const saved = localStorage.getItem('feedCache');
-  const savedAt = localStorage.getItem('feedTimestamp');
-  if (saved && savedAt && Date.now() - savedAt < 1000 * 60 * 30) {
-    try {
-      state.articles = JSON.parse(saved);
-      renderFeed();
-      console.log("Loaded feed from local cache");
-    } catch (e) {
-      console.warn("Local cache corrupted, refetching");
-    }
+  // --- Source header (logo + name) ---
+  const header = document.createElement('div');
+  header.className = 'source-header';
+  if (source.logo) {
+    const logo = document.createElement('img');
+    logo.src = source.logo;
+    logo.alt = source.name;
+    logo.className = 'source-logo';
+    header.appendChild(logo);
   }
+  const name = document.createElement('span');
+  name.textContent = source.name;
+  name.className = 'source-name';
+  header.appendChild(name);
+  card.appendChild(header);
 
-  async function loadAllFeeds() {
-    feedContainer.innerHTML = `
-      <div class="empty-state">
-        <i class='bx bx-loader bx-spin'></i>
-        <p>Loading feeds…</p>
-      </div>`;
-    state.articles = [];
+  // --- Info section (headline + date) ---
+  const info = document.createElement('div');
+  info.className = 'info';
+  const h2 = document.createElement('h2');
+  h2.textContent = truncateWords(normalizeHeadline(cleanTitle(item.title, source.name)), 18);
+  const meta = document.createElement('div');
+  meta.className = 'meta';
+  meta.textContent = formatArticleDate(item.pubDate);
+  info.appendChild(h2);
+  info.appendChild(meta);
 
-    try {
-      const feedRes = await fetch("feeds.json");
-      const feedData = await feedRes.json();
-      state.allSources = Object.values(feedData).flat();
-      buildSourceScroller(state.allSources);
-      await Promise.all(state.allSources.map(loadFeed));
-      renderFeed();
-      localStorage.setItem('feedCache', JSON.stringify(state.articles));
-      localStorage.setItem('feedTimestamp', Date.now());
-      showToast();
-    } catch (err) {
-      feedContainer.innerHTML = `
-        <div class="empty-state">
-          <i class='bx bx-error'></i>
-          <p>Error loading feeds</p>
-          <span>${err.message}</span>
-        </div>`;
+  // --- Content section (expanded view) ---
+  const content = document.createElement('div');
+  content.className = 'content';
+  const p = document.createElement('p');
+  p.textContent = truncateWords(
+    stripHtmlTags(item.content || item.description || '')
+      .replace(/Read More/gi, '')
+      .trim(),
+    32
+  );
+  const a = document.createElement('a');
+  a.href = item.link;
+  a.target = '_blank';
+  a.rel = 'noopener';
+  a.textContent = 'Read Full Article';
+  content.appendChild(p);
+  content.appendChild(a);
+
+  card.appendChild(info);
+  card.appendChild(content);
+
+  // --- Click interaction (only one open at a time) ---
+  card.addEventListener('click', (e) => {
+    if (e.target.tagName === 'A') return;
+    if (state.openCard && state.openCard !== card) {
+      state.openCard.classList.remove('active');
     }
-  }
-
-  document.getElementById('refreshBtn').addEventListener('click', async () => {
-    const icon = document.querySelector('#refreshBtn i');
-    icon.classList.add('bx-spin-reverse');
-    await loadAllFeeds();
-    icon.classList.remove('bx-spin-reverse');
+    const nowActive = !card.classList.contains('active');
+    card.classList.toggle('active', nowActive);
+    state.openCard = nowActive ? card : null;
   });
 
-  document.getElementById('backToTopBtn').addEventListener('click', () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  });
+  return card;
+}
 
-  const backToTopBtn = document.getElementById('backToTopBtn');
-  window.addEventListener('scroll', () => {
-    backToTopBtn.style.opacity = window.scrollY > 400 ? '1' : '0';
-    backToTopBtn.style.pointerEvents = window.scrollY > 400 ? 'auto' : 'none';
-  });
-  backToTopBtn.style.transition = 'opacity 0.3s ease';
-  backToTopBtn.style.opacity = '0';
-  backToTopBtn.style.pointerEvents = 'none';
 
-  loadAllFeeds();
+
+function renderGrid(){
+  gridEl.innerHTML = '';
+  if(!state.articles.length){
+    const empty = document.createElement('div');
+    empty.className = 'empty';
+    empty.textContent = 'No stories. Try refreshing.';
+    gridEl.appendChild(empty);
+    return;
+  }
+  const sorted = state.articles.sort((a,b)=> new Date(b.pubDate)-new Date(a.pubDate));
+  sorted.forEach(item => gridEl.appendChild(item.card));
+}
+
+/* ---------- Feed loading (Worker proxy + cache) ---------- */
+async function loadFeed(source){
+  const cachedUrl = `https://rss-proxy.davidbusch-02.workers.dev/cached?url=${encodeURIComponent(source.url)}`;
+  const liveUrl   = `https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`;
+  let data = null;
+
+  try{
+    const cachedRes = await fetch(cachedUrl);
+    if(cachedRes.ok) data = await cachedRes.json();
+  }catch{}
+
+  if(!data || !data.items || !data.items.length){
+    const liveRes = await fetch(liveUrl);
+    data = await liveRes.json();
+  }
+  if(!data.items) return;
+
+  // Compute per-source colours once (for no-image cards)
+    if(!source._colors){
+      source._colors = await getGradientFromLogo(source.logo);
+    }
+
+
+  for(const item of data.items){
+    item.pubDate ||= item.isoDate || item.published || item.date || new Date().toISOString();
+
+    // Decide thumbnail:
+    let hasImage = !!item.thumbnail;
+    // If the thumbnail is a generated placeholder URL, treat as no-image:
+    if(hasImage && /placehold\.co/.test(item.thumbnail)) hasImage = false;
+
+    // Optional: try a Pexels fallback only if really no image and you want one
+    // (commented out to embrace your "colour card" approach)
+    // if(!hasImage){
+    //   const fallback = await getPexelsImage(cleanTitle(item.title, source.name));
+    //   if(fallback){ item.thumbnail = fallback; hasImage = true; }
+    // }
+
+    const id = btoa(item.link);
+    if(state.articles.some(a => a.id === id)) continue;
+
+    const card = makeCardDOM(item, source);
+    state.articles.push({ ...item, card, id });
+  }
+}
+
+
+
+
+async function loadAllFeeds(){
+  gridEl.innerHTML = '<div class="empty">Loading feeds…</div>';
+  state.articles = [];
+
+  try{
+    const feedRes = await fetch('feeds.json');
+    const feedData = await feedRes.json();
+    state.allSources = Object.values(feedData).flat();
+
+    await Promise.all(state.allSources.map(loadFeed));
+
+    renderGrid();
+    localStorage.setItem('feedCache_grid', JSON.stringify(state.articles.map(a=>({
+      id:a.id,
+      link:a.link,
+      title:a.title,
+      pubDate:a.pubDate,
+      description:a.description,
+      content:a.content,
+      thumbnail:a.thumbnail || null,
+      sourceName:a.card?.dataset?.source || '',
+      sourceColor:a.sourceColor || null,
+      darkSourceColor:a.darkSourceColor || null
+    })) ));
+    localStorage.setItem('feedTimestamp_grid', Date.now());
+    showToast();
+  }catch(err){
+    gridEl.innerHTML = `<div class="empty">Error loading feeds: ${err.message}</div>`;
+  }
+}
+
+/* ---------- Cached boot ---------- */
+(function bootFromCache(){
+  const saved = localStorage.getItem('feedCache_grid');
+  const savedAt = localStorage.getItem('feedTimestamp_grid');
+  if(saved && savedAt && Date.now() - savedAt < 1000*60*30){
+    try{
+      const cacheItems = JSON.parse(saved);
+      state.articles = cacheItems.map(ci=>{
+        const source = { name: ci.sourceName || 'Source', logo: null };
+        const item = {
+          link: ci.link, title: ci.title, pubDate: ci.pubDate,
+          description: ci.description, content: ci.content,
+          thumbnail: ci.thumbnail, sourceColor: ci.sourceColor, darkSourceColor: ci.darkSourceColor
+        };
+        const card = makeCardDOM(item, source);
+        return { ...item, card, id: ci.id };
+      });
+      renderGrid();
+    }catch(e){
+      console.warn('Local cache corrupted, refetching');
+    }
+  }
+})();
+
+
+
+/* ---------- First load ---------- */
+loadAllFeeds();
 </script>
 
+<!-- ColorThief for logo-based palette -->
 <script src="https://unpkg.com/colorthief/dist/color-thief.umd.js"></script>
+<script>
+/* Date */
+(function setDate(){
+  const el=document.getElementById("currentDate");
+  const today=new Date();
+  el.textContent=today.toLocaleDateString("en-US",{year:"numeric",month:"long",day:"numeric"});
+})();
+
+/* Scroll Hide/Show for Frosted Topbar */
+let lastScroll=0;
+const topbar=document.getElementById('topbar');
+window.addEventListener('scroll',()=>{
+  const curr=window.scrollY;
+  if(curr>lastScroll && curr>80){ topbar.classList.add('hidden'); }
+  else if(curr<lastScroll-10){ topbar.classList.remove('hidden'); }
+  lastScroll=curr;
+});
+
+/* Button Logic */
+const backBtn=document.getElementById('backToTopBtn');
+window.addEventListener('scroll',()=>{
+  if(window.scrollY>400) backBtn.classList.add('visible');
+  else backBtn.classList.remove('visible');
+});
+backBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
+
+const refreshBtn=document.getElementById('refreshBtn');
+refreshBtn.addEventListener('click',()=>{
+  const icon=refreshBtn.querySelector('i');
+  icon.classList.add('bx-spin');
+  setTimeout(()=>icon.classList.remove('bx-spin'),1500);
+});
+</script>
 
 
 </body>
 </html>
+ 
