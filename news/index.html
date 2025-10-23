@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+<meta name="mobile-web-app-capable" content="yes">
 <title>London News</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 <link rel="icon" href="favicon.ico">
 <link rel="manifest" href="manifest.json">
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
+
 
 <style>
 :root{
@@ -44,17 +44,19 @@ body{
   top: 0;
   left: 0;
   right: 0;
-  height: 72px;
+  height: calc(72px + env(safe-area-inset-top));
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: space-between;
-  padding: 0 1.5rem;
+  padding: 0 1.5rem calc(12px + env(safe-area-inset-bottom));
   background: rgba(24, 21, 38, 0.6);
   backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(255,255,255,0.08);
   z-index: 1000;
   transition: transform 0.45s ease, opacity 0.35s ease;
+  box-sizing: border-box;
 }
+
 
 .topbar.hidden {
   transform: translateY(-100%);
