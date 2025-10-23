@@ -48,9 +48,9 @@ body{
   align-items: center; /* use center instead of flex-end */
   justify-content: space-between;
   padding: calc(env(safe-area-inset-top, 0px) + 0.75rem) 1.5rem 0.75rem;
-  background: rgba(24, 21, 38, 0.6);
-  backdrop-filter: blur(14px);
-  border-bottom: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.08);
+  border-bottom: 1px solid rgba(255,255,255,0.2);  
+  backdrop-filter: blur(10px);
   z-index: 1000;
   transition: transform 0.45s ease, opacity 0.35s ease;
   box-sizing: border-box;
@@ -160,11 +160,11 @@ body{
   width: 62px;
   height: 62px;
   border-radius: 50%;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.2);
   color: #fff;
   font-size: 1.9rem;
   cursor: pointer;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);  
   backdrop-filter: blur(10px);
   transition: background 0.25s, transform 0.25s, opacity 0.25s;
   padding-top: 4px;
