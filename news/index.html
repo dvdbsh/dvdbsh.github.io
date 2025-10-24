@@ -15,7 +15,7 @@
 
 <style>
 :root{
-  --blur-amount: 10px;
+  --blur-amount: 15px;
   --transition-speed: 0.25s;
   --overlay-color: rgba(0,0,0,0.25);
   --font: 'Nunito', sans-serif;
@@ -295,14 +295,19 @@ text-shadow:
 .content a{
   text-decoration:none;
   align-self:flex-start;
-  background:#fff;
-  color:#000;
+  background: rgb(from var(--source-color) r g b / 0.4);
+  border: 1px solid rgba(255,255,255,0.2);  
+  backdrop-filter: blur(10px);
+  transition: background 0.25s, transform 0.25s, opacity 0.25s;
+  color:#fff;
   border-radius:24px;
   padding:0.6rem 1.2rem;
   font-weight:800;
-  transition:background .25s, transform .25s;
+  box-shadow:
+  0 0 5px rgb(from var(--source-color) r g b / 0.4);
+
 }
-.content a:hover{ background:#ddd; transform:scale(1.05); }
+.content a:hover{ transform:scale(1.05); }
 
 /* Active state */
 /* --- Base overlay setup --- */
