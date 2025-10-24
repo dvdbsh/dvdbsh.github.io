@@ -214,15 +214,7 @@ body{
 .card.active{ filter:saturate(1) contrast(1.05); }
 
 /* overlay */
-.card::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:var(--source-color, rgba(0,0,0,0.25));
-  mix-blend-mode: overlay;
-  transition:backdrop-filter var(--transition-speed) ease, background var(--transition-speed) ease;
-  z-index:1;
-}
+
 
 
 .source-header {
@@ -264,9 +256,11 @@ body{
   font-size:1.75rem;
   line-height:1;
   font-weight:900;
-  text-shadow:
-  0 0 5px rgba(36,36,36,0.55),
-  0 0 10px rgba(36,36,36,1);
+text-shadow:
+  0 0 5px rgba(36,36,36,1),
+  0 0 8px rgba(36,36,36,1),
+  0 0 50px rgba(36,36,36,1);
+
 
 }
 .info .meta{
@@ -294,7 +288,7 @@ body{
 }
 .content p{
   font-size:1.2rem;
-  line-height:1.2;
+  line-height:1.4;
   margin-bottom:1rem;
   color:#e8eeff;
 }
@@ -320,11 +314,21 @@ body{
   z-index: 1;
   transition: all var(--transition-speed) ease;
 }
-
+.card::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:var(--source-color, rgba(0,0,0,0.25));
+  mix-blend-mode: overlay;
+  transition:backdrop-filter var(--transition-speed) ease, background var(--transition-speed) ease;
+  z-index:1;
+}
 /* Overlay colour (multiply tint) */
 .card::before {
-  background: var(--source-color, rgba(0,0,0,0.25));
-  mix-blend-mode: multiply;
+  /* background: rgb(from var(--source-color) r g b / 0); */
+  background:rgba(0,0,0,0.25);
+
+  mix-blend-mode: darken;
 }
 
 /* Blur layer (initially off) */
@@ -396,6 +400,7 @@ body{
     min-height: 360px;
     width: 100%;
     margin: 0;
+	border-bottom: 10px solid #0d0d0d;
   }
 
   .info {
@@ -695,16 +700,22 @@ async function getGradientFromLogo(logoUrl) {
 
 /* Optional Pexels fallback (kept from your previous build) */
 async function getPexelsImage(query){
-  try{
+  const key = 'pexels_' + query.toLowerCase();
+  const cached = localStorage.getItem(key);
+  if (cached) return cached;
+  try {
     const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`, {
       headers: { Authorization: PEXELS_API_KEY }
     });
     const data = await res.json();
-    return data.photos?.[0]?.src?.landscape || null;
-  }catch{
+    const url = data.photos?.[0]?.src?.landscape || null;
+    if (url) localStorage.setItem(key, url);
+    return url;
+  } catch {
     return null;
   }
 }
+
 
 /* ---------- Rendering ---------- */
 function makeCardDOM(item, source) {
@@ -844,12 +855,15 @@ async function loadFeed(source){
     // If the thumbnail is a generated placeholder URL, treat as no-image:
     if(hasImage && /placehold\.co/.test(item.thumbnail)) hasImage = false;
 
-    // Optional: try a Pexels fallback only if really no image and you want one
-    // (commented out to embrace your "colour card" approach)
-    // if(!hasImage){
-    //   const fallback = await getPexelsImage(cleanTitle(item.title, source.name));
-    //   if(fallback){ item.thumbnail = fallback; hasImage = true; }
-    // }
+    // Try a Pexels fallback image if the article has no image
+    if (!hasImage) {
+      const fallback = await getPexelsImage(cleanTitle(item.title, source.name));
+      if (fallback) {
+        item.thumbnail = fallback;
+        hasImage = true;
+      }
+    }
+
 
     const id = btoa(item.link);
     if(state.articles.some(a => a.id === id)) continue;
