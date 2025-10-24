@@ -295,7 +295,7 @@ text-shadow:
 .content a{
   text-decoration:none;
   align-self:flex-start;
-  background: rgb(from var(--source-color) r g b / 0.4);
+  background:transparent;
   border: 1px solid rgba(255,255,255,0.2);  
   backdrop-filter: blur(10px);
   transition: background 0.25s, transform 0.25s, opacity 0.25s;
@@ -304,7 +304,7 @@ text-shadow:
   padding:0.6rem 1.2rem;
   font-weight:800;
   box-shadow:
-  0 0 5px rgb(from var(--source-color) r g b / 0.4);
+  0 0 15px rgba(36,36,36,0.2);
 
 }
 .content a:hover{ transform:scale(1.05); }
@@ -415,6 +415,30 @@ text-shadow:
   .content {
     padding: 1.25rem;
   }
+}
+
+.share-btn {
+  position: absolute;
+  bottom: 0.9rem;
+  right: 0.9rem;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #fff;
+  font-size: 1.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  backdrop-filter: blur(10px);
+  transition: background 0.25s, transform 0.25s;
+}
+.share-btn:hover {
+  background: rgba(255,255,255,0.15);
+  transform: scale(1.08);
 }
 
 
@@ -704,22 +728,22 @@ async function getGradientFromLogo(logoUrl) {
 
 
 /* Optional Pexels fallback (kept from your previous build) */
-async function getPexelsImage(query){
-  const key = 'pexels_' + query.toLowerCase();
-  const cached = localStorage.getItem(key);
-  if (cached) return cached;
-  try {
-    const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`, {
-      headers: { Authorization: PEXELS_API_KEY }
-    });
-    const data = await res.json();
-    const url = data.photos?.[0]?.src?.landscape || null;
-    if (url) localStorage.setItem(key, url);
-    return url;
-  } catch {
-    return null;
-  }
-}
+//async function getPexelsImage(query){
+//  const key = 'pexels_' + query.toLowerCase();
+//  const cached = localStorage.getItem(key);
+//  if (cached) return cached;
+//  try {
+//    const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`, {
+//      headers: { Authorization: PEXELS_API_KEY }
+//    });
+//    const data = await res.json();
+//    const url = data.photos?.[0]?.src?.landscape || null;
+//    if (url) localStorage.setItem(key, url);
+//    return url;
+//  } catch {
+//    return null;
+//  }
+//}
 
 
 /* ---------- Rendering ---------- */
@@ -810,6 +834,37 @@ function makeCardDOM(item, source) {
     card.classList.toggle('active', nowActive);
     state.openCard = nowActive ? card : null;
   });
+  
+// --- Share button (bottom right) ---
+const shareBtn = document.createElement('button');
+shareBtn.className = 'share-btn';
+shareBtn.innerHTML = `<i class='bx bx-share-alt'></i>`;
+
+shareBtn.addEventListener('click', async (e) => {
+  e.stopPropagation(); // don't toggle the card
+  const articleUrl = item.link;
+
+  // ✅ Native Share Sheet support
+  if (navigator.share) {
+    try {
+      await navigator.share({
+        title: decodeEntities(item.title || "London News"),
+        text: "Check out this article:",
+        url: articleUrl
+      });
+    } catch (err) {
+      console.warn("Share cancelled or failed", err);
+    }
+  } else {
+    // fallback for desktop browsers
+    await navigator.clipboard.writeText(articleUrl);
+    showToast("Link copied to clipboard");
+  }
+});
+
+card.appendChild(shareBtn);
+
+
 
   return card;
 }
@@ -861,13 +916,13 @@ async function loadFeed(source){
     if(hasImage && /placehold\.co/.test(item.thumbnail)) hasImage = false;
 
     // Try a Pexels fallback image if the article has no image
-    if (!hasImage) {
-      const fallback = await getPexelsImage(cleanTitle(item.title, source.name));
-      if (fallback) {
-        item.thumbnail = fallback;
-        hasImage = true;
-      }
-    }
+    //if (!hasImage) {
+    //  const fallback = await getPexelsImage(cleanTitle(item.title, source.name));
+    //  if (fallback) {
+    //    item.thumbnail = fallback;
+    //    hasImage = true;
+    //  }
+    //}
 
 
     const id = btoa(item.link);
