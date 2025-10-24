@@ -3,42 +3,50 @@
     {
       "name": "Global News London",
       "url": "https://globalnews.ca/london/feed",
-      "logo": "images/logos/global.png"
+      "logo": "images/logos/global.png",
+	  "useOpenGraph": false
     },
     {
       "name": "CBC News London",
       "url": "https://www.cbc.ca/webfeed/rss/rss-canada-london",
-      "logo": "images/logos/cbc.png"
+      "logo": "images/logos/cbc.png",
+	  "useOpenGraph": false
     },
     {
       "name": "London Free Press",
       "url": "https://lfpress.com/feed",
-      "logo": "images/logos/lfp.png"
+      "logo": "images/logos/lfp.png",
+	  "useOpenGraph": false
     },	
     {
       "name": "CTV News",
       "url": "https://news.google.com/rss/search?q=site:https://www.ctvnews.ca/london/+when:7d&hl=en-CA&gl=CA&ceid=CA:en",
-      "logo": "images/logos/ctv.png"
+      "logo": "images/logos/ctv.png",
+	  "useOpenGraph": true
     },		
     {
       "name": "106.9 The X",
       "url": "https://www.1069thex.com/category/news-home-page/feed/",
-      "logo": "images/logos/1069thex.png"
+      "logo": "images/logos/1069thex.png",
+	  "useOpenGraph": false
     },
     {
       "name": "City of London Newsroom",
       "url": "https://news.google.com/rss/search?q=site:https://london.ca/newsroom+when:7d&hl=en-CA&gl=CA&ceid=CA:en",
-      "logo": "images/logos/CoL.png"
+      "logo": "images/logos/CoL.png",
+	  "useOpenGraph": false
     },	
     {
       "name": "London Police Service",
       "url": "https://news.google.com/rss/search?q=site:https://x.com/lpsmediaoffice+when:7d&hl=en-CA&gl=CA&ceid=CA:en",
-      "logo": "images/logos/lps.png"
+      "logo": "images/logos/lps.png",
+	  "useOpenGraph": false
     },
     {
       "name": "London Fire Department",
       "url": "https://news.google.com/rss/search?q=site:https://x.com/LdnOntFire+when:7d&hl=en-CA&gl=CA&ceid=CA:en",
-      "logo": "images/logos/lfd.png"
+      "logo": "images/logos/lfd.png",
+	  "useOpenGraph": false
     }	
   ]
 }
