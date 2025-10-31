@@ -2,13 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>Arc Brick</title>
+<title>Arc Brick v2</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, viewport-fit=cover">
 <meta name="theme-color" content="#0b0d12">
 <style>
   :root{
     --bg:#0b0d12;
-    --panel:#141823;
+    --panel:#121624;
     --fg:#e8ecf4;
     --muted:#a7b0c0;
     --glass:rgba(255,255,255,.06);
@@ -16,16 +16,21 @@
   }
   html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none;overflow:hidden}
   canvas{display:block;width:100vw;height:100vh;max-height:100svh}
-  .hud{
-    position:fixed;inset:12px 12px auto 12px;display:flex;gap:10px;align-items:center;justify-content:space-between;pointer-events:none
+
+  /* top bar */
+  .topbar{
+    position:fixed;top:10px;left:10px;right:10px;display:grid;
+    grid-template-columns:1fr auto 1fr;align-items:center;gap:10px;pointer-events:none;z-index:5
   }
   .pill{
+    justify-self:start;
     backdrop-filter:blur(10px) saturate(120%);-webkit-backdrop-filter:blur(10px) saturate(120%);
-    background:var(--glass);border:1px solid var(--glassBorder);border-radius:12px;padding:8px 12px;font-weight:700;letter-spacing:.2px;box-shadow:0 8px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06)
+    background:var(--glass);border:1px solid var(--glassBorder);border-radius:12px;padding:8px 12px;
+    font-weight:700;letter-spacing:.2px;box-shadow:0 8px 30px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.06)
   }
-  .btn{
-    position:fixed;top:12px;right:12px;padding:10px 14px;border-radius:12px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:700;cursor:pointer;z-index:5
-  }
+  .pill.center{justify-self:center}
+  .pill.right{justify-self:end}
+
   .hint{
     position:fixed;bottom:16px;left:50%;transform:translateX(-50%);
     backdrop-filter:blur(10px) saturate(120%);-webkit-backdrop-filter:blur(10px) saturate(120%);
@@ -35,22 +40,29 @@
   .centerTitle.hidden{opacity:0;pointer-events:none}
   .centerTitle h1{margin:0 0 8px 0;font-size:clamp(24px,6vw,42px)}
   .centerTitle p{margin:0;color:var(--muted)}
+  .overlayBtn{
+    position:fixed;top:50%;left:50%;transform:translate(-50%,-10px);
+    padding:10px 16px;border-radius:12px;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:700;cursor:pointer
+  }
 </style>
 </head>
 <body>
 <canvas id="cv"></canvas>
 
-<div class="hud">
+<div class="topbar">
   <div class="pill" id="score">Score 0</div>
-  <div class="pill" id="balls">Balls 8</div>
+  <div class="pill center" id="balls">Balls 8</div>
+  <div class="pill right" id="best">Best 0</div>
 </div>
-<button class="btn" id="restart">Restart</button>
+
 <div class="hint">Drag to aim. Release to shoot. Wait for balls to return.</div>
+
 <div class="centerTitle" id="title">
   <div>
     <h1>Arc Brick</h1>
     <p>Clean aim and bounce brick game</p>
   </div>
+  <button id="startBtn" class="overlayBtn">Start</button>
 </div>
 
 <script>
@@ -60,64 +72,36 @@
 
   const scoreEl = document.getElementById('score');
   const ballsEl = document.getElementById('balls');
+  const bestEl = document.getElementById('best');
   const titleEl = document.getElementById('title');
-
-  const restartBtn = document.getElementById('restart');
-  restartBtn.addEventListener('click', () => hardReset());
+  const startBtn = document.getElementById('startBtn');
 
   let W=0, H=0, DPR=1;
-  const margin = { t:96, r:18, b:92, l:18 };
+  const margin = { t:96, r:18, b:96, l:18 };
   const field = () => ({ x:margin.l, y:margin.t, w:W - margin.l - margin.r, h:H - margin.t - margin.b });
 
-  // soft pastel palette
-  const pastel = ['#b7d4ff', '#f8c4ff', '#ffd6a5', '#caffbf', '#e6f3ff', '#ffcfe1', '#d7d7ff', '#c2f7e4'];
-  const brickColors = ['#9ec6ff','#c7b7ff','#ffb6c8','#ffd39b','#bfe8c8','#f1c2ff','#b7e0ff','#ffd9e6'];
-
-  // game state
+  // state
   const S = {
     running:false,
-    waiting:false, // waiting for all balls to return
+    waiting:false,
     level:1,
     score:0,
-    ammo:8,           // balls you own
-    volleyCount:8,    // balls to fire this volley
+    best:parseInt(localStorage.getItem('arcbrick_best')||'0',10),
+    ammo:8,           // balls owned
+    volleyCount:8,    // balls per volley
     balls:[],
     bricks:[],
-    grid:{ cols:7, rows:9, gap:8, cellW:0, cellH:0 },
+    grid:{ cols:7, rows:9, gap:8, cell:56 },
     aim:{ active:false, startX:0, startY:0, endX:0, endY:0, path:[] },
-    launcherX:0, // next volley spawn x
-    firstCatchX:null
+    launcherX:0,
+    firstCatchX:null,
+    particles:[],
+    lastShotTime:0
   };
-
-  // setup and resize
-  function resize(){
-    DPR = Math.max(1, window.devicePixelRatio || 1);
-    W = Math.floor(window.innerWidth);
-    H = Math.floor(window.innerHeight);
-    cv.width = Math.floor(W * DPR);
-    cv.height = Math.floor(H * DPR);
-    cv.style.width = W+'px';
-    cv.style.height = H+'px';
-    ctx.setTransform(DPR,0,0,DPR,0,0);
-    placeGrid();
-  }
-  window.addEventListener('resize', resize, { passive:true });
-
-  function placeGrid(){
-    const f = field();
-    S.grid.cols = clamp(Math.round(f.w / 60), 6, 9);
-    S.grid.rows = 9;
-    S.grid.gap = 8;
-    S.grid.cellW = Math.floor((f.w - S.grid.gap*(S.grid.cols-1)) / S.grid.cols);
-    S.grid.cellH = S.grid.cellW; // square
-    if (!S.running) {
-      S.launcherX = f.x + f.w * 0.5;
-    }
-  }
+  bestEl.textContent = 'Best ' + S.best;
 
   // helpers
   const clamp = (v,a,b) => Math.max(a, Math.min(b,v));
-  const sign = v => v<0?-1:1;
   function rrect(x,y,w,h,r){
     const rr = Math.min(r, w*.5, h*.5);
     ctx.beginPath();
@@ -132,50 +116,130 @@
     ctx.quadraticCurveTo(x,y,x+rr,y);
     ctx.closePath();
   }
+  const randInt=(a,b)=>Math.floor(a+Math.random()*(b-a+1));
+  function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }
 
-  // brick grid helpers
-  function cellToXY(c,r){
-    const f = field();
-    const x = f.x + c*(S.grid.cellW + S.grid.gap);
-    const y = f.y + r*(S.grid.cellW + S.grid.gap);
-    return { x, y };
+  // soft colour by number, same number same colour
+  function colorForHP(hp){
+    // deterministic pastel HSL
+    const hue = (hp * 37) % 360;   // spread
+    const sat = 64;                // soft
+    const light = 78;              // easy on eyes
+    return `hsl(${hue} ${sat}% ${light}%)`;
   }
 
-  // build level row
+  // bricks and power ups
+  // type: 'brick' | 'plusball' | 'coin'
   function addTopRow(){
-    // shift rows down
+    // move down
     for(const b of S.bricks){ b.row += 1; }
-    // game over if any brick moved into the catch line
+
+    // check fail
     for(const b of S.bricks){
       const pos = cellToXY(b.col, b.row);
-      if (pos.y + S.grid.cellH >= H - margin.b) {
+      if (pos.y + S.grid.cell >= H - margin.b){
         gameOver();
         return;
       }
     }
-    // create new row
-    const count = randInt(3, S.grid.cols);
-    const spots = [...Array(S.grid.cols).keys()];
-    shuffle(spots);
-    for(let i=0;i<count;i++){
-      const col = spots[i];
-      const hp = S.level + randInt(1,3);
-      S.bricks.push({
-        col, row:0, hp,
-        color: brickColors[(col + S.level) % brickColors.length]
-      });
+
+    const f = field();
+    const cols = S.grid.cols;
+    const count = randInt(3, cols);
+    const slots = [...Array(cols).keys()];
+    shuffle(slots);
+
+    let created = 0;
+    for(let i=0;i<cols && created<count;i++){
+      const col = slots[i];
+      const roll = Math.random();
+      if (roll < 0.10){
+        // +1 ball power up
+        S.bricks.push({ type:'plusball', col, row:0 });
+      } else if (roll < 0.16){
+        // coin power up
+        S.bricks.push({ type:'coin', col, row:0 });
+      } else {
+        const hp = S.level + randInt(1,3);
+        S.bricks.push({ type:'brick', col, row:0, hp });
+      }
+      created++;
     }
     S.level += 1;
   }
 
-  // physics
+  function placeGrid(){
+    const f = field();
+    const target = Math.round(f.w / 62);
+    S.grid.cols = clamp(target, 6, 9);
+    S.grid.gap = 8;
+    S.grid.cell = Math.floor((f.w - S.grid.gap*(S.grid.cols-1)) / S.grid.cols);
+    if (!S.running) {
+      S.launcherX = f.x + f.w * 0.5;
+    }
+  }
+
+  // geometry
+  function cellToXY(c,r){
+    const f = field();
+    const x = f.x + c*(S.grid.cell + S.grid.gap);
+    const y = f.y + r*(S.grid.cell + S.grid.gap);
+    return { x, y };
+  }
+
+  // resize
+  function resize(){
+    DPR = Math.max(1, window.devicePixelRatio || 1);
+    W = Math.floor(window.innerWidth);
+    H = Math.floor(window.innerHeight);
+    cv.width = Math.floor(W * DPR);
+    cv.height = Math.floor(H * DPR);
+    cv.style.width = W+'px';
+    cv.style.height = H+'px';
+    ctx.setTransform(DPR,0,0,DPR,0,0);
+    placeGrid();
+  }
+  window.addEventListener('resize', resize, { passive:true });
+
+  // particles
+  function burst(x,y,base){
+    for(let i=0;i<10;i++){
+      const a = Math.random()*Math.PI*2;
+      const s = 40+Math.random()*100;
+      S.particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,t:0,life:.35,color:base});
+    }
+  }
+  function updateParticles(dt){
+    const out=[];
+    for(const p of S.particles){
+      p.t += dt;
+      if (p.t < p.life){
+        p.x += p.vx*dt;
+        p.y += p.vy*dt;
+        p.vy += 260*dt;
+        out.push(p);
+      }
+    }
+    S.particles = out;
+  }
+  function drawParticles(){
+    for(const p of S.particles){
+      const k = 1 - p.t/p.life;
+      ctx.globalAlpha = k*.8;
+      ctx.fillStyle = p.color;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 2.5, 0, Math.PI*2);
+      ctx.fill();
+      ctx.globalAlpha = 1;
+    }
+  }
+
+  // balls
   const BALL_SPEED = 560;
   const BALL_R = 6;
 
   function fireVolley(){
     if (S.waiting) return;
-    if (S.ammo <= 0) return;
-
     titleEl.classList.add('hidden');
     S.running = true;
     S.waiting = true;
@@ -185,30 +249,34 @@
     const angle = Math.atan2(S.aim.endY - S.aim.startY, S.aim.endX - S.aim.startX);
     const base = { x:S.launcherX, y:H - margin.b - BALL_R - 2 };
     for(let i=0;i<n;i++){
-      const jitter = 0.0025 * (i - n*0.5); // slight spread to reduce perfect overlap
+      const jitter = 0.0025 * (i - n*0.5);
       S.balls.push({
         x: base.x, y: base.y,
+        px: base.x, py: base.y, // for trail
         vx: Math.cos(angle + jitter) * BALL_SPEED,
         vy: Math.sin(angle + jitter) * BALL_SPEED,
-        alive:true, caught:false
+        alive:true
       });
     }
-    // consume nothing from ammo pool, since you own all balls, you just reuse them
+    S.lastShotTime = performance.now();
   }
 
   function update(dt){
     const f = field();
+    let aliveCount = 0;
 
-    // balls
-    let activeBalls = 0;
+    // move balls
     for(const ball of S.balls){
       if (!ball.alive) continue;
-      activeBalls++;
+      aliveCount++;
+
+      // previous for trail
+      ball.px = ball.x; ball.py = ball.y;
 
       ball.x += ball.vx * dt;
       ball.y += ball.vy * dt;
 
-      // wall reflect
+      // walls
       if (ball.x - BALL_R <= f.x){ ball.x = f.x + BALL_R; ball.vx = Math.abs(ball.vx); }
       if (ball.x + BALL_R >= f.x + f.w){ ball.x = f.x + f.w - BALL_R; ball.vx = -Math.abs(ball.vx); }
       if (ball.y - BALL_R <= f.y){ ball.y = f.y + BALL_R; ball.vy = Math.abs(ball.vy); }
@@ -216,22 +284,21 @@
       // bottom catch
       if (ball.y + BALL_R >= H - margin.b){
         ball.alive = false;
-        ball.caught = true;
         if (S.firstCatchX === null) S.firstCatchX = ball.x;
       }
 
-      // brick collisions
-      // check against possible bricks by coarse grid
-      for (const br of S.bricks){
+      // collisions
+      for (let i=S.bricks.length-1; i>=0; i--){
+        const br = S.bricks[i];
         const pos = cellToXY(br.col, br.row);
-        const rx = pos.x, ry = pos.y, rw = S.grid.cellW, rh = S.grid.cellH;
+        const rx = pos.x, ry = pos.y, rw = S.grid.cell, rh = S.grid.cell;
 
-        // circle rect intersect
+        // circle rect
         const cx = clamp(ball.x, rx, rx+rw);
         const cy = clamp(ball.y, ry, ry+rh);
         const dx = ball.x - cx, dy = ball.y - cy;
         if (dx*dx + dy*dy <= BALL_R*BALL_R){
-          // decide reflection side
+          // reflect
           const left = Math.abs((ball.x + BALL_R) - rx);
           const right = Math.abs((rx+rw) - (ball.x - BALL_R));
           const top = Math.abs((ball.y + BALL_R) - ry);
@@ -239,97 +306,112 @@
           const minPen = Math.min(left,right,top,bottom);
           if (minPen === left || minPen === right) ball.vx *= -1; else ball.vy *= -1;
 
-          // damage brick
-          br.hp -= 1;
-          S.score += 1;
-          if (br.hp <= 0){
-            // remove
-            S.bricks.splice(S.bricks.indexOf(br),1);
+          if (br.type === 'brick'){
+            br.hp -= 1;
+            S.score += 1;
+            if (br.hp <= 0){
+              burst(cx, cy, colorForHP(3));
+              S.bricks.splice(i,1);
+            }
+          } else if (br.type === 'plusball'){
+            S.ammo += 1;
+            S.volleyCount = Math.min(S.ammo, S.volleyCount + 1);
+            S.bricks.splice(i,1);
+          } else if (br.type === 'coin'){
+            S.score += 5;
+            S.bricks.splice(i,1);
           }
         }
       }
     }
 
-    if (S.waiting && activeBalls === 0){
-      // volley ended, set next launcher x to first catch
-      if (S.firstCatchX !== null) S.launcherX = clamp(S.firstCatchX, f.x + 10, f.x + f.w - 10);
+    if (S.waiting && aliveCount === 0){
+      if (S.firstCatchX !== null){
+        S.launcherX = clamp(S.firstCatchX, f.x + 10, f.x + f.w - 10);
+      }
       addTopRow();
       S.waiting = false;
       S.balls.length = 0;
     }
 
+    updateParticles(dt);
+
+    // ui
     scoreEl.textContent = 'Score ' + S.score;
     ballsEl.textContent = 'Balls ' + S.ammo;
   }
 
-  // aiming preview with two bounces against walls and ceiling
+  // aim preview with up to two bounces
   function buildAimPath(sx, sy, ex, ey){
     const f = field();
-    const dirx = ex - sx, diry = ey - sy;
-    let vx = dirx, vy = diry;
+    let vx = ex - sx, vy = ey - sy;
     const len = Math.hypot(vx, vy) || 1;
     vx /= len; vy /= len;
-
-    // keep direction upward only
     if (vy > -0.05) vy = -0.05;
 
-    const maxSeg = 3; // start to first, then two bounces
-    const points = [{ x:sx, y:sy }];
+    const pts = [{x:sx,y:sy}];
     let px = sx, py = sy;
 
-    for(let i=0;i<maxSeg;i++){
-      // find time to hit vertical or horizontal bounds
+    for(let b=0; b<3; b++){
       const tX = vx > 0 ? (f.x + f.w - px) / vx : (f.x - px) / vx;
       const tY = vy > 0 ? (H - margin.b - py) / vy : (f.y - py) / vy;
 
       let t = Math.min(Math.abs(tX), Math.abs(tY));
-      t = clamp(t, 0, 2000);
+      t = clamp(t, 0, 1e4);
       const nx = px + vx * t;
       const ny = py + vy * t;
 
-      // clamp to edges
-      let hitWall = '';
-      if (nx <= f.x+0.1 || nx >= f.x + f.w - 0.1) hitWall = 'x';
-      if (ny <= f.y+0.1) hitWall = 'y';
-      if (ny >= H - margin.b) hitWall = 'bottom';
+      pts.push({x:nx,y:ny});
 
-      points.push({ x:nx, y:ny });
-
-      if (hitWall === 'x'){ vx *= -1; px = nx; py = ny; continue; }
-      if (hitWall === 'y'){ vy *= -1; px = nx; py = ny; continue; }
-      if (hitWall === 'bottom'){ break; }
+      // reflect
+      if (Math.abs(nx - f.x) < 0.5 || Math.abs(nx - (f.x + f.w)) < 0.5) { vx *= -1; px = nx; py = ny; continue; }
+      if (Math.abs(ny - f.y) < 0.5) { vy *= -1; px = nx; py = ny; continue; }
+      if (ny >= H - margin.b) break;
+      px = nx; py = ny;
     }
-    return points;
+    return pts;
   }
 
   // input
   let pointerDown = false;
+  function pointerPos(e){ return { x:e.clientX, y:e.clientY }; }
+
   cv.addEventListener('pointerdown', e => {
     const f = field();
     pointerDown = true;
     S.aim.active = true;
     S.aim.startX = S.launcherX;
     S.aim.startY = H - margin.b - BALL_R - 2;
-    S.aim.endX = clamp(e.clientX, f.x, f.x + f.w);
-    S.aim.endY = clamp(e.clientY, f.y, H - margin.b);
+    const p = pointerPos(e);
+    S.aim.endX = clamp(p.x, f.x, f.x + f.w);
+    S.aim.endY = clamp(p.y, f.y, H - margin.b);
     S.aim.path = buildAimPath(S.aim.startX, S.aim.startY, S.aim.endX, S.aim.endY);
   });
+
   cv.addEventListener('pointermove', e => {
     if (!pointerDown) return;
     const f = field();
-    S.aim.endX = clamp(e.clientX, f.x, f.x + f.w);
-    S.aim.endY = clamp(e.clientY, f.y, H - margin.b);
+    const p = pointerPos(e);
+    S.aim.endX = clamp(p.x, f.x, f.x + f.w);
+    S.aim.endY = clamp(p.y, f.y, H - margin.b);
     S.aim.path = buildAimPath(S.aim.startX, S.aim.startY, S.aim.endX, S.aim.endY);
   });
+
   function release(){
     if (!pointerDown) return;
     pointerDown = false;
-    if (!S.waiting) fireVolley();
+    if (S.running && !S.waiting) fireVolley();
+    if (!S.running) { S.running = true; fireVolley(); }
     S.aim.active = false;
   }
   cv.addEventListener('pointerup', release);
   cv.addEventListener('pointercancel', release);
   cv.addEventListener('pointerleave', release);
+
+  startBtn.addEventListener('click', () => {
+    titleEl.classList.add('hidden');
+    S.running = true;
+  });
 
   // draw
   function draw(){
@@ -337,8 +419,8 @@
     ctx.fillStyle = '#0b0d12';
     ctx.fillRect(0,0,W,H);
 
-    // playfield panel
     const f = field();
+    // panel
     ctx.save();
     ctx.shadowColor = 'rgba(0,0,0,.50)';
     ctx.shadowBlur = 30;
@@ -347,34 +429,49 @@
     ctx.fill();
     ctx.restore();
 
-    // subtle grid
+    // subtle columns
     ctx.globalAlpha = .06;
     for(let c=1;c<S.grid.cols;c++){
-      const x = f.x + c*(S.grid.cellW + S.grid.gap) - S.grid.gap*.5;
+      const x = f.x + c*(S.grid.cell + S.grid.gap) - S.grid.gap*.5;
       ctx.fillStyle = '#ffffff';
       ctx.fillRect(x, f.y, 1, f.h);
     }
     ctx.globalAlpha = 1;
 
-    // bricks
+    // bricks and power ups
     for(const br of S.bricks){
       const pos = cellToXY(br.col, br.row);
-      const x = pos.x, y = pos.y, w = S.grid.cellW, h = S.grid.cellH;
-      ctx.fillStyle = br.color;
-      rrect(x, y, w, h, 10);
-      ctx.fill();
-
-      // hp label
-      ctx.fillStyle = '#0b0d12';
-      ctx.font = `600 ${Math.floor(w*0.36)}px Inter, system-ui, sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(br.hp, x + w*.5, y + h*.5 + 1);
+      const x = pos.x, y = pos.y, w = S.grid.cell, h = S.grid.cell;
+      if (br.type === 'brick'){
+        const c = colorForHP(br.hp);
+        ctx.fillStyle = c;
+        rrect(x, y, w, h, 12);
+        ctx.fill();
+        // number
+        ctx.fillStyle = '#0b0d12';
+        ctx.font = `600 ${Math.floor(w*0.36)}px Inter, system-ui, sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(br.hp, x + w*.5, y + h*.5 + 1);
+      } else if (br.type === 'plusball'){
+        ctx.fillStyle = 'hsl(150 55% 72%)';
+        rrect(x, y, w, h, 12); ctx.fill();
+        ctx.fillStyle = '#0b0d12';
+        ctx.font = `700 ${Math.floor(w*0.36)}px Inter, system-ui, sans-serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('+1', x + w*.5, y + h*.5 + 1);
+      } else if (br.type === 'coin'){
+        ctx.fillStyle = 'hsl(42 85% 72%)';
+        rrect(x, y, w, h, 12); ctx.fill();
+        ctx.fillStyle = '#0b0d12';
+        ctx.font = `700 ${Math.floor(w*0.34)}px Inter, system-ui, sans-serif`;
+        ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+        ctx.fillText('●', x + w*.5, y + h*.5 + 1);
+      }
     }
 
-    // aim
+    // aim path
     if (S.aim.active){
-      // dotted path
       const pts = S.aim.path;
       ctx.lineWidth = 2;
       ctx.setLineDash([8, 10]);
@@ -384,36 +481,50 @@
       for(let i=1;i<pts.length;i++) ctx.lineTo(pts[i].x, pts[i].y);
       ctx.stroke();
       ctx.setLineDash([]);
-
-      // start indicator
+      // start marker
       ctx.fillStyle = '#b7e0ff';
-      ctx.beginPath();
-      ctx.arc(S.aim.startX, S.aim.startY, 6, 0, Math.PI*2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(S.aim.startX, S.aim.startY, 6, 0, Math.PI*2); ctx.fill();
     }
 
     // launcher marker
-    ctx.globalAlpha = .6;
+    ctx.globalAlpha = .65;
     ctx.fillStyle = '#c7b7ff';
-    ctx.beginPath();
-    ctx.arc(S.launcherX, H - margin.b, 4, 0, Math.PI*2);
-    ctx.fill();
+    ctx.beginPath(); ctx.arc(S.launcherX, H - margin.b, 4, 0, Math.PI*2); ctx.fill();
     ctx.globalAlpha = 1;
 
-    // balls
+    // balls with soft trail
     for(const ball of S.balls){
       if (!ball.alive) continue;
+
+      // trail
+      const dx = ball.x - ball.px;
+      const dy = ball.y - ball.py;
+      const len = Math.hypot(dx, dy);
+      if (len > 0.1){
+        const steps = 6;
+        for(let i=1;i<=steps;i++){
+          const k = i/steps;
+          ctx.globalAlpha = 0.18*(1-k);
+          ctx.fillStyle = '#bfe0ff';
+          ctx.beginPath();
+          ctx.arc(ball.x - dx*k, ball.y - dy*k, BALL_R*(1-k*0.6), 0, Math.PI*2);
+          ctx.fill();
+          ctx.globalAlpha = 1;
+        }
+      }
+
       const g = ctx.createRadialGradient(ball.x-3, ball.y-4, 0, ball.x, ball.y, 12);
       g.addColorStop(0, '#ffffff');
       g.addColorStop(1, '#bfe0ff');
       ctx.fillStyle = g;
-      ctx.beginPath();
-      ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI*2);
-      ctx.fill();
+      ctx.beginPath(); ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI*2); ctx.fill();
     }
+
+    // particles
+    drawParticles();
   }
 
-  // game loop
+  // loop
   let last = performance.now();
   function loop(now){
     const dt = Math.min(.033, (now - last) / 1000);
@@ -423,41 +534,55 @@
     requestAnimationFrame(loop);
   }
 
-  // utils
-  function randInt(a,b){ return Math.floor(a + Math.random()*(b-a+1)); }
-  function shuffle(arr){ for(let i=arr.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; } }
-
   // lifecycle
-  function hardReset(){
-    S.running = false;
+  function resetGame(){
     S.waiting = false;
     S.level = 1;
     S.score = 0;
-    S.ammo = 8;
-    S.volleyCount = 8;
+    S.ammo = Math.max(8, S.ammo); // keep growth
+    S.volleyCount = Math.min(S.ammo, S.volleyCount || 8);
     S.balls = [];
     S.bricks = [];
+    S.particles = [];
     S.firstCatchX = null;
-    titleEl.classList.remove('hidden');
 
-    // seed a couple of rows
+    // seed rows
     addTopRow();
     addTopRow();
+
+    scoreEl.textContent = 'Score 0';
+    ballsEl.textContent = 'Balls ' + S.ammo;
+    titleEl.querySelector('h1').textContent = 'Arc Brick';
+    titleEl.querySelector('p').textContent = 'Clean aim and bounce brick game';
   }
 
   function gameOver(){
     S.running = false;
     S.waiting = false;
-    titleEl.classList.remove('hidden');
+    if (S.score > S.best){
+      S.best = S.score;
+      localStorage.setItem('arcbrick_best', String(S.best));
+      bestEl.textContent = 'Best ' + S.best;
+    }
     titleEl.querySelector('h1').textContent = 'Game Over';
-    titleEl.querySelector('p').textContent = 'Tap and drag to try again';
-    // keep bricks so the player sees the failure state
+    titleEl.querySelector('p').textContent = `Score ${S.score}  Best ${S.best}`;
+    titleEl.classList.remove('hidden');
   }
 
   // start
-  resize();
-  hardReset();
-  requestAnimationFrame(loop);
+  function start(){
+    resize();
+    resetGame();
+    requestAnimationFrame(loop);
+  }
+  start();
+
+  // allow tap on overlay to start and immediately allow aiming
+  startBtn.addEventListener('click', () => {
+    titleEl.classList.add('hidden');
+    S.running = true;
+  });
+
 })();
 </script>
 </body>
