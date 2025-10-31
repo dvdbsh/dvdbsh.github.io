@@ -19,7 +19,7 @@
     --orange:#ffb36b;
     --heart:#ff6b7a;
   }
-  html,body{height:100%;margin:0;background:var(--bg);color:var(--fg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none;overflow:hidden}
+  html,body{height:100%;margin:0;background:var(--bg);overflow: hidden;color:var(--fg);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;touch-action:none;user-select:none;-webkit-user-select:none;overflow:hidden}
   canvas{display:block;width:100vw;height:100vh;max-height:100svh}
 
   .topbar{
@@ -64,18 +64,7 @@
     pointer-events:auto;
   }
   .overlay.hidden{opacity:0;pointer-events:none}
-  .card{
-    width:min(600px,92vw);
-    border-radius:16px;
-    padding:18px;
-    background:var(--glass);
-    border:1px solid var(--glassBorder);
-    backdrop-filter:blur(14px) saturate(120%);-webkit-backdrop-filter:blur(14px) saturate(120%);
-    box-shadow:0 20px 60px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
-    text-align:left;
-  }
-  .card h1{margin:0 0 6px 0;font-size:clamp(22px,6vw,34px)}
-  .card p{margin:8px 0;color:var(--muted);line-height:1.4}
+
   .btn{
     margin-top:12px;padding:10px 16px;border-radius:12px;background:rgba(255,255,255,.10);
     border:1px solid rgba(255,255,255,.18);color:#fff;font-weight:700;cursor:pointer;pointer-events:auto
@@ -86,20 +75,114 @@
     background:linear-gradient(to bottom, rgba(0,0,0,.35), rgba(0,0,0,.55));
   }
   .overlay-go.show{opacity:1;pointer-events:auto}
+  
+  /* Base overlay layout */
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  transition: opacity 0.25s ease;
+  opacity: 1;
+  background: linear-gradient(to bottom, rgba(0,0,0,.4), rgba(0,0,0,.65));
+  pointer-events: auto;
+  overflow-y: auto;               /* allow scroll if tall */
+  padding: env(safe-area-inset-top, 16px)
+           env(safe-area-inset-right, 16px)
+           env(safe-area-inset-bottom, 16px)
+           env(safe-area-inset-left, 16px);
+}
+.overlay.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
 
-  /* level up popup */
-  .choices{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:10px}
-  .choice{
-    background:var(--glass);border:1px solid var(--glassBorder);border-radius:14px;padding:10px;cursor:pointer;
-    display:grid;grid-template-rows:auto auto 1fr;gap:6px
+/* Main card layout */
+.card {
+  width: 100%;
+  max-width: 420px;
+  margin: 50px;
+  border-radius: 18px;
+  padding: 20px 18px;
+  background: var(--glass);
+  border: 1px solid var(--glassBorder);
+  backdrop-filter: blur(16px) saturate(120%);
+  -webkit-backdrop-filter: blur(16px) saturate(120%);
+  box-shadow: 0 16px 48px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.06);
+  text-align: left;
+  color: var(--fg);
+}
+
+/* Choices vertical */
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+/* Each choice tile */
+.choice {
+  background: var(--glass);
+  border: 1px solid var(--glassBorder);
+  border-radius: 14px;
+  padding: 12px 14px;
+  cursor: pointer;
+  display: grid;
+  grid-template-rows: auto auto 1fr;
+  gap: 6px;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.choice:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0,0,0,.35);
+}
+
+/* Image box placeholder */
+.choice .img {
+  width: 100%;
+  aspect-ratio: 3/1;
+  border-radius: 10px;
+  background: rgba(255,255,255,.08);
+  display: grid;
+  place-items: center;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* Text styles */
+.choice h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+}
+.choice p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.35;
+}
+
+/* Smaller viewport adjustments */
+@media (max-width: 480px) {
+  .card {
+    max-width: 92vw;
+    padding: 16px;
+    border-radius: 14px;
   }
-  .choice:hover{box-shadow:0 10px 30px rgba(0,0,0,.35)}
-  .choice .img{
-    width:100%;aspect-ratio:2/1;border-radius:10px;background:rgba(255,255,255,.08);display:grid;place-items:center;color:var(--muted);
-    font-size:12px
+  .choice {
+    padding: 10px 12px;
   }
-  .choice h3{margin:0;font-size:15px}
-  .choice p{margin:0;color:var(--muted);font-size:13px;line-height:1.35}
+  h1 {
+    font-size: 22px;
+	margin: 0px;
+  }
+}
+
+
+
 
 </style>
 </head>
