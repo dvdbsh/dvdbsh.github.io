@@ -40,13 +40,17 @@
     background:linear-gradient(90deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
     pointer-events:none;z-index:-1
   }
-  .hearts {
+.hearts {
+  position: fixed;
+  bottom: 18%;
+  left: 22px;
   display: flex;
-  gap: 4px;
-  align-items: center;
-  justify-self: end;
+  gap: 6px;
+  z-index: 6;
   pointer-events: none;
 }
+
+
 
   .heart{
     width:18px;height:16px;background:var(--heart);border-radius:4px;position:relative;box-shadow:0 4px 10px rgba(0,0,0,.25)
@@ -254,6 +258,33 @@
 
   const margin = { t:110, r:18, b:160, l:18 };
   function field(){ return { x:margin.l, y:margin.t, w:W - margin.l - margin.r, h:H - margin.t - margin.b }; }
+  
+  function showPlusOne() {
+    const rect = ballsEl.getBoundingClientRect();
+    const el = document.createElement('div');
+    el.textContent = '+1';
+    el.style.position = 'fixed';
+    el.style.left = rect.left + rect.width / 2 - 8 + 'px';
+    el.style.top = rect.bottom + 6 + 'px'; // BELOW the counter
+    el.style.color = '#b7ffb7';
+    el.style.fontWeight = '700';
+    el.style.fontSize = '18px';
+    el.style.opacity = '1';
+    el.style.pointerEvents = 'none';
+    el.style.filter = 'drop-shadow(0 0 6px rgba(183,255,183,0.45))';
+    el.style.transition = 'transform 0.9s ease-out, opacity 0.9s ease-out';
+    el.style.transform = 'translateY(0px)';
+    document.body.appendChild(el);
+  
+    requestAnimationFrame(() => {
+      el.style.transform = 'translateY(-24px)';
+      el.style.opacity = '0';
+    });
+
+    setTimeout(() => el.remove(), 1000);
+  }
+
+
 
   // Audio
   const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -671,9 +702,8 @@
             if(S.stats.multishot && ball.bounces===1){
               S.balls.push({x:ball.x,y:ball.y,px:ball.x,py:ball.y,vx:-ball.vx,vy:ball.vy,alive:true,bounces:1});
             }
-          }else if(br.type==='plusball'){
-            S.ammo+=1; S.volleyCount=Math.min(S.ammo, S.volleyCount+1); S.bricks.splice(i,1); sfx.power();
-          }else if(br.type==='coin'){
+          } else if (br.type === 'plusball') { S.volleyCount += 1; S.ammo = S.volleyCount; S.bricks.splice(i, 1); sfx.power(); showPlusOne();
+		  } else if(br.type==='coin'){
             addXP(1 + (S.stats.lucky?1:0)); S.bricks.splice(i,1); sfx.power();
           }else if(br.type==='heart'){
             if(S.health<S.maxHealth){ S.health+=1; renderHearts(); sfx.heal(); }
@@ -733,20 +763,44 @@
     return best;
   }
 
-  function buildAimPath(sx,sy,ex,ey){
-    const f=field(); let vx=ex-sx, vy=ey-sy; const L=Math.hypot(vx,vy)||1; vx/=L; vy/=L; if(vy>-0.05) vy=-0.05;
-    const pts=[{x:sx,y:sy}]; let px=sx, py=sy;
+  function buildAimPath(sx, sy, ex, ey) {
+    const f = field();
+    let vx = ex - sx, vy = ey - sy;
+    const L = Math.hypot(vx, vy) || 1;
+    vx /= L;
+    vy /= L;
+    if (vy > -0.05) vy = -0.05; // always aim upward a bit
+
+    const pts = [{ x: sx, y: sy }];
+    let px = sx, py = sy;
+
+    // only 2 segments normally, 3 with precisionGuide
     const maxSeg = S.stats.precisionGuide ? 3 : 2;
-    for(let s=0; s<maxSeg; s++){
-      const hit=firstIntersection(px,py,vx,vy);
-      if(!hit){ const tY=(H-margin.b - py)/vy; pts.push({x:px+vx*tY, y:py+vy*tY}); break; }
-      pts.push({x:hit.x, y:hit.y});
-      if(hit.type==='brick') break;
-      if(hit.normal.x!==0) vx*=-1; if(hit.normal.y!==0) vy*=-1;
-      px=hit.x; py=hit.y;
+
+    for (let s = 0; s < maxSeg; s++) {
+      const hit = firstIntersection(px, py, vx, vy);
+      if (!hit) {
+        const tY = (H - margin.b - py) / vy;
+        pts.push({ x: px + vx * tY, y: py + vy * tY });
+        break;
+      }
+
+      // record hit point
+      pts.push({ x: hit.x, y: hit.y });
+
+      // reflect off wall or brick
+      if (hit.normal.x !== 0) vx *= -1;
+      if (hit.normal.y !== 0) vy *= -1;
+
+      // move slightly forward past hit
+      px = hit.x + vx * 2;
+      py = hit.y + vy * 2;
     }
-    return pts.slice(0, maxSeg+1);
+
+    return pts;
   }
+
+
 
   // input
   let pointerDown = false, holdStart = 0, movePointer = false;
