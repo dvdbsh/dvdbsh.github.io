@@ -418,9 +418,12 @@
   }
 
   function fireVolley(){
-    if(S.waiting || S.firing) return;
+    if(S.firing) return;  // allow re-firing even while other balls exist
     S.running=true; S.waiting=true;
-    const n=Math.min(S.volleyCount, S.ammo);
+    const n = Math.min(S.ammo, S.volleyCount);
+    if (n <= 0) return; // can't shoot if no ammo
+    S.ammo -= n; // use up the ammo being fired
+
     const angle=Math.atan2(S.aim.endY - S.aim.startY, S.aim.endX - S.aim.startX);
     S.fireDir.x=Math.cos(angle); S.fireDir.y=Math.sin(angle);
     if(S.fireDir.y>-0.05) S.fireDir.y=-0.05;
@@ -592,18 +595,27 @@
       if(ball.x + BALL_R >= f.x+f.w){ ball.x=f.x+f.w-BALL_R; ball.vx=-Math.abs(ball.vx); }
       if(ball.y - BALL_R <= f.y){ ball.y=f.y+BALL_R; ball.vy=Math.abs(ball.vy); }
 
-      // optional magnet near bottom
-      if(S.stats.magnet && ball.y > H - margin.b - 80){
+      // curve return motion near bottom
+      const returnZone = H - margin.b - 100;
+      if (ball.vy > 0 && ball.y > returnZone) {
         const dx = S.launcherX - ball.x;
-        ball.vx += clamp(dx, -120, 120) * dt * 0.6;
+        const dist = Math.abs(dx);
+        const strength = clamp(1 - dist / (W * 0.5), 0, 1); // stronger pull when closer
+        ball.vx += dx * dt * 4.5 * strength; // homing pull
+        ball.vy += 20 * dt; // gentle downward acceleration
       }
+
 
       // bottom catch
       if(ball.y + BALL_R >= H - margin.b){
         ball.alive=false;
         if(S.firstCatchX===null) S.firstCatchX=ball.x;
+		
+        S.ammo = Math.min(S.volleyCount, S.ammo + 1);  // restore ammo on catch
         sfx.catch();
+        S.waiting = false;  // allow immediate firing again
       }
+
 
       // collisions with bricks
       for(let i=S.bricks.length-1;i>=0;i--){
@@ -671,12 +683,6 @@
       }
     }
 
-    // when volley ends
-    if(S.waiting && aliveCount===0 && !S.firing){
-      const f=field();
-      if(S.firstCatchX!==null) S.launcherX = clamp(S.firstCatchX, f.x+10, f.x+f.w-10);
-      S.waiting=false; S.balls.length=0; S.comboHits=0;
-    }
 
     // bricks reach bottom
     for(let i=S.bricks.length-1;i>=0;i--){
@@ -743,31 +749,66 @@
   }
 
   // input
-  let pointerDown=false, holdStart=0;
+  let pointerDown = false, holdStart = 0, movePointer = false;
   function pointerPos(e){ return {x:e.clientX, y:e.clientY}; }
-
-  cv.addEventListener('pointerdown', e=>{
-    const f=field(); pointerDown=true; S.aim.active=true;
-    S.aim.startX=S.launcherX; S.aim.startY=H - margin.b - BALL_R - 2;
-    const p=pointerPos(e);
-    S.aim.endX=clamp(p.x, f.x, f.x+f.w); S.aim.endY=clamp(p.y, f.y, H-margin.b);
-    S.aim.path=buildAimPath(S.aim.startX, S.aim.startY, S.aim.endX, S.aim.endY);
-    holdStart = performance.now();
-  });
-  cv.addEventListener('pointermove', e=>{
-    if(!pointerDown) return;
-    const f=field(); const p=pointerPos(e);
-    S.aim.endX=clamp(p.x, f.x, f.x+f.w); S.aim.endY=clamp(p.y, f.y, H-margin.b);
-    S.aim.path=buildAimPath(S.aim.startX, S.aim.startY, S.aim.endX, S.aim.endY);
-  });
+  
   function release(){
-    if(!pointerDown) return; pointerDown=false; S.aim.active=false;
-    S.aim.heldTime = Math.min(1.0, (performance.now()-holdStart)/1000);
-    fireVolley();
-  }
-  cv.addEventListener('pointerup', release);
-  cv.addEventListener('pointercancel', release);
-  cv.addEventListener('pointerleave', release);
+  if (!pointerDown) return;
+  pointerDown = false;
+  S.aim.active = false;
+  S.aim.heldTime = Math.min(1.0, (performance.now() - holdStart) / 1000);
+  fireVolley();
+}
+
+  cv.addEventListener('pointerdown', e => {
+    movePointer = (e.clientY > H - margin.b - 60); // touching near bottom moves player
+    if (!movePointer) {
+      const f = field();
+      pointerDown = true;
+      S.aim.active = true;
+      S.aim.startX = S.launcherX;
+      S.aim.startY = H - margin.b - BALL_R - 2;
+      const p = pointerPos(e);
+      S.aim.endX = clamp(p.x, f.x, f.x + f.w);
+      S.aim.endY = clamp(p.y, f.y, H - margin.b);
+      S.aim.path = buildAimPath(S.aim.startX, S.aim.startY, S.aim.endX, S.aim.endY);
+      holdStart = performance.now();
+    }
+  });
+
+  cv.addEventListener('pointermove', e => {
+    const p = pointerPos(e);
+    if (movePointer) {
+      const f = field();
+      S.launcherX = clamp(p.x, f.x + 10, f.x + f.w - 10); // drag player horizontally
+      return;
+    }
+    if (!pointerDown) return;
+    const f = field();
+    S.aim.endX = clamp(p.x, f.x, f.x + f.w);
+    S.aim.endY = clamp(p.y, f.y, H - margin.b);
+    S.aim.path = buildAimPath(S.aim.startX, S.aim.startY, S.aim.endX, S.aim.endY);
+  });
+
+  cv.addEventListener('pointerup', e => {
+    if (!movePointer && pointerDown) {
+      release();  // fire when releasing an aim drag
+    }
+    pointerDown = false;
+    movePointer = false;
+  });
+
+  cv.addEventListener('pointercancel', e => {
+    pointerDown = false;
+    movePointer = false;
+  });
+
+  cv.addEventListener('pointerleave', e => {
+    pointerDown = false;
+    movePointer = false;
+  });
+
+
 
   // overlays
   playBtn.addEventListener('click', ()=>{ introEl.classList.add('hidden'); ac(); resetGame(); });
