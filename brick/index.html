@@ -185,6 +185,23 @@
   }
 }
 
+.coinbar{
+  position: fixed;
+  bottom: 18%;
+  right: 22px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  z-index: 6;
+  pointer-events: none;
+}
+
+#coinCount{
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
 
 
 
@@ -202,6 +219,11 @@
   <div class="pill center" id="balls">Balls 8</div>
   <div class="pill right" id="best">Best 0</div>
   <div class="hearts" id="hearts"></div>
+  <!-- Coins HUD -->
+<div class="coinbar" id="coinbar">
+  <span id="coinCount">0</span>
+</div>
+
 </div>
 
 <!-- Intro overlay -->
@@ -244,6 +266,8 @@
   const ballsEl  = document.getElementById('balls');
   const bestEl   = document.getElementById('best');
   const heartsEl = document.getElementById('hearts');
+  const coinsEl  = document.getElementById('coinCount'); // correct element id
+
 
   const introEl  = document.getElementById('intro');
   const playBtn  = document.getElementById('playBtn');
@@ -289,6 +313,34 @@
   }
 
   // ============================================================
+  // Coin gain flourish
+  // ============================================================
+  function showCoinGain(n = 1) {
+    if (!coinsEl) return;
+    const rect = coinsEl.getBoundingClientRect();
+    const el = document.createElement('div');
+    el.textContent = `+${n}`;
+    el.style.position = 'fixed';
+    el.style.left = rect.right - 24 + 'px';
+    el.style.top  = rect.top - 8 + 'px';
+    el.style.color = '#ffd76b';
+    el.style.fontWeight = '800';
+    el.style.fontSize = '18px';
+    el.style.opacity = '1';
+    el.style.pointerEvents = 'none';
+    el.style.filter = 'drop-shadow(0 0 6px rgba(255,205,96,0.45))';
+    el.style.transition = 'transform 0.9s ease-out, opacity 0.9s ease-out';
+    el.style.transform = 'translateY(0px)';
+    document.body.appendChild(el);
+
+    requestAnimationFrame(() => {
+      el.style.transform = 'translateY(-18px)';
+      el.style.opacity   = '0';
+    });
+    setTimeout(() => el.remove(), 950);
+  }
+
+  // ============================================================
   // Audio
   // ============================================================
   const AudioCtx = window.AudioContext || window.webkitAudioContext;
@@ -315,6 +367,7 @@
     hit:   () => beep('triangle', 520, 0.04, 0.06),
     break: () => beep('sine',     260, 0.08, 0.08),
     catch: () => beep('sine',     640, 0.05, 0.05),
+    coin:  () => chord([880, 1320], 'sine', 0.05, 0.12),
     power: () => chord([660, 880, 1320], 'sine', 0.05, 0.12),
     over:  () => { beep('triangle', 400, 0.08, 0.06); setTimeout(()=>beep('triangle', 300, 0.08, 0.06),80); setTimeout(()=>beep('sine', 220, 0.10, 0.06),160); },
     heal:  () => chord([440, 660], 'sine', 0.05, 0.10),
@@ -337,6 +390,8 @@
     xp:0,
     xpThreshold:100,
     xpGainMult:1.0,
+
+    coins: parseInt(localStorage.getItem('arcbrick_coins') || '0', 10),
 
     firing:false,
     toFire:0,
@@ -421,15 +476,70 @@
     ctx.setTransform(DPR,0,0,DPR,0,0);
     placeGrid();
     renderHearts();
+    renderCoins();
   }
   window.addEventListener('resize', resize, {passive:true});
 
   // ============================================================
   // Particles
   // ============================================================
-  function burst(x,y,base){for(let i=0;i<10;i++){const a=Math.random()*Math.PI*2;const s=40+Math.random()*100;S.particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,t:0,life:.35,color:base});}}
-  function updateParticles(dt){const out=[];for(const p of S.particles){p.t+=dt;if(p.t<p.life){p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=260*dt;out.push(p);}}S.particles=out;}
-  function drawParticles(){for(const p of S.particles){const k=1-p.t/p.life;ctx.globalAlpha=k*.8;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,2.5,0,Math.PI*2);ctx.fill();ctx.globalAlpha=1;}}
+  function burst(x,y,base){
+    for(let i=0;i<10;i++){
+      const a=Math.random()*Math.PI*2;
+      const s=40+Math.random()*100;
+      S.particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,t:0,life:.35,color:base});
+    }
+  }
+  function coinBurst(x,y){
+    for(let i=0;i<12;i++){
+      const a=Math.random()*Math.PI*2;
+      const s=80+Math.random()*120;
+      S.particles.push({x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,t:0,life:.50,color:'#ffd76b'});
+    }
+  }
+  function updateParticles(dt){
+    const out=[];
+    for(const p of S.particles){
+      p.t+=dt;
+      if(p.t<p.life){
+        p.x+=p.vx*dt; p.y+=p.vy*dt;
+        p.vy+=260*dt;
+        out.push(p);
+      }
+    }
+    S.particles=out;
+  }
+  function drawParticles(){
+    for(const p of S.particles){
+      const k=1-p.t/p.life;
+      ctx.globalAlpha=k*.8;
+      ctx.fillStyle=p.color;
+      ctx.beginPath(); ctx.arc(p.x,p.y,2.5,0,Math.PI*2); ctx.fill();
+      ctx.globalAlpha=1;
+    }
+  }
+
+  // ============================================================
+  // Difficulty helpers for coin blocks
+  // ============================================================
+  function difficultyTier(){
+    // very light scaling with XP so coin blocks get tougher
+    if (S.xp < 300) return 1;
+    if (S.xp < 900) return 2;
+    if (S.xp < 1800) return 3;
+    return 4;
+  }
+  function coinBlockHP(){
+    const tier = difficultyTier();
+    // slightly tougher than regular bricks
+    return 3 + tier + randInt(0, tier);
+  }
+  function coinBlockReward(){
+    const tier = difficultyTier();
+    // random payout by tier
+    const base = randInt(2, 4 + tier);
+    return base + (S.stats.lucky ? 1 : 0);
+  }
 
   // ============================================================
   // Brick spawning, prebuild, fade-in
@@ -440,25 +550,30 @@
     const slots=[...Array(cols).keys()]; shuffle(slots);
 
     for(let i=0;i<cols && i<count;i++){
-      const col=slots[i]; const roll=Math.random();
+      const col=slots[i];
+      const roll=Math.random();
       const baseProps = { col, row:-1, spawnT:0, fadeIn:0 };
 
       if(roll<0.08){
         S.bricks.push({ ...baseProps, type:'heart' });
       }else if(roll<0.14){
         S.bricks.push({ ...baseProps, type:'plusball' });
+      }else if(roll<0.22){
+        const hp = coinBlockHP();
+        const reward = coinBlockReward();
+        S.bricks.push({ ...baseProps, type:'coin', hp, maxHp:hp, reward, hitShake:0, pop:0, dying:false });
       }else{
         const hp = 2 + randInt(0,2) + Math.floor(S.xp/150);
         S.bricks.push({ ...baseProps, type:'brick', hp, hitShake:0, pop:0, dying:false });
       }
     }
-	// Ensure the new row has at least one brick
+
+    // Ensure the new row has at least one blocker
     if (!S.bricks.some(b => b.row === -1)) {
       const col = randInt(0, S.grid.cols - 1);
       const hp = 2 + randInt(0, 2) + Math.floor(S.xp / 150);
       S.bricks.push({ type: 'brick', col, row: -1, hp, hitShake: 0, pop: 0, dying: false, fadeIn: 0 });
     }
-
   }
   function ensurePrebuiltRows() {
     let minRow = Math.min(...S.bricks.map(b => b.row));
@@ -535,6 +650,23 @@
   }
 
   // ============================================================
+  // Coins HUD
+  // ============================================================
+  function renderCoins(){
+    if(!coinsEl) return;
+    // Keep text minimal so it aligns well in your HUD
+    // Example: "🪙 123"
+    coinsEl.textContent = `🪙 ${S.coins}`;
+  }
+  function addCoins(n){
+    S.coins = Math.max(0, S.coins + n);
+    localStorage.setItem('arcbrick_coins', String(S.coins));
+    renderCoins();
+    showCoinGain(n);
+    sfx.coin();
+  }
+
+  // ============================================================
   // Powerups
   // ============================================================
   const POWERUPS = [
@@ -569,7 +701,7 @@
     choicesEl.innerHTML='';
     three.forEach((p)=>{
       const div=document.createElement('div');
-      div.className='choice';
+      div.className = 'choice';
       div.innerHTML = `
         <div class="img">image</div>
         <h3>${p.name}</h3>
@@ -631,35 +763,22 @@
       if(S.toFire===0) S.firing=false;
     }
 
-    // ======================================================
     // Smooth, grid-aligned brick descent
-    // ======================================================
-    const cellStep = S.grid.cell + S.grid.gap;
     const drift = S.driftSpeed * (S.stats.slowMotion ? 0.9 : 1.0);
-    
-    // move all bricks downward together based on rowOffset
     S.rowOffset += drift * dt;
-    
-    // once a full cell height passes, snap all bricks one full row
+
     if (S.rowOffset >= 1) {
       const steps = Math.floor(S.rowOffset);
       S.rowOffset -= steps;
-    
-      // shift all existing bricks down by exactly 1 row
       for (const b of S.bricks) b.row += steps;
-    
-      // immediately spawn a new top row
       addTopRow();
     }
-    
-    // always keep at least one prebuilt row off-screen
     ensurePrebuiltRows();
-    
+
     // fade in timer for new entries
     for (const b of S.bricks) {
       if (b.fadeIn !== undefined) b.fadeIn = clamp(b.fadeIn + dt * 1.5, 0, 1);
     }
-
 
     // move balls and handle collisions
     for(const ball of S.balls){
@@ -702,10 +821,13 @@
         const cx=clamp(ball.x, rx, rx+rw), cy=clamp(ball.y, ry, ry+rh);
         const dx=ball.x - cx, dy=ball.y - cy;
         if(dx*dx+dy*dy <= BALL_R*BALL_R){
+
           const willPierce = S.stats.pierce && ball.bounces===0;
           if(!willPierce){
-            const left=Math.abs((ball.x+BALL_R)-rx), right=Math.abs((rx+rw)-(ball.x-BALL_R));
-            const top=Math.abs((ball.y+BALL_R)-ry), bottom=Math.abs((ry+rh)-(ball.y-BALL_R));
+            const left=Math.abs((ball.x+BALL_R)-rx),
+                  right=Math.abs((rx+rw)-(ball.x-BALL_R)),
+                  top=Math.abs((ball.y+BALL_R)-ry),
+                  bottom=Math.abs((ry+rh)-(ball.y-BALL_R));
             const minPen=Math.min(left,right,top,bottom);
             if(minPen===left || minPen===right) ball.vx*=-1; else ball.vy*=-1;
           }
@@ -713,8 +835,9 @@
 
           if(S.stats.ricochet){ ball.vx*=1.02; ball.vy*=1.02; }
 
-          if(br.type==='brick'){
+          if(br.type==='brick' || br.type==='coin'){
             br.hitShake=1.0;
+
             let dmg = 1;
             if(S.stats.doubleDamage) dmg*=2;
             if(S.aim.heldTime && S.aim.heldTime>0.25) dmg = Math.round(dmg*(1+Math.min(0.5,S.aim.heldTime)));
@@ -728,27 +851,46 @@
             // small splash to neighbors
             if(S.stats.splash){
               for(const nb of S.bricks){
-                if(nb===br || nb.type!=='brick') continue;
+                if(nb===br || nb.type==='heart' || nb.type==='plusball') continue;
                 if(nb.row===br.row && Math.abs(nb.col - br.col)===1){
-                  nb.hp -= 1; if(nb.hp<=0 && !nb.dying){ nb.dying=true; nb.pop=1.0; }
+                  nb.hp = nb.hp!==undefined ? nb.hp - 1 : undefined;
+                  if(nb.hp!==undefined && nb.hp<=0 && !nb.dying){ nb.dying=true; nb.pop=1.0; }
                 }
               }
             }
 
-            if(br.hp<=0 && !br.dying){
-              br.dying=true; br.pop=1.0; burst(cx, cy, colorForHP(3)); sfx.break();
-              setTimeout(()=>{ const idx=S.bricks.indexOf(br); if(idx>=0) S.bricks.splice(idx,1); }, 120);
+            // destroy
+            if (br.hp!==undefined && br.hp<=0 && !br.dying) {
+              br.dying = true;
+              br.pop = 1.0;
+            
+              if (br.type === 'coin') {
+                // award coins immediately
+                const reward = Math.max(1, br.reward || 1);
+                addCoins(reward);
+                coinBurst(cx, cy);
+                sfx.coin();
+              } else {
+                burst(cx, cy, colorForHP(3));
+                sfx.break();
+              }
+            
+              // small delay before actual removal for pop animation
+              setTimeout(() => {
+                const idx = S.bricks.indexOf(br);
+                if (idx >= 0) S.bricks.splice(idx, 1);
+              }, 140);
             }
+
 
             if(S.stats.multishot && ball.bounces===1){
               S.balls.push({x:ball.x,y:ball.y,px:ball.x,py:ball.y,vx:-ball.vx,vy:ball.vy,alive:true,bounces:1});
             }
 
           } else if (br.type === 'plusball') {
-            S.volleyCount += 1; S.ammo = S.volleyCount; S.bricks.splice(i, 1); sfx.power(); showPlusOne();
-
-          } else if (br.type === 'coin') {
-            addXP(1 + (S.stats.lucky?1:0)); S.bricks.splice(i,1); sfx.power();
+            S.volleyCount += 1; S.ammo = S.volleyCount;
+            S.bricks.splice(i, 1);
+            sfx.power(); showPlusOne();
 
           } else if (br.type === 'heart') {
             if(S.health<S.maxHealth){ S.health+=1; renderHearts(); sfx.heal(); }
@@ -793,12 +935,15 @@
     function testWall(nx,ny,t,normal){
       if(t<=0) return;
       const pt={x:px+vx*t, y:py+vy*t};
-      if(normal.x!==0){ if(pt.y>=f.y-0.001 && pt.y<=f.y+f.h+0.001){ if(!best||t<best.t) best={t,x:pt.x,y:pt.y,type:'wall',normal}; } }
-      else { if(pt.x>=f.x-0.001 && pt.x<=f.x+f.w+0.001){ if(!best||t<best.t) best={t,x:pt.x,y:pt.y,type:'wall',normal}; } }
+      if(normal.x!==0){
+        if(pt.y>=f.y-0.001 && pt.y<=f.y+f.h+0.001){ if(!best||t<best.t) best={t,x:pt.x,y:pt.y,type:'wall',normal}; }
+      } else {
+        if(pt.x>=f.x-0.001 && pt.x<=f.x+f.w+0.001){ if(!best||t<best.t) best={t,x:pt.x,y:pt.y,type:'wall',normal}; }
+      }
     }
-    const tLeft=(f.x-px)/vx; testWall(f.x,0,tLeft,{x:1,y:0});
+    const tLeft=(f.x-px)/vx;  testWall(f.x,0,tLeft,{x:1,y:0});
     const tRight=(f.x+f.w-px)/vx; testWall(f.x+f.w,0,tRight,{x:-1,y:0});
-    const tTop=(f.y-py)/vy; testWall(0,f.y,tTop,{x:0,y:1});
+    const tTop=(f.y-py)/vy;   testWall(0,f.y,tTop,{x:0,y:1});
 
     for(const br of S.bricks){
       const pos=cellToXYWorld(br.col, br.row);
@@ -812,23 +957,22 @@
         if(tEnter===t1) normal={x:1,y:0}; else if(tEnter===t2) normal={x:-1,y:0};
         else if(tEnter===t3) normal={x:0,y:1}; else if(tEnter===t4) normal={x:0,y:-1};
         const hx=px+vx*tEnter, hy=py+vy*tEnter;
-        if(hy>=f.y-0.001 && hy<=f.y+f.h+0.001){ if(!best||tEnter<best.t) best={t:tEnter,x:hx,y:hy,type:'brick',normal}; }
+        if(hy>=f.y-0.001 && hy<=f.y+f.h+0.001){
+          if(!best||tEnter<best.t) best={t:tEnter,x:hx,y:hy,type:'brick',normal};
+        }
       }
     }
     return best;
   }
 
   function buildAimPath(sx, sy, ex, ey) {
-    const f = field();
     let vx = ex - sx, vy = ey - sy;
     const L = Math.hypot(vx, vy) || 1;
-    vx /= L;
-    vy /= L;
+    vx /= L; vy /= L;
     if (vy > -0.05) vy = -0.05;
 
     const pts = [{ x: sx, y: sy }];
     let px = sx, py = sy;
-
     const maxSeg = S.stats.precisionGuide ? 3 : 2;
 
     for (let s = 0; s < maxSeg; s++) {
@@ -901,6 +1045,30 @@
   // ============================================================
   // Draw
   // ============================================================
+  function drawCoinBlock(w,h, br){
+    // Base gold tile
+    ctx.fillStyle='hsl(42 85% 72%)';
+    rrect(0,0,w,h,12);
+    ctx.fill();
+
+    // Inner border that shrinks as HP is depleted
+    if (br.maxHp && br.hp>=0){
+      const pct = clamp(br.hp / br.maxHp, 0, 1);
+      const maxThick = Math.floor(w * 0.18);
+      const thick = Math.max(1, Math.floor(maxThick * pct));
+      // Draw a darker inner frame by layering a darker inset rect
+      ctx.fillStyle = 'hsl(42 70% 58%)';
+      rrect(thick, thick, w - thick*2, h - thick*2, Math.max(6, 12 - Math.floor(6 * (1-pct))));
+      ctx.fill();
+    }
+
+    // Coin emoji in the middle
+    ctx.fillStyle='#0b0d12';
+    ctx.font=`800 ${Math.floor(w*0.5)}px Inter, system-ui, sans-serif`;
+    ctx.textAlign='center'; ctx.textBaseline='middle';
+    ctx.fillText('🪙', w*.5, h*.54);
+  }
+
   function draw(){
     ctx.fillStyle='#0b0d12'; ctx.fillRect(0,0,W,H);
     const f=field();
@@ -946,10 +1114,8 @@
       if (alpha <= 0) continue;
 
       let sx=0, sy=0, sc=1;
-      if(br.type==='brick'){
-        if(br.hitShake>0){ const k=br.hitShake; sx=(Math.random()*2-1)*2*k; sy=(Math.random()*2-1)*2*k; br.hitShake = Math.max(0, br.hitShake - 0.08); }
-        if(br.pop>0){ const k=br.pop; sc=1 - 0.4*(1-k); br.pop = Math.max(0, br.pop - 0.1); }
-      }
+      if(br.hitShake>0){ const k=br.hitShake; sx=(Math.random()*2-1)*2*k; sy=(Math.random()*2-1)*2*k; br.hitShake = Math.max(0, br.hitShake - 0.08); }
+      if(br.pop>0){ const k=br.pop; sc=1 - 0.4*(1-k); br.pop = Math.max(0, br.pop - 0.1); }
 
       ctx.save();
       ctx.globalAlpha = alpha;
@@ -960,14 +1126,15 @@
         ctx.fillStyle=colorForHP(br.hp||1); rrect(0,0,w,h,12); ctx.fill();
         ctx.fillStyle='#0b0d12'; ctx.font=`600 ${Math.floor(w*0.36)}px Inter, system-ui, sans-serif`;
         ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(Math.max(0,br.hp||1), w*.5, h*.5 + 1);
+
       }else if(br.type==='plusball'){
         ctx.fillStyle='hsl(150 55% 72%)'; rrect(0,0,w,h,12); ctx.fill();
         ctx.fillStyle='#0b0d12'; ctx.font=`700 ${Math.floor(w*0.36)}px Inter, system-ui, sans-serif`;
         ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('+1', w*.5, h*.5 + 1);
+
       }else if(br.type==='coin'){
-        ctx.fillStyle='hsl(42 85% 72%)'; rrect(0,0,w,h,12); ctx.fill();
-        ctx.fillStyle='#0b0d12'; ctx.font=`700 ${Math.floor(w*0.34)}px Inter, system-ui, sans-serif`;
-        ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('●', w*.5, h*.5 + 1);
+        drawCoinBlock(w,h, br);
+
       }else if(br.type==='heart'){
         ctx.fillStyle='hsl(350 85% 76%)'; rrect(0,0,w,h,12); ctx.fill();
         ctx.fillStyle='#0b0d12'; ctx.font=`700 ${Math.floor(w*0.34)}px Inter, system-ui, sans-serif`;
@@ -1037,8 +1204,12 @@
     S.ammo=Math.max(8,S.ammo); S.volleyCount=Math.min(S.ammo, S.volleyCount||8);
     S.xp=0; S.xpThreshold=100; xpText.textContent='XP 0'; xpFill.style.width='0%';
     S.balls=[]; S.bricks=[]; S.particles=[]; S.firstCatchX=null;
-    S.powerups=[]; S.stats={doubleDamage:false,pierce:false,splash:false,crit:false,ricochet:false,slowMotion:false,precisionGuide:false,magnet:false,multishot:false,xpBoost:false,combo:false,lucky:false,jackpot:false,shieldWall:false};
+    S.powerups=[];
+    S.stats={doubleDamage:false,pierce:false,splash:false,crit:false,ricochet:false,slowMotion:false,precisionGuide:false,magnet:false,multishot:false,xpBoost:false,combo:false,lucky:false,jackpot:false,shieldWall:false};
     S.driftSpeed=0.10; S.rowTimer=0; S.rowInterval=6.0; S.rowOffset=0;
+
+    // Coins persist across runs; just render current amount
+    renderCoins();
 
     // Prebuild several rows off-screen so the board feels continuous
     for(let k=0;k<OFFSCREEN_BUFFER_ROWS+1;k++) addTopRow();
@@ -1058,10 +1229,11 @@
   playBtn.addEventListener('click', ()=>{ introEl.classList.add('hidden'); ac(); resetGame(); });
   replayBtn.addEventListener('click', ()=>{ goEl.classList.remove('show'); resetGame(); });
 
-  function start(){ resize(); requestAnimationFrame(loop); }
+  function start(){ resize(); renderCoins(); requestAnimationFrame(loop); }
   start();
 })();
 </script>
+
 
 
 </body>
