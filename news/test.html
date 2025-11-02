@@ -8,6 +8,8 @@
 <meta name="mobile-web-app-capable" content="yes">
 <title>London News</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
 <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
 <link rel="icon" href="favicon.ico">
 <link rel="manifest" href="manifest.json">
@@ -18,7 +20,7 @@
   --blur-amount: 15px;
   --transition-speed: 0.25s;
   --overlay-color: rgba(0,0,0,0.25);
-  --font: 'Nunito', sans-serif;
+  --font: 'Lexend', sans-serif;
 }
 
 /* Page */
@@ -168,7 +170,7 @@ body{
 ============================== */
 .card {
   position: relative;
-  height: 320px;
+  height: 420px;
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
@@ -189,9 +191,9 @@ body{
   background-size: 80%;
   transition: filter var(--transition-speed) ease;
   z-index: 1;
-  
+   
 background-color: color-mix(in srgb, var(--source-color) 70%, white 30%);
-mix-blend-mode: overlay;
+mix-blend-mode: hard-light;
 
 }
 
@@ -228,7 +230,6 @@ mix-blend-mode: overlay;
   margin:0;
   font-size:1.75rem;
   line-height:1.1;
-  font-weight:900;
 }
 .info .meta{
   font-size:0.9rem;
