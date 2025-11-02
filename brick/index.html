@@ -202,6 +202,12 @@
   color: #fff;
 }
 
+#levelPill {
+  transition: transform .25s ease;
+}
+#levelPill.flash {
+  transform: scale(1.3);
+}
 
 
 
@@ -217,6 +223,7 @@
     <span id="xpText">XP 0</span>
   </div>
   <div class="pill center" id="balls">Balls 8</div>
+  <div class="pill center" id="levelPill">Level 1</div>
   <div class="pill right" id="best">Best 0</div>
   <div class="hearts" id="hearts"></div>
   <!-- Coins HUD -->
@@ -253,11 +260,31 @@
   </div>
 </div>
 
+<!-- Level complete overlay -->
+<div class="overlay-go" id="levelComplete">
+  <div class="card">
+    <h1>Level Complete!</h1>
+    <p id="levelStats"></p>
+    <button class="btn" id="nextLevelBtn">Next Level</button>
+  </div>
+</div>
+
+
 <script>
 (() => {
   // ============================================================
+  // Load images
+  // ============================================================
+  const iconHeart = new Image();
+  iconHeart.src = 'assets/icons/heart.png';
+
+  const iconCoin = new Image();
+  iconCoin.src = 'assets/icons/coin.png';
+
+  // ============================================================
   // Canvas and UI
   // ============================================================
+
   const cv = document.getElementById('cv');
   const ctx = cv.getContext('2d', { alpha: false, desynchronized: true });
 
@@ -266,8 +293,7 @@
   const ballsEl  = document.getElementById('balls');
   const bestEl   = document.getElementById('best');
   const heartsEl = document.getElementById('hearts');
-  const coinsEl  = document.getElementById('coinCount'); // correct element id
-
+  const coinsEl  = document.getElementById('coinCount');
 
   const introEl  = document.getElementById('intro');
   const playBtn  = document.getElementById('playBtn');
@@ -393,6 +419,11 @@
 
     coins: parseInt(localStorage.getItem('arcbrick_coins') || '0', 10),
 
+    level: 1,
+    rowsCleared: 0,
+    rowsToClear: 20,
+    coinsThisLevel: 0,
+
     firing:false,
     toFire:0,
     baseFireDelay:0.11,
@@ -407,35 +438,35 @@
       splash:false,
       crit:false,
       ricochet:false,
+      powerSurge:false,
+      chargedShot:false,
       slowMotion:false,
       precisionGuide:false,
-      magnet:false,
-      multishot:false,
+      bounceSaver:false,
       xpBoost:false,
       combo:false,
-      lucky:false,
       jackpot:false,
-      shieldWall:false
+      shieldWall:false,
+      lastChance:false,
+      regeneration:false
     },
 
     balls:[],
     bricks:[],
     grid:{ cols:7, gap:8, cell:56 },
-    aim:{ active:false, startX:0, startY:0, endX:0, endY:0, path:[], alpha:0 },
+    aim:{ active:false, startX:0, startY:0, endX:0, endY:0, path:[], alpha:0, heldTime:0 },
     launcherX:0,
     firstCatchX:null,
     particles:[],
 
-    // smooth grid descent
-    driftSpeed:0.10,     // rows per second
+    driftSpeed:0.10,
     rowInterval:6.0,
     rowTimer:0.0,
-    rowOffset:0.0,       // fractional rows, 0..1
+    rowOffset:0.0,
 
     comboHits:0
   };
 
-  // How many rows to prebuild above the screen
   const OFFSCREEN_BUFFER_ROWS = 1;
 
   // ============================================================
@@ -460,7 +491,6 @@
     const y=f.y + r*(S.grid.cell+S.grid.gap);
     return {x,y};
   }
-  // world position using global rowOffset for smooth drift
   function cellToXYWorld(c,r){
     const base = cellToXY(c,r);
     return { x: base.x, y: base.y + S.rowOffset*(S.grid.cell + S.grid.gap) };
@@ -523,7 +553,6 @@
   // Difficulty helpers for coin blocks
   // ============================================================
   function difficultyTier(){
-    // very light scaling with XP so coin blocks get tougher
     if (S.xp < 300) return 1;
     if (S.xp < 900) return 2;
     if (S.xp < 1800) return 3;
@@ -531,54 +560,65 @@
   }
   function coinBlockHP(){
     const tier = difficultyTier();
-    // slightly tougher than regular bricks
     return 3 + tier + randInt(0, tier);
   }
   function coinBlockReward(){
     const tier = difficultyTier();
-    // random payout by tier
     const base = randInt(2, 4 + tier);
-    return base + (S.stats.lucky ? 1 : 0);
+    return base;
   }
 
   // ============================================================
   // Brick spawning, prebuild, fade-in
   // ============================================================
-  function addTopRow(){
+  function ensurePrebuiltRows() {
+    const minRow = -OFFSCREEN_BUFFER_ROWS;
+    const maxRow = Math.max(0, ...S.bricks.map(b => b.row)) + 1;
+
+    while (!S.bricks.some(b => b.row <= minRow)) {
+      addTopRow();
+    }
+
+    const maxKeep = Math.ceil(H / (S.grid.cell + S.grid.gap)) + OFFSCREEN_BUFFER_ROWS;
+    S.bricks = S.bricks.filter(b => b.row < maxKeep);
+  }
+
+  function addTopRow() {
     const cols = S.grid.cols;
     const count = randInt(3, cols);
-    const slots=[...Array(cols).keys()]; shuffle(slots);
+    const slots = [...Array(cols).keys()];
+    shuffle(slots);
 
-    for(let i=0;i<cols && i<count;i++){
-      const col=slots[i];
-      const roll=Math.random();
-      const baseProps = { col, row:-1, spawnT:0, fadeIn:0 };
+    const isFirstRow = S.rowsCleared === 0;
 
-      if(roll<0.08){
-        S.bricks.push({ ...baseProps, type:'heart' });
-      }else if(roll<0.14){
-        S.bricks.push({ ...baseProps, type:'plusball' });
-      }else if(roll<0.22){
+    for (let i = 0; i < cols && i < count; i++) {
+      const col = slots[i];
+      const roll = Math.random();
+      const baseProps = { col, row: -1, spawnT: 0, fadeIn: 0 };
+
+      if (isFirstRow && (roll < 0.22)) {
+        const hp = 2 + randInt(0, 2) + Math.floor(S.xp / 150);
+        S.bricks.push({ ...baseProps, type: 'brick', hp, hitShake: 0, pop: 0, dying: false });
+        continue;
+      }
+
+      if (roll < 0.08 && S.health < S.maxHealth) {
+        S.bricks.push({ ...baseProps, type: 'heart' });
+      } else if (roll < 0.22) {
         const hp = coinBlockHP();
         const reward = coinBlockReward();
-        S.bricks.push({ ...baseProps, type:'coin', hp, maxHp:hp, reward, hitShake:0, pop:0, dying:false });
-      }else{
-        const hp = 2 + randInt(0,2) + Math.floor(S.xp/150);
-        S.bricks.push({ ...baseProps, type:'brick', hp, hitShake:0, pop:0, dying:false });
+        S.bricks.push({ ...baseProps, type: 'coin', hp, maxHp: hp, reward, hitShake: 0, pop: 0, dying: false });
+      } else {
+        const hp = 2 + randInt(0, 2) + Math.floor(S.xp / 150);
+        S.bricks.push({ ...baseProps, type: 'brick', hp, hitShake: 0, pop: 0, dying: false });
       }
     }
 
-    // Ensure the new row has at least one blocker
     if (!S.bricks.some(b => b.row === -1)) {
       const col = randInt(0, S.grid.cols - 1);
       const hp = 2 + randInt(0, 2) + Math.floor(S.xp / 150);
       S.bricks.push({ type: 'brick', col, row: -1, hp, hitShake: 0, pop: 0, dying: false, fadeIn: 0 });
     }
-  }
-  function ensurePrebuiltRows() {
-    let minRow = Math.min(...S.bricks.map(b => b.row));
-    if (!isFinite(minRow)) minRow = 0;
-    if (minRow > -1) addTopRow();
   }
 
   // ============================================================
@@ -591,7 +631,7 @@
     S.balls.push({
       x:base.x, y:base.y, px:base.x, py:base.y,
       vx:S.fireDir.x*BALL_SPEED, vy:S.fireDir.y*BALL_SPEED,
-      alive:true, bounces:0
+      alive:true, bounces:0, usedSaver:false
     });
   }
 
@@ -615,7 +655,7 @@
   // ============================================================
   function nextThreshold(t){
     if(t<100) return 100;
-    const base=[100,300,600,1000,1500,2100,2800,3600];
+    const base=[100,500,1000,1500,2000,2500,3000,3500];
     for(const v of base){ if(t<v) return v; }
     return t + 900;
   }
@@ -639,13 +679,14 @@
   // ============================================================
   function renderHearts(){
     heartsEl.innerHTML = '';
-    for(let i = 0; i < S.maxHealth; i++){
-      const icon = document.createElement('i');
-      icon.className = 'bx bxs-heart';
-      icon.style.color = i < S.health ? 'var(--heart)' : 'rgba(255,255,255,0.2)';
-      icon.style.fontSize = '22px';
-      icon.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))';
-      heartsEl.appendChild(icon);
+    for (let i = 0; i < S.maxHealth; i++) {
+      const img = document.createElement('img');
+      img.src = 'assets/icons/heart.png';
+      img.style.width = '20px';
+      img.style.height = '20px';
+      img.style.opacity = i < S.health ? '1' : '0.25';
+      img.style.filter = 'drop-shadow(0 2px 4px rgba(0,0,0,0.4))';
+      heartsEl.appendChild(img);
     }
   }
 
@@ -653,18 +694,31 @@
   // Coins HUD
   // ============================================================
   function renderCoins(){
-    if(!coinsEl) return;
-    // Keep text minimal so it aligns well in your HUD
-    // Example: "🪙 123"
-    coinsEl.textContent = `🪙 ${S.coins}`;
+    if (!coinsEl) return;
+    coinsEl.innerHTML = '';
+
+    const img = document.createElement('img');
+    img.src = 'assets/icons/coin.png';
+    img.style.width = '20px';
+    img.style.height = '20px';
+    img.style.verticalAlign = 'middle';
+    img.style.marginRight = '6px';
+    coinsEl.appendChild(img);
+
+    const span = document.createElement('span');
+    span.textContent = S.coins;
+    span.style.fontWeight = '700';
+    coinsEl.appendChild(span);
   }
+
   function addCoins(n){
+    S.coinsThisLevel += n;
     S.coins = Math.max(0, S.coins + n);
     localStorage.setItem('arcbrick_coins', String(S.coins));
     renderCoins();
     showCoinGain(n);
     sfx.coin();
-  }
+ }
 
   // ============================================================
   // Powerups
@@ -677,19 +731,14 @@
     {id:'ricochet', name:'Ricochet Plus', desc:'Slight speed gain after bounces.'},
     {id:'powerSurge', name:'Power Surge', desc:'Every 20th hit turns into a super hit.'},
     {id:'chargedShot', name:'Charged Shot', desc:'Hold before release for damage bonus.'},
-    {id:'multishot', name:'Multi Shot', desc:'Each ball duplicates after first bounce.'},
-    {id:'magnet', name:'Magnet Catch', desc:'Balls curve toward the launcher near bottom.'},
     {id:'slowMotion', name:'Slow Descent', desc:'Bricks drift 10 percent slower.'},
     {id:'precisionGuide', name:'Precision Guide', desc:'Aim guide shows 3 segments.'},
     {id:'bounceSaver', name:'Bounce Saver', desc:'One auto bounce save per volley.'},
-    {id:'homingPulse', name:'Homing Pulse', desc:'Sometimes redirects a ball at a brick.'},
-    {id:'multiVolley', name:'Multi Volley', desc:'Queue a second volley before return.'},
     {id:'xpBoost', name:'XP Boost', desc:'+25 percent XP from hits.'},
     {id:'combo', name:'Combo Multiplier', desc:'Successive hits increase XP slightly.'},
-    {id:'lucky', name:'Lucky Coins', desc:'+1 XP from coin drops.'},
     {id:'jackpot', name:'Jackpot', desc:'Random small XP bursts.'},
-    {id:'lastChance', name:'Last Chance', desc:'Freeze bricks for 5 seconds once.'},
     {id:'shieldWall', name:'Shield Wall', desc:'One shield line blocks a row once.'},
+    {id:'lastChance', name:'Last Chance', desc:'Freeze bricks for 5 seconds once.'},
     {id:'regeneration', name:'Regeneration', desc:'Heal one heart after three levels.'}
   ];
 
@@ -730,15 +779,17 @@
     if(id==='splash') st.splash=true;
     if(id==='crit') st.crit=true;
     if(id==='ricochet') st.ricochet=true;
+    if(id==='powerSurge') st.powerSurge=true;
+    if(id==='chargedShot') st.chargedShot=true;
     if(id==='slowMotion') st.slowMotion=true;
     if(id==='precisionGuide') st.precisionGuide=true;
-    if(id==='magnet') st.magnet=true;
-    if(id==='multishot') st.multishot=true;
+    if(id==='bounceSaver') st.bounceSaver=true;
     if(id==='xpBoost') st.xpBoost=true;
     if(id==='combo') st.combo=true;
-    if(id==='lucky') st.lucky=true;
     if(id==='jackpot') st.jackpot=true;
     if(id==='shieldWall') st.shieldWall=true;
+    if(id==='lastChance') st.lastChance=true;
+    if(id==='regeneration') st.regeneration=true;
     sfx.power();
   }
 
@@ -748,11 +799,9 @@
   function update(dt){
     const f=field();
 
-    // aim alpha ease
     const targetAlpha=S.aim.active?1:0;
     S.aim.alpha += (targetAlpha - S.aim.alpha) * Math.min(1, dt*12);
 
-    // sequential spawning
     if(S.firing && S.toFire>0){
       S.fireTimer += dt;
       while(S.fireTimer>=S.fireDelay && S.toFire>0){
@@ -763,7 +812,6 @@
       if(S.toFire===0) S.firing=false;
     }
 
-    // Smooth, grid-aligned brick descent
     const drift = S.driftSpeed * (S.stats.slowMotion ? 0.9 : 1.0);
     S.rowOffset += drift * dt;
 
@@ -772,38 +820,38 @@
       S.rowOffset -= steps;
       for (const b of S.bricks) b.row += steps;
       addTopRow();
+
+      S.rowsCleared += steps;
+      if (S.rowsCleared >= S.rowsToClear) {
+        levelComplete();
+        return;
+      }
     }
+
     ensurePrebuiltRows();
 
-    // fade in timer for new entries
     for (const b of S.bricks) {
       if (b.fadeIn !== undefined) b.fadeIn = clamp(b.fadeIn + dt * 1.5, 0, 1);
     }
 
-    // move balls and handle collisions
     for(const ball of S.balls){
       if(!ball.alive) continue;
 
       ball.px=ball.x; ball.py=ball.y;
       ball.x += ball.vx*dt; ball.y += ball.vy*dt;
 
-      // walls
       if(ball.x - BALL_R <= f.x){ ball.x=f.x+BALL_R; ball.vx=Math.abs(ball.vx); }
       if(ball.x + BALL_R >= f.x+f.w){ ball.x=f.x+f.w-BALL_R; ball.vx=-Math.abs(ball.vx); }
       if(ball.y - BALL_R <= f.y){ ball.y=f.y+BALL_R; ball.vy=Math.abs(ball.vy); }
 
-      // magnet return zone near bottom
-      const returnZone = H - margin.b - 100;
-      if (ball.vy > 0 && ball.y > returnZone) {
-        const dx = S.launcherX - ball.x;
-        const dist = Math.abs(dx);
-        const strength = clamp(1 - dist / (W * 0.5), 0, 1);
-        ball.vx += dx * dt * 4.5 * strength;
-        ball.vy += 20 * dt;
-      }
-
-      // bottom catch
+      // bottom catch or saver
       if(ball.y + BALL_R >= H - margin.b){
+        if (S.stats.bounceSaver && !ball.usedSaver) {
+          ball.vy = -Math.abs(ball.vy);
+          ball.usedSaver = true;
+          sfx.power();
+          continue;
+        }
         ball.alive=false;
         if(S.firstCatchX===null) S.firstCatchX=ball.x;
         S.ammo = Math.min(S.volleyCount, S.ammo + 1);
@@ -817,7 +865,6 @@
         const pos=cellToXYWorld(br.col, br.row);
         const rx=pos.x, ry=pos.y, rw=S.grid.cell, rh=S.grid.cell;
 
-        // circle-rect
         const cx=clamp(ball.x, rx, rx+rw), cy=clamp(ball.y, ry, ry+rh);
         const dx=ball.x - cx, dy=ball.y - cy;
         if(dx*dx+dy*dy <= BALL_R*BALL_R){
@@ -840,32 +887,69 @@
 
             let dmg = 1;
             if(S.stats.doubleDamage) dmg*=2;
-            if(S.aim.heldTime && S.aim.heldTime>0.25) dmg = Math.round(dmg*(1+Math.min(0.5,S.aim.heldTime)));
+
+            // Charged Shot scaling if held
+            if(S.stats.chargedShot && S.aim.heldTime) {
+              dmg = Math.round(dmg * (1 + Math.min(1.0, S.aim.heldTime * 2)));
+            }
+
             if(S.stats.crit && Math.random()<0.10) dmg*=5;
+
+            // Power Surge every 20th hit
+            S.stats._hitCount = (S.stats._hitCount || 0) + 1;
+            if (S.stats.powerSurge && S.stats._hitCount % 20 === 0) {
+              dmg *= 4;
+              burst(cx, cy, '#ffd76b');
+              sfx.power();
+            }
 
             br.hp -= dmg;
             addXP(dmg);
             S.comboHits += 1;
             sfx.hit();
 
-            // small splash to neighbors
-            if(S.stats.splash){
-              for(const nb of S.bricks){
-                if(nb===br || nb.type==='heart' || nb.type==='plusball') continue;
-                if(nb.row===br.row && Math.abs(nb.col - br.col)===1){
-                  nb.hp = nb.hp!==undefined ? nb.hp - 1 : undefined;
-                  if(nb.hp!==undefined && nb.hp<=0 && !nb.dying){ nb.dying=true; nb.pop=1.0; }
+            // Jackpot random XP burst
+            if(S.stats.jackpot && Math.random() < 0.02){
+              const bonus = randInt(20,50);
+              addXP(bonus);
+              burst(cx, cy, '#ffd76b');
+            }
+
+            // splash to neighbors
+            if (S.stats.splash) {
+              for (let nb of [...S.bricks]) {
+                if (nb === br || nb.type === 'heart' || nb.type === 'plusball') continue;
+                if (nb.row === br.row && Math.abs(nb.col - br.col) === 1) {
+                  if (nb.hp !== undefined) {
+                    nb.hp -= 1;
+                    if (nb.hp <= 0 && !nb.dying) {
+                      nb.dying = true;
+                      nb.pop = 1.0;
+                      // if it's a coin, reward immediately
+                      if (nb.type === 'coin') {
+                        const reward = Math.max(1, nb.reward || 1);
+                        addCoins(reward);
+                        coinBurst(nb.x || 0, nb.y || 0);
+                        sfx.coin();
+                      } else {
+                        burst(nb.x || 0, nb.y || 0, colorForHP(3));
+                        sfx.break();
+                      }
+                      // remove instantly to avoid 0-HP ghosts
+                      const idx = S.bricks.indexOf(nb);
+                      if (idx >= 0) S.bricks.splice(idx, 1);
+                    }
+                  }
                 }
               }
             }
 
-            // destroy
+
             if (br.hp!==undefined && br.hp<=0 && !br.dying) {
               br.dying = true;
               br.pop = 1.0;
-            
+
               if (br.type === 'coin') {
-                // award coins immediately
                 const reward = Math.max(1, br.reward || 1);
                 addCoins(reward);
                 coinBurst(cx, cy);
@@ -874,17 +958,15 @@
                 burst(cx, cy, colorForHP(3));
                 sfx.break();
               }
-            
-              // small delay before actual removal for pop animation
+
               setTimeout(() => {
                 const idx = S.bricks.indexOf(br);
                 if (idx >= 0) S.bricks.splice(idx, 1);
               }, 140);
             }
 
-
-            if(S.stats.multishot && ball.bounces===1){
-              S.balls.push({x:ball.x,y:ball.y,px:ball.x,py:ball.y,vx:-ball.vx,vy:ball.vy,alive:true,bounces:1});
+            if(S.stats.pierce && ball.bounces===1 && willPierce){
+              // already pierced through first brick, nothing else to do
             }
 
           } else if (br.type === 'plusball') {
@@ -928,7 +1010,7 @@
   }
 
   // ============================================================
-  // Aim guide with brick aware raycast, using world positions
+  // Aim guide with brick aware raycast
   // ============================================================
   function firstIntersection(px,py,vx,vy){
     const f=field(); let best=null;
@@ -1046,23 +1128,19 @@
   // Draw
   // ============================================================
   function drawCoinBlock(w,h, br){
-    // Base gold tile
     ctx.fillStyle='hsl(42 85% 72%)';
     rrect(0,0,w,h,12);
     ctx.fill();
 
-    // Inner border that shrinks as HP is depleted
     if (br.maxHp && br.hp>=0){
       const pct = clamp(br.hp / br.maxHp, 0, 1);
       const maxThick = Math.floor(w * 0.18);
       const thick = Math.max(1, Math.floor(maxThick * pct));
-      // Draw a darker inner frame by layering a darker inset rect
       ctx.fillStyle = 'hsl(42 70% 58%)';
       rrect(thick, thick, w - thick*2, h - thick*2, Math.max(6, 12 - Math.floor(6 * (1-pct))));
       ctx.fill();
     }
 
-    // Coin emoji in the middle
     ctx.fillStyle='#0b0d12';
     ctx.font=`800 ${Math.floor(w*0.5)}px Inter, system-ui, sans-serif`;
     ctx.textAlign='center'; ctx.textBaseline='middle';
@@ -1073,22 +1151,18 @@
     ctx.fillStyle='#0b0d12'; ctx.fillRect(0,0,W,H);
     const f=field();
 
-    // outer soft panel with shadow
     ctx.save();
     ctx.shadowColor='rgba(0,0,0,.50)'; ctx.shadowBlur=30;
     ctx.fillStyle='#121624'; rrect(f.x,f.y,f.w,f.h,18); ctx.fill();
     ctx.restore();
 
-    // clip to rounded play area as a mask
     ctx.save();
     rrect(f.x,f.y,f.w,f.h,18);
     ctx.clip();
 
-    // background fill inside field
     ctx.fillStyle='#121624';
     ctx.fillRect(f.x, f.y, f.w, f.h);
 
-    // guides
     ctx.globalAlpha=.06;
     for(let c=1;c<S.grid.cols;c++){
       const x=f.x + c*(S.grid.cell+S.grid.gap) - S.grid.gap*.5;
@@ -1096,14 +1170,12 @@
     }
     ctx.globalAlpha=1;
 
-    // bricks
     for(const br of S.bricks){
       const pos = cellToXYWorld(br.col, br.row);
       const x = pos.x;
       const y = pos.y;
       const w = S.grid.cell, h = S.grid.cell;
 
-      // fade as crossing top edge
       let alpha = clamp(br.fadeIn ?? 1, 0, 1);
       if (y + h <= f.y) alpha = 0;
       else if (y < f.y) {
@@ -1132,18 +1204,16 @@
         ctx.fillStyle='#0b0d12'; ctx.font=`700 ${Math.floor(w*0.36)}px Inter, system-ui, sans-serif`;
         ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('+1', w*.5, h*.5 + 1);
 
-      }else if(br.type==='coin'){
-        drawCoinBlock(w,h, br);
+      }else if (br.type === 'coin') {
+        ctx.drawImage(iconCoin, 0, 0, w, h);
 
-      }else if(br.type==='heart'){
-        ctx.fillStyle='hsl(350 85% 76%)'; rrect(0,0,w,h,12); ctx.fill();
-        ctx.fillStyle='#0b0d12'; ctx.font=`700 ${Math.floor(w*0.34)}px Inter, system-ui, sans-serif`;
-        ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText('♥', w*.5, h*.5 + 1);
+      }else if (br.type === 'heart') {
+        ctx.drawImage(iconHeart, 0, 0, w, h);
       }
+
       ctx.restore();
     }
 
-    // aim path inside mask
     if(S.aim.alpha>0.01){
       const pts=S.aim.path;
       ctx.globalAlpha=0.75*S.aim.alpha; ctx.lineWidth=2; ctx.setLineDash([8,10]); ctx.strokeStyle='#ffffff';
@@ -1154,7 +1224,6 @@
       ctx.globalAlpha=1;
     }
 
-    // balls render inside mask
     for(const ball of S.balls){
       if(!ball.alive) continue;
       const dx=ball.x-ball.px, dy=ball.y-ball.py, len=Math.hypot(dx,dy);
@@ -1172,19 +1241,17 @@
       ctx.fillStyle=g; ctx.beginPath(); ctx.arc(ball.x,ball.y,BALL_R,0,Math.PI*2); ctx.fill();
     }
 
-    // thumb zone gradient at bottom
     const thumbTop=H - margin.b;
     const grad=ctx.createLinearGradient(0,thumbTop,0,H);
     grad.addColorStop(0,'rgba(0,0,0,0)');
     grad.addColorStop(1,'rgba(0,0,0,0.25)');
     ctx.fillStyle=grad; ctx.fillRect(0,thumbTop,W,margin.b);
 
-    // launcher marker
     ctx.globalAlpha=.75; ctx.fillStyle=S.stats.doubleDamage ? '#ffb36b' : '#c7b7ff';
     ctx.beginPath(); ctx.arc(S.launcherX, H - margin.b, 4, 0, Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
 
     drawParticles();
-    ctx.restore(); // end mask
+    ctx.restore();
   }
 
   // ============================================================
@@ -1199,25 +1266,102 @@
   }
 
   function resetGame(){
-    S.waiting=false; S.firing=false;
-    S.health=3; S.maxHealth=3; renderHearts();
-    S.ammo=Math.max(8,S.ammo); S.volleyCount=Math.min(S.ammo, S.volleyCount||8);
-    S.xp=0; S.xpThreshold=100; xpText.textContent='XP 0'; xpFill.style.width='0%';
-    S.balls=[]; S.bricks=[]; S.particles=[]; S.firstCatchX=null;
-    S.powerups=[];
-    S.stats={doubleDamage:false,pierce:false,splash:false,crit:false,ricochet:false,slowMotion:false,precisionGuide:false,magnet:false,multishot:false,xpBoost:false,combo:false,lucky:false,jackpot:false,shieldWall:false};
-    S.driftSpeed=0.10; S.rowTimer=0; S.rowInterval=6.0; S.rowOffset=0;
+    document.getElementById('levelPill').textContent = `Level ${S.level}`;
 
-    // Coins persist across runs; just render current amount
+    S.waiting = false;
+    S.firing = false;
+    S.health = 3;
+    S.maxHealth = 3;
+    renderHearts();
+
+    S.ammo = Math.max(8, S.ammo);
+    S.volleyCount = Math.min(S.ammo, S.volleyCount || 8);
+
+    S.xp = 0;
+    S.xpThreshold = 100;
+    xpText.textContent = 'XP 0';
+    xpFill.style.width = '0%';
+
+    S.balls = [];
+    S.bricks = [];
+    S.particles = [];
+    S.firstCatchX = null;
+    S.powerups = [];
+    S.stats = {
+      doubleDamage:false, pierce:false, splash:false, crit:false, ricochet:false,
+      powerSurge:false, chargedShot:false, slowMotion:false, precisionGuide:false,
+      bounceSaver:false, xpBoost:false, combo:false, jackpot:false,
+      shieldWall:false, lastChance:false, regeneration:false
+    };
+
+    S.driftSpeed = 0.30 + (S.level - 1) * 0.02;
+    S.rowTimer = 0;
+    S.rowInterval = 6.0;
+    S.rowOffset = 0;
+
     renderCoins();
 
-    // Prebuild several rows off-screen so the board feels continuous
-    for(let k=0;k<OFFSCREEN_BUFFER_ROWS+1;k++) addTopRow();
+    for (let k = 0; k < OFFSCREEN_BUFFER_ROWS + 1; k++) addTopRow();
     ensurePrebuiltRows();
-    S.running=true;
+
+    S.running = true;
+  }
+
+  function levelComplete(){
+    S.running = false;
+    S.waiting = false;
+
+    const lvlGoEl = document.getElementById('levelComplete');
+    const statsEl = document.getElementById('levelStats');
+    const nextBtn = document.getElementById('nextLevelBtn');
+
+    statsEl.textContent = `Coins earned: ${S.coinsThisLevel}`;
+    lvlGoEl.classList.add('show');
+
+    nextBtn.onclick = () => {
+      lvlGoEl.classList.remove('show');
+      S.level += 1;
+      S.rowsCleared = 0;
+      S.coinsThisLevel = 0;
+
+      S.driftSpeed += 0.02;
+      S.rowsToClear += 5;
+      S.volleyCount = Math.max(8, S.volleyCount);
+
+      const levelPill = document.getElementById('levelPill');
+      levelPill.textContent = `Level ${S.level}`;
+      levelPill.classList.add('flash');
+      setTimeout(() => levelPill.classList.remove('flash'), 250);
+
+      sfx.level();
+
+      // Regeneration powerup heals every 3 levels
+      if (S.stats.regeneration && S.level % 3 === 0 && S.health < S.maxHealth){
+        S.health++;
+        renderHearts();
+        sfx.heal();
+      }
+
+      resetGame();
+    };
   }
 
   function gameOver(){
+    // Last Chance intercept
+    if(S.stats.lastChance && !S.stats.usedLastChance){
+      S.stats.usedLastChance = true;
+      const oldSpeed = S.driftSpeed;
+      S.driftSpeed = 0;
+      sfx.power();
+      setTimeout(() => {
+        S.driftSpeed = oldSpeed;
+        S.health = 1;
+        renderHearts();
+        S.running = true;
+      }, 5000);
+      return;
+    }
+
     S.running=false; S.waiting=false; S.firing=false;
     if(S.xp>S.best){ S.best=S.xp; localStorage.setItem('arcbrick_best_xp', String(S.best)); }
     goTitle.textContent='Game Over'; goInfo.textContent=`XP ${S.xp}, Best ${S.best}`;
@@ -1225,7 +1369,6 @@
     goEl.classList.add('show'); sfx.over();
   }
 
-  // overlays
   playBtn.addEventListener('click', ()=>{ introEl.classList.add('hidden'); ac(); resetGame(); });
   replayBtn.addEventListener('click', ()=>{ goEl.classList.remove('show'); resetGame(); });
 
@@ -1233,8 +1376,6 @@
   start();
 })();
 </script>
-
-
 
 </body>
 </html>
