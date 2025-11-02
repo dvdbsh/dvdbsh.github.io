@@ -36,92 +36,56 @@ body{
 }
 
 /* ==============================
-   FROSTED TOP BAR
+   Frosted Top Bar
 ============================== */
-
 .topbar {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  top: 0; left: 0; right: 0;
   display: flex;
-  align-items: center; /* use center instead of flex-end */
+  align-items: center;
   justify-content: space-between;
   padding: calc(env(safe-area-inset-top, 0px) + 0.75rem) 1.5rem 0.75rem;
   background: rgba(255,255,255,0.08);
-  border-bottom: 1px solid rgba(255,255,255,0.2);  
+  border-bottom: 1px solid rgba(255,255,255,0.2);
   backdrop-filter: blur(10px);
   z-index: 1000;
   transition: transform 0.45s ease, opacity 0.35s ease;
-  box-sizing: border-box;
 }
+.topbar.hidden { transform: translateY(-100%); opacity: 0; }
 
-
-
-.topbar.hidden {
-  transform: translateY(-100%);
-  opacity: 0;
-}
-
-/* Logo group */
 .logo {
   display: flex;
   align-items: center;
   gap: 0.65rem;
-  position: relative;
-  top: 0px; /* nudges group down slightly */
 }
-
 .logo-icon {
   width: 45px;
   object-fit: contain;
   position: relative;
-  top: -4px; /* visually centers icon with text baseline */
+  top: -4px;
 }
-
 .logo-text {
   font-size: 1.15rem;
   font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0.25px;
   color: #fff;
   opacity: 0.95;
-  display: flex;
-  align-items: center;
-  height: 28px;
-}
-
-/* Date text */
-.topbar .date {
-  font-size: 1.15rem;
-  font-weight: 800;
-  line-height: 1;
-  letter-spacing: 0.25px;
-  color: #fff;
-  opacity: 0.95;
-  display: flex;
-  align-items: center;
-  height: 28px;
 }
 
 .date {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #fff;
+  opacity: 0.95;
   display: flex;
   align-items: center;
-  justify-content: right;
   gap: 0.35rem;
   transition: opacity 0.8s ease;
 }
 
-
-.topbar.hidden {
-  transform: translateY(-100%);
-  opacity: 0;
-}
-
-.controls{
-  display:flex;
-  gap:0.6rem;
-}
+/* ==============================
+   Controls
+============================== */
+.controls{ display:flex; gap:0.6rem; }
 .btn{
   background:transparent;
   border:1px solid rgba(255,255,255,0.15);
@@ -133,8 +97,11 @@ body{
   font-size: 1rem;
   transition:transform .2s, background .25s, border-color .25s;
 }
-.btn:hover{ transform:translateY(-1px); background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.25); }
-.btn i{ font-style:normal; }
+.btn:hover{
+  transform:translateY(-1px);
+  background:rgba(255,255,255,0.06);
+  border-color:rgba(255,255,255,0.25);
+}
 
 /* Toast */
 .toast{
@@ -164,7 +131,6 @@ body{
   gap: 0.8rem;
   z-index: 9999;
 }
-
 .float-btn {
   width: 62px;
   height: 62px;
@@ -173,64 +139,67 @@ body{
   font-size: 1.9rem;
   cursor: pointer;
   background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.2);  
+  border: 1px solid rgba(255,255,255,0.2);
   backdrop-filter: blur(10px);
   transition: background 0.25s, transform 0.25s, opacity 0.25s;
   padding-top: 4px;
 }
-
 .float-btn:hover {
   background: rgba(255,255,255,0.15);
   transform: scale(1.08);
 }
+#backToTopBtn { opacity: 0; pointer-events: none; }
+#backToTopBtn.visible { opacity: 1; pointer-events: auto; }
 
-#backToTopBtn {
-  opacity: 0;
-  pointer-events: none;
-}
-
-#backToTopBtn.visible {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-
-/* Grid */
+/* ==============================
+   Grid Layout
+============================== */
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
   gap:1.5rem;
   width:100%;
   max-width:1200px;
-  margin:0 auto;
-  margin-top: 72px;
+  margin:72px auto 0;
 }
 
-/* Separate white background and tinted SVG image */
+/* ==============================
+   Simplified Article Cards
+============================== */
 .card {
   position: relative;
   height: 320px;
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
-
-  background: var(--source-color, rgba(0,0,0,0.15));
-  background-image: var(--card-image, none);
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-size: 80%;
-  background-blend-mode: multiply;
-
-  filter: saturate(0.9) contrast(0.95);
-  transition: filter var(--transition-speed) ease, transform 0.25s ease;
+  background-color: var(--dark-source-color, #222);
+  transition: transform 0.25s ease, backdrop-filter var(--transition-speed) ease;
+  backdrop-filter: none;
+}
+.card.active {
+  backdrop-filter: blur(var(--blur-amount));
+  transform: scale(1.01);
 }
 
+.card-art {
+  position: absolute;
+  inset: 0;
+  background-repeat: no-repeat;
+  background-position: 50% 15%;
+  background-size: 80%;
+  transition: filter var(--transition-speed) ease;
+  z-index: 1;
+  
+background-color: color-mix(in srgb, var(--source-color) 70%, white 30%);
+mix-blend-mode: overlay;
 
+}
 
-/* overlay */
+.card.active .card-art {
+  filter: blur(var(--blur-amount)) brightness(0.9);
+}
 
-
-
+/* Source header */
 .source-header {
   position: absolute;
   top: 0.8rem;
@@ -239,22 +208,13 @@ body{
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  text-shadow:
-  0 0 5px rgba(0,0,0,0.55),
-  0 0 10px rgba(0,0,0,0.35);
-
 }
-
 .source-logo {
   width: 40px;
   object-fit: contain;
   border-radius: 3px;
 }
-
-.source-name {
-  display: none;
-}
-
+.source-name { display: none; }
 
 /* Info (title/meta) */
 .info{
@@ -263,31 +223,21 @@ body{
   padding:1.2rem;
   z-index:2;
   transition:opacity var(--transition-speed) ease;
-  
 }
 .info h2{
   margin:0;
   font-size:1.75rem;
-  line-height:1;
+  line-height:1.1;
   font-weight:900;
-text-shadow:
-  0 0 5px rgba(36,36,36,1),
-  0 0 8px rgba(36,36,36,1),
-  0 0 50px rgba(36,36,36,1);
-
-
 }
 .info .meta{
   font-size:0.9rem;
   opacity:0.85;
   margin-top:0.4rem;
   font-weight:700;
-  text-shadow:
-  0 0 5px rgba(0,0,0,0.55),
-  0 0 10px rgba(0,0,0,0.35);
 }
 
-/* Content (expanded) */
+/* Expanded content */
 .content{
   position:absolute;
   inset:0;
@@ -298,7 +248,7 @@ text-shadow:
   opacity:0;
   z-index:3;
   pointer-events:none;
-  transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
+  transition: opacity var(--transition-speed) ease;
 }
 .content p{
   font-size:1.2rem;
@@ -309,82 +259,21 @@ text-shadow:
 .content a{
   text-decoration:none;
   align-self:flex-start;
-  background:transparent;
-  border: 1px solid rgba(255,255,255,0.2);  
+  background:rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);
   backdrop-filter: blur(10px);
-  transition: background 0.25s, transform 0.25s, opacity 0.25s;
   color:#fff;
   border-radius:24px;
   padding:0.6rem 1.2rem;
   font-weight:800;
-  box-shadow:
-  0 0 15px rgba(36,36,36,0.2);
-
+  transition: background 0.25s, transform 0.25s;
 }
-.content a:hover{ transform:scale(1.05); }
+.content a:hover{ transform:scale(1.05); background:rgba(255,255,255,0.15); }
 
-/* --- Greyscale SVG base --- */
-.card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: #000;
-  mask-image: var(--card-image, none);
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: 80%;
-  filter: grayscale(1) brightness(0.8);
-  opacity: 0.15;
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* --- Soft colour tint overlay --- */
-.card::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: var(--source-color, rgba(0,0,0,0.15));
-  mix-blend-mode: color;
-  mask-image: var(--card-image, none);
-  mask-repeat: no-repeat;
-  mask-position: center;
-  mask-size: 80%;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.card.active::after {
-  backdrop-filter: blur(var(--blur-amount));
-}
-
-
-
-
-
-
-/* Blur layer (initially off) */
-.card::after {
-  backdrop-filter: none;
-}
-
-/* Active: enable blur, keep the overlay tint */
-.card.active::after {
-  backdrop-filter: blur(var(--blur-amount));
-}
-
-.card.active .source-header {
-  opacity: 0;
-  transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease;
-  pointer-events: none;
-}
-
-
-
-.card.active .info{ opacity:0; }
-.card.active .content{
-  opacity:1; pointer-events:auto;
-}
+/* Toggle states */
+.card.active .source-header,
+.card.active .info { opacity:0; }
+.card.active .content { opacity:1; pointer-events:auto; }
 
 /* Empty state */
 .empty{
@@ -399,58 +288,39 @@ text-shadow:
   font-weight:800;
 }
 
-/* Counter-clockwise spin for refresh icon */
-.bx-spin {
-  animation: bx-reverse-spin 2s linear infinite !important;
-}
-
-@keyframes bx-reverse-spin {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(-360deg); }
-}
-/* ============================================
-   MOBILE EDGE-TO-EDGE LAYOUT
-============================================ */
+/* ==============================
+   Mobile
+============================== */
 @media (max-width: 768px) {
-	body {
-	  padding: calc(52.8px + env(safe-area-inset-top)) 16px calc(116px + env(safe-area-inset-bottom));
-	  }
+  body {
+    padding: calc(52.8px + env(safe-area-inset-top)) 16px calc(116px + env(safe-area-inset-bottom));
+  }
   .grid {
     display: flex;
     flex-direction: column;
     gap: 0;
-    margin: 0;
     width: 100vw;
     max-width: none;
-    margin-left: calc(-1 * 16px);  /* removes body padding */
-    margin-right: calc(-1 * 16px);
+    margin: 0 calc(-1 * 16px);
   }
-
   .card {
     border-radius: 0;
-    height: auto;
     min-height: 360px;
-    width: 100%;
-    margin: 0;
-	border-bottom: 10px solid #0d0d0d;
+    border-bottom: 10px solid #0d0d0d;
   }
-
-  .info {
-    padding: 1rem 1.25rem;
-  }
-
-  .content {
-    padding: 1.25rem;
-  }
+  .info, .content { padding: 1.25rem; }
 }
 
+/* ==============================
+   Share Button
+============================== */
 .share-btn {
   position: absolute;
   top: 1.2rem;
   right: 1.2rem;
   width: 26px;
   height: 26px;
-background:transparent;
+  background:transparent;
   border:1px solid rgba(255,255,255,0.15);
   border-radius:50%;
   color: #fff;
@@ -468,9 +338,16 @@ background:transparent;
   transform: scale(1.08);
 }
 
-	
-
+/* ==============================
+   Icons
+============================== */
+.bx-spin { animation: bx-reverse-spin 2s linear infinite !important; }
+@keyframes bx-reverse-spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(-360deg); }
+}
 </style>
+
 </head>
 <body>
 
@@ -726,7 +603,7 @@ async function getGradientFromLogo(logoUrl) {
         // create tones
         const {h,s,l} = rgbToHsl(r,g,b);
         const light = hslToRgb(h, s*0.9, Math.min(1,l*1.4));
-        const dark = hslToRgb(h, s, Math.max(0,l*0.45));
+        const dark = hslToRgb(h, s, Math.max(0, l * (l > 0.6 ? 0.25 : 0.4)));
         const rgbStr = ([r,g,b])=>`rgb(${r},${g},${b})`;
 
         resolve({
@@ -844,23 +721,24 @@ function makeCardDOM(item, source) {
   const card = document.createElement('div');
   card.className = 'card';
   card.dataset.source = source.name;
-
+  
   // --- Local image selection ---
   let localImage = null;
   if (imageLibrary.length) {
     localImage = findBestImageForHeadline(item.title);
   }
   const chosen = localImage || 'News.svg';
+  
+  // --- Background colour ---
+  card.style.backgroundColor = source._colors?.darkSourceColor || '#222';
+  
+  // --- Foreground SVG layer ---
+  const svgLayer = document.createElement('div');
+  svgLayer.className = 'card-art';
+  svgLayer.style.backgroundImage = `url('images/articles/${chosen}')`;
+  card.appendChild(svgLayer);
 
-  card.style.backgroundImage = `url('images/articles/${chosen}')`;
 
-  // apply CSS variables instead of inline style resets
-  card.style.setProperty('--card-image', `url('images/articles/${chosen}')`);
-  card.style.setProperty('--card-gradient',
-    source._colors?.gradient ||
-    'linear-gradient(135deg, #333 0%, #111 100%)'
-  );
-  card.style.setProperty('--source-color', source._colors?.sourceColor || 'rgba(0,0,0,0.25)');
 
 
 
@@ -903,6 +781,10 @@ function makeCardDOM(item, source) {
       .trim(),
     44
   );
+  const blurLayer = document.createElement('div');
+  blurLayer.part = 'blur';
+  card.appendChild(blurLayer);
+
   const a = document.createElement('a');
   a.href = item.link;
   a.target = '_blank';
