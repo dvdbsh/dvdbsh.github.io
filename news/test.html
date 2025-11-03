@@ -174,13 +174,12 @@ body{
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
-  background-color: var(--dark-source-color, #222);
+  background-color: var(--source-color, #222);
   transition: transform 0.25s ease, backdrop-filter var(--transition-speed) ease;
   backdrop-filter: none;
 }
 .card.active {
   backdrop-filter: blur(var(--blur-amount));
-  transform: scale(1.01);
 }
 
 .card-art {
@@ -192,10 +191,11 @@ body{
   transition: filter var(--transition-speed) ease;
   z-index: 1;
    
-background-color: color-mix(in srgb, var(--source-color) 70%, white 30%);
+background-color: color-mix(in srgb, var(--source-color) 80%, grey 20%);
 mix-blend-mode: hard-light;
 
 }
+
 
 .card.active .card-art {
   filter: blur(var(--blur-amount)) brightness(0.9);
@@ -226,11 +226,16 @@ mix-blend-mode: hard-light;
   z-index:2;
   transition:opacity var(--transition-speed) ease;
 }
-.info h2{
-  margin:0;
-  font-size:1.75rem;
-  line-height:1.1;
+.info h2 {
+  margin: 0;
+  font-size: 1.75rem;
+  line-height: 1.1;
+  text-shadow:
+    0 0 25px var(--dark-source-color),
+	0 0 30px var(--source-color),
+	0 0 40px var(--source-color);
 }
+
 .info .meta{
   font-size:0.9rem;
   opacity:0.85;
@@ -306,7 +311,7 @@ mix-blend-mode: hard-light;
   }
   .card {
     border-radius: 0;
-    min-height: 360px;
+    min-height: 550px;
     border-bottom: 10px solid #0d0d0d;
   }
   .info, .content { padding: 1.25rem; }
@@ -602,9 +607,27 @@ async function getGradientFromLogo(logoUrl) {
         const [r,g,b] = scored[0].rgb;
 
         // create tones
-        const {h,s,l} = rgbToHsl(r,g,b);
-        const light = hslToRgb(h, s*0.9, Math.min(1,l*1.4));
-        const dark = hslToRgb(h, s, Math.max(0, l * (l > 0.6 ? 0.25 : 0.4)));
+		// Tuning factors (lower/higher values adjust globally)
+        const LIGHT_SAT_MULT = 1.25;
+        const LIGHT_LUM_MULT = 1.5;
+        const DARK_SAT_MULT  = 0.9;
+        const DARK_LUM_MULT  = 0.35;
+
+
+        const { h, s, l } = rgbToHsl(r, g, b);
+
+        const light = hslToRgb(
+          h,
+          Math.min(1, s * LIGHT_SAT_MULT),
+          Math.min(1, l * LIGHT_LUM_MULT)
+        );
+        
+        const dark = hslToRgb(
+          h,
+          Math.min(1, s * DARK_SAT_MULT),
+          Math.max(0, l * DARK_LUM_MULT)
+        );
+
         const rgbStr = ([r,g,b])=>`rgb(${r},${g},${b})`;
 
         resolve({
@@ -732,6 +755,11 @@ function makeCardDOM(item, source) {
   
   // --- Background colour ---
   card.style.backgroundColor = source._colors?.darkSourceColor || '#222';
+  card.style.setProperty('--source-color', source._colors?.sourceColor || 'rgba(255,255,255,0.5)');
+  card.style.setProperty('--dark-source-color', source._colors?.darkSourceColor || '#222');
+  card.style.setProperty('--light-source-color', source._colors?.lightSourceColor || '#222');
+
+
   
   // --- Foreground SVG layer ---
   const svgLayer = document.createElement('div');
