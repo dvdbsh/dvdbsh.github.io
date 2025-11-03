@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>London News — Masonry Grid</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+
+  <style>
+    :root {
+      --bg: #292a2d;
+      --fg: #ffffff;
+      --card-bg: #3a3b3f;
+      --font: 'Nunito', sans-serif;
+      --radius: 20px;
+      --gutter: 32px;
+      --col-count: 3;
+      --col-width: calc((100% - (var(--gutter) * (var(--col-count) - 1))) / var(--col-count));
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      padding: 96px 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      font-weight: 800;
+      font-size: 1.1rem;
+      z-index: 1000;
+    }
+
+    .grid {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .grid-sizer { width: var(--col-width); }
+
+    /* Base Card */
+    .card {
+      position: relative;
+      width: var(--col-width);
+      margin-bottom: var(--gutter);
+	  border: 0px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--card-bg);
+      color: var(--fg);
+      transition: transform 0.25s ease, filter 0.25s ease;
+      z-index: 0;
+      cursor: pointer;
+    }
+
+    .card:hover { filter: brightness(1.25); }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.35), rgba(0,0,0,0.15));
+      z-index: 0;
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 2;
+      padding: 1rem;
+    }
+
+    .card.image .card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .card h2 {
+      font-size: 1.7rem;
+      font-weight: 800;
+      margin: 0 0 0.5rem;
+    }
+
+    .card p {
+      font-size: 1rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .meta { font-size: 0.8rem; }
+
+    .card.image {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 300px;
+    }
+
+    /* Source Logo */
+    .source-logo {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 3;
+      width: 30px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: filter 0.3s ease, opacity 0.3s ease;
+    }
+
+    .source-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Overlay for image cards */
+    .overlay {
+      position: absolute;
+      inset: 0;
+	  background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+	  border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 4;
+    }
+
+    .overlay p {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
+    }
+
+    .overlay button {
+ background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.2);  
+      backdrop-filter: blur(10px);
+	  color: white;
+      font-weight: 400;
+      border-radius: var(--radius);
+      padding: 0.6rem 1.4rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .overlay button:hover {   background: rgba(255,255,255,0.2); backdrop-filter: blur(22px); }
+
+    /* Open card state */
+    .card.open .card-content,
+    .card.open .source-logo {
+      filter: blur(6px);
+      opacity: 0.4;
+    }
+	
+	.card.open:hover { filter: brightness(1); }
+
+    .card.open .overlay {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* Mobile */
+    @media (max-width: 1000px) {
+      .grid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .card {
+        width: 100% !important;
+        margin: 0 0 24px;
+      }
+      .grid-sizer { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">London News</div>
+
+  <div class="grid" id="grid">
+    <div class="grid-sizer"></div>
+
+    <!-- Image Card -->
+    <div class="card image" style="background-image:url('https://images.weserv.nl/?url=https%3A%2F%2Fmedia-cdn.socastsrm.com%2Fwordpress%2Fwp-content%2Fblogs.dir%2F202%2Ffiles%2F2025%2F11%2Feast-lions-community-centre.jpg')" data-url="#">
+      <div class="source-logo">
+        <img src="https://dvdbsh.github.io/news/images/logos/1069thex.png" alt="Source Logo">
+      </div>
+      <div class="card-content">
+        <h2>Article One</h2>
+        <span class="meta">Nov 3 11:17 a.m. • 106.9 The X</span>
+      </div>
+      <div class="overlay">
+        <p>This is a short preview of the article. Tap the button to read the full story.</p>
+        <button>Read Full Article</button>
+      </div>
+    </div>
+
+    <!-- No Image Card -->
+    <div class="card" data-url="#">
+      <div class="source-logo">
+        <img src="https://dvdbsh.github.io/news/images/logos/1069thex.png" alt="Source Logo">
+      </div>
+      <div class="card-content">
+        <h2>Article Two</h2>
+        <span class="meta">Nov 3 11:17 a.m. • 106.9 The X</span>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Initialize Masonry
+    const grid = document.querySelector('#grid');
+    const msnry = new Masonry(grid, {
+      itemSelector: '.card',
+      columnWidth: '.grid-sizer',
+      gutter: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gutter')),
+      percentPosition: true,
+      horizontalOrder: true
+    });
+
+    // Click handler
+    grid.addEventListener('click', e => {
+      const card = e.target.closest('.card');
+      if (!card) return;
+
+      // No-image cards go directly to link
+      if (!card.classList.contains('image')) {
+        console.log('Placeholder link for:', card.dataset.url);
+        return;
+      }
+
+      // Image cards toggle preview
+      document.querySelectorAll('.card.open').forEach(c => {
+        if (c !== card) c.classList.remove('open');
+      });
+
+      card.classList.toggle('open');
+      msnry.layout();
+    });
+  </script>
+
+</body>
+</html>

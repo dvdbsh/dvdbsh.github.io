@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>London News — Masonry Grid</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
+  <!-- ColorThief for source-logo colour extraction -->
+  <script src="https://unpkg.com/colorthief/dist/color-thief.umd.js"></script>
+
+  <style>
+    :root {
+      --bg: #292a2d;
+      --fg: #ffffff;
+      --card-bg: #3a3b3f;
+      --font: 'Nunito', sans-serif;
+      --radius: 20px;
+      --gutter: 32px;
+      --col-count: 3;
+      --col-width: calc((100% - (var(--gutter) * (var(--col-count) - 1))) / var(--col-count));
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+      padding: 96px 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255,255,255,0.08);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      padding: 1rem 2rem;
+      font-weight: 800;
+      font-size: 1.1rem;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform 0.45s ease, opacity 0.35s ease;
+    }
+    .topbar.hidden { transform: translateY(-100%); opacity: 0; }
+
+    .grid {
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .grid-sizer { width: var(--col-width); }
+
+    /* Base Card */
+    .card {
+      position: relative;
+      width: var(--col-width);
+	  padding-top: 40px;
+      margin-bottom: var(--gutter);
+      border: 0px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius);
+      overflow: hidden;
+      background: var(--card-bg);
+      color: var(--fg);
+      transition: transform 0.25s ease, filter 0.25s ease;
+      z-index: 0;
+      cursor: pointer;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(45,45,45,0.95), rgba(45,45,45,0.15));
+	  mix-blend-mode: multiply;
+      z-index: 0;
+    }
+
+    .card-content {
+      position: relative;
+      z-index: 2;
+      padding: 1rem;
+    }
+
+    .card.image .card-content {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .card h2 {
+      font-size: 1.7rem;
+      font-weight: 800;
+	  line-height: 1.1;
+      margin: 0 0 0.5rem;
+    }
+
+    .card p {
+      font-size: 1rem;
+      line-height: 1.5;
+      margin: 0;
+    }
+
+    .meta { font-size: 0.8rem; opacity: 0.9; }
+
+    .card.image {
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      min-height: 300px;
+    }
+
+    /* Source Logo */
+    .source-logo {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      z-index: 3;
+      width: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      transition: filter 0.3s ease, opacity 0.3s ease;
+
+    }
+
+    .source-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Overlay for image cards */
+    .overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius);
+      backdrop-filter: blur(10px);
+      color: white;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      z-index: 4;
+    }
+
+    .overlay p {
+      font-size: 1rem;
+      margin-bottom: 1.5rem;
+      opacity: 0.9;
+      max-width: 60ch;
+    }
+
+    .overlay button {
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      color: white;
+      font-weight: 700;
+      border-radius: var(--radius);
+      padding: 0.6rem 1.4rem;
+      cursor: pointer;
+      transition: background 0.2s ease;
+    }
+
+    .overlay button:hover { background: rgba(255,255,255,0.2); backdrop-filter: blur(22px); }
+
+    /* Open card state */
+    .card.open .card-content,
+    .card.open .source-logo {
+      filter: blur(6px);
+      opacity: 0.4;
+    }
+    .card.open:hover { filter: brightness(1); }
+    .card.open .overlay {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    /* Toast */
+    .toast{
+      position:fixed;
+      bottom: 24px;
+      left:50%;
+      transform:translateX(-50%);
+      background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.2);
+      color:#fff;
+      padding:0.6rem 1.2rem;
+      border-radius:20px;
+      font-weight:800;
+      opacity:0;
+      transition:opacity .35s ease;
+      z-index:9999;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Mobile */
+    @media (max-width: 1000px) {
+      .grid {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+      .card {
+        width: 100% !important;
+        margin: 0 0 24px;
+      }
+      .grid-sizer { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="topbar" id="topbar">
+    <div>London News</div>
+    <div id="currentDate"></div>
+  </div>
+
+  <div class="grid" id="grid">
+    <div class="grid-sizer"></div>
+  </div>
+
+  <div class="toast" id="toast">Updated just now</div>
+
+  <script>
+    /* ==============================
+       Backend config from working app
+    ============================== */
+    const WORKER_BASE = "https://rss-proxy.davidbusch-02.workers.dev";
+    const workerCached = (feedUrl) => `${WORKER_BASE}/cached?url=${encodeURIComponent(feedUrl)}`;
+    const workerLive   = (feedUrl) => `${WORKER_BASE}/?url=${encodeURIComponent(feedUrl)}`;
+
+
+    const grid = document.querySelector('#grid');
+    const toastEl = document.getElementById('toast');
+
+    // Masonry init
+    const msnry = new Masonry(grid, {
+      itemSelector: '.card',
+      columnWidth: '.grid-sizer',
+      gutter: parseInt(getComputedStyle(document.documentElement).getPropertyValue('--gutter')),
+      percentPosition: true,
+      horizontalOrder: true
+    });
+
+    function relayout() {
+      msnry.layout();
+    }
+
+    /* ==============================
+       Helpers from working app
+    ============================== */
+    function showToast(msg="Updated just now"){
+      toastEl.textContent = msg;
+      toastEl.style.opacity = '1';
+      setTimeout(()=> toastEl.style.opacity = '0', 2200);
+    }
+
+    function stripHtmlTags(html) {
+      if (!html) return '';
+      const txt = document.createElement('textarea');
+      txt.innerHTML = html;
+      let decoded = txt.value;
+
+      const temp = document.createElement('textarea');
+      temp.innerHTML = decoded;
+      decoded = temp.value;
+
+      decoded = decoded.replace(/<\/?[^>]+(>|$)/g, '');
+      decoded = decoded.replace(/\s+/g, ' ').trim();
+
+      decoded = decoded
+      .replace(/&nbsp;/gi, ' ')
+      .replace(/&amp;/gi, '&')
+      .replace(/&quot;/gi, '"')
+      .replace(/&#039;/gi, "'")
+      .replace(/&rsquo;/gi, "'")
+      .replace(/&lsquo;/gi, "'")
+      .replace(/&ldquo;/gi, '"')
+      .replace(/&rdquo;/gi, '"')
+      .replace(/&hellip;/gi, '…')
+      .replace(/&mdash;/gi, '-')
+      .replace(/&ndash;/gi, '-');
+
+
+      return decoded.trim();
+    }
+
+    function truncateWords(text, n){
+      const words = (text||'').trim().split(/\s+/);
+      return words.length>n ? words.slice(0,n).join(' ') + '…' : text;
+    }
+
+    function decodeEntities(text) {
+      if (!text) return '';
+      const txt = document.createElement('textarea');
+      txt.innerHTML = text;
+      return txt.value;
+    }
+
+    function cleanTitle(title, sourceName) {
+      if (!title) return "";
+      title = decodeEntities(title);
+      return title.replace(new RegExp(`[-|–|:|•]?\\s*${sourceName}\\s*$`, "i"), "").trim();
+    }
+
+    function normalizeHeadline(text) {
+      if (!text) return "";
+      text = decodeEntities(text);
+      const letters = text.replace(/[^a-zA-Z]/g, "");
+      const upperRatio = letters.replace(/[a-z]/g, "").length / (letters.length || 1);
+      if (upperRatio > 0.8) {
+        text = text.toLowerCase();
+        text = text.replace(/^([“"‘'(\[]*)([a-z])/, (_, p, f) => p + f.toUpperCase());
+        text = text.replace(/([.!?]\s+)([a-z])/g, (_, s, c) => s + c.toUpperCase());
+      }
+      return text
+        .replace(/&nbsp;/gi, ' ')
+        .replace(/&#039;/gi, "'")
+        .replace(/&quot;/gi, '"')
+        .replace(/&amp;/gi, '&')
+        .replace(/&rsquo;/gi, "'")
+        .replace(/&lsquo;/gi, "'")
+        .replace(/&ldquo;/gi, '"')
+        .replace(/&rdquo;/gi, '"')
+        .replace(/&hellip;/gi, '…')
+        .replace(/&mdash;/gi, '-')
+        .replace(/&ndash;/gi, '-')
+        .trim();
+
+    }
+
+    function formatArticleDate(pubDate) {
+      const date = new Date(pubDate);
+      if (isNaN(date)) return '';
+      const day = date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
+      const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+      return `${day} ${time}`;
+
+    }
+
+    // Source colour extraction using ColorThief, with graceful fallback
+    async function getColorsFromLogo(logoUrl) {
+      return new Promise(resolve => {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        img.src = logoUrl;
+
+        img.onload = () => {
+          try {
+            const thief = new ColorThief();
+            const palette = thief.getPalette(img, 8);
+            const swatch = palette && palette[0] ? palette[0] : [90,90,90];
+            const [r,g,b] = swatch;
+            resolve({ sourceColor: `rgb(${r},${g},${b})` });
+          } catch {
+            resolve({ sourceColor: 'rgb(90,90,90)' });
+          }
+        };
+        img.onerror = () => resolve({ sourceColor: 'rgb(90,90,90)' });
+      });
+    }
+
+    /* ==============================
+       State
+    ============================== */
+    const state = {
+      articles: [],
+      allSources: [],
+      sourceColors: new Map() // sourceName -> {sourceColor}
+    };
+
+    /* ==============================
+       Card builders that match your Masonry front end
+    ============================== */
+    function buildImageCard(item, source, sourceColor) {
+      const card = document.createElement('div');
+      card.className = 'card image';
+      card.dataset.url = item.link;
+      card.style.backgroundImage = `url('${item.thumbnail}')`;
+
+      const logoBox = document.createElement('div');
+      logoBox.className = 'source-logo';
+      if (source.logo) {
+        const img = document.createElement('img');
+        img.src = source.logo;
+        img.alt = source.name;
+        logoBox.appendChild(img);
+      }
+      card.appendChild(logoBox);
+
+      const content = document.createElement('div');
+      content.className = 'card-content';
+      const h2 = document.createElement('h2');
+      h2.textContent = truncateWords(normalizeHeadline(cleanTitle(item.title, source.name)), 18);
+      const meta = document.createElement('span');
+      meta.className = 'meta';
+      meta.textContent = `${formatArticleDate(item.pubDate)} • ${source.name}`;
+      content.appendChild(h2);
+      content.appendChild(meta);
+      card.appendChild(content);
+
+      const overlay = document.createElement('div');
+      overlay.className = 'overlay';
+      const p = document.createElement('p');
+      p.textContent = truncateWords(
+        stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(),
+        44
+      );
+      const btn = document.createElement('button');
+      btn.textContent = 'Read Full Article';
+      btn.addEventListener('click', e => {
+        e.stopPropagation();
+        window.open(item.link, '_blank', 'noopener');
+      });
+      overlay.appendChild(p);
+      overlay.appendChild(btn);
+      card.appendChild(overlay);
+
+      // clicking image cards toggles preview
+      card.addEventListener('click', e => {
+        if (e.target.closest('button')) return;
+        document.querySelectorAll('.card.open').forEach(c => { if (c !== card) c.classList.remove('open'); });
+        card.classList.toggle('open');
+        relayout();
+      });
+
+      return card;
+    }
+
+    function buildNoImageCard(item, source, sourceColor) {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.dataset.url = item.link;
+      // apply the extracted brand colour, your gradient layer will add depth
+      if (sourceColor) card.style.backgroundColor = sourceColor;
+
+      const logoBox = document.createElement('div');
+      logoBox.className = 'source-logo';
+      if (source.logo) {
+        const img = document.createElement('img');
+        img.src = source.logo;
+        img.alt = source.name;
+        logoBox.appendChild(img);
+      }
+      card.appendChild(logoBox);
+
+      const content = document.createElement('div');
+      content.className = 'card-content';
+      const h2 = document.createElement('h2');
+      h2.textContent = truncateWords(normalizeHeadline(cleanTitle(item.title, source.name)), 18);
+      const meta = document.createElement('span');
+      meta.className = 'meta';
+      meta.textContent = `${formatArticleDate(item.pubDate)} • ${source.name}`;
+      content.appendChild(h2);
+      content.appendChild(meta);
+      card.appendChild(content);
+
+      // no-image cards go straight to link
+      card.addEventListener('click', () => {
+        window.open(item.link, '_blank', 'noopener');
+      });
+
+      return card;
+    }
+
+    function appendCardToMasonry(card, hasImage) {
+      grid.appendChild(card);
+      msnry.appended(card);
+      // For background-image, pre-load to reduce jumps
+      if (hasImage) {
+        const bg = card.style.backgroundImage;
+        const match = bg.match(/url\(['"]?(.*?)['"]?\)/i);
+        const url = match && match[1] ? match[1] : null;
+        if (url) {
+          const img = new Image();
+          img.onload = () => relayout();
+          img.onerror = () => relayout();
+          img.src = url;
+        } else {
+          relayout();
+        }
+      } else {
+        relayout();
+      }
+    }
+	
+	function asTimestamp(item){
+      const cand = item.pubDate || item.isoDate || item.published || item.date;
+      const t = Date.parse(cand);
+      if (!Number.isNaN(t)) return t;
+      // last resort, now
+      return Date.now();
+    }
+
+
+    /* ==============================
+       Feed loading
+    ============================== */
+    async function loadFeed(source) {
+      const cachedUrl = workerCached(source.url);
+      const liveUrl   = workerLive(source.url);
+      let data = null;
+
+      try {
+        const cachedRes = await fetch(cachedUrl);
+        if (cachedRes.ok) data = await cachedRes.json();
+      } catch {}
+
+      if (!data || !data.items || !data.items.length) {
+        const liveRes = await fetch(liveUrl);
+        data = await liveRes.json();
+      }
+      if (!data.items) return;
+
+      // compute per-source colour once
+      if (!state.sourceColors.has(source.name)) {
+        const colors = await getColorsFromLogo(source.logo);
+        state.sourceColors.set(source.name, colors);
+      }
+      const { sourceColor } = state.sourceColors.get(source.name) || { sourceColor: null };
+
+      for (const item of data.items) {
+        item.pubDate ||= item.isoDate || item.published || item.date || new Date().toISOString();
+
+        let hasImage = !!item.thumbnail;
+        if (hasImage && /placehold\.co/.test(item.thumbnail)) hasImage = false;
+
+        const id = btoa(item.link);
+        if (state.articles.some(a => a.id === id)) continue;
+
+        const card = hasImage
+          ? buildImageCard(item, source, sourceColor)
+          : buildNoImageCard(item, source, sourceColor);
+
+        state.articles.push({ ...item, id, sourceName: source.name, card });
+        appendCardToMasonry(card, hasImage);
+      }
+    }
+
+    async function loadAllFeeds() {
+        // clear grid except sizer
+        [...grid.querySelectorAll('.card')].forEach(n => n.remove());
+        state.articles = [];
+
+        try {
+            const feedRes = await fetch('feeds.json');
+            const feedData = await feedRes.json();
+            state.allSources = Object.values(feedData).flat();
+
+            // fetch all feeds in parallel, then combine
+            const results = await Promise.all(state.allSources.map(async (src) => {
+                // get brand colour once
+                if (!state.sourceColors.has(src.name)) {
+                    const colors = await getColorsFromLogo(src.logo);
+                    state.sourceColors.set(src.name, colors);
+                }
+                const { sourceColor } = state.sourceColors.get(src.name) || { sourceColor: null };
+
+                let data = null;
+                try {
+                    const cachedRes = await fetch(workerCached(src.url));
+                    if (cachedRes.ok) data = await cachedRes.json();
+                } catch {}
+                if (!data || !data.items || !data.items.length) {
+                    const liveRes = await fetch(workerLive(src.url));
+                    data = await liveRes.json();
+                }
+                if (!data.items) return [];
+
+                // normalize dates now so we can sort globally later
+                return data.items.map(it => {
+                    it.pubDate ||= it.isoDate || it.published || it.date || new Date().toISOString();
+                    return { item: it, src, sourceColor, ts: asTimestamp(it) };
+                });
+            }));
+
+            // flatten and sort newest to oldest with deterministic tiebreaker
+            const allArticles = results.flat();
+            allArticles.sort((a, b) => (b.ts - a.ts) || String(a.item.link).localeCompare(String(b.item.link)));
+
+            // render in sorted order, de-dupe by link
+            const seen = new Set();
+            const frag = document.createDocumentFragment();
+            const newElems = [];
+
+            for (const { item, src, sourceColor } of allArticles) {
+                const key = item.link || item.guid || item.id || JSON.stringify(item);
+                if (seen.has(key)) continue;
+                seen.add(key);
+
+                const hasImage = !!item.thumbnail && !/placehold\.co/.test(item.thumbnail);
+                const id = btoa(item.link || key);
+
+                const card = hasImage
+                    ? buildImageCard(item, src, sourceColor)
+                    : buildNoImageCard(item, src, sourceColor);
+
+                state.articles.push({ ...item, id, sourceName: src.name, card });
+                frag.appendChild(card);
+                newElems.push(card);
+            }
+
+            grid.appendChild(frag);
+            msnry.appended(newElems);
+            relayout();
+
+            // cache summary
+            localStorage.setItem('feedCache_masonry', JSON.stringify(state.articles.map(a => ({
+                id: a.id,
+                link: a.link,
+                title: a.title,
+                pubDate: a.pubDate,
+                description: a.description || '',
+                content: a.content || '',
+                thumbnail: a.thumbnail || null,
+                sourceName: a.sourceName || ''
+            }))));
+            localStorage.setItem('feedTimestamp_masonry', Date.now());
+            showToast();
+        } catch (err) {
+            const errCard = document.createElement('div');
+            errCard.className = 'card';
+            errCard.innerHTML = '<div class="card-content"><h2>Error loading feeds</h2><p class="meta">' + err.message + '</p></div>';
+            appendCardToMasonry(errCard, false);
+        }
+    }
+
+
+
+    // cached boot
+    fetch('feeds.json').then(r => r.json()).then(async feedData => {
+        const sources = Object.values(feedData).flat();
+        const byName = new Map(sources.map(s => [s.name, s]));
+
+        const cacheItems = JSON.parse(saved)
+            .map(ci => ({ ci, ts: asTimestamp(ci) }))
+            .sort((a, b) => (b.ts - a.ts) || String(a.ci.link).localeCompare(String(b.ci.link)));
+
+        const frag = document.createDocumentFragment();
+        const newElems = [];
+
+        for (const { ci } of cacheItems) {
+            const src = byName.get(ci.sourceName) || { name: ci.sourceName || 'Source', logo: '' };
+
+            if (!state.sourceColors.has(src.name)) {
+                const colors = await getColorsFromLogo(src.logo);
+                state.sourceColors.set(src.name, colors);
+            }
+            const { sourceColor } = state.sourceColors.get(src.name) || { sourceColor: null };
+
+            const hasImage = !!ci.thumbnail && !/placehold\.co/.test(ci.thumbnail);
+            const item = {
+                link: ci.link, title: ci.title, pubDate: ci.pubDate,
+                description: ci.description, content: ci.content, thumbnail: ci.thumbnail
+            };
+
+            const card = hasImage
+                ? buildImageCard(item, src, sourceColor)
+                : buildNoImageCard(item, src, sourceColor);
+
+            state.articles.push({ ...item, id: ci.id, sourceName: src.name, card });
+            frag.appendChild(card);
+            newElems.push(card);
+        }
+
+        grid.appendChild(frag);
+        msnry.appended(newElems);
+        relayout();
+    }).catch(() => {
+        loadAllFeeds();
+    });
+
+
+    /* ==============================
+       Topbar: date and weather swap, scroll show-hide
+    ============================== */
+    (function setDateAndWeather(){
+      const el = document.getElementById('currentDate');
+
+      function setText(newText, instant = false){
+        if (instant) {
+          el.style.transition = "none";
+          el.textContent = newText;
+          el.style.opacity = 1;
+          requestAnimationFrame(() => { el.style.transition = "opacity 0.8s ease"; });
+        } else {
+          el.style.opacity = 0;
+          setTimeout(() => {
+            el.textContent = newText;
+            el.style.opacity = 1;
+          }, 400);
+        }
+      }
+
+      const today = new Date();
+      const dateText = today.toLocaleDateString("en-US",{month:"long",day:"numeric"});
+      setText(dateText, true);
+
+      async function getWeather(){
+        try {
+          const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=42.9837&longitude=-81.2497&current_weather=true");
+          const data = await res.json();
+          const temp = Math.round(data.current_weather.temperature);
+          const symbol = "°C";
+          const code = data.current_weather.weathercode;
+
+          const map = [
+            { codes: [0], label: "Clear", icon: "☀️" },
+            { codes: [1, 2], label: "Partly Cloudy", icon: "🌤️" },
+            { codes: [3], label: "Cloudy", icon: "☁️" },
+            { codes: [45, 48], label: "Fog", icon: "🌫️" },
+            { codes: [51, 53, 55], label: "Drizzle", icon: "🌦️" },
+            { codes: [61, 63, 65], label: "Rain", icon: "🌧️" },
+            { codes: [66, 67], label: "Freezing Rain", icon: "🌨️" },
+            { codes: [71, 73, 75, 77, 85, 86], label: "Snow", icon: "❄️" },
+            { codes: [80, 81, 82], label: "Showers", icon: "🌦️" },
+            { codes: [95, 96, 99], label: "Thunderstorm", icon: "⛈️" }
+          ];
+          const entry = map.find(e => e.codes.includes(code)) || { label: "Weather", icon: "🌡️" };
+          return `${temp}\${symbol} • ${entry.label} ${entry.icon}`;
+        } catch {
+          return null;
+        }
+      }
+
+      getWeather().then(weatherText => {
+        let showingDate = true;
+        setInterval(()=>{
+          showingDate = !showingDate;
+          setText(showingDate ? dateText : (weatherText || dateText));
+        }, 3000);
+      });
+
+      // scroll hide-show
+      const topbar = document.getElementById('topbar');
+      let lastScroll = 0;
+      window.addEventListener('scroll', ()=>{
+        const curr = window.scrollY;
+        if(curr > lastScroll && curr > 80){ topbar.classList.add('hidden'); }
+        else if(curr < lastScroll - 10){ topbar.classList.remove('hidden'); }
+        lastScroll = curr;
+      });
+    })();
+
+    /* ==============================
+       Click handler preserved from your template
+    ============================== */
+    grid.addEventListener('click', e => {
+      const card = e.target.closest('.card');
+      if (!card) return;
+      if (!card.classList.contains('image')) {
+        // no-image cards already navigate on click in builder
+        return;
+      }
+      // image cards toggle preview in builder as well
+    });
+  </script>
+
+</body>
+</html>
