@@ -41,15 +41,62 @@
     background:linear-gradient(90deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
     pointer-events:none;z-index:-1
   }
-.hearts {
+.bottombar {
   position: fixed;
   bottom: 18%;
-  left: 22px;
-  display: flex;
-  gap: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  width: calc(100% - 36px);
+  max-width: 480px;
   z-index: 6;
   pointer-events: none;
 }
+
+.hearts {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-start;
+}
+
+.balls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: center;
+  font-weight: 700;
+  color: #e8ecf4;
+  font-size: 18px;
+}
+
+.ball-icon {
+  width: 16px;
+  height: 16px;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.4));
+}
+
+.coinbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  justify-content: flex-end;
+  padding-right: 2px;
+}
+
+.coin-icon {
+  width: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+#coinCount {
+  font-size: 18px;
+  font-weight: 700;
+  color: #fff;
+}
+
 
 
 
@@ -186,22 +233,7 @@
   }
 }
 
-.coinbar{
-  position: fixed;
-  bottom: 18%;
-  right: 22px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  z-index: 6;
-  pointer-events: none;
-}
 
-#coinCount{
-  font-size: 18px;
-  font-weight: 700;
-  color: #fff;
-}
 
 #levelPill {
   transition: transform .25s ease;
@@ -210,7 +242,78 @@
   transform: scale(1.3);
 }
 
+.progress-container {
+  position: fixed;
+  top: 40px; /* below the topbar */
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 260px;
+  z-index: 8;
+  pointer-events: none;
+}
 
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.progress i {
+  font-size: 22px;
+  color: #fcd227;
+  width: 26px;
+  text-align: center;
+}
+
+.progress.lvl i {
+  color: #8269a3;
+}
+
+.bar {
+  flex: 1;
+  height: 12px;
+  background: #3c3c3c;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0,0,0,0.35);
+}
+
+.bar .fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 8px;
+  transition: width 0.4s ease;
+}
+
+.progress.xp .fill {
+  background: linear-gradient(90deg, #fcd227, #f9b700);
+}
+
+.progress.lvl .fill {
+  background: linear-gradient(90deg, #8269a3, #a991ff);
+}
+
+.level-num {
+  font-weight: 800;
+  color: #fcd227;
+  font-size: 16px;
+  margin-right: 6px;
+  min-width: 18px;
+  text-align: right;
+}
+
+.stage-num {
+  font-weight: 800;
+  color: #8269a3;
+  font-size: 16px;
+  margin-right: 6px;
+  min-width: 18px;
+  text-align: right;
+}
 
 </style>
 </head>
@@ -218,19 +321,40 @@
 <canvas id="cv"></canvas>
 
 <!-- HUD -->
-<div class="topbar">
-  <div class="pill" id="xpPill">
-    <div class="fill" id="xpFill"></div>
-    <span id="xpText">XP 0</span>
+<div class="progress-container">
+  <div class="progress xp">
+    <i class="bx bxs-bolt"></i>
+	<span id="levelText" class="level-num">1</span>
+    <div class="bar">
+      <div class="fill" id="xpProgress"></div>
+    </div>
   </div>
-  <div class="pill center" id="balls">Balls 8</div>
-  <div class="pill center" id="levelPill">Level 1</div>
-  <div class="pill right" id="best">Best 0</div>
-  <div class="hearts" id="hearts"></div>
-  <!-- Coins HUD -->
-<div class="coinbar" id="coinbar">
-  <span id="coinCount">0</span>
+
+  <div class="progress lvl">
+    <i class="bx bxs-map"></i>
+	<span id="stageLabel" class="stage-num">1</span>
+    <div class="bar">
+      <div class="fill" id="lvlProgress"></div>
+    </div>
+  </div>
 </div>
+
+<div class="bottombar">
+  <div class="hearts" id="hearts"></div>
+
+  <div class="balls">
+    <img src="assets/icons/ball.png" alt="Ball" class="ball-icon">
+    <span id="ballsCount">0</span>
+  </div>
+
+  <div class="coinbar" id="coinbar">
+    <img src="assets/icons/coin.png" alt="Coin" class="coin-icon">
+    <span id="coinCount">0</span>
+  </div>
+</div>
+
+
+
 
 </div>
 
@@ -281,6 +405,10 @@
 
   const iconCoin = new Image();
   iconCoin.src = 'assets/icons/coin.png';
+  
+  const iconBall = new Image();
+  iconBall.src = 'assets/icons/ball.png';
+
 
   // ============================================================
   // Canvas and UI
@@ -289,12 +417,23 @@
   const cv = document.getElementById('cv');
   const ctx = cv.getContext('2d', { alpha: false, desynchronized: true });
 
-  const xpText   = document.getElementById('xpText');
-  const xpFill   = document.getElementById('xpFill');
-  const ballsEl  = document.getElementById('balls');
-  const bestEl   = document.getElementById('best');
+  const ballsEl  = document.getElementById('ballsCount');
   const heartsEl = document.getElementById('hearts');
   const coinsEl  = document.getElementById('coinCount');
+  
+  const xpBar = document.getElementById('xpProgress');
+  const lvlBar = document.getElementById('lvlProgress');
+
+  function updateXPBar() {
+    const pct = Math.min(S.xp / S.xpThreshold, 1);
+    xpBar.style.width = (pct * 100).toFixed(1) + '%';
+  }
+
+  function updateLevelBar() {
+    const pct = Math.min(S.rowsCleared / S.rowsToClear, 1);
+    lvlBar.style.width = (pct * 100).toFixed(1) + '%';
+  }
+
 
   const introEl  = document.getElementById('intro');
   const playBtn  = document.getElementById('playBtn');
@@ -433,10 +572,12 @@
 
     coins: parseInt(localStorage.getItem('arcbrick_coins') || '0', 10),
 
-    level: 1,
-    rowsCleared: 0,
+    xpLevel: 1,         
+    stage: 1, 
     rowsToClear: 20,
-    coinsThisLevel: 0,
+    coinsThisStage: 0,
+	rowsCleared: 0,
+
 
     firing:false,
     toFire:0,
@@ -682,15 +823,17 @@
     let gain = x * S.xpGainMult * (S.stats.xpBoost ? 1.25 : 1.0);
     if(S.stats.combo) gain *= (1 + Math.min(0.5, S.comboHits*0.01));
     S.xp += Math.round(gain);
-    xpText.textContent='XP ' + S.xp;
-    const pct = clamp(S.xp / S.xpThreshold, 0, 1);
-    xpFill.style.width = (pct*100).toFixed(1)+'%';
     if(S.xp >= S.xpThreshold){
       S.xpThreshold = nextThreshold(S.xpThreshold);
       xpFill.style.width = '100%';
+      S.xpLevel++;
       sfx.level();
       showPowerupChoices();
+      document.getElementById('levelText').textContent = S.xpLevel;
     }
+	updateXPBar();
+    updateLevelBar();
+
   }
 
   // ============================================================
@@ -713,25 +856,13 @@
   // Coins HUD
   // ============================================================
   function renderCoins(){
-    if (!coinsEl) return;
-    coinsEl.innerHTML = '';
-
-    const img = document.createElement('img');
-    img.src = 'assets/icons/coin.png';
-    img.style.width = '20px';
-    img.style.height = '20px';
-    img.style.verticalAlign = 'middle';
-    img.style.marginRight = '6px';
-    coinsEl.appendChild(img);
-
-    const span = document.createElement('span');
-    span.textContent = S.coins;
-    span.style.fontWeight = '700';
-    coinsEl.appendChild(span);
+    const coinCountEl = document.getElementById('coinCount');
+    if (coinCountEl) coinCountEl.textContent = S.coins;
   }
 
+
   function addCoins(n){
-    S.coinsThisLevel += n;
+    S.coinsThisStage += n;
     S.coins = Math.max(0, S.coins + n);
     localStorage.setItem('arcbrick_coins', String(S.coins));
     renderCoins();
@@ -841,8 +972,9 @@
       addTopRow();
 
       S.rowsCleared += steps;
+	  updateLevelBar();
       if (S.rowsCleared >= S.rowsToClear) {
-        levelComplete();
+        stageComplete();
         return;
       }
     }
@@ -1024,8 +1156,9 @@
     }
 
     updateParticles(dt);
-    ballsEl.textContent='Balls ' + S.ammo;
-    bestEl.textContent='Best ' + S.best;
+    ballsEl.textContent = S.ammo;
+
+    
   }
 
   // ============================================================
@@ -1274,22 +1407,34 @@
       ctx.globalAlpha=1;
     }
 
-    for(const ball of S.balls){
-      if(!ball.alive) continue;
-      const dx=ball.x-ball.px, dy=ball.y-ball.py, len=Math.hypot(dx,dy);
-      if(len>0.1){
-        const steps=6;
-        for(let i=1;i<=steps;i++){
-          const k=i/steps; ctx.globalAlpha=0.18*(1-k);
-          ctx.fillStyle=S.stats.doubleDamage? '#ffcf9a' : '#bfe0ff';
-          ctx.beginPath(); ctx.arc(ball.x - dx*k, ball.y - dy*k, BALL_R*(1-k*0.6), 0, Math.PI*2); ctx.fill(); ctx.globalAlpha=1;
+    for (const ball of S.balls) {
+      if (!ball.alive) continue;
+
+      // trailing effect (optional)
+      const dx = ball.x - ball.px, dy = ball.y - ball.py, len = Math.hypot(dx, dy);
+      if (len > 0.1) {
+        const steps = 6;
+        for (let i = 1; i <= steps; i++) {
+          const k = i / steps;
+          ctx.globalAlpha = 0.15 * (1 - k);
+          ctx.drawImage(
+            iconBall,
+            ball.x - dx * k - BALL_R,
+            ball.y - dy * k - BALL_R,
+            BALL_R * 2,
+            BALL_R * 2
+          );
+          ctx.globalAlpha = 1;
         }
       }
-      const g=ctx.createRadialGradient(ball.x-3, ball.y-4, 0, ball.x, ball.y, 12);
-      if(S.stats.doubleDamage){ g.addColorStop(0,'#fff3e0'); g.addColorStop(1,'#ffb36b'); }
-      else { g.addColorStop(0,'#ffffff'); g.addColorStop(1,'#bfe0ff'); }
-      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(ball.x,ball.y,BALL_R,0,Math.PI*2); ctx.fill();
+
+      // draw main ball
+      ctx.save();
+      ctx.translate(ball.x - BALL_R, ball.y - BALL_R);
+      ctx.drawImage(iconBall, 0, 0, BALL_R * 2, BALL_R * 2);
+      ctx.restore();
     }
+
 
     const thumbTop=H - margin.b;
     const grad=ctx.createLinearGradient(0,thumbTop,0,H);
@@ -1316,7 +1461,7 @@
   }
 
   function resetGame(){
-    document.getElementById('levelPill').textContent = `Level ${S.level}`;
+    
 
     S.waiting = false;
     S.firing = false;
@@ -1329,8 +1474,6 @@
 
     S.xp = 0;
     S.xpThreshold = 100;
-    xpText.textContent = 'XP 0';
-    xpFill.style.width = '0%';
 
     S.balls = [];
     S.bricks = [];
@@ -1344,7 +1487,7 @@
       shieldWall:false, lastChance:false, regeneration:false
     };
 
-    S.driftSpeed = 0.30 + (S.level - 1) * 0.02;
+    S.driftSpeed = 0.30 + (S.stage - 1) * 0.02;
     S.rowTimer = 0;
     S.rowInterval = 6.0;
     S.rowOffset = 0;
@@ -1357,7 +1500,7 @@
     S.running = true;
   }
 
-  function levelComplete(){
+  function stageComplete(){
     S.running = false;
     S.waiting = false;
 
@@ -1365,28 +1508,29 @@
     const statsEl = document.getElementById('levelStats');
     const nextBtn = document.getElementById('nextLevelBtn');
 
-    statsEl.textContent = `Coins earned: ${S.coinsThisLevel}`;
+    statsEl.textContent = `Coins earned: ${S.coinsThisStage}`;
     lvlGoEl.classList.add('show');
 
     nextBtn.onclick = () => {
       lvlGoEl.classList.remove('show');
-      S.level += 1;
+      S.stage += 1;
       S.rowsCleared = 0;
-      S.coinsThisLevel = 0;
+      S.coinsThisStage = 0;
 
       S.driftSpeed += 0.02;
       S.rowsToClear += 5;
       S.volleyCount = Math.max(8, S.volleyCount);
 
-      const levelPill = document.getElementById('levelPill');
-      levelPill.textContent = `Level ${S.level}`;
-      levelPill.classList.add('flash');
-      setTimeout(() => levelPill.classList.remove('flash'), 250);
+      const levelText = document.getElementById('levelText');
+      levelText.textContent = S.xpLevel;
+      levelText.classList.add('flash');
+      setTimeout(() => levelText.classList.remove('flash'), 250);
+
 
       sfx.level();
 
       // Regeneration powerup heals every 3 levels
-      if (S.stats.regeneration && S.level % 3 === 0 && S.health < S.maxHealth){
+      if (S.stats.regeneration && S.stage % 3 === 0 && S.health < S.maxHealth){
         S.health++;
         renderHearts();
         sfx.heal();
@@ -1415,7 +1559,7 @@
     S.running=false; S.waiting=false; S.firing=false;
     if(S.xp>S.best){ S.best=S.xp; localStorage.setItem('arcbrick_best_xp', String(S.best)); }
     goTitle.textContent='Game Over'; goInfo.textContent=`XP ${S.xp}, Best ${S.best}`;
-    bestEl.textContent='Best ' + S.best;
+    
     goEl.classList.add('show'); sfx.over();
   }
 
