@@ -821,20 +821,22 @@
   }
   function addXP(x){
     let gain = x * S.xpGainMult * (S.stats.xpBoost ? 1.25 : 1.0);
-    if(S.stats.combo) gain *= (1 + Math.min(0.5, S.comboHits*0.01));
+    if (S.stats.combo) gain *= (1 + Math.min(0.5, S.comboHits * 0.01));
     S.xp += Math.round(gain);
-    if(S.xp >= S.xpThreshold){
+
+    if (S.xp >= S.xpThreshold) {
       S.xpThreshold = nextThreshold(S.xpThreshold);
-      xpFill.style.width = '100%';
+      xpBar.style.width = '100%'; // fixed
       S.xpLevel++;
       sfx.level();
       showPowerupChoices();
       document.getElementById('levelText').textContent = S.xpLevel;
     }
-	updateXPBar();
-    updateLevelBar();
 
-  }
+    updateXPBar();
+    updateLevelBar();
+}
+
 
   // ============================================================
   // Hearts
@@ -919,7 +921,7 @@
     S.running=true;
     S.powerups.push(p.id);
     applyPowerup(p.id);
-    xpFill.style.width = '0%';
+    xpBar.style.width = '0%';
   }
 
   function applyPowerup(id){
@@ -1526,6 +1528,7 @@
       levelText.classList.add('flash');
       setTimeout(() => levelText.classList.remove('flash'), 250);
 
+      document.getElementById('stageLabel').textContent = S.stage;
 
       sfx.level();
 
