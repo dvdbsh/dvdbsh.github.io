@@ -48,14 +48,13 @@
   border-bottom: 1px solid rgba(255,255,255,0.2);
   backdrop-filter: blur(40px);
   font-weight: 500;
-  font-size: 1.2rem;
+  font-size: 1.5rem;
+  font-family: 'Playfair Display';
   z-index: 1000;
   display: flex;
   justify-content: space-between;
-
-  /* Key part */
-align-items: flex-end;
-padding: calc(env(safe-area-inset-top) + 4px) 20px 15px;
+  align-items: flex-end;
+  padding: calc(env(safe-area-inset-top) + 45px) 20px 15px;
   height: calc(55px + env(safe-area-inset-top));
 
   transition: transform 0.45s ease, opacity 0.35s ease;
@@ -85,7 +84,7 @@ padding: calc(env(safe-area-inset-top) + 4px) 20px 15px;
       transition: transform 0.25s ease, filter 0.25s ease;
       z-index: 0;
       cursor: pointer;
-	  box-shadow: 0 0 15px #0d0d0d;
+	  box-shadow: 0 0 35px #0d0d0d;
     }
 
     .card::before {
@@ -256,8 +255,8 @@ padding: calc(env(safe-area-inset-top) + 4px) 20px 15px;
   position: fixed;
   bottom: 32px;
   right: 32px;
-  width: 56px;
-  height: 56px;
+  width: 62px;
+  height: 62px;
   border: none;
   border-radius: 50%;
   background: rgba(255,255,255,0.08);
@@ -289,7 +288,7 @@ padding: calc(env(safe-area-inset-top) + 4px) 20px 15px;
 
 
 @media (max-width: 1000px) {
-  body { padding: 65px 20px; }
+  body { padding: 65px 20px; background-color: #0a0a0a; }
 
   .grid { display: block; margin: 0; padding: 20px 0; }
   .grid-sizer { display: none; }
@@ -299,6 +298,7 @@ padding: calc(env(safe-area-inset-top) + 4px) 20px 15px;
     border-radius: var(--radius);
     border-bottom: 0px solid var(--bg);
 	min-height: 220px;
+	margin-bottom: 20px;
   }
   .card:last-child { border-bottom: none; }
   .overlay { border-radius: 0; border: 0; }
@@ -368,7 +368,10 @@ padding: calc(env(safe-area-inset-top) + 4px) 20px 15px;
 
   <div class="topbar" id="topbar">
     <div>London News</div>
-    <div id="currentDate"></div>
+    <div id="currentDate">
+      <span id="dateText"></span>
+      <span id="weatherText"></span>
+    </div>
   </div>
 
   <div class="grid" id="grid">
@@ -877,76 +880,65 @@ padding: calc(env(safe-area-inset-top) + 4px) 20px 15px;
     });
 
 
-    /* ==============================
-       Topbar: date and weather swap, scroll show-hide
-    ============================== */
-    (function setDateAndWeather(){
-      const el = document.getElementById('currentDate');
+/* ==============================
+   Topbar: show weather only, scroll show-hide
+============================== */
+(function setDateAndWeather(){
+  const el = document.getElementById('currentDate');
 
-      function setText(newText, instant = false){
-        if (instant) {
-          el.style.transition = "none";
-          el.textContent = newText;
-          el.style.opacity = 1;
-          requestAnimationFrame(() => { el.style.transition = "opacity 0.8s ease"; });
-        } else {
-          el.style.opacity = 0;
-          setTimeout(() => {
-            el.textContent = newText;
-            el.style.opacity = 1;
-          }, 400);
-        }
-      }
+  async function getWeather(){
+    try {
+      const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=42.9837&longitude=-81.2497&current_weather=true");
+      const data = await res.json();
+      const temp = Math.round(data.current_weather.temperature);
+      const symbol = "°C";
+      const code = data.current_weather.weathercode;
 
-      const today = new Date();
-      const dateText = today.toLocaleDateString("en-US",{month:"long",day:"numeric"});
-      setText(dateText, true);
+      // Map weather codes to your custom icons
+      const iconMap = [
+        { codes: [0], file: "clear_mostly-clear_day.png", label: "Clear" },
+        { codes: [1, 2], file: "partly-cloudly_day.png", label: "Partly Cloudy" },
+        { codes: [3], file: "cloudy.png", label: "Cloudy" },
+        { codes: [45, 48], file: "fog.png", label: "Fog" },
+        { codes: [51, 53, 55], file: "drizzle.png", label: "Drizzle" },
+        { codes: [61, 63, 65], file: "rain.png", label: "Rain" },
+        { codes: [66, 67], file: "freezing-rain.png", label: "Freezing Rain" },
+        { codes: [71, 73, 75, 77, 85, 86], file: "snow.png", label: "Snow" },
+        { codes: [80, 81, 82], file: "heavy-rain.png", label: "Showers" },
+        { codes: [95, 96, 99], file: "thunderstorm.png", label: "Thunderstorm" },
+        { codes: [99], file: "heavy-snow_blizzard.png", label: "Blizzard" },
+        { codes: [55, 56, 57], file: "drizzle_night.png", label: "Drizzle" },
+        { codes: [2], file: "partly-cloudly_day.png", label: "Partly Cloudy" },
+        { codes: [3], file: "cloudy.png", label: "Cloudy" },
+        { codes: [45], file: "fog.png", label: "Fog" },
+        { codes: [95], file: "thunderstorm.png", label: "Thunderstorm" }
+      ];
 
-      async function getWeather(){
-        try {
-          const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=42.9837&longitude=-81.2497&current_weather=true");
-          const data = await res.json();
-          const temp = Math.round(data.current_weather.temperature);
-          const symbol = "°C";
-          const code = data.current_weather.weathercode;
+      const entry = iconMap.find(e => e.codes.includes(code)) || { file: "cloudy.png", label: "Weather" };
 
-          const map = [
-            { codes: [0], label: "Clear", icon: "☀️" },
-            { codes: [1, 2], label: "Partly Cloudy", icon: "🌤️" },
-            { codes: [3], label: "Cloudy", icon: "☁️" },
-            { codes: [45, 48], label: "Fog", icon: "🌫️" },
-            { codes: [51, 53, 55], label: "Drizzle", icon: "🌦️" },
-            { codes: [61, 63, 65], label: "Rain", icon: "🌧️" },
-            { codes: [66, 67], label: "Freezing Rain", icon: "🌨️" },
-            { codes: [71, 73, 75, 77, 85, 86], label: "Snow", icon: "❄️" },
-            { codes: [80, 81, 82], label: "Showers", icon: "🌦️" },
-            { codes: [95, 96, 99], label: "Thunderstorm", icon: "⛈️" }
-          ];
-          const entry = map.find(e => e.codes.includes(code)) || { label: "Weather", icon: "🌡️" };
-          return `${temp}${symbol} • ${entry.label} ${entry.icon}`;
-        } catch {
-          return null;
-        }
-      }
+      // Return formatted HTML with your icon and weather text
+      return `<img src="images/weather/${entry.file}" alt="${entry.label}" style="width:32px;vertical-align:middle;margin-right:6px;"> ${temp}${symbol} • ${entry.label}`;
+    } catch {
+      return "Weather unavailable";
+    }
+  }
 
-      getWeather().then(weatherText => {
-        let showingDate = true;
-        setInterval(()=>{
-          showingDate = !showingDate;
-          setText(showingDate ? dateText : (weatherText || dateText));
-        }, 3000);
-      });
+  // Show only the weather (no date rotation)
+  getWeather().then(weatherHTML => {
+    el.innerHTML = weatherHTML;
+  });
 
-      // scroll hide-show
-      const topbar = document.getElementById('topbar');
-      let lastScroll = 0;
-      window.addEventListener('scroll', ()=>{
-        const curr = window.scrollY;
-        if(curr > lastScroll && curr > 80){ topbar.classList.add('hidden'); }
-        else if(curr < lastScroll - 10){ topbar.classList.remove('hidden'); }
-        lastScroll = curr;
-      });
-    })();
+  // scroll hide-show stays the same
+  const topbar = document.getElementById('topbar');
+  let lastScroll = 0;
+  window.addEventListener('scroll', ()=>{
+    const curr = window.scrollY;
+    if(curr > lastScroll && curr > 80){ topbar.classList.add('hidden'); }
+    else if(curr < lastScroll - 10){ topbar.classList.remove('hidden'); }
+    lastScroll = curr;
+  });
+})();
+
 
     /* ==============================
        Click handler preserved from your template
