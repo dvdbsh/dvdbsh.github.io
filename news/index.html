@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>London News</title>
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&family=PT+Serif:ital,wght@0,400;0,700;1,400;1,700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
   <!-- ColorThief for source-logo colour extraction -->
   <script src="https://unpkg.com/colorthief/dist/color-thief.umd.js"></script>
@@ -36,35 +36,56 @@
     font-family: var(--font);
     background: var(--bg);
     color: var(--fg);
-    padding-top: calc(75px + env(safe-area-inset-top));
+    padding-top: calc(85px + env(safe-area-inset-top));
     display: flex;
     justify-content: center;
   }
 
-  .topbar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: rgba(255,255,255,0.05);
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-    backdrop-filter: blur(40px);
-    font-weight: 500;
-    font-size: 1.5rem;
-    font-family: 'Playfair Display';
-    z-index: 1000;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    padding: calc(env(safe-area-inset-top) + 45px) 20px 15px;
-    height: calc(55px + env(safe-area-inset-top));
-    transition: transform 0.45s ease, opacity 0.35s ease;
-  }
+.topbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: rgba(255,255,255,0.05);
+  border-bottom: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(40px);
+  font-weight: 500;
+  font-size: 1.5rem;
+  font-family: 'PT Serif';
+  z-index: 1000;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: calc(env(safe-area-inset-top) + 20px) 20px 20px; /* balanced top/bottom */
+  height: calc(70px + env(safe-area-inset-top));
+  transition: transform 0.45s ease, opacity 0.35s ease;
+  line-height: 1.2;
+}
+
 
   .topbar.hidden {
     transform: translateY(-100%);
     opacity: 0;
   }
+  
+	.weather-display {
+	  display: flex;
+	  align-items: center;
+	  height: auto; /* let the content define height */
+	}
+
+.weather-display img {
+  width: 38px;
+  height: 38px;
+  margin-left: 6px;
+}
+	
+#currentWeather {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.2;
+}	
 
   .grid {
     max-width: 1200px;
@@ -124,7 +145,7 @@
   }
 
   .card h2 {
-    font-size: 1.7rem;
+    font-size: 1.9rem;
     font-weight: 700;
     font-family: 'Playfair Display';
     line-height: 1.1;
@@ -155,16 +176,15 @@
   .source-logo {
     position: absolute;
     top: 12px;
-    right: 12px;
+    left: 16px;
     z-index: 1;
-    width: 40px;
-    height: 40px;
+	height: 34px;	
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
     transition: filter 0.3s ease, opacity 0.3s ease;
-    border-radius: 8px;
+    border-radius: 0px;
   }
 
   .source-logo img {
@@ -368,7 +388,7 @@
     background-repeat: repeat;
     background-size: 150px 150px;
     mix-blend-mode: none;
-    opacity: 0.65;
+    opacity: 0.95;
     pointer-events: none;
     z-index: 1;
   }
@@ -395,8 +415,7 @@
 
   <div class="topbar" id="topbar">
     <div>London News</div>
-    <div id="currentDate">
-      <span id="dateText"></span>
+    <div id="currentWeather">
       <span id="weatherText"></span>
     </div>
   </div>
@@ -911,7 +930,7 @@
    Topbar: show weather only, scroll show-hide
 ============================== */
 (function setDateAndWeather(){
-  const el = document.getElementById('currentDate');
+  const el = document.getElementById('currentWeather');
 
   async function getWeather(){
     try {
@@ -944,7 +963,7 @@
       const entry = iconMap.find(e => e.codes.includes(code)) || { file: "cloudy.png", label: "Weather" };
 
       // Return formatted HTML with your icon and weather text
-      return `<img src="images/weather/${entry.file}" alt="${entry.label}" style="width:32px;vertical-align:middle;margin-right:6px;"> ${temp}${symbol} • ${entry.label}`;
+      return `${temp}${symbol} • ${entry.label} <img src="images/weather/${entry.file}" alt="${entry.label}">`;
     } catch {
       return "Weather unavailable";
     }
