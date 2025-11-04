@@ -34,7 +34,7 @@
       font-family: var(--font);
       background: var(--bg);
       color: var(--fg);
-      padding-top: calc(75px + env(safe-area-inset-top) 20px;);
+      padding-top: calc(75px + env(safe-area-inset-top));
       display: flex;
       justify-content: center;
     }
@@ -288,7 +288,10 @@
 
 
 @media (max-width: 1000px) {
-  body { background-color: #0a0a0a; }
+  body {   padding-top: calc(75px + env(safe-area-inset-top));
+  padding-left: 20px;
+  padding-right: 20px;
+  background-color: #0a0a0a; }
 
   .grid { display: block; margin: 0; padding: 20px 0; }
   .grid-sizer { display: none; }
