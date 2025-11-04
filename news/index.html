@@ -288,7 +288,7 @@
 
 
 @media (max-width: 1000px) {
-  body { padding: 65px 20px; background-color: #0a0a0a; }
+  body { background-color: #0a0a0a; }
 
   .grid { display: block; margin: 0; padding: 20px 0; }
   .grid-sizer { display: none; }
@@ -925,8 +925,9 @@
 
   // Show only the weather (no date rotation)
   getWeather().then(weatherHTML => {
-    el.innerHTML = weatherHTML;
+    el.innerHTML = `<span class="weather-display">${weatherHTML}</span>`;
   });
+
 
   // scroll hide-show stays the same
   const topbar = document.getElementById('topbar');
