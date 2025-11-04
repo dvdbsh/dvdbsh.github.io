@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>London News</title>
-
+  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/masonry-layout@4/dist/masonry.pkgd.min.js"></script>
   <!-- ColorThief for source-logo colour extraction -->
@@ -91,6 +91,7 @@
       background: linear-gradient(to top, rgba(45,45,45,0.95), rgba(45,45,45,0.15));
 	  mix-blend-mode: multiply;
       z-index: 0;
+	  
     }
 
     .card-content {
@@ -223,22 +224,75 @@
       z-index:9999;
       backdrop-filter: blur(10px);
     }
+	
+.back-to-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  width: 56px;
+  height: 56px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.25);
+  backdrop-filter: blur(20px);
+  color: #fff;
+  font-size: 1.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, transform 0.3s ease, background 0.3s ease;
+  z-index: 1000;
+}
+
+.back-to-top:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateY(-3px);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+
 
 @media (max-width: 1000px) {
-  body { padding: 65px 0; }
+  body { padding: 65px 20px; }
 
   .grid { display: block; margin: 0; padding: 0; }
   .grid-sizer { display: none; }
 
   .card {
     width: 100% !important;
-    margin: 0;
-    border-radius: 0;
-    border-bottom: 10px solid var(--bg);
+    border-radius: var(--radius);
+    border-bottom: 0px solid var(--bg);
+	min-height: 220px;
   }
   .card:last-child { border-bottom: none; }
   .overlay { border-radius: 0; border: 0; }
 }
+
+.card.mesh .noise {
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cdefs%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3C/defs%3E%3Crect width='150' height='150' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 150px 150px;
+  mix-blend-mode: none;
+  opacity: 0.45;
+  pointer-events: none;
+  z-index: 1;
+}
+
+
+
+
+
 
 
 
@@ -256,6 +310,11 @@
   </div>
 
   <div class="toast" id="toast">Updated just now</div>
+  <button id="backToTop" class="back-to-top" aria-label="Back to top">
+    <i class='bx bx-up-arrow-alt'></i>
+  </button>
+
+
 
   <script>
     /* ==============================
@@ -402,50 +461,31 @@
 
     // Source colour extraction using ColorThief, with graceful fallback
     async function getColorsFromLogo(logoUrl) {
-      return new Promise(resolve => {
-        const img = new Image();
-        img.crossOrigin = 'Anonymous';
-        img.src = logoUrl;
-    
-        img.onload = () => {
-          try {
-            const thief = new ColorThief();
-            const palette = thief.getPalette(img, 6);
-            const base = palette && palette[0] ? palette[0] : [100, 100, 100];
-            let [r, g, b] = base;
-    
-            // --- Step 1: Normalize dull tones (push saturation up slightly)
-            const avg = (r + g + b) / 3;
-            const satBoost = 1.2;
-            r = Math.min(255, avg + (r - avg) * satBoost);
-            g = Math.min(255, avg + (g - avg) * satBoost);
-            b = Math.min(255, avg + (b - avg) * satBoost);
-    
-            // --- Step 2: Harmonize brightness (avoid pure black or overly dark)
-            const brightness = (0.299 * r + 0.587 * g + 0.114 * b);
-            const target = 130; // neutral midpoint
-            const adjust = brightness < target ? target / brightness : 1;
-            r = Math.min(255, r * adjust);
-            g = Math.min(255, g * adjust);
-            b = Math.min(255, b * adjust);
-    
-            // --- Step 3: Smooth tone (slight tint toward neutral grey)
-            const blend = 0.1;
-            r = r + (128 - r) * blend;
-            g = g + (128 - g) * blend;
-            b = b + (128 - b) * blend;
+        return new Promise(resolve => {
+            const img = new Image();
+            img.crossOrigin = 'Anonymous';
+            img.src = logoUrl;
 
-            // final
-            const color = `rgb(${Math.round(r)}, ${Math.round(g)}, ${Math.round(b)})`;
-            resolve({ sourceColor: color });
-          } catch {
-            resolve({ sourceColor: 'rgb(120,120,120)' });
-          }
-        };
+            img.onload = () => {
+                try {
+                    const thief = new ColorThief();
+                    const base = thief.getColor(img) || [100, 100, 100];
+                    const [r, g, b] = base;
 
-        img.onerror = () => resolve({ sourceColor: 'rgb(120,120,120)' });
-      });
+                    // Slightly darkened and lightened versions
+                    const dark = `rgb(${r * 0.6}, ${g * 0.6}, ${b * 0.6})`;
+                    const light = `rgb(${Math.min(255, r * 1.3)}, ${Math.min(255, g * 1.3)}, ${Math.min(255, b * 1.3)})`;
+
+                    resolve({ dark, light });
+                } catch {
+                    resolve({ dark: 'rgb(70,70,70)', light: 'rgb(130,130,130)' });
+                }
+            };
+
+            img.onerror = () => resolve({ dark: 'rgb(70,70,70)', light: 'rgb(130,130,130)' });
+        });
     }
+
 
 
     /* ==============================
@@ -515,41 +555,52 @@
       return card;
     }
 
-    function buildNoImageCard(item, source, sourceColor) {
-      const card = document.createElement('div');
-      card.className = 'card';
-      card.dataset.url = item.link;
-      // apply the extracted brand colour, your gradient layer will add depth
-      if (sourceColor) card.style.backgroundColor = sourceColor;
+    function buildNoImageCard(item, source, colors) {
+        const card = document.createElement('div');
+        card.className = 'card mesh';
+        card.dataset.url = item.link;
 
-      const logoBox = document.createElement('div');
-      logoBox.className = 'source-logo';
-      if (source.logo) {
-        const img = document.createElement('img');
-        img.src = source.logo;
-        img.alt = source.name;
-        logoBox.appendChild(img);
-      }
-      card.appendChild(logoBox);
+        const { dark, light } = colors || {};
+        card.style.background = `
+            radial-gradient(circle at 30% 20%, ${light} 0%, ${dark} 100%)
+        `;
 
-      const content = document.createElement('div');
-      content.className = 'card-content';
-      const h2 = document.createElement('h2');
-      h2.textContent = truncateWords(normalizeHeadline(cleanTitle(item.title, source.name)), 18);
-      const meta = document.createElement('span');
-      meta.className = 'meta';
-      meta.textContent = `${formatArticleDate(item.pubDate)} • ${source.name}`;
-      content.appendChild(h2);
-      content.appendChild(meta);
-      card.appendChild(content);
+        // Add noise overlay
+        card.style.backgroundBlendMode = 'overlay';
+        card.style.position = 'relative';
 
-      // no-image cards go straight to link
-      card.addEventListener('click', () => {
-        window.open(item.link, '_blank', 'noopener');
-      });
+        // Noise layer
+        const noise = document.createElement('div');
+        noise.className = 'noise';
+        card.appendChild(noise);
 
-      return card;
+        // Logo and content same as before
+        const logoBox = document.createElement('div');
+        logoBox.className = 'source-logo';
+        if (source.logo) {
+            const img = document.createElement('img');
+            img.src = source.logo;
+            img.alt = source.name;
+            logoBox.appendChild(img);
+        }
+        card.appendChild(logoBox);
+
+        const content = document.createElement('div');
+        content.className = 'card-content';
+        const h2 = document.createElement('h2');
+        h2.textContent = truncateWords(normalizeHeadline(cleanTitle(item.title, source.name)), 18);
+        const meta = document.createElement('span');
+        meta.className = 'meta';
+        meta.textContent = `${formatArticleDate(item.pubDate)} • ${source.name}`;
+        content.appendChild(h2);
+        content.appendChild(meta);
+        card.appendChild(content);
+
+        card.addEventListener('click', () => window.open(item.link, '_blank', 'noopener'));
+
+        return card;
     }
+
 
     function appendCardToMasonry(card, hasImage) {
       grid.appendChild(card);
@@ -605,7 +656,7 @@
         const colors = await getColorsFromLogo(source.logo);
         state.sourceColors.set(source.name, colors);
       }
-      const { sourceColor } = state.sourceColors.get(source.name) || { sourceColor: null };
+      const colors = state.sourceColors.get(source.name) || { dark: null, light: null };
 
       for (const item of data.items) {
         item.pubDate ||= item.isoDate || item.published || item.date || new Date().toISOString();
@@ -617,8 +668,9 @@
         if (state.articles.some(a => a.id === id)) continue;
 
         const card = hasImage
-          ? buildImageCard(item, source, sourceColor)
-          : buildNoImageCard(item, source, sourceColor);
+          ? buildImageCard(item, source, colors)
+          : buildNoImageCard(item, source, colors);
+
 
         state.articles.push({ ...item, id, sourceName: source.name, card });
         appendCardToMasonry(card, hasImage);
@@ -642,7 +694,7 @@
                     const colors = await getColorsFromLogo(src.logo);
                     state.sourceColors.set(src.name, colors);
                 }
-                const { sourceColor } = state.sourceColors.get(src.name) || { sourceColor: null };
+                const colors = state.sourceColors.get(src.name) || { dark: null, light: null };
 
                 let data = null;
                 try {
@@ -658,7 +710,7 @@
                 // normalize dates now so we can sort globally later
                 return data.items.map(it => {
                     it.pubDate ||= it.isoDate || it.published || it.date || new Date().toISOString();
-                    return { item: it, src, sourceColor, ts: asTimestamp(it) };
+                    return { item: it, src, colors, ts: asTimestamp(it) };
                 });
             }));
 
@@ -671,7 +723,7 @@
             const frag = document.createDocumentFragment();
             const newElems = [];
 
-            for (const { item, src, sourceColor } of allArticles) {
+            for (const { item, src, colors } of allArticles) {
                 const key = item.link || item.guid || item.id || JSON.stringify(item);
                 if (seen.has(key)) continue;
                 seen.add(key);
@@ -680,8 +732,8 @@
                 const id = btoa(item.link || key);
 
                 const card = hasImage
-                    ? buildImageCard(item, src, sourceColor)
-                    : buildNoImageCard(item, src, sourceColor);
+                  ? buildImageCard(item, src, colors)
+                  : buildNoImageCard(item, src, colors);
 
                 state.articles.push({ ...item, id, sourceName: src.name, card });
                 frag.appendChild(card);
@@ -734,7 +786,7 @@
                 const colors = await getColorsFromLogo(src.logo);
                 state.sourceColors.set(src.name, colors);
             }
-            const { sourceColor } = state.sourceColors.get(src.name) || { sourceColor: null };
+            const colors = state.sourceColors.get(src.name) || { dark: null, light: null };
 
             const hasImage = !!ci.thumbnail && !/placehold\.co/.test(ci.thumbnail);
             const item = {
@@ -743,8 +795,8 @@
             };
 
             const card = hasImage
-                ? buildImageCard(item, src, sourceColor)
-                : buildNoImageCard(item, src, sourceColor);
+                ? buildImageCard(item, src, colors)
+                : buildNoImageCard(item, src, colors);
 
             state.articles.push({ ...item, id: ci.id, sourceName: src.name, card });
             frag.appendChild(card);
@@ -843,6 +895,27 @@
       // image cards toggle preview in builder as well
     });
   </script>
+  <script>
+  /* ==============================
+   Back to Top Button
+============================== */
+(function setupBackToTop() {
+  const btn = document.getElementById('backToTop');
+  if (!btn) return;
+
+  // show/hide on scroll
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 400) btn.classList.add('visible');
+    else btn.classList.remove('visible');
+  });
+
+  // smooth scroll to top
+  btn.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
+})();
+
+</script>
 
 </body>
 </html>
