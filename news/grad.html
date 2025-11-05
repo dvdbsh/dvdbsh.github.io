@@ -118,9 +118,14 @@ body {
     flex-direction: column;
     overflow: hidden;
     border-radius: var(--radius);
+	background: var(--card-bg);
 }
 
-.card.image img {
+.card.image.has-color {
+    background: var(--avg-color, var(--card-bg));
+}
+
+.card.image > img {
     flex-shrink: 0;
     width: 100%;
     height: 180px;
@@ -128,9 +133,8 @@ body {
     display: block;
     border-top-left-radius: var(--radius);
     border-top-right-radius: var(--radius);
-    /* gradient blend to background */
-    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
-    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
 }
 
 .card.image .card-content {
@@ -148,7 +152,12 @@ body {
     font-weight: 700;
     font-family: 'Playfair Display';
     line-height: 1.1;
-    margin: 0 0 0.5rem;
+    margin: -2.7rem 0 0.5rem;
+}
+
+.card:not(.image) h2 {
+    padding-top: 40px;
+	margin: 0 0 0.5rem;
 }
 
 .card p {
@@ -547,18 +556,15 @@ body {
             try {
                 const thief = new ColorThief();
                 const [r, g, b] = thief.getColor(img);
-                // average color background
-                card.style.background = `rgb(${r}, ${g}, ${b})`;
-                // smooth blend between image and background
-                img.style.maskImage =
-                    'linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)';
-                img.style.webkitMaskImage =
-                    'linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)';
+                card.style.setProperty('--avg-color', `rgb(${r}, ${g}, ${b})`);
+                card.classList.add('has-color');
             } catch (err) {
                 console.warn('Color extraction failed:', err);
-                card.style.background = 'rgb(60,60,60)';
+                card.style.setProperty('--avg-color', 'rgb(60,60,60)');
+                card.classList.add('has-color');
             }
         };
+
 
         card.appendChild(img);
 
