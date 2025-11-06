@@ -1,1109 +1,1229 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="mobile-web-app-capable" content="yes">
-<title>London News</title>
-<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Zain:ital,wght@0,200;0,300;0,400;0,700;0,800;0,900;1,300;1,400&display=swap" rel="stylesheet">
-<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
-<link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
-<link rel="icon" href="favicon.ico">
-<link rel="manifest" href="manifest.json">
+	<!DOCTYPE html>
+	<html lang="en">
+	<head>
+	  <meta charset="UTF-8" />
+	  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	  <title>London News</title>
+	  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet" />
+	  <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+	  <style>
+	/* ========================================
+	   Root Variables
+	======================================== */
+	:root {
+	  --bg: #131313;
+	  --fg: #fff;
+	  --card: #1b1b1b;
+	  --radius: 16px;
+	  --accent: #3cb6f3;
+	  --font: 'Lexend', sans-serif;
+	  --shadow: 0 4px 12px rgba(0,0,0,0.25);
+	}
+
+	/* ========================================
+	   Base Reset
+	======================================== */
+	* {
+	  box-sizing: border-box;
+	  margin: 0;
+	  padding: 0;
+	}
+
+	body {
+	  background: var(--bg);
+	  color: var(--fg);
+	  font-family: var(--font);
+	  line-height: 1.5;
+	}
+
+	a {
+	  color: var(--accent);
+	  text-decoration: none;
+	}
+	a:hover {
+	  text-decoration: underline;
+	}
+
+	/* ========================================
+	   Topbar
+	======================================== */
+	.topbar {
+	  position: sticky;
+	  top: 0;
+	  z-index: 100;
+	  display: flex;
+	  align-items: center;
+	  justify-content: space-between;
+	  padding: 1rem 2rem;
+	  background: rgba(255,255,255,0.05);
+	  backdrop-filter: blur(10px);
+	}
+
+	/* Logo */
+	.topbar .logo {
+	  font-weight: 700;
+	  font-size: 1.4rem;
+	}
+
+	/* Source Icons */
+	.source-icons {
+	  display: flex;
+	  flex-direction: row-reverse; /* expand from right to left */
+	  align-items: center;
+	  gap: 1rem;
+	}
+
+	/* Circular Buttons */
+	.source-btn {
+	  width: 54px;
+	  height: 54px;
+	  border-radius: 50%;
+	  background: var(--bg, #222);
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  border: none;
+	  cursor: pointer;
+	  opacity: 0;
+	  transform: scale(0.8) translateX(20px);
+	  transition: transform 0.2s ease, opacity 0.2s ease;
+	  animation-fill-mode: forwards;
+	}
+
+	.source-btn img {
+	  width: 60%;
+	}
+
+	.source-btn:hover {
+	  transform: scale(1.1);
+	}
+
+	/* Menu Toggle Buttons */
+	.menu-toggle {
+	  display: none;
+	  background: none;
+	  border: none;
+	  color: #fff;
+	  font-size: 1.8rem;
+	  cursor: pointer;
+	  z-index: 101;
+	}
+
+	.menu-toggle.close {
+	  display: none;
+	}
+
+	/* ========================================
+	   Responsive Topbar
+	======================================== */
+	@media (max-width: 700px) {
+	  .source-icons {
+		position: fixed;
+		top: 0;
+		right: 0;
+		width: 70%;
+		max-width: 300px;
+		height: 100vh;
+		background: rgba(0,0,0,0.95);
+		backdrop-filter: blur(10px);
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		gap: 1.5rem;
+		transform: translateX(100%);
+		transition: transform 0.4s ease;
+		z-index: 99;
+	  }
+
+	  .source-icons.show {
+		transform: translateX(0);
+	  }
+
+	  /* Hamburger open button */
+	  .menu-toggle.open {
+		display: block;
+		position: absolute;
+		top: 1rem;
+		right: 1.5rem;
+		z-index: 100;
+	  }
+
+	  /* Close button */
+	  .menu-toggle.close {
+		display: none;
+		position: fixed;
+		top: 1rem;
+		right: 1.5rem;
+		font-size: 2rem;
+		z-index: 101;
+	  }
+
+	  /* Larger buttons on mobile */
+	  .source-btn {
+		width: 60px;
+		height: 60px;
+	  }
+
+	  /* Show close button when menu open */
+	  .source-icons.show ~ .menu-toggle.close {
+		display: block;
+	  }
+	}
+
+	/* ========================================
+	   Layout & Content
+	======================================== */
+	main {
+	  max-width: 1200px;
+	  margin: 2rem auto;
+	  padding: 0 1rem;
+	}
+
+	section {
+	  margin-bottom: 3rem;
+	}
+	
+    .real-content > h2 {
+	  margin-bottom: 20px;
+	  padding-bottom: 10px;
+	  border-bottom: 2px solid white;
+	  }
+
+	.real-content {
+	  opacity: 0;
+	  transition: opacity 0.5s ease;
+	}
+	.real-content.loaded,
+	.real-content[style*="opacity: 1"] {
+	  opacity: 1;
+	}
 
 
-<style>
-:root{
-  --blur-amount: 15px;
-  --transition-speed: 0.25s;
-  --overlay-color: rgba(0,0,0,0.25);
-  --font: 'Lexend', sans-serif;
-}
+	/* ========================================
+	   Hero
+	======================================== */
+	.hero {
+	  position: relative;
+	  border-radius: var(--radius);
+	  overflow: hidden;
+	  box-shadow: var(--shadow);
+	}
 
-/* Page */
-*{box-sizing:border-box}
-html,body{height:100%}
-body{
-  margin:0;
-  font-family:var(--font);
-  background:#292a2d;
-  color:#fff;
-  display:flex;
-  flex-direction:column;
-  min-height:100vh;
-  padding: calc(16px + env(safe-area-inset-top)) 16px calc(116px + env(safe-area-inset-bottom));
-}
+	.hero img {
+	  width: 100%;
+	  border-radius: var(--radius);
+	  display: block;
+	}
 
-/* ==============================
-   Frosted Top Bar
-============================== */
-.topbar {
-  position: fixed;
-  top: 0; left: 0; right: 0;
+	.hero .overlay {
+	  position: absolute;
+	  bottom: 0;
+	  left: 0;
+	  right: 0;
+	  padding: 2rem;
+	  background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+	}
+
+	/* ========================================
+	   Grids
+	======================================== */
+	.grid {
+	  display: grid;
+	  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+	  gap: 1.5rem;
+	}
+
+	.grid article {
+	  background: var(--card);
+	  border-radius: var(--radius);
+	  overflow: hidden;
+	  box-shadow: var(--shadow);
+	  transition: transform 0.2s ease;
+	}
+	.grid article:hover {
+	  transform: translateY(-4px);
+	}
+
+	.grid img {
+	  width: 100%;
+	  height: 180px;
+	  object-fit: cover;
+	}
+
+	.grid h3 {
+	  padding: 1rem;
+	  font-size: 1rem;
+	}
+
+	/* ========================================
+	   Featured
+	======================================== */
+	.featured {
+	  display: grid;
+	  grid-template-columns: 2fr 1fr;
+	  gap: 1.5rem;
+	  align-items: center;
+	}
+
+	.featured img {
+	  width: 100%;
+	  border-radius: var(--radius);
+	  box-shadow: var(--shadow);
+	}
+
+	.featured .text {
+	  padding: 1rem;
+	}
+
+/* ========================================
+   Weather Section
+======================================== */
+.weather {
   display: flex;
+  justify-content: center;
   align-items: center;
+}
+
+.weather-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2rem;
+  width: 100%;
+  transition: background 0.3s ease;
+}
+
+.weather-card:hover {
+  background: rgba(255,255,255,0.07);
+}
+
+.current {
+  display: flex;
   justify-content: space-between;
-  padding: calc(env(safe-area-inset-top, 0px) + 0.75rem) 1.5rem 0.75rem;
-  background: rgba(255,255,255,0.08);
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
-  z-index: 1000;
-  transition: transform 0.45s ease, opacity 0.35s ease;
+  align-items: center;
+  margin-bottom: 2rem;
 }
-.topbar.hidden { transform: translateY(-100%); opacity: 0; }
 
-.logo {
+.icon-temp {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  gap: 1rem;
 }
-.logo-icon {
-  width: 45px;
-  object-fit: contain;
+
+.icon-temp h2 {
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+.icon-temp p {
+  color: #ccc;
+}
+
+.details {
+  text-align: right;
+  font-size: 0.95rem;
+  color: #aaa;
+}
+
+.details i {
+  color: var(--accent);
+  margin-right: 0.4rem;
+}
+
+/* Forecast Grid */
+.forecast-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 1rem;
+  text-align: center;
+}
+
+.forecast-day {
+  background: rgba(255,255,255,0.05);
+  border-radius: var(--radius);
+  padding: 1rem;
+  transition: background 0.3s ease;
+}
+
+.forecast-day:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.forecast-day h4 {
+  font-size: 0.9rem;
+  color: #ccc;
+  margin-bottom: 0.4rem;
+}
+
+.forecast-day i {
+  font-size: 1.8rem;
+  color: var(--accent);
+}
+
+.forecast-day p {
+  font-size: 0.95rem;
+  margin-top: 0.3rem;
+}
+
+
+
+	/* ========================================
+	   Footer
+	======================================== */
+	.footer {
+	  background: #000;
+	  padding: 2rem;
+	  color: #aaa;
+	}
+
+	.footer .cols {
+	  display: grid;
+	  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	  gap: 2rem;
+	}
+
+	.footer h4 {
+	  color: #fff;
+	  margin-bottom: 0.5rem;
+	}
+
+	.footer ul {
+	  list-style: none;
+	  padding: 0;
+	}
+	.footer li {
+	  margin-bottom: 0.5rem;
+	}
+
+	.copy {
+	  text-align: center;
+	  margin-top: 2rem;
+	  color: #666;
+	}
+
+	/* ========================================
+	   Skeleton Loaders
+	======================================== */
+	@keyframes shimmer {
+	  0% { background-position: -300px 0; }
+	  100% { background-position: 300px 0; }
+	}
+
+	.skeleton {
+	  background: linear-gradient(
+		90deg,
+		rgba(255,255,255,0.04) 25%,
+		rgba(255,255,255,0.1) 50%,
+		rgba(255,255,255,0.04) 75%
+	  );
+	  background-size: 400px 100%;
+	  animation: shimmer 1.5s infinite;
+	  border-radius: var(--radius);
+	  box-shadow: var(--shadow);
+	}
+
+	.skeleton.hero { height: 400px; }
+
+	.skeleton-card,
+	.skeleton-feature,
+	.skeleton-video {
+	  border-radius: var(--radius);
+	  animation: shimmer 1.5s infinite;
+	  background: linear-gradient(
+		90deg,
+		rgba(255,255,255,0.04) 25%,
+		rgba(255,255,255,0.1) 50%,
+		rgba(255,255,255,0.04) 75%
+	  );
+	  background-size: 400px 100%;
+	  box-shadow: var(--shadow);
+	}
+
+	.skeleton-card { height: 250px; }
+	.skeleton-feature { height: 300px; }
+	.skeleton-video { height: 250px; }
+
+	/* ========================================
+	   Source Button Pop Animation
+	======================================== */
+	@keyframes popOut {
+	  0% {
+		opacity: 0;
+		transform: scale(0.6) translateX(30px);
+	  }
+	  80% {
+		transform: scale(1.08);
+	  }
+	  100% {
+		opacity: 1;
+		transform: scale(1) translateX(0);
+	  }
+	}
+
+	/* Animate on Desktop */
+	@media (min-width: 701px) {
+	  .source-icons .source-btn {
+		animation: popOut 0.4s ease forwards;
+	  }
+	  .source-icons .source-btn:nth-child(1) { animation-delay: 0.05s; }
+	  .source-icons .source-btn:nth-child(2) { animation-delay: 0.1s; }
+	  .source-icons .source-btn:nth-child(3) { animation-delay: 0.15s; }
+	  .source-icons .source-btn:nth-child(4) { animation-delay: 0.2s; }
+	}
+
+	/* Animate on Mobile Menu Open */
+	@media (max-width: 700px) {
+	  .source-icons.show .source-btn {
+		animation: popOut 0.4s ease forwards;
+	  }
+	  .source-icons.show .source-btn:nth-child(1) { animation-delay: 0.1s; }
+	  .source-icons.show .source-btn:nth-child(2) { animation-delay: 0.2s; }
+	  .source-icons.show .source-btn:nth-child(3) { animation-delay: 0.3s; }
+	  .source-icons.show .source-btn:nth-child(4) { animation-delay: 0.4s; }
+	}
+	
+/* ========================================
+   Word Cloud Section
+======================================== */
+.wordcloud {
+
+}
+
+.wordcloud h2 {
+  margin-bottom: 1.5rem;
+}
+
+.wordcloud-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 1.2rem;
+  justify-content: center;
+  text-align: center;
+}
+
+.wordcloud-container span {
+  font-weight: 600;
+  color: var(--fg);
+  opacity: 0.8;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.wordcloud-container span:hover {
+  opacity: 1;
+  transform: scale(1.1);
+  color: var(--accent);
+}
+
+/* Randomized font sizing */
+.wordcloud-container span[data-size='1'] { font-size: 0.9rem; opacity: 0.6; }
+.wordcloud-container span[data-size='2'] { font-size: 1.1rem; }
+.wordcloud-container span[data-size='3'] { font-size: 1.3rem; }
+.wordcloud-container span[data-size='4'] { font-size: 1.6rem; }
+.wordcloud-container span[data-size='5'] { font-size: 2rem; }
+
+/* ========================================
+   City of London Slideshow (Fixed Size)
+======================================== */
+.featured {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.featured .col-slider {
   position: relative;
-  top: -4px;
-}
-.logo-text {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: #fff;
-  opacity: 0.95;
-}
-
-.date {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: #fff;
-  opacity: 0.95;
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  transition: opacity 0.8s ease;
-}
-
-/* ==============================
-   Controls
-============================== */
-.controls{ display:flex; gap:0.6rem; }
-.btn{
-  background:transparent;
-  border:1px solid rgba(255,255,255,0.15);
-  color:#fff;
-  border-radius:999px;
-  padding:0.5rem 0.9rem;
-  cursor:pointer;
-  font-weight:800;
-  font-size: 1rem;
-  transition:transform .2s, background .25s, border-color .25s;
-}
-.btn:hover{
-  transform:translateY(-1px);
-  background:rgba(255,255,255,0.06);
-  border-color:rgba(255,255,255,0.25);
-}
-
-/* Toast */
-.toast{
-  position:fixed;
-  bottom:110px;
-  left:50%;
-  transform:translateX(-50%);
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.2);
-  color:#fff;
-  padding:0.6rem 1.2rem;
-  border-radius:20px;
-  font-weight:800;
-  opacity:0;
-  transition:opacity .35s ease;
-  z-index:9999;
-  backdrop-filter: blur(10px);
-}
-
-/* Floating Buttons */
-.floating-controls {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.8rem;
-  z-index: 9999;
-}
-.float-btn {
-  width: 62px;
-  height: 62px;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 1.9rem;
-  cursor: pointer;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
-  transition: background 0.25s, transform 0.25s, opacity 0.25s;
-  padding-top: 4px;
-}
-.float-btn:hover {
-  background: rgba(255,255,255,0.15);
-  transform: scale(1.08);
-}
-#backToTopBtn { opacity: 0; pointer-events: none; }
-#backToTopBtn.visible { opacity: 1; pointer-events: auto; }
-
-/* ==============================
-   Grid Layout
-============================== */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
-  gap:1.5rem;
-  width:100%;
-  max-width:1200px;
-  margin:72px auto 0;
-}
-
-/* ==============================
-   Simplified Article Cards
-============================== */
-.card {
-  position: relative;
-  height: 420px;
-  border-radius: 16px;
-  overflow: hidden;
-  cursor: pointer;
-  background-color: var(--source-color, #222);
-  transition: transform 0.25s ease, backdrop-filter var(--transition-speed) ease;
-  backdrop-filter: none;
-}
-.card.active {
-  backdrop-filter: blur(var(--blur-amount));
-}
-
-.card-art {
-  position: absolute;
-  inset: 0;
-  background-repeat: no-repeat;
-  background-position: 50% 15%;
-  background-size: 80%;
-  transition: filter var(--transition-speed) ease;
-  z-index: 1;
-   
-background-color: color-mix(in srgb, var(--source-color) 80%, grey 20%);
-mix-blend-mode: hard-light;
-
-}
-
-
-.card.active .card-art {
-  filter: blur(var(--blur-amount)) brightness(0.9);
-}
-
-/* Source header */
-.source-header {
-  position: absolute;
-  top: 0.8rem;
-  left: 1.2rem;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-.source-logo {
-  width: 40px;
-  object-fit: contain;
-  border-radius: 3px;
-}
-.source-name { display: none; }
-
-/* Info (title/meta) */
-.info{
-  position:absolute;
-  bottom:0; left:0; right:0;
-  padding:1.2rem;
-  z-index:2;
-  transition:opacity var(--transition-speed) ease;
-}
-.info h2 {
-  margin: 0;
-  font-size: 1.75rem;
-  line-height: 1.1;
-  text-shadow:
-    0 0 25px var(--dark-source-color),
-	0 0 30px var(--source-color),
-	0 0 40px var(--source-color);
-}
-
-.info .meta{
-  font-size:0.9rem;
-  opacity:0.85;
-  margin-top:0.4rem;
-  font-weight:700;
-}
-
-/* Expanded content */
-.content{
-  position:absolute;
-  inset:0;
-  padding:1.5rem;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-  opacity:0;
-  z-index:3;
-  pointer-events:none;
-  transition: opacity var(--transition-speed) ease;
-}
-.content p{
-  font-size:1.2rem;
-  line-height:1.4;
-  margin-bottom:1rem;
-  color:#e8eeff;
-}
-.content a{
-  text-decoration:none;
-  align-self:flex-start;
-  background:rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
-  color:#fff;
-  border-radius:24px;
-  padding:0.6rem 1.2rem;
-  font-weight:800;
-  transition: background 0.25s, transform 0.25s;
-}
-.content a:hover{ transform:scale(1.05); background:rgba(255,255,255,0.15); }
-
-/* Toggle states */
-.card.active .source-header,
-.card.active .info { opacity:0; }
-.card.active .content { opacity:1; pointer-events:auto; }
-
-/* Empty state */
-.empty{
-  grid-column:1/-1;
-  background:rgba(255,255,255,0.04);
-  border:1px dashed rgba(255,255,255,0.15);
-  padding:2rem;
-  margin:20px;
-  border-radius:16px;
-  text-align:center;
-  color:#e8eeff;
-  font-weight:800;
-}
-
-/* ==============================
-   Mobile
-============================== */
-@media (max-width: 768px) {
-  body {
-    padding: calc(52.8px + env(safe-area-inset-top)) 16px calc(116px + env(safe-area-inset-bottom));
-  }
-  .grid {
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-    width: 100vw;
-    max-width: none;
-    margin: 0 calc(-1 * 16px);
-  }
-  .card {
-    border-radius: 0;
-    min-height: 550px;
-    border-bottom: 10px solid #0d0d0d;
-  }
-  .info, .content { padding: 1.25rem; }
-}
-
-/* ==============================
-   Share Button
-============================== */
-.share-btn {
-  position: absolute;
-  top: 1.2rem;
-  right: 1.2rem;
-  width: 26px;
-  height: 26px;
-  background:transparent;
-  border:1px solid rgba(255,255,255,0.15);
-  border-radius:50%;
-  color: #fff;
-  font-size: 1rem;
-  display: flex;
-  align-items: center;
   justify-content: center;
+  align-items: center;
+  background: #006b3f;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+  color: white;
+  width: 800px;
+  max-width: 100%;
+  height: 320px;             /* Fixed height */
+  min-height: 320px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  text-align: center;
+  overflow: hidden;
+}
+
+.col-slide {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  max-width: 850px;
+  text-align: center;
+}
+
+.col-slide h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0 0 1.2rem 0;
   cursor: pointer;
-  z-index: 10;
-  backdrop-filter: blur(10px);
-  transition: background 0.25s, transform 0.25s;
-}
-.share-btn:hover {
-  background: rgba(255,255,255,0.15);
-  transform: scale(1.08);
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 90%;
+  text-align: center;
 }
 
-/* ==============================
-   Icons
-============================== */
-.bx-spin { animation: bx-reverse-spin 2s linear infinite !important; }
-@keyframes bx-reverse-spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(-360deg); }
+.col-slide .divider {
+  width: 80px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.8);
+  margin: 0 auto 1rem auto;
 }
-</style>
 
-</head>
-<body>
+.col-slide .col-date {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
 
-<div class="topbar" id="topbar">
-  <div class="logo">
-    <img src="images/LN-logo-svg.svg" alt="London News Logo" class="logo-icon">
-    <span class="logo-text">London News</span>
-  </div>
-  <div class="date" id="currentDate"></div>
-</div>
+.col-prev,
+.col-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.col-prev:hover,
+.col-next:hover {
+  opacity: 1;
+}
+
+.col-prev { left: 1rem; }
+.col-next { right: 1rem; }
+
+.col-dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.2rem;
+}
+
+.col-dots span {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.col-dots span.active {
+  background: white;
+}
 
 
-<div class="grid" id="grid"></div>
 
-<div class="toast" id="toast">Updated just now</div>
 
-<div class="floating-controls">
-  <button id="backToTopBtn" class="float-btn">
-    <i class='bx bx-up-arrow-alt'></i>
-  </button>
-  <button id="refreshBtn" class="float-btn">
-    <i class='bx bx-refresh'></i>
-  </button>
-</div>
+
+	
+
+/* ========================================
+   Mobile Hero Height
+======================================== */
+@media (max-width: 700px) {
+  .hero img {
+    height: 400px;
+    object-fit: cover;
+  }
+
+  .hero .overlay {
+    padding: 1.5rem;
+  }
+
+  .hero .overlay h1 {
+    font-size: 1.6rem;
+    line-height: 1.2;
+  }
+
+  .hero .overlay p {
+    font-size: 0.95rem;
+  }
+
+  .featured .col-slider {
+    height: 260px;
+    min-height: 260px;
+    padding: 2.5rem 1.5rem;
+  }
+
+  .col-slide h2 {
+    font-size: 1.25rem;
+  }
+}  
+
+
+	  </style>
+	</head>
+	<body>
+
+	<header class="topbar">
+	  <div class="logo">London News</div>
+
+	  <!-- Source icons container -->
+	  <nav class="source-icons">
+		<button class="source-btn" style="--bg:#e41e26" title="CTV">
+		  <img src="images/logos/ctv.png" alt="CTV">
+		</button>
+		<button class="source-btn" style="--bg:#1a73e8" title="CBC">
+		  <img src="images/logos/cbc.png" alt="CBC">
+		</button>
+		<button class="source-btn" style="--bg:#00843d" title="Global News">
+		  <img src="images/logos/global.png" alt="Global News">
+		</button>
+		<button class="source-btn" style="--bg:#ffcc00" title="BBC">
+		  <img src="images/logos/CoL.png" alt="BBC">
+		</button>
+	  </nav>
+
+	  <!-- Mobile menu buttons -->
+	  <button class="menu-toggle open"><i class='bx bx-menu'></i></button>
+	  <button class="menu-toggle close"><i class='bx bx-x'></i></button>
+	</header>
+
+
+	  <main>
+
+		<!-- HERO -->
+		<section class="section-wrapper hero-section">
+		  <div class="skeleton hero"></div>
+		  <section class="hero real-content">
+			<img src="https://picsum.photos/1200/500" alt="">
+			<div class="overlay">
+			  <h1>Top Story Headline Goes Here</h1>
+			  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+			</div>
+		  </section>
+		</section>
+		
+		<!-- WORD CLOUD -->
+		<section class="section-wrapper wordcloud-section">
+		  <div class="skeleton-feature"></div>
+		  <section class="wordcloud real-content">
+			<h2>Trending Topics</h2>
+			<div class="wordcloud-container" id="wordcloud"></div>
+		  </section>
+		</section>
+		
+
+		<!-- TODAYS HEADLINES -->
+		<section class="section-wrapper trending-section">
+		  <div class="grid">
+			<div class="skeleton-card"></div>
+			<div class="skeleton-card"></div>
+			<div class="skeleton-card"></div>
+			<div class="skeleton-card"></div>
+		  </div>
+
+		  <section class="trending real-content">
+			<h2>Today's Headlines</h2>
+			<div class="grid">
+			  <article><img src="https://picsum.photos/400/250"><h3>Headline One</h3></article>
+			  <article><img src="https://picsum.photos/401/250"><h3>Headline Two</h3></article>
+			  <article><img src="https://picsum.photos/402/250"><h3>Headline Three</h3></article>
+			  <article><img src="https://picsum.photos/403/250"><h3>Headline Four</h3></article>
+			</div>
+		  </section>
+		</section>
+
+		<!-- WEATHER -->
+		<section class="section-wrapper weather-section">
+		  <div class="skeleton-feature"></div>
+		  <section class="weather real-content">
+			<div class="weather-card">
+			  <div class="current">
+				<div class="icon-temp">
+				  <i id="weather-icon" class='bx bx-cloud bx-lg'></i>
+				  <div>
+					<h2 id="weather-temp">--°C</h2>
+					<p id="weather-desc">Loading...</p>
+				  </div>
+				</div>
+				<div class="details">
+				  <p><i class='bx bx-wind'></i> <span id="weather-wind">-- km/h</span></p>
+				  <p><i class='bx bx-tint'></i> <span id="weather-humidity">--%</span></p>
+				  <p><i class='bx bx-compass'></i> <span id="weather-direction">--</span></p>
+				</div>
+			  </div>
+			  <div class="forecast-grid" id="forecast-grid"></div>
+			</div>
+		  </section>
+		</section>
+
+		<!-- FEATURED -->
+		<section class="section-wrapper featured-section">
+		  <div class="skeleton-feature"></div>
+		  <section class="featured real-content">
+			<div class="image"><img src="https://picsum.photos/900/500"></div>
+			<div class="text">
+			  <h2>City of London Newsroom</h2>
+			  <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, eveniet?</p>
+			</div>
+		  </section>
+		</section>
+
+		<!-- ARTICLES -->
+		<section class="section-wrapper articles-section">
+		  <div class="grid">
+			<div class="skeleton-card"></div>
+			<div class="skeleton-card"></div>
+			<div class="skeleton-card"></div>
+			<div class="skeleton-card"></div>
+		  </div>
+
+		  <section class="articles real-content">
+			<h2>In Case You Missed It</h2>
+			<div class="grid">
+			  <article><img src="https://picsum.photos/404/250"><h3>Local update headline</h3></article>
+			  <article><img src="https://picsum.photos/405/250"><h3>Weather report headline</h3></article>
+			  <article><img src="https://picsum.photos/406/250"><h3>Traffic update headline</h3></article>
+			  <article><img src="https://picsum.photos/407/250"><h3>Community event headline</h3></article>
+			</div>
+		  </section>
+		</section>
+
+	  </main>
+
+	  <footer class="footer">
+		<div class="cols">
+		  <div>
+			<h4>About</h4>
+			<p>London News brings you curated local updates and national stories, refreshed every hour.</p>
+		  </div>
+		  <div>
+			<h4>Sections</h4>
+			<ul>
+			  <li><a href="#">Local</a></li>
+			  <li><a href="#">World</a></li>
+			  <li><a href="#">Sports</a></li>
+			  <li><a href="#">Entertainment</a></li>
+			</ul>
+		  </div>
+		  <div>
+			<h4>Connect</h4>
+			<ul>
+			  <li><a href="#">Twitter</a></li>
+			  <li><a href="#">YouTube</a></li>
+			  <li><a href="#">Contact</a></li>
+			</ul>
+		  </div>
+		</div>
+		<p class="copy">&copy; 2025 London News</p>
+	  </footer>
+
+	  <script>
+		document.addEventListener("DOMContentLoaded", () => {
+		  const sections = document.querySelectorAll(".section-wrapper");
+
+		  sections.forEach(section => {
+			const skeletons = section.querySelectorAll(".skeleton, .skeleton-card, .skeleton-feature, .skeleton-video");
+			const content = section.querySelector(".real-content");
+			if (!content) return;
+
+			const images = content.querySelectorAll("img");
+			let loaded = 0;
+
+			function showContent() {
+			  skeletons.forEach(s => s.style.display = "none");
+			  content.style.opacity = 1;
+			  content.classList.add("loaded");
+			}
+
+			if (images.length === 0) {
+			  showContent();
+			} else {
+			  images.forEach(img => {
+				if (img.complete) {
+				  loaded++;
+				  if (loaded === images.length) showContent();
+				} else {
+				  img.addEventListener("load", () => {
+					loaded++;
+					if (loaded === images.length) showContent();
+				  });
+				  img.addEventListener("error", () => {
+					loaded++;
+					if (loaded === images.length) showContent();
+				  });
+				}
+			  });
+			}
+		  });
+		});
+	  </script>
+	<script>
+	  document.addEventListener("DOMContentLoaded", () => {
+		const menuOpen = document.querySelector(".menu-toggle.open");
+		const menuClose = document.querySelector(".menu-toggle.close");
+		const icons = document.querySelector(".source-icons");
+
+		// Open menu
+		menuOpen.addEventListener("click", () => {
+		  icons.classList.add("show");
+		  menuOpen.style.display = "none";
+		  menuClose.style.display = "block";
+		});
+
+		// Close menu
+		menuClose.addEventListener("click", () => {
+		  icons.classList.remove("show");
+		  menuClose.style.display = "none";
+		  menuOpen.style.display = "block";
+		});
+	  });
+	</script>
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+  const tempEl = document.getElementById("weather-temp");
+  const descEl = document.getElementById("weather-desc");
+  const windEl = document.getElementById("weather-wind");
+  const humEl = document.getElementById("weather-humidity");
+  const dirEl = document.getElementById("weather-direction");
+  const iconEl = document.getElementById("weather-icon");
+  const forecastGrid = document.getElementById("forecast-grid");
+
+  const lat = 42.9837, lon = -81.2497; // London, ON
+
+  try {
+    const res = await fetch(
+      `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto`
+    );
+    const data = await res.json();
+    const weather = data.current_weather;
+    const daily = data.daily;
+
+    // Current weather
+    tempEl.textContent = `${Math.round(weather.temperature)}°C`;
+    descEl.textContent = getWeatherDesc(weather.weathercode);
+    windEl.textContent = `${Math.round(weather.windspeed)} km/h`;
+    humEl.textContent = "--%"; // Humidity not provided by API
+    dirEl.textContent = degToCompass(weather.winddirection);
+    iconEl.className = `bx ${getWeatherIcon(weather.weathercode)} bx-lg`;
+
+    // 5-day forecast
+    forecastGrid.innerHTML = "";
+    for (let i = 0; i < 5; i++) {
+      const day = new Date(daily.time[i]).toLocaleDateString("en-US", { weekday: "short" });
+      const max = Math.round(daily.temperature_2m_max[i]);
+      const min = Math.round(daily.temperature_2m_min[i]);
+      const code = daily.weathercode[i];
+
+      const div = document.createElement("div");
+      div.className = "forecast-day";
+      div.innerHTML = `
+        <h4>${day}</h4>
+        <i class='bx ${getWeatherIcon(code)}'></i>
+        <p>${max}° / ${min}°</p>
+      `;
+      forecastGrid.appendChild(div);
+    }
+  } catch (err) {
+    console.warn("Weather load failed:", err);
+  }
+
+  function getWeatherIcon(code) {
+    if (code === 0) return "bx-sun";
+    if (code <= 2) return "bx-cloud";
+    if (code <= 48) return "bx-cloud-rain";
+    if (code <= 67) return "bx-cloud-light-rain";
+    if (code <= 77) return "bx-cloud-snow";
+    if (code <= 82) return "bx-cloud-drizzle";
+    if (code <= 99) return "bx-cloud-lightning";
+    return "bx-cloud";
+  }
+
+  function getWeatherDesc(code) {
+    const map = {
+      0: "Clear",
+      1: "Mainly Clear",
+      2: "Partly Cloudy",
+      3: "Overcast",
+      45: "Fog",
+      48: "Rime Fog",
+      51: "Light Drizzle",
+      53: "Drizzle",
+      55: "Heavy Drizzle",
+      61: "Light Rain",
+      63: "Rain",
+      65: "Heavy Rain",
+      71: "Light Snow",
+      73: "Snow",
+      75: "Heavy Snow",
+      95: "Thunderstorms"
+    };
+    return map[code] || "Unknown";
+  }
+
+  function degToCompass(num) {
+    const val = Math.floor((num / 22.5) + 0.5);
+    const arr = ["N","NNE","NE","ENE","E","ESE","SE","SSE",
+                 "S","SSW","SW","WSW","W","WNW","NW","NNW"];
+    return arr[val % 16];
+  }
+});
+</script>
+
 
 <script>
-/* ---------- Config ---------- */
-const PEXELS_API_KEY = 'fB6vzEHx5CsDIVByIpuDfQ2QoliM9TYWyBqmkzPgj6nPeEuWdBvbtJIx';
-const gridEl = document.getElementById('grid');
-const toastEl = document.getElementById('toast');
-const WORKER_BASE = "https://rss-proxy.davidbusch-02.workers.dev";
-
-const workerCached = (feedUrl) =>
-  `${WORKER_BASE}/cached?url=${encodeURIComponent(feedUrl)}`;
-const workerLive = (feedUrl) =>
-  `${WORKER_BASE}/?url=${encodeURIComponent(feedUrl)}`;
-
-/* ---------- State ---------- */
-const state = {
-  articles: [],
-  allSources: [],
-  openCard: null
-};
-
-
-/* ---------- Toast ---------- */
-function showToast(msg="Updated just now"){
-  toastEl.textContent = msg;
-  toastEl.style.opacity = '1';
-  setTimeout(()=> toastEl.style.opacity = '0', 2200);
+async function loadArticles() {
+  const res = await fetch('https://rss-proxy.davidbusch-02.workers.dev/local');
+  const data = await res.json();
+  return data.items; // standard RSS Worker format
 }
 
-/* ---------- Helpers ---------- */
-function stripHtmlTags(html) {
-  if (!html) return '';
-  const txt = document.createElement('textarea');
+function renderHero(articles) {
+  const hero = document.querySelector('.hero.real-content');
+  const story = articles.find(a => a.thumbnail && a.thumbnail !== '');
+
+  if (!story) return;
+
+  hero.querySelector('img').src = story.thumbnail;
+  hero.querySelector('h1').textContent = story.title;
+  hero.querySelector('p').textContent = story.link.replace(/^https?:\/\//, '').split('/')[0];
+  hero.querySelector('img').addEventListener('click', () => window.open(story.link, '_blank'));
+}
+
+function generateWordCloud(articles) {
+  // Common English stopwords + local news filler terms
+  const stopwords = new Set([
+    // Core stopwords
+    'a','an','and','are','as','at','be','by','for','from','has','he','in','is','it','its',
+    'of','on','that','the','to','was','were','will','with','this','these','those','their',
+    'they','them','there','what','when','where','which','who','whom','why','how','you','your',
+    'me','my','mine','we','our','ours','i','itself','him','her','hers','his','herself','himself',
+    'ourselves','yourself','yourselves','myself','ours','themselves','been','had','have','having',
+    'did','does','doing','do','or','so','if','but','not','no','yes','just','only','out','up','down',
+    'off','over','under','before','after','again','further','once','because','very','can','could',
+    'should','would','might','must','shall','may','then','than','such','into','onto','about','around',
+    'through','across','between','among','any','all','each','few','some','many','more','most','less',
+    'least','own','same','other','another','both','either','neither','too','also','ever','every',
+    'always','often','sometimes','never','yet','still',
+    // Filler / local news terms
+    'news','update','breaking','local','today','london','city','ontario','canada','police','service','community'
+  ]);
+
+  const counts = {};
+  for (const a of articles) {
+    const title = (a.title || '').toLowerCase();
+
+    title.split(/\s+/).forEach(raw => {
+      let word = raw
+        .replace(/[^a-z]/gi, '')   // remove punctuation
+        .replace(/'s$/i, '')       // remove possessives
+        .trim();
+
+      if (word.length > 3 && !stopwords.has(word)) {
+        counts[word] = (counts[word] || 0) + 1;
+      }
+    });
+  }
+
+  const top = Object.entries(counts)
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 20);
+
+  const container = document.getElementById('wordcloud');
+  if (!container) return;
+  container.innerHTML = '';
+
+  for (const [word, freq] of top) {
+    const span = document.createElement('span');
+    span.dataset.size = Math.min(5, Math.ceil(freq / 2));
+    span.textContent = word;
+    container.appendChild(span);
+  }
+}
+
+function renderTodaysHeadlines(articles) {
+  const today = new Date().toDateString();
+  const todays = articles.filter(a => new Date(a.pubDate).toDateString() === today);
+  const grid = document.querySelector('.trending .grid');
+
+  grid.innerHTML = todays.slice(0, 4).map(a => `
+    <article>
+      <img src="${a.thumbnail || 'images/placeholder/fallback.jpeg'}" alt="">
+      <h3>${a.title}</h3>
+    </article>
+  `).join('');
+}
+
+function stripHtml(s = "") {
+  return String(s).replace(/<\/?[^>]+>/g, "").replace(/\s+/g, " ").trim();
+}
+function cleanCoLTitle(s = "") {
+  return stripHtml(s).replace(/\s*-\s*City of London\s*$/i, "");
+}
+
+function decodeHtml(html) {
+  const txt = document.createElement("textarea");
   txt.innerHTML = html;
-  let decoded = txt.value;
-
-  // Decode any double-encoded entities (e.g., &#039; inside RSS)
-  const temp = document.createElement('textarea');
-  temp.innerHTML = decoded;
-  decoded = temp.value;
-
-  // Remove HTML tags and collapse whitespace
-  decoded = decoded.replace(/<\/?[^>]+(>|$)/g, '');
-  decoded = decoded.replace(/\s+/g, ' ').trim();
-
-  // Replace leftover entities that browsers don’t decode automatically
-  decoded = decoded
-    .replace(/&nbsp;/gi, ' ')
-    .replace(/&amp;/gi, '&')
-    .replace(/&quot;/gi, '"')
-    .replace(/&#039;/gi, "'")
-    .replace(/&rsquo;/gi, "'")
-    .replace(/&lsquo;/gi, "'")
-    .replace(/&ldquo;/gi, '"')
-    .replace(/&rdquo;/gi, '"')
-    .replace(/&hellip;/gi, '…')
-    .replace(/&mdash;/gi, '-')
-    .replace(/&ndash;/gi, '-');
-
-  return decoded.trim();
-}
-
-function truncateWords(text, n){
-  const words = (text||'').trim().split(/\s+/);
-  return words.length>n ? words.slice(0,n).join(' ') + '…' : text;
-}
-function decodeEntities(text) {
-  if (!text) return '';
-  const txt = document.createElement('textarea');
-  txt.innerHTML = text;
   return txt.value;
 }
 
-function cleanTitle(title, sourceName) {
-  if (!title) return "";
-  title = decodeEntities(title);
-  return title.replace(new RegExp(`[-|–|:|•]?\\s*${sourceName}\\s*$`, "i"), "").trim();
-}
-
-function normalizeHeadline(text) {
-  if (!text) return "";
-  text = decodeEntities(text); // decode again here just in case
-  const letters = text.replace(/[^a-zA-Z]/g, "");
-  const upperRatio = letters.replace(/[a-z]/g, "").length / (letters.length || 1);
-  if (upperRatio > 0.8) {
-    text = text.toLowerCase();
-    text = text.replace(/^([“"‘'(\[]*)([a-z])/, (_, p, f) => p + f.toUpperCase());
-    text = text.replace(/([.!?]\s+)([a-z])/g, (_, s, c) => s + c.toUpperCase());
-  }
-  return text
-    .replace(/&nbsp;/gi, ' ')
-    .replace(/&#039;/gi, "'")
-    .replace(/&quot;/gi, '"')
-    .replace(/&amp;/gi, '&')
-    .replace(/&rsquo;/gi, "'")
-    .replace(/&lsquo;/gi, "'")
-    .replace(/&ldquo;/gi, '"')
-    .replace(/&rdquo;/gi, '"')
-    .replace(/&hellip;/gi, '…')
-    .replace(/&mdash;/gi, '-')
-    .replace(/&ndash;/gi, '-')
+function stripHtml(html) {
+  return decodeHtml(html)
+    .replace(/<\/?[^>]+>/g, "")
+    .replace(/\s+/g, " ")
     .trim();
 }
 
-function formatArticleDate(pubDate) {
-  const date = new Date(pubDate);
-  if (isNaN(date)) return ''; // safety
-  const day = date.toLocaleDateString('en-CA', { month: 'short', day: 'numeric' });
-  const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
-  return `${day} ${time}`;
+function cleanCoLTitle(s = "") {
+  return stripHtml(s).replace(/\s*-\s*City of London\s*$/i, "");
 }
 
+function renderCoLFeed(articles) {
+  const featured = document.querySelector(".featured");
+  if (!featured) return;
 
-/* Color utilities for faithful-but-pretty colours */
-function beautifyColor(r,g,b){
-  r/=255; g/=255; b/=255;
-  const max=Math.max(r,g,b), min=Math.min(r,g,b);
-  let h,s,l=(max+min)/2;
-  if(max===min){ h=s=0; }
-  else{
-    const d=max-min;
-    s = l>0.5 ? d/(2-max-min) : d/(max+min);
-    switch(max){
-      case r: h=(g-b)/d + (g<b?6:0); break;
-      case g: h=(b-r)/d + 2; break;
-      case b: h=(r-g)/d + 4; break;
-    }
-    h/=6;
-  }
-  s = Math.min(0.7, s*1.2);
-  l = Math.min(0.6, l*1.3);
-  const hue2rgb=(p,q,t)=>{
-    if(t<0) t+=1; if(t>1) t-=1;
-    if(t<1/6) return p+(q-p)*6*t;
-    if(t<1/2) return q;
-    if(t<2/3) return p+(q-p)*(2/3 - t)*6;
-    return p;
-  };
-  let r2,g2,b2;
-  if(s===0){ r2=g2=b2=l; }
-  else{
-    const q=l<0.5 ? l*(1+s) : l + s - l*s;
-    const p=2*l-q;
-    r2=hue2rgb(p,q,h+1/3);
-    g2=hue2rgb(p,q,h);
-    b2=hue2rgb(p,q,h-1/3);
-  }
-  return [Math.round(r2*255),Math.round(g2*255),Math.round(b2*255)];
-}
-function rgbToHsl(r,g,b){
-  r/=255; g/=255; b/=255;
-  const max=Math.max(r,g,b), min=Math.min(r,g,b);
-  let h,s,l=(max+min)/2;
-  if(max===min){ h=s=0; }
-  else{
-    const d=max-min;
-    s = l>0.5 ? d/(2-max-min) : d/(max+min);
-    switch(max){
-      case r: h=(g-b)/d + (g<b?6:0); break;
-      case g: h=(b-r)/d + 2; break;
-      case b: h=(r-g)/d + 4; break;
-    }
-    h/=6;
-  }
-  return [h,s,l];
-}
-function hslToRgb(h,s,l){
-  const hue2rgb=(p,q,t)=>{
-    if(t<0) t+=1; if(t>1) t-=1;
-    if(t<1/6) return p+(q-p)*6*t;
-    if(t<1/2) return q;
-    if(t<2/3) return p+(q-p)*(2/3 - t)*6;
-    return p;
-  };
-  let r,g,b;
-  if(s===0){ r=g=b=l; }
-  else{
-    const q=l<0.5 ? l*(1+s) : l + s - l*s;
-    const p=2*l-q;
-    r=hue2rgb(p,q,h+1/3);
-    g=hue2rgb(p,q,h);
-    b=hue2rgb(p,q,h-1/3);
-  }
-  return [Math.round(r*255),Math.round(g*255),Math.round(b*255)];
-}
+  // Remove the image container entirely
+  const imageContainer = featured.querySelector(".image");
+  if (imageContainer) imageContainer.remove();
 
-/* Extract brand-ish colours from the source logo (with fallbacks) */
-async function getGradientFromLogo(logoUrl) {
-  return new Promise(resolve => {
-    const img = new Image();
-    img.crossOrigin = 'Anonymous';
-    img.src = logoUrl;
+  // Target text area
+  const container = featured.querySelector(".text");
+  if (!container) return;
 
-    img.onload = () => {
-      try {
-        const thief = new ColorThief();
-        let palette = thief.getPalette(img, 8);
-        if (!palette || !palette.length) throw new Error("No palette found");
-
-        // Compute vibrancy scores
-        const rgbToHsl = (r,g,b) => {
-          r/=255; g/=255; b/=255;
-          const max=Math.max(r,g,b), min=Math.min(r,g,b);
-          let h,s,l=(max+min)/2;
-          if(max===min){h=s=0;}
-          else{
-            const d=max-min;
-            s=l>0.5?d/(2-max-min):d/(max+min);
-            switch(max){
-              case r:h=(g-b)/d+(g<b?6:0);break;
-              case g:h=(b-r)/d+2;break;
-              case b:h=(r-g)/d+4;break;
-            }
-            h/=6;
-          }
-          return {h,s,l};
-        };
-
-        const scored = palette.map(([r,g,b])=>{
-          const {s,l}=rgbToHsl(r,g,b);
-          const distance = Math.sqrt(
-            (r-128)**2 + (g-128)**2 + (b-128)**2
-          )/255; // prefer colours far from neutral grey
-          const score = (s*1.3) + (distance*0.7) - Math.abs(l-0.5);
-          return {rgb:[r,g,b],score};
-        }).sort((a,b)=>b.score-a.score);
-
-        const [r,g,b] = scored[0].rgb;
-
-        // create tones
-		// Tuning factors (lower/higher values adjust globally)
-        const LIGHT_SAT_MULT = 1.25;
-        const LIGHT_LUM_MULT = 1.5;
-        const DARK_SAT_MULT  = 0.9;
-        const DARK_LUM_MULT  = 0.35;
-
-
-        const { h, s, l } = rgbToHsl(r, g, b);
-
-        const light = hslToRgb(
-          h,
-          Math.min(1, s * LIGHT_SAT_MULT),
-          Math.min(1, l * LIGHT_LUM_MULT)
-        );
-        
-        const dark = hslToRgb(
-          h,
-          Math.min(1, s * DARK_SAT_MULT),
-          Math.max(0, l * DARK_LUM_MULT)
-        );
-
-        const rgbStr = ([r,g,b])=>`rgb(${r},${g},${b})`;
-
-        resolve({
-          gradient: `
-            radial-gradient(at 20% 30%, ${rgbStr(light)}, transparent 60%),
-            radial-gradient(at 80% 70%, ${rgbStr([r,g,b])}, ${rgbStr(dark)} 80%)
-          `,
-          sourceColor: rgbStr([r,g,b]),
-          darkSourceColor: rgbStr(dark),
-          lightSourceColor: rgbStr(light)
-        });
-
-      } catch (err) {
-        // fallback colour
-        resolve({
-          gradient: 'radial-gradient(circle, #555, #222)',
-          sourceColor: 'rgb(85,85,85)',
-          darkSourceColor: 'rgb(34,34,34)',
-          lightSourceColor: 'rgb(110,110,110)'
-        });
-      }
-    };
-
-    img.onerror = () => resolve({
-      gradient: 'radial-gradient(circle, #555, #222)',
-      sourceColor: 'rgb(85,85,85)',
-      darkSourceColor: 'rgb(34,34,34)',
-      lightSourceColor: 'rgb(110,110,110)'
-    });
-  });
-}
-
-
-
-/* Optional Pexels fallback (kept from your previous build) */
-//async function getPexelsImage(query){
-//  const key = 'pexels_' + query.toLowerCase();
-//  const cached = localStorage.getItem(key);
-//  if (cached) return cached;
-//  try {
-//    const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`, {
-//      headers: { Authorization: PEXELS_API_KEY }
-//    });
-//    const data = await res.json();
-//    const url = data.photos?.[0]?.src?.landscape || null;
-//    if (url) localStorage.setItem(key, url);
-//    return url;
-//  } catch {
-//    return null;
-//  }
-//}
-
-/* ---------- Local Image Library ---------- */
-let imageLibrary = [];
-
-async function loadImageLibrary() {
-  if (imageLibrary.length) return imageLibrary;
-  try {
-    const res = await fetch('library.json', { cache: 'no-store' });
-    if (!res.ok) throw new Error(`library.json HTTP ${res.status}`);
-    const data = await res.json();
-    imageLibrary = Object.entries(data).map(([filename, tags]) => ({
-      filename,
-      tags: (tags || []).map(t => String(t).toLowerCase())
-    }));
-    // expose for debugging only
-    window.imageLibrary = imageLibrary;
-    console.log('Loaded imageLibrary:', imageLibrary.length, 'items');
-    return imageLibrary;
-  } catch (err) {
-    console.error('Failed to load library.json:', err);
-    imageLibrary = [];
-    window.imageLibrary = imageLibrary;
-    return imageLibrary;
-  }
-}
-
-
-function extractKeywords(text) {
-  if (!text) return [];
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9\s]/g, '')
-    .split(/\s+/)
-    .filter(w => w.length > 2);
-}
-
-
-function findBestImageForHeadline(headline) {
-  const keywords = extractKeywords(headline);
-  if (!keywords.length || !imageLibrary.length) return null;
-
-  let best = null;
-  let bestScore = 0;
-
-  for (const item of imageLibrary) {
-    let score = 0;
-    for (const key of keywords) {
-      if (item.tags.includes(key)) score += 5;
-      else if (item.tags.some(t => t.includes(key))) score += 3;
-      else if (item.tags.some(t => key.includes(t))) score += 2;
-    }
-    if (score > bestScore) {
-      bestScore = score;
-      best = item;
-    }
-  }
-  console.log("Headline:", headline, "→", best?.filename, "score:", bestScore);
-  return bestScore >= 1 ? best.filename : null;
-}
-
-
-/* ---------- Rendering ---------- */
-function makeCardDOM(item, source) {
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.dataset.source = source.name;
-  
-  // --- Local image selection ---
-  let localImage = null;
-  if (imageLibrary.length) {
-    localImage = findBestImageForHeadline(item.title);
-  }
-  const chosen = localImage || 'News.svg';
-  
-  // --- Background colour ---
-  card.style.backgroundColor = source._colors?.darkSourceColor || '#222';
-  card.style.setProperty('--source-color', source._colors?.sourceColor || 'rgba(255,255,255,0.5)');
-  card.style.setProperty('--dark-source-color', source._colors?.darkSourceColor || '#222');
-  card.style.setProperty('--light-source-color', source._colors?.lightSourceColor || '#222');
-
-
-  
-  // --- Foreground SVG layer ---
-  const svgLayer = document.createElement('div');
-  svgLayer.className = 'card-art';
-  svgLayer.style.backgroundImage = `url('images/articles/${chosen}')`;
-  card.appendChild(svgLayer);
-
-
-
-
-
-
-  // --- Source header ---
-  const header = document.createElement('div');
-  header.className = 'source-header';
-  if (source.logo) {
-    const logo = document.createElement('img');
-    logo.src = source.logo;
-    logo.alt = source.name;
-    logo.className = 'source-logo';
-    header.appendChild(logo);
-  }
-  const name = document.createElement('span');
-  name.textContent = source.name;
-  name.className = 'source-name';
-  header.appendChild(name);
-  card.appendChild(header);
-
-  // --- Info ---
-  const info = document.createElement('div');
-  info.className = 'info';
-  const h2 = document.createElement('h2');
-  h2.textContent = truncateWords(normalizeHeadline(cleanTitle(item.title, source.name)), 18);
-  const meta = document.createElement('div');
-  meta.className = 'meta';
-  meta.textContent = `${formatArticleDate(item.pubDate)} • ${source.name}`;
-  info.appendChild(h2);
-  info.appendChild(meta);
-  card.appendChild(info);
-
-  // --- Content ---
-  const content = document.createElement('div');
-  content.className = 'content';
-  const p = document.createElement('p');
-  p.textContent = truncateWords(
-    stripHtmlTags(item.content || item.description || '')
-      .replace(/Read More/gi, '')
-      .trim(),
-    44
+  // Filter City of London articles
+  const colArticles = articles.filter(
+    a => a.title && a.title.toLowerCase().includes("city of london")
   );
-  const blurLayer = document.createElement('div');
-  blurLayer.part = 'blur';
-  card.appendChild(blurLayer);
 
-  const a = document.createElement('a');
-  a.href = item.link;
-  a.target = '_blank';
-  a.rel = 'noopener';
-  a.textContent = 'Read Full Article';
-  content.appendChild(p);
-  content.appendChild(a);
-  card.appendChild(content);
-
-  // --- Share button ---
-  const shareBtn = document.createElement('button');
-  shareBtn.className = 'share-btn';
-  shareBtn.innerHTML = `<i class='bx bx-dots-horizontal-rounded'></i>`;
-  shareBtn.addEventListener('click', async (e) => {
-    e.stopPropagation();
-    const articleUrl = item.link;
-    if (navigator.share) {
-      try {
-        await navigator.share({
-          title: decodeEntities(item.title || "London News"),
-          text: "Check out this article:",
-          url: articleUrl
-        });
-      } catch {}
-    } else {
-      await navigator.clipboard.writeText(articleUrl);
-      showToast("Link copied!");
-    }
-  });
-  card.appendChild(shareBtn);
-
-  // --- Card click ---
-  card.addEventListener('click', (e) => {
-    if (e.target.tagName === 'A' || e.target.classList.contains('share-btn')) return;
-    if (state.openCard && state.openCard !== card) {
-      state.openCard.classList.remove('active');
-    }
-    const nowActive = !card.classList.contains('active');
-    card.classList.toggle('active', nowActive);
-    state.openCard = nowActive ? card : null;
-  });
-
-  return card;
-}
-
-
-function renderGrid(){
-  gridEl.innerHTML = '';
-  if(!state.articles.length){
-    const empty = document.createElement('div');
-    empty.className = 'empty';
-    empty.textContent = 'No stories. Try refreshing.';
-    gridEl.appendChild(empty);
+  // Fallback if none found
+  if (!colArticles.length) {
+    container.innerHTML = `<div class="col-slider"><h2>City of London Newsroom</h2></div>`;
     return;
   }
-  const sorted = state.articles.sort((a,b)=> new Date(b.pubDate)-new Date(a.pubDate));
-  sorted.forEach(item => gridEl.appendChild(item.card));
+
+  // Build slider structure
+  container.innerHTML = `
+    <div class="col-slider">
+      <button class="col-prev"><i class='bx bx-chevron-left'></i></button>
+      <div class="col-slide">
+        <h2></h2>
+        <div class="col-date"></div>
+      </div>
+      <button class="col-next"><i class='bx bx-chevron-right'></i></button>
+    </div>
+    <div class="col-dots"></div>
+  `;
+
+  const titleEl = container.querySelector(".col-slide h2");
+  const dateEl = container.querySelector(".col-slide .col-date");
+  const prevBtn = container.querySelector(".col-prev");
+  const nextBtn = container.querySelector(".col-next");
+  const dotsContainer = container.querySelector(".col-dots");
+
+  let index = 0;
+  let timer;
+
+  // Create dots
+  colArticles.forEach((_, i) => {
+    const dot = document.createElement("span");
+    dot.addEventListener("click", () => showSlide(i, true));
+    dotsContainer.appendChild(dot);
+  });
+
+  function showSlide(i, manual = false) {
+    index = (i + colArticles.length) % colArticles.length;
+    const a = colArticles[index];
+    titleEl.textContent = cleanCoLTitle(a.title || "");
+    let divider = container.querySelector(".col-slide .divider");
+    if (!divider) {
+		divider = document.createElement("div");
+      divider.className = "divider";
+      dateEl.before(divider);
+    }
+    dateEl.textContent = new Date(a.pubDate).toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric"
+    });
+
+
+    dotsContainer.querySelectorAll("span").forEach((d, j) =>
+      d.classList.toggle("active", j === index)
+    );
+
+    titleEl.onclick = () => window.open(a.link, "_blank");
+
+    if (!manual && colArticles.length > 1) {
+      clearTimeout(timer);
+      timer = setTimeout(() => showSlide(index + 1), 5000);
+    }
+  }
+
+  prevBtn.onclick = () => showSlide(index - 1, true);
+  nextBtn.onclick = () => showSlide(index + 1, true);
+
+  if (colArticles.length === 1) {
+    prevBtn.style.display = "none";
+    nextBtn.style.display = "none";
+    dotsContainer.style.display = "none";
+  }
+
+  showSlide(0);
 }
 
-/* ---------- Feed loading (Worker proxy + cache) ---------- */
-async function loadFeed(source){
-  const cachedUrl = workerCached(source.url);
-  const liveUrl   = workerLive(source.url);
-  let data = null;
-
-  try{
-    const cachedRes = await fetch(cachedUrl);
-    if(cachedRes.ok) data = await cachedRes.json();
-  }catch{}
-
-  if(!data || !data.items || !data.items.length){
-    const liveRes = await fetch(liveUrl);
-    data = await liveRes.json();
-  }
-  if(!data.items) return;
-
-  // Compute per-source colours once (for no-image cards)
-    if(!source._colors){
-      source._colors = await getGradientFromLogo(source.logo);
-    }
 
 
-  for(const item of data.items){
-    item.pubDate ||= item.isoDate || item.published || item.date || new Date().toISOString();
-
-    // Decide thumbnail:
-    let hasImage = !!item.thumbnail;
-    // If the thumbnail is a generated placeholder URL, treat as no-image:
-    if(hasImage && /placehold\.co/.test(item.thumbnail)) hasImage = false;
-
-    // Try a Pexels fallback image if the article has no image
-    //if (!hasImage) {
-    //  const fallback = await getPexelsImage(cleanTitle(item.title, source.name));
-    //  if (fallback) {
-    //    item.thumbnail = fallback;
-    //    hasImage = true;
-    //  }
-    //}
 
 
-    const id = btoa(item.link);
-    if(state.articles.some(a => a.id === id)) continue;
-
-    const card = makeCardDOM(item, source);
-    state.articles.push({ ...item, card, id });
-  }
+function renderICYMI(articles) {
+  const today = new Date().toDateString();
+  const older = articles.filter(a => new Date(a.pubDate).toDateString() !== today);
+  const grid = document.querySelector('.articles .grid');
+  grid.innerHTML = older.slice(0, 4).map(a => `
+    <article>
+      <img src="${a.thumbnail || 'images/placeholder/fallback.jpeg'}">
+      <h3>${a.title}</h3>
+    </article>
+  `).join('');
 }
 
-
-
-
-async function loadAllFeeds(){
-  gridEl.innerHTML = '<div class="empty">Loading feeds…</div>';
-  state.articles = [];
-
-  try{
-    const feedRes = await fetch('feeds.json');
-    const feedData = await feedRes.json();
-    state.allSources = Object.values(feedData).flat();
-
-    await Promise.all(state.allSources.map(loadFeed));
-
-    renderGrid();
-    localStorage.setItem('feedCache_grid', JSON.stringify(state.articles.map(a=>({
-      id:a.id,
-      link:a.link,
-      title:a.title,
-      pubDate:a.pubDate,
-      description:a.description,
-      content:a.content,
-      thumbnail:a.thumbnail || null,
-      sourceName:a.card?.dataset?.source || '',
-      sourceColor:a.sourceColor || null,
-      darkSourceColor:a.darkSourceColor || null
-    })) ));
-    localStorage.setItem('feedTimestamp_grid', Date.now());
-    showToast();
-  }catch(err){
-    gridEl.innerHTML = `<div class="empty">Error loading feeds: ${err.message}</div>`;
-  }
-}
-
-/* ---------- Cached boot ---------- */
-(function bootFromCache(){
-  const saved = localStorage.getItem('feedCache_grid');
-  const savedAt = localStorage.getItem('feedTimestamp_grid');
-  if(saved && savedAt && Date.now() - savedAt < 1000*60*30){
-    try{
-      const cacheItems = JSON.parse(saved);
-      state.articles = cacheItems.map(ci=>{
-        const source = { name: ci.sourceName || 'Source', logo: null };
-        const item = {
-          link: ci.link, title: ci.title, pubDate: ci.pubDate,
-          description: ci.description, content: ci.content,
-          thumbnail: ci.thumbnail, sourceColor: ci.sourceColor, darkSourceColor: ci.darkSourceColor
-        };
-        const card = makeCardDOM(item, source);
-        return { ...item, card, id: ci.id };
-      });
-      renderGrid();
-    }catch(e){
-      console.warn('Local cache corrupted, refetching');
-    }
+(async () => {
+  try {
+    const articles = await loadArticles();
+    renderHero(articles);
+    generateWordCloud(articles);
+    renderTodaysHeadlines(articles);
+    renderCoLFeed(articles);
+    renderICYMI(articles);
+  } catch (err) {
+    console.error("Error loading articles:", err);
   }
 })();
-
-
-
-
 </script>
 
-<!-- ColorThief for logo-based palette -->
-<script src="https://unpkg.com/colorthief/dist/color-thief.umd.js"></script>
+
 <script>
-/* Date */
-(function setDate(){
-  const el=document.getElementById("currentDate");
-  const today=new Date();
-  el.textContent=today.toLocaleDateString("en-US",{month:"long",day:"numeric"});
-})();
-
-/* Scroll Hide/Show for Frosted Topbar */
-let lastScroll=0;
-const topbar=document.getElementById('topbar');
-window.addEventListener('scroll',()=>{
-  const curr=window.scrollY;
-  if(curr>lastScroll && curr>80){ topbar.classList.add('hidden'); }
-  else if(curr<lastScroll-10){ topbar.classList.remove('hidden'); }
-  lastScroll=curr;
-});
-
-/* Button Logic */
-const backBtn=document.getElementById('backToTopBtn');
-window.addEventListener('scroll',()=>{
-  if(window.scrollY>400) backBtn.classList.add('visible');
-  else backBtn.classList.remove('visible');
-});
-backBtn.addEventListener('click',()=>window.scrollTo({top:0,behavior:'smooth'}));
-
-const refreshBtn=document.getElementById('refreshBtn');
-refreshBtn.addEventListener('click',()=>{
-  const icon=refreshBtn.querySelector('i');
-  icon.classList.add('bx-spin');
-  setTimeout(()=>icon.classList.remove('bx-spin'),1500);
-});
-
-</script>
-<script>
-/* Fade between date and weather with right-side icons */
-(async function fadeDateWeather(){
-  const el = document.getElementById("currentDate");
-
-  function setText(newText, instant = false){
-    if (instant) {
-      el.style.transition = "none";
-      el.innerHTML = newText;
-      el.style.opacity = 1;
-      requestAnimationFrame(() => {
-        el.style.transition = "opacity 0.8s ease";
-      });
-    } else {
-      el.style.opacity = 0;
-      setTimeout(() => {
-        el.innerHTML = newText;
-        el.style.opacity = 1;
-      }, 400);
-    }
+(async () => {
+  try {
+    const articles = await loadArticles();
+    renderHero(articles);
+    generateWordCloud(articles);
+    renderTodaysHeadlines(articles);
+    renderCoLFeed(articles);
+    renderICYMI(articles);
+  } catch (err) {
+    console.error("Error loading articles:", err);
   }
-
-  // initial date (instant)
-  const today = new Date();
-  const dateText = today.toLocaleDateString("en-US",{month:"long",day:"numeric"});
-  setText(dateText, true);
-
-  // fetch weather
-  async function getWeather(){
-    try {
-      const res = await fetch("https://api.open-meteo.com/v1/forecast?latitude=42.9837&longitude=-81.2497&current_weather=true");
-      const data = await res.json();
-      const temp = Math.round(data.current_weather.temperature);
-      const symbol = "°C";
-      const code = data.current_weather.weathercode;
-
-      const map = [
-        { codes: [0], label: "Clear", icon: "☀️" },
-        { codes: [1, 2], label: "Partly Cloudy", icon: "🌤️" },
-        { codes: [3], label: "Cloudy", icon: "☁️" },
-        { codes: [45, 48], label: "Fog", icon: "🌫️" },
-        { codes: [51, 53, 55], label: "Drizzle", icon: "🌦️" },
-        { codes: [61, 63, 65], label: "Rain", icon: "🌧️" },
-        { codes: [66, 67], label: "Freezing Rain", icon: "🌨️" },
-        { codes: [71, 73, 75, 77, 85, 86], label: "Snow", icon: "❄️" },
-        { codes: [80, 81, 82], label: "Showers", icon: "🌦️" },
-        { codes: [95, 96, 99], label: "Thunderstorm", icon: "⛈️" }
-      ];
-
-      const entry = map.find(e => e.codes.includes(code)) || { label: "Unknown", icon: "🌡️" };
-      return `${temp}${symbol} • ${entry.label} ${entry.icon}`;
-    } catch (e){
-      console.warn("Weather fetch failed", e);
-      return null;
-    }
-  }
-
-  const weatherText = await getWeather();
-
-  // alternate every 6 s
-  let showingDate = true;
-  setInterval(()=>{
-    showingDate = !showingDate;
-    setText(showingDate ? dateText : (weatherText || dateText));
-  }, 3000);
-})();
-</script>
-<script>
-(async function initApp(){
-  // Step 1: Load local image library first
-  await loadImageLibrary();
-
-  // Step 2: Then load feeds
-  await loadAllFeeds();
 })();
 </script>
 
+	</body>
+	</html>
 
-
-
-
-
-</body>
-</html>
- 
 
