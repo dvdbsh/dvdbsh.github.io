@@ -17,7 +17,7 @@
   <meta name="mobile-web-app-capable" content="yes">
 
 <style>
-  :root {
+:root {
     --bg: #121212;
     --fg: #ffffff;  
     --card-bg: #3a3b3f;
@@ -26,13 +26,13 @@
     --gutter: 32px;
     --col-count: 3;
     --col-width: calc((100% - (var(--gutter) * (var(--col-count) - 1))) / var(--col-count));
-  }
+}
 
-  * {
+* {
     box-sizing: border-box;
-  }
+}
 
-  body {
+body {
     margin: 0;
     font-family: var(--font);
     background: var(--bg);
@@ -40,237 +40,160 @@
     padding-top: calc(85px + env(safe-area-inset-top));
     display: flex;
     justify-content: center;
-  }
-
-.topbar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  background: rgba(255,255,255,0.05);
-  border-bottom: 1px solid rgba(255,255,255,0.2);
-  backdrop-filter: blur(40px);
-  font-weight: 500;
-  font-size: 1.5rem;
-  font-family: 'PT Serif';
-  z-index: 1000;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: calc(env(safe-area-inset-top) + 20px) 20px 20px; /* balanced top/bottom */
-  height: calc(70px + env(safe-area-inset-top));
-  transition: transform 0.45s ease, opacity 0.35s ease;
-  line-height: 1.2;
 }
 
+/* ===================== TOPBAR ===================== */
+.topbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: rgba(255,255,255,0.05);
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(40px);
+    font-weight: 500;
+    font-size: 1.5rem;
+    font-family: 'PT Serif';
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: calc(env(safe-area-inset-top) + 20px) 20px 20px;
+    height: calc(70px + env(safe-area-inset-top));
+    transition: transform 0.45s ease, opacity 0.35s ease;
+    line-height: 1.2;
+}
 
-  .topbar.hidden {
+.topbar.hidden {
     transform: translateY(-100%);
     opacity: 0;
-  }
-  
-	.weather-display {
-	  display: flex;
-	  align-items: center;
-	  height: auto; /* let the content define height */
-	}
+}
+
+.weather-display {
+    display: flex;
+    align-items: center;
+}
 
 .weather-display img {
-  width: 38px;
-  height: 38px;
-  margin-left: 6px;
+    width: 38px;
+    height: 38px;
+    margin-left: 6px;
 }
-	
-#currentWeather {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  line-height: 1.2;
-}	
 
-  .grid {
+#currentWeather {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    line-height: 1.2;
+}
+
+/* ===================== GRID ===================== */
+.grid {
     max-width: 1200px;
     width: 100%;
     margin: 0 auto;
-  }
+}
 
-  .grid-sizer {
+.grid-sizer {
     width: var(--col-width);
-  }
+}
 
-  /* Base Card */
-  .card {
+/* ===================== BASE CARD ===================== */
+.card {
     position: relative;
     width: var(--col-width);
-    padding-top: 40px;
     margin-bottom: var(--gutter);
-    border: 0 solid rgba(255,255,255,0.2);
     border-radius: var(--radius);
     overflow: hidden;
     background: var(--card-bg);
     color: var(--fg);
     transition: transform 0.25s ease, filter 0.25s ease;
-    z-index: 0;
-    cursor: pointer;
     box-shadow: 0 0 35px #0d0d0d;
-  }
+    cursor: pointer;
+}
 
-  .card::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(to top, rgba(45,45,45,0.85), rgba(45,45,45,0.05));
-    mix-blend-mode: multiply;
-    z-index: 0;
-  }
-
-  .card-content {
-    position: relative;
-    z-index: 2;
-    padding: 1rem;
-    justify-content: flex-end;
+/* ===================== IMAGE CARD (TOP IMAGE + GRADIENT) ===================== */
+.card.image {
     display: flex;
     flex-direction: column;
-  }
+    overflow: hidden;
+    border-radius: var(--radius);
+	background: var(--card-bg);
+	
+}
 
-  .card.image .card-content {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+.card.image.has-color {
+    background: var(--avg-color, var(--card-bg));
+}
+
+.card.image > img {
+    flex-shrink: 0;
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    border-top-left-radius: var(--radius);
+    border-top-right-radius: var(--radius);
+    -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+    mask-image: linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%);
+}
+
+.card.image .card-content {
+    padding: 1.25rem 1rem 1.5rem;
+    background: transparent; /* card background set dynamically */
+    color: var(--fg);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    height: 100%;
-    padding: 1rem;
-  }
+}
 
-  .card h2 {
+/* ===================== HEADLINE / META ===================== */
+.card h2 {
     font-size: 1.9rem;
     font-weight: 700;
     font-family: 'Playfair Display';
     line-height: 1.1;
-    margin: 0 0 0.5rem;
-  }
+    margin: -2.7rem 0 0.5rem;
+}
 
-  .card p {
+.card:not(.image) h2 {
+    padding-top: 40px;
+	margin: 0 0 0.5rem;
+}
+
+.card p {
     font-size: 1rem;
-    font-weight: 400;
     line-height: 1.5;
     margin: 0;
-  }
+}
 
-  .meta {
+.meta {
     font-size: 0.8rem;
     opacity: 0.9;
     font-weight: 600;
-  }
+}
 
-  .card.image {
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    min-height: 300px;
-  }
-
-  /* Source Logo */
-  .source-logo {
+/* ===================== SOURCE LOGO ===================== */
+.source-logo {
     position: absolute;
     top: 12px;
     left: 16px;
-    z-index: 1;
-	height: 40px;
-	width: 40px;
+    z-index: 2;
+    height: 40px;
+    width: 40px;
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    transition: filter 0.3s ease, opacity 0.3s ease;
-    border-radius: 0px;
-  }
+}
 
-  .source-logo img {
+.source-logo img {
     width: 100%;
     height: 100%;
     object-fit: contain;
-  }
+}
 
-  /* Overlay for image cards */
-  .overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(255,255,255,0);
-    border: 0 solid rgba(255,255,255,0.2);
-    border-radius: var(--radius);
-    backdrop-filter: blur(40px);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 2rem;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    z-index: 4;
-  }
-
-  .overlay::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='150' height='150'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='2' stitchTiles='stitch'/></filter><rect width='150' height='150' filter='url(%23n)' opacity='0.3'/></svg>");
-    background-repeat: repeat;
-    background-size: 150px 150px;
-    mix-blend-mode: overlay;
-    opacity: 0.35;
-    z-index: 5;
-  }
-
-  .overlay p {
-    font-size: 1.1rem;
-    margin-bottom: 1.5rem;
-    opacity: 0.9;
-    max-width: 50ch;
-  }
-
-  .overlay button {
-    background: rgba(255,255,255,0.08);
-    border: 1px solid rgba(255,255,255,0.2);
-    backdrop-filter: blur(40px);
-    color: white;
-    font-weight: 400;
-    font-size: 1.1rem;
-    border-radius: 24px;
-    padding: 0.6rem 1.4rem;
-    cursor: pointer;
-    transition: background 0.2s ease;
-    width: 200px;
-  }
-
-  .overlay button:hover {
-    background: rgba(255,255,255,0.2);
-    backdrop-filter: blur(22px);
-  }
-
-  /* Open card state */
-  .card.open .card-content,
-  .card.open .source-logo {
-    filter: blur(6px);
-    opacity: 0.4;
-  }
-
-  .card.open:hover {
-    filter: brightness(1);
-  }
-
-  .card.open .overlay {
-    opacity: 1;
-    pointer-events: all;
-  }
-
-  /* Toast */
-  .toast {
+/* ===================== TOAST ===================== */
+.toast {
     position: fixed;
     bottom: 24px;
     left: 50%;
@@ -285,9 +208,10 @@
     transition: opacity 0.35s ease;
     z-index: 9999;
     backdrop-filter: blur(10px);
-  }
+}
 
-  .back-to-top {
+/* ===================== BACK TO TOP ===================== */
+.back-to-top {
     position: fixed;
     bottom: 32px;
     right: 32px;
@@ -308,55 +232,20 @@
     pointer-events: none;
     transition: opacity 0.4s ease, transform 0.3s ease, background 0.3s ease;
     z-index: 1000;
-  }
+}
 
-  .back-to-top:hover {
+.back-to-top:hover {
     background: rgba(255,255,255,0.2);
     transform: translateY(-3px);
-  }
+}
 
-  .back-to-top.visible {
+.back-to-top.visible {
     opacity: 1;
     pointer-events: auto;
-  }
+}
 
-  @media (max-width: 1000px) {
-    body {
-      padding-top: calc(75px + env(safe-area-inset-top));
-      padding-left: 20px;
-      padding-right: 20px;
-      background-color: #0a0a0a;
-    }
-
-    .grid {
-      display: block;
-      margin: 0;
-      padding: 20px 0;
-    }
-
-    .grid-sizer {
-      display: none;
-    }
-
-    .card {
-      width: 100% !important;
-      border-radius: var(--radius);
-      border-bottom: 0 solid var(--bg);
-      min-height: 220px;
-      margin-bottom: 20px;
-    }
-
-    .card:last-child {
-      border-bottom: none;
-    }
-
-    .overlay {
-      border-radius: 0;
-      border: 0;
-    }
-  }
-
-  .card.mesh {
+/* ===================== MESH CARD (UNCHANGED) ===================== */
+.card.mesh {
     position: relative;
     overflow: hidden;
     border-radius: var(--radius);
@@ -365,51 +254,71 @@
     transition: transform 0.25s ease, filter 0.25s ease;
     box-shadow: 0 0 15px #0d0d0d;
     display: grid;
-  }
+}
 
-  /* Mesh Gradient Layer */
-  .card.mesh::before {
+.card.mesh::before {
     content: "";
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(at 20% 30%, rgba(255,255,255,0.15) 0%, transparent 70%),
-      radial-gradient(at 80% 20%, rgba(255,0,150,0.25) 0%, transparent 60%),
-      radial-gradient(at 40% 80%, rgba(0,200,255,0.25) 0%, transparent 70%),
-      radial-gradient(at 70% 70%, rgba(255,200,0,0.2) 0%, transparent 65%);
+        radial-gradient(at 20% 30%, rgba(255,255,255,0.15) 0%, transparent 70%),
+        radial-gradient(at 80% 20%, rgba(255,0,150,0.25) 0%, transparent 60%),
+        radial-gradient(at 40% 80%, rgba(0,200,255,0.25) 0%, transparent 70%),
+        radial-gradient(at 70% 70%, rgba(255,200,0,0.2) 0%, transparent 65%);
     mix-blend-mode: overlay;
     opacity: 0.9;
     z-index: 0;
-  }
+}
 
-  /* Noise overlay stays the same */
-  .card.mesh .noise {
-    position: absolute;
-    inset: 0;
-    background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='150' height='150'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.6' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='150' height='150' filter='url(%23n)' opacity='0.25'/%3E%3C/svg%3E");
-    background-repeat: repeat;
-    background-size: 150px 150px;
-    mix-blend-mode: none;
-    opacity: 0.95;
-    pointer-events: none;
-    z-index: 1;
-  }
 
-  .card.mesh .card-content {
+
+.card.mesh .card-content {
     align-self: end;
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
     padding: 1rem 1rem 1.25rem;
-    min-height: 0;
-  }
+}
 
-  @media (min-width: 1001px) {
-    .topbar {
-      padding-left: calc((100% - 1200px) / 2);
-      padding-right: calc((100% - 1200px) / 2);
+/* ===================== RESPONSIVE ===================== */
+@media (max-width: 1000px) {
+    body {
+        padding-top: calc(75px + env(safe-area-inset-top));
+        padding-left: 20px;
+        padding-right: 20px;
+        background-color: #0a0a0a;
     }
-  }
+
+    .grid {
+        display: block;
+        margin: 0;
+        padding: 20px 0;
+    }
+
+    .grid-sizer {
+        display: none;
+    }
+
+    .card {
+        width: 100% !important;
+        border-radius: var(--radius);
+        margin-bottom: 20px;
+    }
+
+    .card.image img {
+        height: auto;
+        aspect-ratio: 16 / 9;
+    }
+}
+
+@media (min-width: 1001px) {
+    .topbar {
+        padding-left: calc((100% - 1200px) / 2);
+        padding-right: calc((100% - 1200px) / 2);
+    }
+}
+
+
 </style>
 
 </head>
@@ -618,59 +527,73 @@
        Card builders that match your Masonry front end
     ============================== */
     function buildImageCard(item, source, sourceColor) {
-      const card = document.createElement('div');
-      card.className = 'card image';
-      card.dataset.url = item.link;
-      card.style.backgroundImage = `url('${item.thumbnail}')`;
+        const card = document.createElement('div');
+        card.className = 'card image';
+        card.dataset.url = item.link;
 
-      const logoBox = document.createElement('div');
-      logoBox.className = 'source-logo';
-      if (source.logo) {
-        const img = document.createElement('img');
-        img.src = source.logo;
-        img.alt = source.name;
-        logoBox.appendChild(img);
-      }
-      card.appendChild(logoBox);
+        // Create an image element (for the top half)
+        const img = new Image();
+        img.crossOrigin = 'Anonymous';
+        const proxied = `${WORKER_BASE}/image?url=${encodeURIComponent(item.thumbnail)}`;
+        img.src = proxied;
+        img.style.width = '100%';
+        img.style.display = 'block';
+        img.style.borderTopLeftRadius = 'var(--radius)';
+        img.style.borderTopRightRadius = 'var(--radius)';
+        img.style.objectFit = 'cover';
+        img.style.height = '180px'; // adjust height as needed
 
-      const content = document.createElement('div');
-      content.className = 'card-content';
-      const h2 = document.createElement('h2');
-      h2.textContent = truncateWords(normalizeHeadline(cleanTitle(item.title, source.name)), 18);
-      const meta = document.createElement('span');
-      meta.className = 'meta';
-      meta.textContent = `${formatArticleDate(item.pubDate)} • ${source.name}`;
-      content.appendChild(h2);
-      content.appendChild(meta);
-      card.appendChild(content);
+        // Average color background (set once image loads)
+        img.onload = () => {
+            try {
+                const thief = new ColorThief();
+                const [r, g, b] = thief.getColor(img);
+                card.style.setProperty('--avg-color', `rgb(${r}, ${g}, ${b})`);
+                card.classList.add('has-color');
+            } catch (err) {
+                console.warn('Color extraction failed:', err);
+                card.style.setProperty('--avg-color', 'rgb(60,60,60)');
+                card.classList.add('has-color');
+            }
+        };
 
-      const overlay = document.createElement('div');
-      overlay.className = 'overlay';
-      const p = document.createElement('p');
-      p.textContent = truncateWords(
-        stripHtmlTags(item.content || item.description || '').replace(/Read More/gi, '').trim(),
-        28
-      );
-      const btn = document.createElement('button');
-      btn.textContent = 'Read Full Article';
-      btn.addEventListener('click', e => {
-        e.stopPropagation();
-        window.open(item.link, '_blank', 'noopener');
-      });
-      overlay.appendChild(p);
-      overlay.appendChild(btn);
-      card.appendChild(overlay);
 
-      // clicking image cards toggles preview
-      card.addEventListener('click', e => {
-        if (e.target.closest('button')) return;
-        document.querySelectorAll('.card.open').forEach(c => { if (c !== card) c.classList.remove('open'); });
-        card.classList.toggle('open');
-        relayout();
-      });
+        card.appendChild(img);
 
-      return card;
+        // Source logo
+        const logoBox = document.createElement('div');
+        logoBox.className = 'source-logo';
+        if (source.logo) {
+            const logoImg = document.createElement('img');
+            logoImg.src = source.logo;
+            logoImg.alt = source.name;
+            logoBox.appendChild(logoImg);
+        }
+        card.appendChild(logoBox);
+
+        // Content section (bottom half)
+        const content = document.createElement('div');
+        content.className = 'card-content';
+        const h2 = document.createElement('h2');
+        h2.textContent = truncateWords(
+            normalizeHeadline(cleanTitle(item.title, source.name)),
+            18
+        );
+        const meta = document.createElement('span');
+        meta.className = 'meta';
+        meta.textContent = `${formatArticleDate(item.pubDate)} • ${source.name}`;
+        content.appendChild(h2);
+        content.appendChild(meta);
+        card.appendChild(content);
+
+        // Click to open
+        card.addEventListener('click', () =>
+            window.open(item.link, '_blank', 'noopener')
+        );
+
+        return card;
     }
+
 
     function buildNoImageCard(item, source, colors) {
         const card = document.createElement('div');
