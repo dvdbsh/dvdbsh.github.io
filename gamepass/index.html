@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Game Pass Library</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <aside class="sidebar" id="sidebar" aria-hidden="true">
+    <div class="brand">
+      <span class="logo-dot"></span>
+      <span class="brand-name">Game Library</span>
+      <button class="close-sidebar" id="closeSidebar" aria-label="Close menu">
+        <i class='bx bx-x'></i>
+      </button>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" data-route="home">
+        <i class='bx bx-home'></i>
+        <span>Home</span>
+      </button>
+      <button class="nav-item" data-route="recent">
+        <i class='bx bx-time'></i>
+        <span>Recently added</span>
+      </button>
+      <div class="divider"></div>
+      <div class="nav-label">Genres</div>
+      <div id="genreList" class="genre-list"></div>
+    </nav>
+    <div class="spacer"></div>
+    <div class="footer">
+      <small>HTML, CSS, JS</small>
+    </div>
+  </aside>
+
+  <div class="menu-backdrop" id="menuBackdrop" aria-hidden="true"></div>
+
+  <main class="main">
+    <header class="topbar">
+      <button class="hamburger" id="openSidebar" aria-label="Open menu">
+        <i class='bx bx-menu'></i>
+      </button>
+      <div class="top-title">Game Library</div>
+      <div class="search">
+        <i class='bx bx-search'></i>
+        <input id="searchInput" type="text" placeholder="Search games">
+      </div>
+      <div class="pill" id="countPill">0 games</div>
+    </header>
+
+    <section class="surface">
+      <h1 id="sectionTitle">Home</h1>
+      <div id="grid" class="grid"></div>
+    </section>
+  </main>
+
+  <div id="modal" class="modal hidden" aria-hidden="true">
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-dialog" role="dialog" aria-modal="true">
+      <button class="modal-close" data-close aria-label="Close details">&times;</button>
+      <div class="modal-media">
+        <img id="modalCover" alt="cover">
+      </div>
+      <div class="modal-body">
+        <h2 id="modalTitle">Title</h2>
+        <div class="meta-row" id="modalMeta"></div>
+        <div class="action-row">
+          <button class="action-btn primary"><i class='bx bx-play'></i>Play on Xbox Cloud</button>
+          <button class="action-btn secondary"><i class='bx bx-heart'></i>Like</button>
+        </div>
+        <p id="modalDesc" class="desc"></p>
+        <div id="modalTags" class="tag-row"></div>
+      </div>
+    </div>
+  </div>
+
+  <template id="cardTpl">
+    <article class="card">
+      <div class="thumb-wrap">
+        <img class="thumb" loading="lazy" alt="cover">
+      </div>
+      <div class="card-meta">
+        <h3 class="card-title"></h3>
+      </div>
+    </article>
+  </template>
+
+  <script src="script.js"></script>
+</body>
+</html>
