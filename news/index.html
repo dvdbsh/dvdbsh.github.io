@@ -7,190 +7,190 @@
   <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap" rel="stylesheet" />
   <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
   <style>
-  /* ========================================
-      Root Variables
-  ======================================== */
-  :root {
-    --bg: #131313;
-    --fg: #fff;
-    --card: #1b1b1b;
-    --radius: 16px;
-    --accent: #588157;
-    --accent-dark: #3a5a40;
-    --muted: #a3b18a;      
-    --highlight: #dad7cd; 	
-    --font: 'Lexend', sans-serif;
-    --shadow: 0 0 0 rgba(0,0,0,0.25);
-  }
+/* ========================================
+   Root Variables
+======================================== */
+:root {
+  --bg: #131313;
+  --fg: #fff;
+  --card: #1b1b1b;
+  --radius: 16px;
+  --accent: #588157;
+  --accent-dark: #3a5a40;
+  --muted: #a3b18a;
+  --highlight: #dad7cd;
+  --font: 'Lexend', sans-serif;
+  --shadow: 0 0 0 rgba(0,0,0,0.25);
+}
 
-  /* ========================================
-      Base Reset
-  ======================================== */
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
+/* ========================================
+   Base Reset
+======================================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-  body {
-    background: var(--bg);
-    color: var(--fg);
-    font-family: var(--font);
-    line-height: 1.5;
-  }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--font);
+  line-height: 1.5;
+}
 
-  a {
-    color: var(--accent);
-    text-decoration: none;
-  }
-  a:hover {
-    text-decoration: underline;
-  }
+a {
+  color: var(--accent);
+  text-decoration: none;
+}
 
-  /* ========================================
-      Topbar
-  ======================================== */
-  .topbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 1rem 2rem;
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
-  }
+a:hover {
+  text-decoration: underline;
+}
 
-  /* Logo */
-  .topbar .logo {
-    font-weight: 700;
-    font-size: 1.4rem;
-  }
+/* ========================================
+   Topbar
+======================================== */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(10px);
+}
 
-  /* Source Icons */
+/* Logo */
+.topbar .logo {
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+
+/* Source Icons */
+.source-icons {
+  display: flex;
+  flex-direction: row-reverse; /* expand from right to left */
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Circular Buttons */
+.source-btn {
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  background: var(--bg, #222);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  cursor: pointer;
+  opacity: 0;
+  transform: scale(0.8) translateX(20px);
+  transition: transform 0.2s ease, opacity 0.2s ease;
+  animation-fill-mode: forwards;
+}
+
+.source-btn img {
+  width: 60%;
+}
+
+.source-btn:hover {
+  transform: scale(1.1);
+}
+
+/* Menu Toggle Buttons */
+.menu-toggle {
+  display: none;
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 1.8rem;
+  cursor: pointer;
+  z-index: 101;
+}
+
+.menu-toggle.close {
+  display: none;
+}
+
+/* ========================================
+   Responsive Topbar
+======================================== */
+@media (max-width: 700px) {
   .source-icons {
-    display: flex;
-    flex-direction: row-reverse; /* expand from right to left */
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 100%;
+    max-width: 300px;
+    height: 100vh;
+    background: rgba(0,0,0,0.90);
+    backdrop-filter: blur(10px);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
     align-items: center;
-    gap: 1rem;
+    align-content: center;
+    gap: 1.5rem;
+    padding: 5rem 1rem;
+    transform: translateX(100%);
+    transition: transform 0.4s ease;
+    z-index: 99;
   }
 
-  /* Circular Buttons */
-  .source-btn {
-    width: 54px;
-    height: 54px;
-    border-radius: 50%;
-    background: var(--bg, #222);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    cursor: pointer;
-    opacity: 0;
-    transform: scale(0.8) translateX(20px);
-    transition: transform 0.2s ease, opacity 0.2s ease;
-    animation-fill-mode: forwards;
+  .source-icons.show {
+    transform: translateX(0);
   }
 
-  .source-btn img {
-    width: 60%;
+  /* Hamburger open button */
+  .menu-toggle.open {
+    display: block;
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    z-index: 100;
   }
 
-  .source-btn:hover {
-    transform: scale(1.1);
-  }
-
-  /* Menu Toggle Buttons */
-  .menu-toggle {
+  /* Close button */
+  .menu-toggle.close {
     display: none;
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 1.8rem;
-    cursor: pointer;
+    position: fixed;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 2rem;
     z-index: 101;
   }
 
-  .menu-toggle.close {
-    display: none;
+  /* Larger buttons on mobile */
+  .source-btn {
+    width: 70px;
+    height: 70px;
+    background: var(--card, #222);
   }
 
-  /* ========================================
-      Responsive Topbar
-  ======================================== */
-  @media (max-width: 700px) {
-	.source-icons {
-	  position: fixed;
-	  top: 0;
-	  right: 0;
-	  width: 100%;
-	  max-width: 300px;
-	  height: 100vh;
-	  background: rgba(0,0,0,0.90);
-	  backdrop-filter: blur(10px);
-	  display: grid;
-	  grid-template-columns: repeat(3, 1fr);
-	  justify-items: center;
-	  align-items: center;
-	  align-content: center;
-	  gap: 1.5rem;
-	  padding: 5rem 1rem;
-	  transform: translateX(100%);
-	  transition: transform 0.4s ease;
-	  z-index: 99;
-	}
-
-	.source-icons.show {
-	  transform: translateX(0);
-	}
-
-
-    /* Hamburger open button */
-    .menu-toggle.open {
-      display: block;
-      position: absolute;
-      top: 1rem;
-      right: 1.5rem;
-      z-index: 100;
-    }
-
-    /* Close button */
-    .menu-toggle.close {
-      display: none;
-      position: fixed;
-      top: 1rem;
-      right: 1.5rem;
-      font-size: 2rem;
-      z-index: 101;
-    }
-
-    /* Larger buttons on mobile */
-    .source-btn {
-      width: 70px;
-      height: 70px;
-	  background: var(--card, #222);
-    }
-
-    /* Show close button when menu open */
-    .source-icons.show ~ .menu-toggle.close {
-      display: block;
-    }
+  /* Show close button when menu open */
+  .source-icons.show ~ .menu-toggle.close {
+    display: block;
   }
+}
 
-  /* ========================================
-      Layout & Content
-  ======================================== */
-  main {
-    max-width: 1200px;
-    margin: 2rem auto;
-    padding: 0 1rem;
-  }
+/* ========================================
+   Layout & Content
+======================================== */
+main {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
 
-  section {
-    margin-bottom: 3rem;
-  }
-  
+section {
+  margin-bottom: 3rem;
+}
+
 .real-content > h2 {
   position: relative;
   font-size: 2.2rem;
@@ -212,22 +212,20 @@
   -webkit-mask-size: auto 12px;
 }
 
+.real-content {
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
 
+.real-content.loaded,
+.real-content[style*="opacity: 1"] {
+  opacity: 1;
+}
 
-  .real-content {
-    opacity: 0;
-    transition: opacity 0.5s ease;
-  }
-  .real-content.loaded,
-  .real-content[style*="opacity: 1"] {
-    opacity: 1;
-  }
-
-
-  /* ========================================
-      Hero
-  ======================================== */
-  /* Desktop-only hero layout */
+/* ========================================
+   Hero
+======================================== */
+/* Desktop-only hero layout */
 @media (min-width: 701px) {
   .hero {
     display: flex;
@@ -264,29 +262,27 @@
   }
 }
 
-  
-  
+/* ========================================
+   Grids
+======================================== */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 1.5rem;
+}
 
-
-  /* ========================================
-      Grids
-  ======================================== */
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .grid article {
-    background: var(--card);
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
-    transition: transform 0.2s ease;
-  }
-  .grid article:hover {
-    transform: translateY(-4px);
-  }
+.grid article {
+  background: var(--card);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* space out title and date */
+  height: 100%; /* ensure consistent card height */
+  position: relative;  /* needed for absolute child */
+}
 
 .grid .image-wrapper > img.card-img {
   width: 100%;
@@ -295,27 +291,55 @@
   display: block;
 }
 
-  .grid h3 {
-    padding: 1rem;
-    font-size: 1rem;
-	font-weight: 400;
-  }
+.grid h3 {
+  padding: 1rem;
+  font-size: 1rem;
+  font-weight: 400;
+  flex-grow: 1; /* allow title block to expand and push date down */
+}
 
-  /* ========================================
-      Featured
-  ======================================== */
+.open-article {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 1.6rem;
+  cursor: pointer;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.grid article:hover .open-article {
+  color: var(--accent);
+  transform: scale(1.2);
+}
+
+.open-article:hover,
+.open-article:focus {
+  color: var(--accent);
+  transform: scale(1.2);
+  outline: none;
+}
+
+.open-article i {
+  pointer-events: none; /* lets the button receive the click */
+}
 
 
-  .featured img {
-    width: 100%;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-  }
+/* ========================================
+   Featured
+======================================== */
+.featured img {
+  width: 100%;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
 
-  .featured .text {
-    padding: 1rem;
-    width: 100%;
-  }
+.featured .text {
+  padding: 1rem;
+  width: 100%;
+}
 
 /* ========================================
   Weather Section
@@ -407,124 +431,132 @@
   margin-top: 0.3rem;
 }
 
-
-
-  /* ========================================
-      Footer
-  ======================================== */
-  .footer {
-    background: #000;
-    padding: 2rem;
-    color: #aaa;
-  }
-
-  .footer .cols {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 2rem;
-  }
-
-  .footer h4 {
-    color: #fff;
-    margin-bottom: 0.5rem;
-  }
-
-  .footer ul {
-    list-style: none;
-    padding: 0;
-  }
-  .footer li {
-    margin-bottom: 0.5rem;
-  }
-
-  .copy {
-    text-align: center;
-    margin-top: 2rem;
-    color: #666;
-  }
-
-  /* ========================================
-      Skeleton Loaders
-  ======================================== */
-  @keyframes shimmer {
-    0% { background-position: -300px 0; }
-    100% { background-position: 300px 0; }
-  }
-
-  .skeleton {
-    background: linear-gradient(
-      90deg,
-      rgba(255,255,255,0.04) 25%,
-      rgba(255,255,255,0.1) 50%,
-      rgba(255,255,255,0.04) 75%
-    );
-    background-size: 400px 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-  }
-
-  .skeleton.hero { height: 400px; }
-
-  .skeleton-card,
-  .skeleton-feature,
-  .skeleton-video {
-    border-radius: var(--radius);
-    animation: shimmer 1.5s infinite;
-    background: linear-gradient(
-      90deg,
-      rgba(255,255,255,0.04) 25%,
-      rgba(255,255,255,0.1) 50%,
-      rgba(255,255,255,0.04) 75%
-    );
-    background-size: 400px 100%;
-    box-shadow: var(--shadow);
-  }
-
-  .skeleton-card { height: 250px; }
-  .skeleton-feature { height: 300px; }
-  .skeleton-video { height: 250px; }
-
-  /* ========================================
-      Source Button Pop Animation
-  ======================================== */
-  @keyframes popOut {
-    0% {
-      opacity: 0;
-      transform: scale(0.6) translateX(30px);
-    }
-    80% {
-      transform: scale(1.08);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1) translateX(0);
-    }
-  }
-
-  /* Animate on Desktop */
-  @media (min-width: 701px) {
-.source-icons .source-btn {
-  animation: popOut 0.4s ease forwards;
-  animation-delay: calc(var(--i) * 0.1s);
+/* ========================================
+   Footer
+======================================== */
+.footer {
+  background: #000;
+  padding: 2rem;
+  color: #aaa;
 }
 
-  }
-
-  /* Animate on Mobile Menu Open */
-  @media (max-width: 700px) {
-.source-icons .source-btn {
-  animation: popOut 0.4s ease forwards;
-  animation-delay: calc(var(--i) * 0.1s);
+.footer .cols {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 2rem;
 }
 
+.footer h4 {
+  color: #fff;
+  margin-bottom: 0.5rem;
+}
+
+.footer ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer li {
+  margin-bottom: 0.5rem;
+}
+
+.copy {
+  text-align: center;
+  margin-top: 2rem;
+  color: #666;
+}
+
+/* ========================================
+   Skeleton Loaders
+======================================== */
+@keyframes shimmer {
+  0% {
+    background-position: -300px 0;
   }
-  
+  100% {
+    background-position: 300px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.1) 50%,
+    rgba(255,255,255,0.04) 75%
+  );
+  background-size: 400px 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+.skeleton.hero {
+  height: 400px;
+}
+
+.skeleton-card,
+.skeleton-feature,
+.skeleton-video {
+  border-radius: var(--radius);
+  animation: shimmer 1.5s infinite;
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,0.04) 25%,
+    rgba(255,255,255,0.1) 50%,
+    rgba(255,255,255,0.04) 75%
+  );
+  background-size: 400px 100%;
+  box-shadow: var(--shadow);
+}
+
+.skeleton-card {
+  height: 250px;
+}
+.skeleton-feature {
+  height: 300px;
+}
+.skeleton-video {
+  height: 250px;
+}
+
+/* ========================================
+   Source Button Pop Animation
+======================================== */
+@keyframes popOut {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) translateX(30px);
+  }
+  80% {
+    transform: scale(1.08);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateX(0);
+  }
+}
+
+/* Animate on Desktop */
+@media (min-width: 701px) {
+  .source-icons .source-btn {
+    animation: popOut 0.4s ease forwards;
+    animation-delay: calc(var(--i) * 0.1s);
+  }
+}
+
+/* Animate on Mobile Menu Open */
+@media (max-width: 700px) {
+  .source-icons .source-btn {
+    animation: popOut 0.4s ease forwards;
+    animation-delay: calc(var(--i) * 0.1s);
+  }
+}
+
 /* ========================================
   Word Cloud Section
 ======================================== */
 .wordcloud {
-
 }
 
 .wordcloud h2 {
@@ -555,17 +587,26 @@
 }
 
 /* Randomized font sizing */
-.wordcloud-container span[data-size='1'] { font-size: 0.9rem; opacity: 0.6; }
-.wordcloud-container span[data-size='2'] { font-size: 1.1rem; }
-.wordcloud-container span[data-size='3'] { font-size: 1.3rem; }
-.wordcloud-container span[data-size='4'] { font-size: 1.6rem; }
-.wordcloud-container span[data-size='5'] { font-size: 2rem; }
+.wordcloud-container span[data-size='1'] {
+  font-size: 0.9rem;
+  opacity: 0.6;
+}
+.wordcloud-container span[data-size='2'] {
+  font-size: 1.1rem;
+}
+.wordcloud-container span[data-size='3'] {
+  font-size: 1.3rem;
+}
+.wordcloud-container span[data-size='4'] {
+  font-size: 1.6rem;
+}
+.wordcloud-container span[data-size='5'] {
+  font-size: 2rem;
+}
 
 /* ========================================
   City of London Slideshow (Fixed Size)
 ======================================== */
-
-
 .featured .col-slider {
   position: relative;
   display: flex;
@@ -593,7 +634,6 @@
   height: 100%;
   max-width: 800px;
   text-align: center;
-
 }
 
 .col-slide h2 {
@@ -606,7 +646,6 @@
   text-overflow: ellipsis;
   max-width: 90%;
   text-align: center;
-
 }
 
 .col-slide .divider {
@@ -640,8 +679,12 @@
   opacity: 1;
 }
 
-.col-prev { left: 1rem; }
-.col-next { right: 1rem; }
+.col-prev {
+  left: 1rem;
+}
+.col-next {
+  right: 1rem;
+}
 
 .col-dots {
   display: flex;
@@ -662,13 +705,11 @@
 .col-dots span.active {
   background: white;
 }
-  
 
 /* ========================================
   Mobile Hero Height
 ======================================== */
 @media (max-width: 700px) {
-
   .hero {
     position: relative;
     border-radius: var(--radius);
@@ -680,7 +721,7 @@
     width: 100%;
     border-radius: var(--radius);
     display: block;
-	height: 390px;
+    height: 390px;
     object-fit: cover;
   }
 
@@ -708,18 +749,19 @@
     width: 100%;
     padding: 2.5rem 1.5rem;
   }
-  
+
   .col-slide {
     width:100%;
-    }
+  }
 
   .col-slide h2 {
     font-size: 1.25rem;
   }
+
   .real-content > h2 {
     font-size: 1.8rem;
-	}
-}  
+  }
+}
 
 .image-wrapper {
   position: relative;
@@ -728,27 +770,20 @@
 
 .source-overlay {
   position: absolute;
-  top: 8px;
-  left: 8px;
-  height: 28px;       /* fixed logo height */
-  width: auto;        /* keep aspect ratio */
-  background: rgba(0,0,0,0.55);
-  padding: 4px 6px;
-  border-radius: 6px;
-  backdrop-filter: blur(6px);
-  box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+  top: 0.5rem;
+  left: 0.5rem;
+  height: 28px; 
+  width: auto; 
   z-index: 2;
 }
-
 
 .article-meta {
   font-size: 0.85rem;
   color: var(--muted);
   padding: 0 1rem 1rem 1rem;
   opacity: 0.85;
+  margin-top: auto; /* ensures date stays at bottom */
 }
-
-
   </style>
 </head>
 <body>
@@ -1273,32 +1308,57 @@ function renderTodaysHeadlines(articles) {
   const todays = articles.filter(a => new Date(a.pubDate).toDateString() === today);
   const grid = document.querySelector('.trending .grid');
 
-  grid.innerHTML = todays.slice(0, 4).map(a => {
-    const date = new Date(a.pubDate);
-    const timeStr = date.toLocaleTimeString("en-CA", {
-      hour: "2-digit",
-      minute: "2-digit"
-    });
-    const domain = a.link ? a.link.replace(/^https?:\/\//, '').split('/')[0] : "";
-    const logo = getSourceLogo(a.link, a.title);
+grid.innerHTML = todays.slice(0, 4).map(a => {
+  const date = new Date(a.pubDate);
+  const dateStr = date.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+  }).replace(",", "").replace(",", " at");
 
-    return `
-      <article data-link="${a.link}" style="cursor:pointer;">
-		<div class="image-wrapper">
-		  <img class="card-img" src="${a.thumbnail || 'images/placeholder/placeholder.svg'}" alt="">
-		  ${logo ? `<img class="source-overlay" src="${logo}" alt="logo">` : ""}
-		</div>
-        <h3>${a.title}</h3>
-        <p class="article-meta">${date.toLocaleDateString()} · ${timeStr}</p>
-      </article>
-    `;
-  }).join('');
+  const domain = a.link ? a.link.replace(/^https?:\/\//, '').split('/')[0] : "";
+  const logo = getSourceLogo(a.link, a.title);
+
+  return `
+    <article data-link="${a.link}" style="cursor:pointer;">
+      <div class="image-wrapper">
+        <img class="card-img" src="${a.thumbnail || 'images/placeholder/placeholder.svg'}" alt="">
+        ${logo ? `<img class="source-overlay" src="${logo}" alt="logo">` : ""}
+      </div>
+      <h3>${a.title}</h3>
+      <p class="article-meta">${dateStr}</p>
+      <button class="open-article" aria-label="Open article">
+        <i class='bx bx-right-arrow-circle'></i>
+      </button>
+    </article>
+  `;
+}).join('');
+
 
   grid.querySelectorAll('article').forEach(articleEl => {
-    articleEl.addEventListener('click', () => {
-      window.open(articleEl.dataset.link, '_blank');
-    });
+  const link = articleEl.dataset.link;
+
+  // When clicking the card background
+  articleEl.addEventListener('click', (e) => {
+    // Ignore clicks on the arrow button itself
+    if (!e.target.closest('.open-article')) {
+      window.open(link, '_blank');
+    }
   });
+
+  // When clicking the arrow button
+  const btn = articleEl.querySelector('.open-article');
+  if (btn) {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.open(link, '_blank');
+    });
+  }
+});
+
 }
 
 
@@ -1411,27 +1471,55 @@ function renderICYMI(articles) {
   const grid = document.querySelector('.articles .grid');
 
   grid.innerHTML = older.slice(0, 4).map(a => {
-    const date = new Date(a.pubDate);
-    const domain = a.link ? a.link.replace(/^https?:\/\//, '').split('/')[0] : "";
-    const logo = getSourceLogo(a.link, a.title);
+  const date = new Date(a.pubDate);
+  const dateStr = date.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+  }).replace(",", "").replace(",", " at");
 
-    return `
-      <article data-link="${a.link}" style="cursor:pointer;">
-		<div class="image-wrapper">
-		  <img class="card-img" src="${a.thumbnail || 'images/placeholder/placeholder.svg'}" alt="">
-		  ${logo ? `<img class="source-overlay" src="${logo}" alt="logo">` : ""}
-		</div>
-        <h3>${a.title}</h3>
-        <p class="article-meta">${date.toLocaleDateString()}</p>
-      </article>
-    `;
-  }).join('');
+  const domain = a.link ? a.link.replace(/^https?:\/\//, '').split('/')[0] : "";
+  const logo = getSourceLogo(a.link, a.title);
+
+  return `
+    <article data-link="${a.link}" style="cursor:pointer;">
+      <div class="image-wrapper">
+        <img class="card-img" src="${a.thumbnail || 'images/placeholder/placeholder.svg'}" alt="">
+        ${logo ? `<img class="source-overlay" src="${logo}" alt="logo">` : ""}
+      </div>
+      <h3>${a.title}</h3>
+      <p class="article-meta">${dateStr}</p>
+      <button class="open-article" aria-label="Open article">
+        <i class='bx bx-right-arrow-circle'></i>
+      </button>
+    </article>
+  `;
+}).join('');
+
 
   grid.querySelectorAll('article').forEach(articleEl => {
-    articleEl.addEventListener('click', () => {
-      window.open(articleEl.dataset.link, '_blank');
-    });
+  const link = articleEl.dataset.link;
+
+  // Whole card click
+  articleEl.addEventListener('click', (e) => {
+    if (!e.target.closest('.open-article')) {
+      window.open(link, '_blank');
+    }
   });
+
+  // Arrow button click
+  const btn = articleEl.querySelector('.open-article');
+  if (btn) {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      window.open(link, '_blank');
+    });
+  }
+});
+
 }
 
 
