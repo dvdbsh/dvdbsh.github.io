@@ -1194,10 +1194,17 @@ function getSourceLogo(link = "", title = "") {
 
 
 async function loadArticles() {
-  const res = await fetch('https://rss-proxy.davidbusch-02.workers.dev/local');
-  const data = await res.json();
-  return data.items; // standard RSS Worker format
+  const url = 'https://rss-proxy.davidbusch-02.workers.dev/local?_=' + Math.floor(Date.now() / 60000);
+  try {
+    const res = await fetch(url);
+    const data = await res.json();
+    return data.items;
+  } catch (err) {
+    console.warn("Feed load failed:", err);
+    return [];
+  }
 }
+
 
 
 
