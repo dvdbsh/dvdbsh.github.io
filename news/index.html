@@ -20,7 +20,7 @@
     --muted: #a3b18a;      
     --highlight: #dad7cd; 	
     --font: 'Lexend', sans-serif;
-    --shadow: 0 4px 12px rgba(0,0,0,0.25);
+    --shadow: 0 0 0 rgba(0,0,0,0.25);
   }
 
   /* ========================================
@@ -227,27 +227,46 @@
   /* ========================================
       Hero
   ======================================== */
+  /* Desktop-only hero layout */
+@media (min-width: 701px) {
   .hero {
-    position: relative;
-    border-radius: var(--radius);
-    overflow: hidden;
-    box-shadow: var(--shadow);
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
   }
 
   .hero img {
-    width: 100%;
-    border-radius: var(--radius);
-    display: block;
+    width: 55%;
+    height: auto;
+    object-fit: cover;
+    border-radius: var(--radius) 0 0 var(--radius);
   }
 
   .hero .overlay {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    padding: 2rem;
-    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+    position: static;
+    width: 45%;
+    padding: 2rem 2.5rem;
+    background: var(--card);
+    border-radius: 0 var(--radius) var(--radius) 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
+
+  .hero .overlay h1 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  .hero .overlay p {
+    font-size: 1rem;
+    color: var(--muted);
+  }
+}
+
+  
+  
+
 
   /* ========================================
       Grids
@@ -269,15 +288,17 @@
     transform: translateY(-4px);
   }
 
-  .grid img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-  }
+.grid .image-wrapper > img.card-img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
 
   .grid h3 {
     padding: 1rem;
     font-size: 1rem;
+	font-weight: 400;
   }
 
   /* ========================================
@@ -558,7 +579,7 @@
   max-width: 100%;
   height: 320px;
   min-height: 320px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  box-shadow: var(--shadow);
   text-align: center;
   overflow: hidden;
   margin: 0 auto;
@@ -647,13 +668,29 @@
   Mobile Hero Height
 ======================================== */
 @media (max-width: 700px) {
+
+  .hero {
+    position: relative;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+  }
+
   .hero img {
-    height: 390px;
+    width: 100%;
+    border-radius: var(--radius);
+    display: block;
+	height: 390px;
     object-fit: cover;
   }
 
   .hero .overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     padding: 1.5rem;
+    background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
   }
 
   .hero .overlay h1 {
@@ -683,6 +720,33 @@
     font-size: 1.8rem;
 	}
 }  
+
+.image-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.source-overlay {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  height: 28px;       /* fixed logo height */
+  width: auto;        /* keep aspect ratio */
+  background: rgba(0,0,0,0.55);
+  padding: 4px 6px;
+  border-radius: 6px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 3px 8px rgba(0,0,0,0.35);
+  z-index: 2;
+}
+
+
+.article-meta {
+  font-size: 0.85rem;
+  color: var(--muted);
+  padding: 0 1rem 1rem 1rem;
+  opacity: 0.85;
+}
 
 
   </style>
@@ -731,10 +795,10 @@
       <section class="section-wrapper hero-section">
         <div class="skeleton hero"></div>
         <section class="hero real-content">
-          <img src="https://picsum.photos/1200/500" alt="">
+          <img src="images/placeholder/placeholder.svg" alt="">
           <div class="overlay">
-            <h1>Top Story Headline Goes Here</h1>
-            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+            <h1>Loading headline...</h1>
+            <p>Loading article...</p>
           </div>
         </section>
       </section>
@@ -759,10 +823,10 @@
         <section class="trending real-content">
           <h2>Today's Headlines</h2>
           <div class="grid">
-            <article><img src="https://picsum.photos/400/250"><h3>Headline One</h3></article>
-            <article><img src="https://picsum.photos/401/250"><h3>Headline Two</h3></article>
-            <article><img src="https://picsum.photos/402/250"><h3>Headline Three</h3></article>
-            <article><img src="https://picsum.photos/403/250"><h3>Headline Four</h3></article>
+            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
+            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
+            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
+            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
           </div>
         </section>
       </section>
@@ -794,8 +858,8 @@
         <div class="skeleton-feature"></div>
         <section class="featured real-content">
           <div class="text">
-            <h2>City of London Newsroom</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Iure, eveniet?</p>
+            <h2>Loading headline...</h2>
+            <p>Loading article...</p>
           </div>
         </section>
       </section>
@@ -811,10 +875,10 @@
         <section class="articles real-content">
           <h2>In Case You Missed It</h2>
           <div class="grid">
-            <article><img src="https://picsum.photos/404/250"><h3>Local update headline</h3></article>
-            <article><img src="https://picsum.photos/405/250"><h3>Weather report headline</h3></article>
-            <article><img src="https://picsum.photos/406/250"><h3>Traffic update headline</h3></article>
-            <article><img src="https://picsum.photos/407/250"><h3>Community event headline</h3></article>
+            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
+            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
+            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
+            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
           </div>
         </section>
       </section>
@@ -1040,7 +1104,7 @@ function showSourcePage(filterKey, filterType, pageTitle) {
 
   sourceGridEl.innerHTML = filteredArticles.map(a => `
     <article data-link="${a.link}" style="cursor: pointer;">
-      <img src="${a.thumbnail || 'images/placeholder/fallback.jpeg'}" alt="">
+      <img src="${a.thumbnail || 'images/placeholder/placeholder.svg'}" alt="">
       <h3>${a.title}</h3>
     </article>
   `).join('');
@@ -1063,22 +1127,25 @@ function showMainPage() {
   mainContent.style.display = 'block';
 }
 
+let feedSources = []; // store the full feeds.json entries
+
 async function setupSourceFilters() {
   const res = await fetch("https://dvdbsh.github.io/news/feeds.json");
   const data = await res.json();
-  const feeds = data.Local || [];
+  feedSources = data.Local || [];
 
-  if (!Array.isArray(feeds)) {
+  if (!Array.isArray(feedSources)) {
     console.error("feeds.json format invalid:", data);
     return;
   }
 
   const filterMap = {};
 
-  for (const f of feeds) {
+  for (const f of feedSources) {
     const domain = f.url.replace(/^https?:\/\//, '').split('/')[0];
-    const isTitleBased = domain.includes('google.com') || f.name.toLowerCase().includes('city of london');
-    
+    const isTitleBased =
+      domain.includes('google.com') || f.name.toLowerCase().includes('city of london');
+
     filterMap[f.name] = {
       key: isTitleBased ? f.name.toLowerCase().replace('newsroom', '').trim() : domain,
       type: isTitleBased ? 'title' : 'link',
@@ -1101,12 +1168,38 @@ async function setupSourceFilters() {
   backButton.addEventListener('click', showMainPage);
 }
 
+// =======================================
+// getSourceLogo (new unified logic)
+// =======================================
+function getSourceLogo(link = "", title = "") {
+  if (!feedSources.length) return null;
+
+  const normalizedLink = (link || "").toLowerCase();
+  const normalizedTitle = (title || "").toLowerCase();
+
+  // Try to match by domain
+  for (const f of feedSources) {
+    const domain = f.url.replace(/^https?:\/\//, '').split('/')[0].toLowerCase();
+    if (normalizedLink.includes(domain)) return f.logo;
+  }
+
+  // Fallback: match by feed name
+  for (const f of feedSources) {
+    const name = f.name.toLowerCase();
+    if (normalizedTitle.includes(name)) return f.logo;
+  }
+
+  return null;
+}
+
 
 async function loadArticles() {
   const res = await fetch('https://rss-proxy.davidbusch-02.workers.dev/local');
   const data = await res.json();
   return data.items; // standard RSS Worker format
 }
+
+
 
 function renderHero(articles) {
   const hero = document.querySelector('.hero.real-content');
@@ -1173,19 +1266,34 @@ function renderTodaysHeadlines(articles) {
   const todays = articles.filter(a => new Date(a.pubDate).toDateString() === today);
   const grid = document.querySelector('.trending .grid');
 
-  grid.innerHTML = todays.slice(0, 4).map(a => `
-    <article data-link="${a.link}" style="cursor: pointer;">
-      <img src="${a.thumbnail || 'images/placeholder/fallback.jpeg'}" alt="">
-      <h3>${a.title}</h3>
-    </article>
-  `).join('');
+  grid.innerHTML = todays.slice(0, 4).map(a => {
+    const date = new Date(a.pubDate);
+    const timeStr = date.toLocaleTimeString("en-CA", {
+      hour: "2-digit",
+      minute: "2-digit"
+    });
+    const domain = a.link ? a.link.replace(/^https?:\/\//, '').split('/')[0] : "";
+    const logo = getSourceLogo(a.link, a.title);
+
+    return `
+      <article data-link="${a.link}" style="cursor:pointer;">
+		<div class="image-wrapper">
+		  <img class="card-img" src="${a.thumbnail || 'images/placeholder/placeholder.svg'}" alt="">
+		  ${logo ? `<img class="source-overlay" src="${logo}" alt="logo">` : ""}
+		</div>
+        <h3>${a.title}</h3>
+        <p class="article-meta">${date.toLocaleDateString()} · ${timeStr}</p>
+      </article>
+    `;
+  }).join('');
 
   grid.querySelectorAll('article').forEach(articleEl => {
     articleEl.addEventListener('click', () => {
-        window.open(articleEl.dataset.link, '_blank');
+      window.open(articleEl.dataset.link, '_blank');
     });
   });
 }
+
 
 function decodeHtml(html) {
   const txt = document.createElement("textarea");
@@ -1294,24 +1402,36 @@ function renderICYMI(articles) {
   const today = new Date().toDateString();
   const older = articles.filter(a => new Date(a.pubDate).toDateString() !== today);
   const grid = document.querySelector('.articles .grid');
-  grid.innerHTML = older.slice(0, 4).map(a => `
-    <article data-link="${a.link}" style="cursor: pointer;">
-      <img src="${a.thumbnail || 'images/placeholder/fallback.jpeg'}">
-      <h3>${a.title}</h3>
-    </article>
-  `).join('');
+
+  grid.innerHTML = older.slice(0, 4).map(a => {
+    const date = new Date(a.pubDate);
+    const domain = a.link ? a.link.replace(/^https?:\/\//, '').split('/')[0] : "";
+    const logo = getSourceLogo(a.link, a.title);
+
+    return `
+      <article data-link="${a.link}" style="cursor:pointer;">
+		<div class="image-wrapper">
+		  <img class="card-img" src="${a.thumbnail || 'images/placeholder/placeholder.svg'}" alt="">
+		  ${logo ? `<img class="source-overlay" src="${logo}" alt="logo">` : ""}
+		</div>
+        <h3>${a.title}</h3>
+        <p class="article-meta">${date.toLocaleDateString()}</p>
+      </article>
+    `;
+  }).join('');
 
   grid.querySelectorAll('article').forEach(articleEl => {
     articleEl.addEventListener('click', () => {
-        window.open(articleEl.dataset.link, '_blank');
+      window.open(articleEl.dataset.link, '_blank');
     });
   });
 }
 
+
 (async () => {
   try {
-    await setupSourceFilters();  // <-- first
-    allArticles = await loadArticles(); 
+    await setupSourceFilters();
+    allArticles = await loadArticles();
 
     renderHero(allArticles);
     generateWordCloud(allArticles);
@@ -1323,6 +1443,7 @@ function renderICYMI(articles) {
     console.error("Error loading articles:", err);
   }
 })();
+
 
 </script>
 
