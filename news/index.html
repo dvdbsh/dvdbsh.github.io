@@ -13,6 +13,7 @@
 :root {
   --bg: #131313;
   --fg: #fff;
+  --dark: #0f0f0f;
   --card: #1b1b1b;
   --radius: 16px;
   --accent: #588157;
@@ -196,21 +197,12 @@ section {
   font-size: 2.2rem;
   display: block;
   margin: 15px 0;
-  padding-bottom: 20px;
+  padding-top: 10px;
+  color: var(--accent);
+border-top: 8px solid var(--muted);
 }
 
-.real-content > h2::after {
-  content: "";
-  display: block;
-  width: 100%;
-  height: 12px;
-  margin-top: 10px;
-  background-color: var(--accent);
-  mask: url("images/squig.svg") repeat-x center;
-  -webkit-mask: url("images/squig.svg") repeat-x center;
-  mask-size: auto 12px;
-  -webkit-mask-size: auto 12px;
-}
+
 
 .real-content {
   opacity: 0;
@@ -295,13 +287,11 @@ section {
     font-size: 1.6rem;
     line-height: 1.2;
     color: #fff;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
   }
 
   .hero .overlay p {
     font-size: 0.95rem;
     color: #f1f1f1;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
   }
 }
 
@@ -360,7 +350,6 @@ section {
   .hero .hero-meta {
     font-size: 0.85rem;
     color: rgba(255,255,255,0.9);
-    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
   }
 
   .hero .hero-btn {
@@ -368,7 +357,6 @@ section {
     bottom: 1rem;
     right: 1rem;
     color: #fff;
-    text-shadow: 0 2px 6px rgba(0,0,0,0.6);
   }
 }
 
@@ -437,20 +425,6 @@ section {
   pointer-events: none; /* lets the button receive the click */
 }
 
-
-/* ========================================
-   Featured
-======================================== */
-.featured img {
-  width: 100%;
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-}
-
-.featured .text {
-  padding: 1rem;
-  width: 100%;
-}
 
 /* ========================================
   Weather Section
@@ -632,6 +606,134 @@ section {
 }
 
 /* ========================================
+   Featured (City of London Slideshow)
+======================================== */
+.featured {
+  display: flex;
+  justify-content: center;
+}
+
+.featured .text {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding: 1rem;
+}
+
+.featured .col-slider {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background: #006b3f;
+  border-radius: var(--radius);
+  padding: 3rem 2rem;
+  color: white;
+  width: 800px;
+  max-width: 100%;
+  height: 320px;
+  min-height: 320px;
+  box-shadow: var(--shadow);
+  text-align: center;
+  overflow: hidden;
+  margin: 0 auto;
+}
+
+.col-slide {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  max-width: 800px;
+  text-align: center;
+}
+
+.col-slide h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 1.2rem;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90%;
+}
+
+.col-slide .divider {
+  width: 80px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.8);
+  margin: 0 auto 1rem auto;
+}
+
+.col-slide .col-date {
+  font-size: 0.95rem;
+  opacity: 0.9;
+}
+
+/* Slideshow Controls */
+.col-prev,
+.col-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.col-prev:hover,
+.col-next:hover {
+  opacity: 1;
+}
+
+.col-prev { left: 1rem; }
+.col-next { right: 1rem; }
+
+.col-dots {
+  display: flex;
+  gap: 0.4rem;
+  margin-top: 1.5rem;
+  justify-content: center;
+}
+
+.col-dots .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: 0.5;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.col-dots .dot.active {
+  background: var(--accent);
+  opacity: 1;
+}
+
+.col-dots .dot.animate {
+  animation: dotTimer 5s linear forwards;
+}
+
+@keyframes dotTimer {
+  0% {
+    transform: scale(1.4);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+}
+
+
+/* ========================================
    Source Button Pop Animation
 ======================================== */
 @keyframes popOut {
@@ -715,129 +817,8 @@ section {
   font-size: 2rem;
 }
 
-/* ========================================
-  City of London Slideshow (Fixed Size)
-======================================== */
-.featured .col-slider {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  background: #006b3f;
-  border-radius: 16px;
-  padding: 3rem 2rem;
-  color: white;
-  width: 800px;
-  max-width: 100%;
-  height: 320px;
-  min-height: 320px;
-  box-shadow: var(--shadow);
-  text-align: center;
-  overflow: hidden;
-  margin: 0 auto;
-}
-
-.col-slide {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  max-width: 800px;
-  text-align: center;
-}
-
-.col-slide h2 {
-  font-size: 1.6rem;
-  font-weight: 700;
-  line-height: 1.35;
-  margin: 0 0 1.2rem 0;
-  cursor: pointer;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 90%;
-  text-align: center;
-}
-
-.col-slide .divider {
-  width: 80px;
-  height: 2px;
-  background: rgba(255, 255, 255, 0.8);
-  margin: 0 auto 1rem auto;
-}
-
-.col-slide .col-date {
-  font-size: 0.95rem;
-  opacity: 0.9;
-}
-
-.col-prev,
-.col-next {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background: transparent;
-  border: none;
-  color: white;
-  font-size: 2rem;
-  cursor: pointer;
-  opacity: 0.7;
-  transition: opacity 0.2s;
-}
-
-.col-prev:hover,
-.col-next:hover {
-  opacity: 1;
-}
-
-.col-prev {
-  left: 1rem;
-}
-.col-next {
-  right: 1rem;
-}
-
-.col-dots {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1.2rem;
-}
-
-.col-dots span {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.4);
-  cursor: pointer;
-  transition: background 0.3s;
-}
-
-.col-dots span.active {
-  background: white;
-}
 
 
-
-  .featured .col-slider {
-    height: 390px;
-    min-height: 260px;
-    width: 100%;
-    padding: 2.5rem 1.5rem;
-  }
-
-  .col-slide {
-    width:100%;
-  }
-
-  .col-slide h2 {
-    font-size: 1.25rem;
-  }
-
-  .real-content > h2 {
-    font-size: 1.8rem;
-  }
-}
 
 .image-wrapper {
   position: relative;
@@ -879,6 +860,40 @@ section {
   color: var(--highlight);
   font-weight: 500;
 }
+
+.read-more-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.read-more-btn {
+  background: none;
+  color: var(--muted);
+  border: 1px solid var(--muted);
+  border-radius: var(--radius);
+  padding: 0.7rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.read-more-btn i {
+  font-size: 1.3rem;
+  display: flex;
+  align-items: center;
+}
+
+.read-more-btn:hover {
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  transform: scale(1.05);
+}
+
 
 
   </style>
@@ -933,10 +948,10 @@ section {
 				<p>Loading article...</p>
 
 				<div class="hero-meta">
-				  <div class="meta-date">Nov 10, 2025</div>
+				  <div class="meta-date">Loading date...</div>
 				  <div class="meta-source-wrap">
-					<img class="meta-logo" src="images/logos/cbc.png" alt="">
-					<span class="meta-source">cbc.ca</span>
+					<img class="meta-logo" src="images/placeholder/logo.svg" alt="">
+					<span class="meta-source">Loading source...</span>
 				  </div>
 				</div>
 
@@ -1246,17 +1261,57 @@ function showSourcePage(filterKey, filterType, pageTitle) {
     filteredArticles = allArticles.filter(a => a.title && a.title.toLowerCase().includes(filterKey));
   }
 
-  sourceGridEl.innerHTML = filteredArticles.map(a => `
-    <article data-link="${a.link}" style="cursor: pointer;">
-      <img src="${a.thumbnail || 'images/placeholder/placeholder.svg'}" alt="">
-      <h3>${a.title}</h3>
-    </article>
-  `).join('');
+  sourceGridEl.innerHTML = filteredArticles.map(a => {
+    const date = new Date(a.pubDate);
+    const dateStr = date.toLocaleString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true
+    }).replace(",", "").replace(",", " at");
 
+    const domain = a.link ? a.link.replace(/^https?:\/\//, '').split('/')[0] : "";
+    const logo = getSourceLogo(a.link, a.title);
+
+    return `
+      <article data-link="${a.link}" style="cursor:pointer;">
+        <div class="image-wrapper">
+          <img class="card-img" src="${a.thumbnail || 'images/placeholder/placeholder.svg'}" alt="">
+        </div>
+        <h3>${a.title}</h3>
+        <div class="article-meta">
+          <div class="meta-date">${dateStr}</div>
+          <div class="meta-source-wrap">
+            ${logo ? `<img class="meta-logo" src="${logo}" alt="">` : ""}
+            <span class="meta-source">${domain}</span>
+          </div>
+        </div>
+        <button class="open-article" aria-label="Open article">
+          <i class='bx bx-right-arrow-circle'></i>
+        </button>
+      </article>
+    `;
+  }).join('');
+
+  // make cards clickable
   sourceGridEl.querySelectorAll('article').forEach(articleEl => {
-    articleEl.addEventListener('click', () => {
-        window.open(articleEl.dataset.link, '_blank');
+    const link = articleEl.dataset.link;
+
+    articleEl.addEventListener('click', (e) => {
+      if (!e.target.closest('.open-article')) {
+        window.open(link, '_blank');
+      }
     });
+
+    const btn = articleEl.querySelector('.open-article');
+    if (btn) {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        window.open(link, '_blank');
+      });
+    }
   });
 
   sourceTitleEl.textContent = `${pageTitle} (${filteredArticles.length})`;
@@ -1265,6 +1320,7 @@ function showSourcePage(filterKey, filterType, pageTitle) {
   sourceView.style.display = 'block';
   window.scrollTo(0, 0);
 }
+
 
 function showMainPage() {
   sourceView.style.display = 'none';
@@ -1355,14 +1411,40 @@ async function loadArticles() {
 function renderHero(articles) {
   const hero = document.querySelector('.hero.real-content');
   const story = articles.find(a => a.thumbnail && a.thumbnail !== '');
-
   if (!story) return;
 
-  hero.querySelector('img').src = story.thumbnail;
-  hero.querySelector('h1').textContent = story.title;
-  hero.querySelector('p').textContent = story.link.replace(/^https?:\/\//, '').split('/')[0];
-  hero.querySelector('img').addEventListener('click', () => window.open(story.link, '_blank'));
+  const imgEl = hero.querySelector('img');
+  const titleEl = hero.querySelector('h1');
+  const descEl = hero.querySelector('p');
+  const dateEl = hero.querySelector('.meta-date');
+  const sourceEl = hero.querySelector('.meta-source');
+  const logoEl = hero.querySelector('.meta-logo');
+
+  // Basic data
+  const date = new Date(story.pubDate);
+  const dateStr = date.toLocaleString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+
+  const domain = story.link ? story.link.replace(/^https?:\/\//, '').split('/')[0] : "";
+  const logo = getSourceLogo(story.link, story.title);
+
+  // Fill content
+  imgEl.src = story.thumbnail;
+  titleEl.textContent = story.title;
+  descEl.textContent = story.description
+    ? stripHtml(story.description).slice(0, 120) + "..."
+    : domain;
+  dateEl.textContent = dateStr;
+  sourceEl.textContent = domain;
+  if (logo) logoEl.src = logo;
+
+  // Click opens article
+  imgEl.addEventListener('click', () => window.open(story.link, '_blank'));
 }
+
 
 function generateWordCloud(articles) {
   const stopwords = new Set([
@@ -1416,64 +1498,88 @@ function renderTodaysHeadlines(articles) {
   const today = new Date().toDateString();
   const todays = articles.filter(a => new Date(a.pubDate).toDateString() === today);
   const grid = document.querySelector('.trending .grid');
+  const section = document.querySelector('.trending');
+  let visibleCount = 4;
 
-grid.innerHTML = todays.slice(0, 4).map(a => {
-  const date = new Date(a.pubDate);
-  const dateStr = date.toLocaleString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true
-  }).replace(",", "").replace(",", " at");
+  function renderGrid() {
+    grid.innerHTML = todays.slice(0, visibleCount).map(a => {
+      const date = new Date(a.pubDate);
+      const dateStr = date.toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+      }).replace(",", "").replace(",", " at");
 
-  const domain = a.link ? a.link.replace(/^https?:\/\//, '').split('/')[0] : "";
-  const logo = getSourceLogo(a.link, a.title);
+      const domain = a.link ? a.link.replace(/^https?:\/\//, '').split('/')[0] : "";
+      const logo = getSourceLogo(a.link, a.title);
 
-  return `
-    <article data-link="${a.link}" style="cursor:pointer;">
-      <div class="image-wrapper">
-        <img class="card-img" src="${a.thumbnail || 'images/placeholder/placeholder.svg'}" alt="">
-      </div>
-      <h3>${a.title}</h3>
-		<div class="article-meta">
-		  <div class="meta-date">${dateStr}</div>
-		  <div class="meta-source-wrap">
-			${logo ? `<img class="meta-logo" src="${logo}" alt="">` : ""}
-			<span class="meta-source">${domain}</span>
-		  </div>
-		</div>
-      <button class="open-article" aria-label="Open article">
-        <i class='bx bx-right-arrow-circle'></i>
-      </button>
-    </article>
-  `;
-}).join('');
+      return `
+        <article data-link="${a.link}" style="cursor:pointer;">
+          <div class="image-wrapper">
+            <img class="card-img" src="${a.thumbnail || 'images/placeholder/placeholder.svg'}" alt="">
+          </div>
+          <h3>${a.title}</h3>
+          <div class="article-meta">
+            <div class="meta-date">${dateStr}</div>
+            <div class="meta-source-wrap">
+              ${logo ? `<img class="meta-logo" src="${logo}" alt="">` : ""}
+              <span class="meta-source">${domain}</span>
+            </div>
+          </div>
+          <button class="open-article" aria-label="Open article">
+            <i class='bx bx-right-arrow-circle'></i>
+          </button>
+        </article>
+      `;
+    }).join('');
 
+    grid.querySelectorAll('article').forEach(articleEl => {
+      const link = articleEl.dataset.link;
 
-  grid.querySelectorAll('article').forEach(articleEl => {
-  const link = articleEl.dataset.link;
+      articleEl.addEventListener('click', (e) => {
+        if (!e.target.closest('.open-article')) {
+          window.open(link, '_blank');
+        }
+      });
 
-  // When clicking the card background
-  articleEl.addEventListener('click', (e) => {
-    // Ignore clicks on the arrow button itself
-    if (!e.target.closest('.open-article')) {
-      window.open(link, '_blank');
-    }
-  });
-
-  // When clicking the arrow button
-  const btn = articleEl.querySelector('.open-article');
-  if (btn) {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      window.open(link, '_blank');
+      const btn = articleEl.querySelector('.open-article');
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          window.open(link, '_blank');
+        });
+      }
     });
-  }
-});
 
+    if (visibleCount < todays.length) {
+      if (!section.querySelector('.read-more-container')) {
+        const readMoreContainer = document.createElement('div');
+        readMoreContainer.className = 'read-more-container';
+        readMoreContainer.innerHTML = `
+		  <button class="read-more-btn">
+			<i class='bx bx-plus-circle'></i>
+			<span>Read More</span>
+		  </button>
+		`;
+
+        section.appendChild(readMoreContainer);
+        readMoreContainer.querySelector('.read-more-btn').addEventListener('click', () => {
+          visibleCount += 8;
+          renderGrid();
+        });
+      }
+    } else {
+      const existing = section.querySelector('.read-more-container');
+      if (existing) existing.remove();
+    }
+  }
+
+  renderGrid();
 }
+
 
 
 function decodeHtml(html) {
@@ -1497,9 +1603,6 @@ function renderCoLFeed(articles) {
   const featured = document.querySelector(".featured");
   if (!featured) return;
 
-  const imageContainer = featured.querySelector(".image");
-  if (imageContainer) imageContainer.remove();
-
   const container = featured.querySelector(".text");
   if (!container) return;
 
@@ -1517,11 +1620,12 @@ function renderCoLFeed(articles) {
       <button class="col-prev"><i class='bx bx-chevron-left'></i></button>
       <div class="col-slide">
         <h2></h2>
+        <div class="divider"></div>
         <div class="col-date"></div>
       </div>
+      <div class="col-dots"></div>
       <button class="col-next"><i class='bx bx-chevron-right'></i></button>
     </div>
-    <div class="col-dots"></div>
   `;
 
   const titleEl = container.querySelector(".col-slide h2");
@@ -1529,13 +1633,20 @@ function renderCoLFeed(articles) {
   const prevBtn = container.querySelector(".col-prev");
   const nextBtn = container.querySelector(".col-next");
   const dotsContainer = container.querySelector(".col-dots");
+  const slider = container.querySelector(".col-slider");
 
   let index = 0;
-  let timer;
+  let timer = null;
+  let idleTimeout = null;
 
+  // Create dots
   colArticles.forEach((_, i) => {
     const dot = document.createElement("span");
-    dot.addEventListener("click", () => showSlide(i, true));
+    dot.classList.add("dot");
+    dot.addEventListener("click", () => {
+      showSlide(i, true);
+      resetIdleTimer();
+    });
     dotsContainer.appendChild(dot);
   });
 
@@ -1543,32 +1654,89 @@ function renderCoLFeed(articles) {
     index = (i + colArticles.length) % colArticles.length;
     const a = colArticles[index];
     titleEl.textContent = cleanCoLTitle(a.title || "");
-    let divider = container.querySelector(".col-slide .divider");
-    if (!divider) {
-        divider = document.createElement("div");
-      divider.className = "divider";
-      dateEl.before(divider);
-    }
     dateEl.textContent = new Date(a.pubDate).toLocaleDateString("en-US", {
       month: "long",
       day: "numeric"
     });
 
-
-    dotsContainer.querySelectorAll("span").forEach((d, j) =>
-      d.classList.toggle("active", j === index)
-    );
+    // Highlight active dot + restart animation
+    dotsContainer.querySelectorAll("span").forEach((d, j) => {
+      d.classList.toggle("active", j === index);
+      d.classList.remove("animate");
+    });
+    const activeDot = dotsContainer.querySelectorAll("span")[index];
+    void activeDot.offsetWidth; // Force reflow
+    activeDot.classList.add("animate");
 
     titleEl.onclick = () => window.open(a.link, "_blank");
 
-    if (!manual && colArticles.length > 1) {
-      clearTimeout(timer);
-      timer = setTimeout(() => showSlide(index + 1), 5000);
-    }
+    if (!manual) startAutoSlide();
   }
 
-  prevBtn.onclick = () => showSlide(index - 1, true);
-  nextBtn.onclick = () => showSlide(index + 1, true);
+  function startAutoSlide() {
+    clearTimeout(timer);
+    timer = setTimeout(() => {
+      showSlide(index + 1);
+    }, 5000);
+  }
+
+  function pauseAutoSlide() {
+    clearTimeout(timer);
+    clearTimeout(idleTimeout);
+  }
+
+  function resetIdleTimer() {
+    pauseAutoSlide();
+    idleTimeout = setTimeout(() => {
+      startAutoSlide();
+    }, 5000);
+  }
+
+  prevBtn.onclick = () => {
+    showSlide(index - 1, true);
+    resetIdleTimer();
+  };
+
+  nextBtn.onclick = () => {
+    showSlide(index + 1, true);
+    resetIdleTimer();
+  };
+
+  // Swipe Support
+  let startX = null;
+  slider.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+  });
+
+  slider.addEventListener("touchend", e => {
+    if (startX === null) return;
+    const endX = e.changedTouches[0].clientX;
+    const diff = startX - endX;
+    if (Math.abs(diff) > 30) {
+      if (diff > 0) showSlide(index + 1, true);
+      else showSlide(index - 1, true);
+      resetIdleTimer();
+    }
+    startX = null;
+  });
+
+  // Optional: mouse drag swipe on desktop
+  let mouseX = null;
+  slider.addEventListener("mousedown", e => (mouseX = e.clientX));
+  slider.addEventListener("mouseup", e => {
+    if (mouseX === null) return;
+    const diff = mouseX - e.clientX;
+    if (Math.abs(diff) > 30) {
+      if (diff > 0) showSlide(index + 1, true);
+      else showSlide(index - 1, true);
+      resetIdleTimer();
+    }
+    mouseX = null;
+  });
+
+  // Pause on hover
+  slider.addEventListener("mouseenter", pauseAutoSlide);
+  slider.addEventListener("mouseleave", resetIdleTimer);
 
   if (colArticles.length === 1) {
     prevBtn.style.display = "none";
@@ -1579,67 +1747,91 @@ function renderCoLFeed(articles) {
   showSlide(0);
 }
 
+
+
 function renderICYMI(articles) {
   const today = new Date().toDateString();
   const older = articles.filter(a => new Date(a.pubDate).toDateString() !== today);
   const grid = document.querySelector('.articles .grid');
+  const section = document.querySelector('.articles');
+  let visibleCount = 4;
 
-  grid.innerHTML = older.slice(0, 4).map(a => {
-  const date = new Date(a.pubDate);
-  const dateStr = date.toLocaleString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
-    hour12: true
-  }).replace(",", "").replace(",", " at");
+  function renderGrid() {
+    grid.innerHTML = older.slice(0, visibleCount).map(a => {
+      const date = new Date(a.pubDate);
+      const dateStr = date.toLocaleString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+      }).replace(",", "").replace(",", " at");
 
-  const domain = a.link ? a.link.replace(/^https?:\/\//, '').split('/')[0] : "";
-  const logo = getSourceLogo(a.link, a.title);
+      const domain = a.link ? a.link.replace(/^https?:\/\//, '').split('/')[0] : "";
+      const logo = getSourceLogo(a.link, a.title);
 
-  return `
-    <article data-link="${a.link}" style="cursor:pointer;">
-      <div class="image-wrapper">
-        <img class="card-img" src="${a.thumbnail || 'images/placeholder/placeholder.svg'}" alt="">
-      </div>
-      <h3>${a.title}</h3>
-		<div class="article-meta">
-		  <div class="meta-date">${dateStr}</div>
-		  <div class="meta-source-wrap">
-			${logo ? `<img class="meta-logo" src="${logo}" alt="">` : ""}
-			<span class="meta-source">${domain}</span>
-		  </div>
-		</div>
-      <button class="open-article" aria-label="Open article">
-        <i class='bx bx-right-arrow-circle'></i>
-      </button>
-    </article>
-  `;
-}).join('');
+      return `
+        <article data-link="${a.link}" style="cursor:pointer;">
+          <div class="image-wrapper">
+            <img class="card-img" src="${a.thumbnail || 'images/placeholder/placeholder.svg'}" alt="">
+          </div>
+          <h3>${a.title}</h3>
+          <div class="article-meta">
+            <div class="meta-date">${dateStr}</div>
+            <div class="meta-source-wrap">
+              ${logo ? `<img class="meta-logo" src="${logo}" alt="">` : ""}
+              <span class="meta-source">${domain}</span>
+            </div>
+          </div>
+          <button class="open-article" aria-label="Open article">
+            <i class='bx bx-right-arrow-circle'></i>
+          </button>
+        </article>
+      `;
+    }).join('');
 
+    grid.querySelectorAll('article').forEach(articleEl => {
+      const link = articleEl.dataset.link;
 
-  grid.querySelectorAll('article').forEach(articleEl => {
-  const link = articleEl.dataset.link;
+      articleEl.addEventListener('click', (e) => {
+        if (!e.target.closest('.open-article')) {
+          window.open(link, '_blank');
+        }
+      });
 
-  // Whole card click
-  articleEl.addEventListener('click', (e) => {
-    if (!e.target.closest('.open-article')) {
-      window.open(link, '_blank');
-    }
-  });
-
-  // Arrow button click
-  const btn = articleEl.querySelector('.open-article');
-  if (btn) {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      window.open(link, '_blank');
+      const btn = articleEl.querySelector('.open-article');
+      if (btn) {
+        btn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          window.open(link, '_blank');
+        });
+      }
     });
-  }
-});
 
+    if (visibleCount < older.length) {
+      if (!section.querySelector('.read-more-container')) {
+        const readMoreContainer = document.createElement('div');
+        readMoreContainer.className = 'read-more-container';
+        readMoreContainer.innerHTML = `		  <button class="read-more-btn">
+			<i class='bx bx-plus-circle'></i>
+			<span>Read More</span>
+		  </button>`;
+        section.appendChild(readMoreContainer);
+        readMoreContainer.querySelector('.read-more-btn').addEventListener('click', () => {
+          visibleCount += 8;
+          renderGrid();
+        });
+      }
+    } else {
+      const existing = section.querySelector('.read-more-container');
+      if (existing) existing.remove();
+    }
+  }
+
+  renderGrid();
 }
+
 
 
 (async () => {
