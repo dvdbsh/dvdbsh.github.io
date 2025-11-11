@@ -192,16 +192,84 @@ section {
   margin-bottom: 3rem;
 }
 
-.real-content > h2 {
+.section-wrapper > h2 {
   position: relative;
-  font-size: 2.2rem;
-  display: block;
-  margin: 15px 0;
-  padding-top: 10px;
+  font-size: 3.5rem;
+  margin: 15px 0 25px;
+  padding-left: 10px;
   color: var(--accent);
-border-top: 8px solid var(--muted);
+  transform: translateY(-5px); /* moves text slightly up for alignment */
 }
 
+.section-wrapper > h2::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 250px;
+  height: 35px;
+  background: var(--card);
+  z-index: -1;
+}
+
+@media (max-width: 700px) {
+  .section-wrapper > h2 {
+    font-size: 2.3rem;
+    padding-left: 5px;
+  }
+
+  .section-wrapper > h2::before {
+    width: 200px;
+    height: 30px;
+    top: 0;
+    left: -20px;
+  }
+}
+
+
+.real-content > h2 {
+  position: relative;
+  font-size: 3.5rem;
+  margin: 15px 0;
+  padding-left: 10px;
+  color: var(--accent);
+}
+
+.real-content > h2::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 0; /* keep accent block fixed in place */
+  display: block;
+  width: 250px;
+  height: 35px;
+  background: var(--card);
+  z-index: -1;
+}
+
+
+/* Mobile layout */
+@media (max-width: 700px) {
+	.real-content > h2 {
+	  position: relative;
+	  font-size: 2.3rem;
+	  margin: 15px 0;
+	  padding-left: 5px;
+	  color: var(--accent);
+	}
+
+	.real-content > h2::before {
+	  content: "";
+	  position: absolute;
+	  top: 0;
+	  left: -21px; /* keep accent block fixed in place */
+	  display: block;
+	  width: 200px;
+	  height: 35px;
+	  background: var(--card);
+	  z-index: -1;
+	}
+}
 
 
 .real-content {
@@ -213,6 +281,83 @@ border-top: 8px solid var(--muted);
 .real-content[style*="opacity: 1"] {
   opacity: 1;
 }
+
+.source-header {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-bottom: 2rem;
+}
+
+.back-btn {
+  background: var(--card);
+  color: var(--fg);
+  border: none;
+  padding: 0.6rem 1.2rem;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: background 0.2s ease;
+  margin-bottom: 0.5rem;
+}
+
+.back-btn:hover {
+  background: var(--accent-dark);
+}
+
+
+.source-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  position: relative;
+  padding-left: 10px;
+}
+
+.source-title-wrap::before {
+  content: "";
+  position: absolute;
+  top: 10px;
+  left: 0;
+  width: 250px;
+  height: 35px;
+  background: var(--card);
+  z-index: -1;
+}
+
+.source-title-wrap h2 {
+  font-size: 2rem;
+  color: var(--accent);
+  margin: 0;
+  line-height: 1.2;
+}
+
+#source-view-logo {
+  width: 42px;
+  height: auto;
+  border-radius: 6px;
+  background: var(--card);
+  padding: 4px;
+}
+
+@media (max-width: 700px) {
+  .source-title-wrap h2 {
+    font-size: 1.6rem;
+  }
+  .source-view-logo {
+    width: 34px;
+  }
+  .source-title-wrap::before {
+    width: 180px;
+    height: 30px;
+    top: 0;
+    left: -15px;
+  }
+}
+
 
 /* ========================================
    Hero (Desktop + Mobile + Meta Unified)
@@ -617,7 +762,6 @@ border-top: 8px solid var(--muted);
   display: flex;
   justify-content: center;
   width: 100%;
-  padding: 1rem;
 }
 
 .featured .col-slider {
@@ -663,13 +807,12 @@ border-top: 8px solid var(--muted);
 .col-slide .divider {
   width: 80px;
   height: 2px;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--accent);
   margin: 0 auto 1rem auto;
 }
 
 .col-slide .col-date {
   font-size: 0.95rem;
-  opacity: 0.9;
 }
 
 /* Slideshow Controls */
@@ -937,125 +1080,130 @@ border-top: 8px solid var(--muted);
   </header>
 
 
-    <main>
+<main>
 
-      <section class="section-wrapper hero-section">
-        <div class="skeleton hero"></div>
-			<section class="hero real-content">
-			  <img src="images/placeholder/placeholder.svg" alt="">
-			  <div class="overlay">
-				<h1>Loading headline...</h1>
-				<p>Loading article...</p>
+  <section class="section-wrapper hero-section">
+    <h2>Top Story</h2>
+    <div class="skeleton hero"></div>
+    <section class="hero real-content">
+      <img src="images/placeholder/placeholder.svg" alt="">
+      <div class="overlay">
+        <h1>Loading headline...</h1>
+        <p>Loading article...</p>
 
-				<div class="hero-meta">
-				  <div class="meta-date">Loading date...</div>
-				  <div class="meta-source-wrap">
-					<img class="meta-logo" src="images/placeholder/logo.svg" alt="">
-					<span class="meta-source">Loading source...</span>
-				  </div>
-				</div>
-
-				<button class="open-article hero-btn" aria-label="Open article">
-				  <i class='bx bx-right-arrow-circle'></i>
-				</button>
-			  </div>
-			</section>
-      </section>
-      
-      <section class="section-wrapper wordcloud-section">
-        <div class="skeleton-feature"></div>
-        <section class="wordcloud real-content">
-          <h2>Trending Topics</h2>
-          <div class="wordcloud-container" id="wordcloud"></div>
-        </section>
-      </section>
-      
-
-      <section class="section-wrapper trending-section">
-        <div class="grid">
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
+        <div class="hero-meta">
+          <div class="meta-date">Loading date...</div>
+          <div class="meta-source-wrap">
+            <img class="meta-logo" src="images/placeholder/logo.svg" alt="">
+            <span class="meta-source">Loading source...</span>
+          </div>
         </div>
 
-        <section class="trending real-content">
-          <h2>Today's Headlines</h2>
-          <div class="grid">
-            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
-            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
-            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
-            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
-          </div>
-        </section>
-      </section>
+        <button class="open-article hero-btn" aria-label="Open article">
+          <i class='bx bx-right-arrow-circle'></i>
+        </button>
+      </div>
+    </section>
+  </section>
 
-      <section class="section-wrapper weather-section">
-        <div class="skeleton-feature"></div>
-        <section class="weather real-content">
-          <div class="weather-card">
-            <div class="current">
-              <div class="icon-temp">
-                <i id="weather-icon" class='bx bx-cloud bx-lg'></i>
-                <div>
-                  <h2 id="weather-temp">--°C</h2>
-                  <p id="weather-desc">Loading...</p>
-                </div>
-              </div>
-              <div class="details">
-                <p><i class='bx bx-wind'></i> <span id="weather-wind">-- km/h</span></p>
-                <p><i class='bx bx-tint'></i> <span id="weather-humidity">--%</span></p>
-                <p><i class='bx bx-compass'></i> <span id="weather-direction">--</span></p>
-              </div>
+  <section class="section-wrapper wordcloud-section">
+    <h2>Trending Topics</h2>
+    <div class="skeleton-feature"></div>
+    <section class="wordcloud real-content">
+      <div class="wordcloud-container" id="wordcloud"></div>
+    </section>
+  </section>
+
+  <section class="section-wrapper trending-section">
+    <h2>Today's Headlines</h2>
+    <div class="grid">
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+    </div>
+
+    <section class="trending real-content">
+      <div class="grid">
+        <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
+        <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
+        <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
+        <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
+      </div>
+    </section>
+  </section>
+
+  <section class="section-wrapper weather-section">
+    <h2>Local Weather</h2>
+    <div class="skeleton-feature"></div>
+    <section class="weather real-content">
+      <div class="weather-card">
+        <div class="current">
+          <div class="icon-temp">
+            <i id="weather-icon" class='bx bx-cloud bx-lg'></i>
+            <div>
+              <h2 id="weather-temp">--°C</h2>
+              <p id="weather-desc">Loading...</p>
             </div>
-            <div class="forecast-grid" id="forecast-grid"></div>
           </div>
-        </section>
-      </section>
-
-      <section class="section-wrapper featured-section">
-        <div class="skeleton-feature"></div>
-        <section class="featured real-content">
-          <div class="text">
-            <h2>Loading headline...</h2>
-            <p>Loading article...</p>
+          <div class="details">
+            <p><i class='bx bx-wind'></i> <span id="weather-wind">-- km/h</span></p>
+            <p><i class='bx bx-tint'></i> <span id="weather-humidity">--%</span></p>
+            <p><i class='bx bx-compass'></i> <span id="weather-direction">--</span></p>
           </div>
-        </section>
-      </section>
-
-      <section class="section-wrapper articles-section">
-        <div class="grid">
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
-          <div class="skeleton-card"></div>
         </div>
+        <div class="forecast-grid" id="forecast-grid"></div>
+      </div>
+    </section>
+  </section>
 
-        <section class="articles real-content">
-          <h2>In Case You Missed It</h2>
-          <div class="grid">
-            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
-            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
-            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
-            <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
-          </div>
-        </section>
-      </section>
+  <section class="section-wrapper featured-section">
+    <h2>City of London News</h2>
+    <div class="skeleton-feature"></div>
+    <section class="featured real-content">
+      <div class="text">
+        <h2>Loading headline...</h2>
+        <p>Loading article...</p>
+      </div>
+    </section>
+  </section>
+
+  <section class="section-wrapper articles-section">
+    <h2>In Case You Missed It</h2>
+    <div class="grid">
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+      <div class="skeleton-card"></div>
+    </div>
+
+    <section class="articles real-content">
+      <div class="grid">
+        <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
+        <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
+        <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
+        <article><img src="images/placeholder/placeholder.svg"><h3>Loading headline...</h3></article>
+      </div>
+    </section>
+  </section>
 
 </main>
 
+
   <div id="source-view" style="display: none; padding: 0 1rem; max-width: 1200px; margin: 2rem auto;">
-    <header style="display: flex; align-items: center; gap: 1rem; margin-bottom: 2rem;">
-      
-      <button id="back-to-main" style="background: var(--card); color: var(--fg); border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; gap: 0.5rem;">
-        <i class='bx bx-arrow-back'></i> Back
-      </button>
+	<div class="source-header">
+	  <button id="back-to-main" class="back-btn">
+		<i class='bx bx-arrow-back'></i> Back
+	  </button>
+	  <div class="section-wrapper">
+		<h2>
+		  <img id="source-view-logo" src="" alt="" class="meta-logo" style="vertical-align: middle; margin-right: 0.5rem;">
+		  <span id="source-view-title"></span>
+		</h2>
+	  </div>
+	</div>
 
-      <h2 id="source-view-title"></h2>
-    </header>
-
-    <div id="source-view-grid" class="grid">
-      </div>
+    <div id="source-view-grid" class="grid"></div>
   </div>
 
   <footer class="footer">
@@ -1315,6 +1463,17 @@ function showSourcePage(filterKey, filterType, pageTitle) {
   });
 
   sourceTitleEl.textContent = `${pageTitle} (${filteredArticles.length})`;
+
+  // Get and show logo
+  const match = feedSources.find(f => f.name === pageTitle);
+  const logoEl = document.getElementById("source-view-logo");
+  if (match && logoEl) {
+    logoEl.src = match.logo;
+    logoEl.style.display = "block";
+  } else {
+    logoEl.style.display = "none";
+  }
+
 
   mainContent.style.display = 'none';
   sourceView.style.display = 'block';
