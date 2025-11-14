@@ -1,4 +1,3 @@
-title: "Tomb Raider Archives"
-description: "A fan made hub for Tomb Raider games, movies, series, lore, and media."
-theme: null
-plugins: []
+title: Tomb Raider Archives
+url: "https://dvdbsh.github.io"
+baseurl: "/tr"
