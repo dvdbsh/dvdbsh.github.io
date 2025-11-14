@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ page.title }}</title>
+
+  <!-- Fonts and icons -->
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+  <link href="https://fonts.gstatic.com/s/alexandria/v3/UMBXrPdDqW66y0Y2usFeai3dAw.woff2" rel="stylesheet">
+
+  <!-- Site CSS -->
+  <link rel="stylesheet" href="{{ '/assets/css/style.css' | relative_url }}">
+</head>
+
+<body>
+
+  {% include header.html %}
+
+  <main class="content">
+    {{ content }}
+  </main>
+
+  {% include footer.html %}
+
+  <!-- Back to top -->
+  <div class="back-to-top" aria-label="Back to top">
+    <i class="bx bxs-chevrons-up"></i>
+  </div>
+
+  <!-- Scripts -->
+  <script src="{{ '/assets/js/nav.js' | relative_url }}"></script>
+  <script src="{{ '/assets/js/lightbox.js' | relative_url }}"></script>
+  <script src="{{ '/assets/js/backtotop.js' | relative_url }}"></script>
+
+</body>
+</html>

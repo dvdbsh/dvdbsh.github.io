@@ -1,0 +1,152 @@
+---
+layout: default
+---
+
+<nav class="sub-nav">
+  <button class="dropdown-btn">Page sections</button>
+  <div class="dropdown-content">
+    <a href="#info">Info</a>
+    <a href="#cheats">Cheats</a>
+    <a href="#achievements">Achievements</a>
+    <a href="#masonry1">Masonry gallery</a>
+    <a href="#flex1">Flex gallery</a>
+    <a href="#videos">Video gallery</a>
+    <a href="#actors">Cast</a>
+  </div>
+</nav>
+
+<!-- Info block -->
+<section id="info" class="media-info">
+  <img src="{{ page.cover }}" alt="{{ page.title }} key art" loading="lazy">
+  <div class="description">
+    <h2>{{ page.title }} overview</h2>
+    <p>{{ page.description }}</p>
+  </div>
+</section>
+
+<!-- Stats cards -->
+<section class="grid">
+  {% for stat in page.stats %}
+  <article class="card">
+    <i class="bx {{ stat.icon }} bx-icon"></i>
+    <div>
+      <h3>{{ stat.label }}</h3>
+      <p>{{ stat.value }}</p>
+    </div>
+  </article>
+  {% endfor %}
+</section>
+
+<!-- Cheats -->
+<section id="cheats" class="cheats">
+  <div class="section-header">
+    <h2>Cheats and extras</h2>
+  </div>
+  <div class="grid">
+    {% for platform in page.cheats %}
+    <div class="platform">
+      <h3>{{ platform.name }}</h3>
+      <ul>
+        {% for item in platform.items %}
+        <li>
+          <div class="description">
+            <strong>{{ item.title }}</strong>
+            <p>{{ item.text }}</p>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Achievements -->
+<section id="achievements" class="achievements">
+  <div class="section-header">
+    <h2>Achievements</h2>
+  </div>
+
+  <div class="grid">
+    {% for platform in page.achievements %}
+    <div class="platform">
+      <h3>{{ platform.name }}</h3>
+      <ul>
+        {% for item in platform.items %}
+        <li>
+          <div class="description">
+            <strong>{{ item.title }}</strong>
+            <p>{{ item.text }}</p>
+          </div>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Masonry gallery -->
+<section id="masonry1" class="gallery">
+  <div class="section-header">
+    <h2>Masonry gallery</h2>
+  </div>
+  <div class="masonry-grid">
+    {% for img in page.masonry %}
+    <a href="{{ img }}" class="lightbox-trigger masonry">
+      <img src="{{ img }}" loading="lazy">
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Flex gallery -->
+<section id="flex1" class="gallery">
+  <div class="section-header">
+    <h2>Screenshot gallery</h2>
+  </div>
+  <div class="flex-grid">
+    {% for img in page.flex %}
+    <a href="{{ img }}" class="lightbox-trigger flex">
+      <img src="{{ img }}" loading="lazy">
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Videos -->
+<section id="videos" class="gallery">
+  <div class="section-header">
+    <h2>Video gallery</h2>
+  </div>
+  <div class="video-grid">
+    {% for video in page.videos %}
+    <article class="video-card">
+      <div class="video-wrapper">
+        <iframe src="https://www.youtube.com/embed/{{ video.id }}" loading="lazy" allowfullscreen></iframe>
+      </div>
+      <div class="video-info">
+        <p>{{ video.title }}</p>
+        <p>{{ video.text }}</p>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Cast -->
+<section id="actors" class="actors">
+  <div class="section-header">
+    <h2>Main cast</h2>
+  </div>
+
+  <div class="actors-grid">
+    {% for actor in page.cast %}
+    <article class="actor-card">
+      <img src="{{ actor.img }}" loading="lazy">
+      <h3>{{ actor.name }}</h3>
+      <p>{{ actor.role }}</p>
+    </article>
+    {% endfor %}
+  </div>
+</section>
