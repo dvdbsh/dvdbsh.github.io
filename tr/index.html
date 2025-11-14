@@ -661,21 +661,28 @@
     }
 
     /* Back to top */
-    .back-to-top {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: var(--submenu-bg-color);
-      color: var(--text-color);
-      border-radius: var(--radius-lg);
-      padding: 10px;
-      cursor: pointer;
-      box-shadow: 0 4px 8px var(--box-shadow-color);
-      opacity: 0;
-      transform: translateY(100%);
-      transition: opacity 0.25s ease, transform 0.25s ease;
-      z-index: 1050;
-    }
+.back-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 15px;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  color: var(--text-color);
+  border-radius: 100%;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px var(--box-shadow-color);
+  opacity: 0;
+  transform: translateY(100%);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  z-index: 999;
+  padding: 0 0 3px;
+}
+
 
     .back-to-top.show {
       opacity: 1;
@@ -691,8 +698,11 @@
     ====================================== */
     @media (max-width: 900px) {
       :root {
-        font-size: 15px;
+        font-size: 18px;
       }
+.header-title {
+	font-size: 1.3rem;
+	}
 
       .menu-icon {
         display: block;
@@ -710,6 +720,7 @@
         background-image: url("https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1717846070/bg_2_dkqruw.svg");
         background-size: cover;
         padding: var(--spacing-lg) var(--spacing-md);
+		z-index: 1000;
       }
 
       .main-navigation.open {
@@ -757,26 +768,13 @@
       }
     }
 
-    @media (max-width: 520px) {
-      :root {
-        font-size: 14px;
-      }
-
-      .header-title {
-        font-size: 1.3rem;
-      }
-
-      .content {
-        padding-top: 76px;
-      }
-    }
   </style>
 </head>
 
 <body>
   <!-- Header -->
   <header class="header">
-    <h1 class="header-title">Tomb Raider Central</h1>
+    <h1 class="header-title">Tomb Raider Archives</h1>
     <i class="bx bx-menu menu-icon" aria-label="Open navigation"></i>
   </header>
 
