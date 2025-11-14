@@ -1,0 +1,1614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tomb Raider Central</title>
+  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet">
+
+  <style>
+    /* =====================================
+       Fonts
+    ====================================== */
+    @font-face {
+      font-family: "Alexandria";
+      src: url("https://fonts.gstatic.com/s/alexandria/v3/UMBXrPdDqW66y0Y2usFeai3dAw.woff2")
+        format("woff2");
+    }
+
+    @font-face {
+      font-family: "Roboto";
+      src: url("https://fonts.gstatic.com/s/roboto/v18/KFOmCnqEu92Fr1Mu4mxKKTU1Kg.woff2")
+        format("woff2");
+    }
+
+    /* =====================================
+       Design tokens
+    ====================================== */
+    :root {
+      --cat-bg-color: #1e1e1e;
+      --submenu-bg-color: #2a2a2a;
+      --sublink-bg-color: #353535;
+      --hover-bg-color: #333333;
+      --hover-text-color: #bb86fc;
+      --text-color: #e0e0e0;
+      --header-bg-color: #1e1e1e;
+      --highlight-color: #bb86fc;
+      --accent-color: #fbbf6a;
+      --box-shadow-color: rgba(0, 0, 0, 0.25);
+      --scrollbar-track-bg-color: #1e1e1e;
+      --scrollbar-thumb-bg-color: #bb86fc;
+      --background-color: #121212;
+      --gamerscore-border-color: #008000;
+      --radius-lg: 10px;
+      --radius-md: 8px;
+      --spacing-sm: 10px;
+      --spacing-md: 15px;
+      --spacing-lg: 20px;
+      --spacing-xl: 30px;
+      --content-width: 1400px;
+      font-size: 16px;
+    }
+
+    /* =====================================
+       Scrollbar
+    ====================================== */
+    *::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    *::-webkit-scrollbar-track {
+      background: var(--scrollbar-track-bg-color);
+      border-radius: 10px;
+    }
+
+    *::-webkit-scrollbar-thumb {
+      background-color: var(--scrollbar-thumb-bg-color);
+      border-radius: 10px;
+      border: 3px solid var(--scrollbar-track-bg-color);
+    }
+
+    *::-webkit-scrollbar-thumb:hover {
+      background-color: var(--scrollbar-thumb-bg-color);
+    }
+
+    *::-webkit-scrollbar-button {
+      display: none;
+    }
+
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: var(--scrollbar-thumb-bg-color)
+        var(--scrollbar-track-bg-color);
+      box-sizing: border-box;
+    }
+
+    .no-scroll {
+      overflow: hidden;
+    }
+
+    /* =====================================
+       Base
+    ====================================== */
+    body {
+      font-family: "Roboto", system-ui, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background-color);
+      background-image: url("https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1717846070/bg_2_dkqruw.svg");
+      color: var(--text-color);
+      line-height: 1.5;
+    }
+
+    h1,
+    h2,
+    h3 {
+      font-family: "Alexandria", system-ui, sans-serif;
+      color: var(--highlight-color);
+      margin: 0 0 0.5rem 0;
+    }
+
+    h1 {
+      font-size: 2rem;
+    }
+
+    h2 {
+      font-size: 1.75rem;
+    }
+
+    h3 {
+      font-size: 1.5rem;
+    }
+
+    p {
+      margin: 0 0 0.75rem 0;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    /* =====================================
+       Layout
+    ====================================== */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--spacing-md) var(--spacing-lg);
+      background-color: var(--header-bg-color);
+      box-shadow: 0 4px 8px var(--box-shadow-color);
+      transition: top 0.25s ease;
+    }
+
+    .header-title {
+      font-size: 1.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin: 0;
+    }
+
+    .menu-icon {
+      display: none;
+      font-size: 1.9rem;
+      cursor: pointer;
+    }
+
+    .shell {
+      max-width: var(--content-width);
+      margin: 0 auto;
+      display: flex;
+    }
+
+    .main-navigation {
+      position: fixed;
+      top: 76px;
+      left: 0;
+      bottom: 0;
+      width: 260px;
+      padding: 4px var(--spacing-md);
+      overflow-y: auto;
+      font-size: 0.9rem;
+      transition: left 0.25s ease, top 0.25s ease;
+    }
+
+    .main-navigation.fixed {
+      top: 0;
+    }
+
+    .main-navigation-inner {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .close-menu {
+      display: none;
+      text-align: right;
+      font-size: 2rem;
+      cursor: pointer;
+      margin-bottom: var(--spacing-md);
+    }
+
+    .content {
+      flex: 1;
+      margin-left: 280px;
+      padding: 86px var(--spacing-lg) var(--spacing-xl) var(--spacing-lg);
+      transition: margin-left 0.25s ease, padding-top 0.25s ease;
+    }
+
+    .container {
+      max-width: var(--content-width);
+      margin: 0 auto;
+    }
+
+    /* =====================================
+       Navigation
+    ====================================== */
+.menu-item,
+.submenu-item,
+.sub-links a {
+  margin-top: 6px;
+}
+
+
+
+    .menu-item > a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+      color: var(--text-color);
+      background-color: var(--cat-bg-color);
+      padding: 12px 12px;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 4px 8px var(--box-shadow-color);
+      transition: background-color 0.2s ease, color 0.2s ease,
+        transform 0.1s ease;
+    }
+
+    .menu-item > a i {
+      font-size: 1.3rem;
+      color: var(--accent-color);
+    }
+
+    .menu-item > a:hover {
+      background-color: var(--hover-bg-color);
+      color: var(--hover-text-color);
+      transform: translateY(-1px);
+    }
+
+    .submenu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+
+    .submenu.open {
+      max-height: 1000px;
+    }
+
+    .submenu-item > a {
+      display: block;
+      text-decoration: none;
+      color: var(--text-color);
+      background-color: var(--submenu-bg-color);
+      padding: 10px 12px;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 4px 8px var(--box-shadow-color);
+      font-weight: 500;
+      position: relative;
+    }
+
+    .submenu-item > a i {
+      margin-right: 6px;
+    }
+
+    .submenu-item > a:hover {
+      background-color: var(--hover-bg-color);
+      color: var(--hover-text-color);
+    }
+
+    .sub-links {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease;
+    }
+
+    .sub-links.open {
+      max-height: 600px;
+    }
+
+    .sub-links a {
+      display: block;
+      text-decoration: none;
+      color: var(--text-color);
+      background-color: var(--sublink-bg-color);
+      padding: 9px 12px;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 4px 8px var(--box-shadow-color);
+      font-size: 0.88rem;
+    }
+
+    .sub-links a i {
+      margin-right: 6px;
+    }
+
+    .sub-links a:hover {
+      background-color: var(--hover-bg-color);
+      color: var(--hover-text-color);
+    }
+
+    .classic-era {
+      background-image: url("https://tombraidercentral.online/images/menu/classic_menu.png");
+      background-position: right center;
+      background-repeat: no-repeat;
+      background-size: auto 50px;
+    }
+
+    .remastered-era {
+      background-image: url("https://tombraidercentral.online/images/menu/remastered_menu.png");
+      background-position: right center;
+      background-repeat: no-repeat;
+      background-size: auto 50px;
+    }
+
+    .legend-era {
+      background-image: url("https://tombraidercentral.online/images/menu/legend_menu.png");
+      background-position: right center;
+      background-repeat: no-repeat;
+      background-size: auto 50px;
+    }
+
+    .survivor-era {
+      background-image: url("https://tombraidercentral.online/images/menu/survivor_menu.png");
+      background-position: right center;
+      background-repeat: no-repeat;
+      background-size: auto 50px;
+    }
+
+    /* =====================================
+       Sub nav (page local links)
+    ====================================== */
+    .sub-nav {
+      background-color: var(--header-bg-color);
+      box-shadow: 0 4px 8px var(--box-shadow-color);
+      border-radius: var(--radius-lg);
+      padding: var(--spacing-md);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .dropdown-btn {
+      display: none;
+      width: 100%;
+      background-color: transparent;
+      border: none;
+      color: var(--text-color);
+      font-size: 1.05rem;
+      font-weight: 600;
+      font-family: "Alexandria", system-ui, sans-serif;
+      cursor: pointer;
+      text-align: left;
+    }
+
+    .dropdown-content {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-sm);
+      margin-top: 4px;
+    }
+
+    .dropdown-content a {
+      text-decoration: none;
+      color: var(--text-color);
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: var(--radius-md);
+      transition: color 0.2s ease, background-color 0.2s ease;
+    }
+
+    .dropdown-content a:hover {
+      color: var(--highlight-color);
+      background-color: var(--cat-bg-color);
+    }
+
+    /* =====================================
+       Sections and components
+    ====================================== */
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 3px solid var(--cat-bg-color);
+      margin-bottom: var(--spacing-lg);
+      padding-bottom: 4px;
+    }
+
+    .section-header h2 {
+      margin: 0;
+    }
+
+    .media-info {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+      background-color: var(--cat-bg-color);
+      padding: var(--spacing-lg);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 4px 8px var(--box-shadow-color);
+    }
+
+    .media-info img {
+      max-width: 260px;
+      border-radius: var(--radius-lg);
+      flex: 0 0 auto;
+    }
+
+    .media-info .description {
+      flex: 1 1 260px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .card,
+    .achievements li,
+    .cheats li,
+    .video-card {
+      background-color: var(--cat-bg-color);
+      padding: var(--spacing-md);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 4px 8px var(--box-shadow-color);
+    }
+
+    .card {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--spacing-md);
+    }
+
+    .card h3 {
+      font-size: 1.1rem;
+      margin-bottom: 4px;
+    }
+
+    .card .bx-icon {
+      font-size: 2rem;
+      color: var(--accent-color);
+      flex: 0 0 auto;
+    }
+
+    /* Cheats and achievements */
+    .platform h3 {
+      margin-bottom: 8px;
+    }
+
+    .achievements ul,
+    .cheats ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .achievements li,
+    .cheats li {
+      display: flex;
+      align-items: center;
+      gap: var(--spacing-md);
+      margin-bottom: var(--spacing-md);
+    }
+
+    .achievements .description,
+    .cheats .description {
+      flex: 1 1 auto;
+    }
+
+    .achievements .description strong,
+    .cheats .description strong {
+      color: var(--highlight-color);
+      margin-bottom: 2px;
+    }
+
+    .gamerscore {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      font-weight: bold;
+      color: var(--highlight-color);
+      font-size: 1rem;
+    }
+
+    .gamerscore svg {
+      width: 24px;
+      height: 24px;
+      fill: currentColor;
+    }
+
+    .trophy-icon {
+      font-size: 2rem;
+    }
+
+    .trophy-bronze {
+      color: #cd7f32;
+    }
+
+    .trophy-silver {
+      color: #c0c0c0;
+    }
+
+    .trophy-gold {
+      color: #ffd700;
+    }
+
+    .trophy-platinum {
+      color: #e5e4e2;
+    }
+
+    /* Galleries */
+    .gallery {
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .masonry-grid {
+      column-count: 3;
+      column-gap: 15px;
+    }
+
+    .masonry-grid a {
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    .masonry-grid img,
+    .flex-grid img {
+      width: 100%;
+      border-radius: var(--radius-lg);
+      display: block;
+    }
+
+    .flex-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .flex-grid a {
+      display: block;
+      width: calc(33.333% - 10px);
+    }
+
+    /* Video grid */
+    .video-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: var(--spacing-lg);
+    }
+
+    .video-card {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .video-wrapper {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      border-radius: var(--radius-lg);
+      overflow: hidden;
+      margin-bottom: var(--spacing-sm);
+    }
+
+    .video-wrapper iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+
+    .video-info p {
+      margin: 2px 0;
+    }
+
+    /* Actors */
+    .actors {
+      margin-bottom: var(--spacing-xl);
+    }
+
+    .actors-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: var(--spacing-lg);
+    }
+
+    .actor-card {
+      background-color: var(--cat-bg-color);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 4px 8px var(--box-shadow-color);
+      padding: var(--spacing-md);
+      text-align: center;
+    }
+
+    .actor-card img {
+      width: 140px;
+      height: 140px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+    }
+
+    /* Lightbox */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.9);
+      z-index: 1100;
+    }
+
+    .lightbox-content {
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .lightbox-content img {
+      max-width: 100%;
+      max-height: 80%;
+      border-radius: var(--radius-lg);
+    }
+
+    .lightbox .close {
+      position: absolute;
+      top: 18px;
+      right: 28px;
+      font-size: 2.2rem;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .lightbox .nav-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 2rem;
+      color: #ffffff;
+      cursor: pointer;
+      padding: 10px;
+      border-radius: var(--radius-md);
+    }
+
+    .lightbox .nav-arrow.left {
+      left: 10px;
+    }
+
+    .lightbox .nav-arrow.right {
+      right: 10px;
+    }
+
+    .lightbox .nav-arrow:hover {
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    /* Back to top */
+    .back-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: var(--submenu-bg-color);
+      color: var(--text-color);
+      border-radius: var(--radius-lg);
+      padding: 10px;
+      cursor: pointer;
+      box-shadow: 0 4px 8px var(--box-shadow-color);
+      opacity: 0;
+      transform: translateY(100%);
+      transition: opacity 0.25s ease, transform 0.25s ease;
+      z-index: 1050;
+    }
+
+    .back-to-top.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .back-to-top i {
+      font-size: 1.5rem;
+    }
+
+    /* =====================================
+       Responsive
+    ====================================== */
+    @media (max-width: 900px) {
+      :root {
+        font-size: 15px;
+      }
+
+      .menu-icon {
+        display: block;
+      }
+
+      .shell {
+        max-width: 100%;
+      }
+
+      .main-navigation {
+        width: 100%;
+        left: -100%;
+        top: 0;
+        background-color: var(--background-color);
+        background-image: url("https://res.cloudinary.com/di8j84ent/image/upload/q_auto/v1717846070/bg_2_dkqruw.svg");
+        background-size: cover;
+        padding: var(--spacing-lg) var(--spacing-md);
+      }
+
+      .main-navigation.open {
+        left: 0;
+      }
+
+      .main-navigation.fixed {
+        top: 0;
+      }
+
+      .close-menu {
+        display: block;
+      }
+
+      .content {
+        margin-left: 0;
+        padding-top: 86px;
+      }
+
+      .masonry-grid {
+        column-count: 1;
+      }
+
+      .flex-grid a {
+        width: 100%;
+      }
+
+      .media-info img {
+        max-width: 100%;
+      }
+
+      .dropdown-btn {
+        display: block;
+      }
+
+      .dropdown-content {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        margin-top: var(--spacing-sm);
+      }
+
+      .dropdown-content.show {
+        display: flex;
+      }
+    }
+
+    @media (max-width: 520px) {
+      :root {
+        font-size: 14px;
+      }
+
+      .header-title {
+        font-size: 1.3rem;
+      }
+
+      .content {
+        padding-top: 76px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Header -->
+  <header class="header">
+    <h1 class="header-title">Tomb Raider Central</h1>
+    <i class="bx bx-menu menu-icon" aria-label="Open navigation"></i>
+  </header>
+
+  <div class="shell">
+    <!-- Side navigation -->
+    <nav class="main-navigation">
+      <div class="main-navigation-inner">
+        <i class="bx bx-x close-menu"></i>
+
+        <div class="menu-item">
+          <a href="/index.php">
+            <i class="bx bx-home-circle"></i>
+            <span>Home</span>
+          </a>
+        </div>
+
+        <div class="menu-item">
+          <a href="#">
+            <i class="bx bx-home-alt-2"></i>
+            <span>Main Areas</span>
+          </a>
+          <div class="submenu">
+            <div class="submenu-item">
+              <a href="#"><i class="bx bxs-chevron-right"></i> News Archive</a>
+            </div>
+            <div class="submenu-item">
+              <a href="#"><i class="bx bxs-chevron-right"></i> Community Hub</a>
+            </div>
+            <div class="submenu-item">
+              <a href="#"><i class="bx bxs-chevron-right"></i> Lore Library</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <a href="#">
+            <i class="bx bx-joystick"></i>
+            <span>Games</span>
+          </a>
+          <div class="submenu">
+            <div class="submenu-item">
+              <a href="#" class="remastered-era">
+                <i class="bx bx-chevrons-right"></i> Remastered Era
+              </a>
+              <div class="sub-links">
+                <a href="/tombraider_remastered_01.php">
+                  <i class="bx bxs-chevron-right"></i> Tomb Raider
+                </a>
+                <a href="/tombraider_remastered_02.php">
+                  <i class="bx bxs-chevron-right"></i> Tomb Raider II
+                </a>
+                <a href="/tombraider_remastered_03.php">
+                  <i class="bx bxs-chevron-right"></i> Tomb Raider III
+                </a>
+              </div>
+            </div>
+
+            <div class="submenu-item">
+              <a href="#" class="classic-era">
+                <i class="bx bx-chevrons-right"></i> Classic Era
+              </a>
+              <div class="sub-links">
+                <a href="/tombraider_01.php">
+                  <i class="bx bxs-chevron-right"></i> Tomb Raider
+                </a>
+                <a href="/tombraider_02.php">
+                  <i class="bx bxs-chevron-right"></i> Tomb Raider II
+                </a>
+                <a href="/tombraider_03.php">
+                  <i class="bx bxs-chevron-right"></i> Tomb Raider III
+                </a>
+                <a href="/tombraider_04.php">
+                  <i class="bx bxs-chevron-right"></i> The Last Revelation
+                </a>
+                <a href="/tombraider_05.php">
+                  <i class="bx bxs-chevron-right"></i> Chronicles
+                </a>
+                <a href="/tombraider_06.php">
+                  <i class="bx bxs-chevron-right"></i> The Angel of Darkness
+                </a>
+              </div>
+            </div>
+
+            <div class="submenu-item">
+              <a href="#" class="legend-era">
+                <i class="bx bx-chevrons-right"></i> Legend Era
+              </a>
+              <div class="sub-links">
+                <a href="/tombraider_legend.php">
+                  <i class="bx bxs-chevron-right"></i> Legend
+                </a>
+                <a href="/tombraider_anniversary.php">
+                  <i class="bx bxs-chevron-right"></i> Anniversary
+                </a>
+                <a href="/tombraider_underworld.php">
+                  <i class="bx bxs-chevron-right"></i> Underworld
+                </a>
+              </div>
+            </div>
+
+            <div class="submenu-item">
+              <a href="#" class="survivor-era">
+                <i class="bx bx-chevrons-right"></i> Survivor Era
+              </a>
+              <div class="sub-links">
+                <a href="/tombraider_2013.php">
+                  <i class="bx bxs-chevron-right"></i> Tomb Raider (2013)
+                </a>
+                <a href="/tombraider_rotr.php">
+                  <i class="bx bxs-chevron-right"></i> Rise of the Tomb Raider
+                </a>
+                <a href="/tombraider_sotr.php">
+                  <i class="bx bxs-chevron-right"></i> Shadow of the Tomb Raider
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="menu-item">
+          <a href="#">
+            <i class="bx bx-movie-play"></i>
+            <span>Media</span>
+          </a>
+          <div class="submenu">
+            <div class="submenu-item">
+              <a href="#">
+                <i class="bx bx-chevrons-right"></i> Movies
+              </a>
+              <div class="sub-links">
+                <a href="/lctr_movie.php">
+                  <i class="bx bxs-chevron-right"></i> Lara Croft Tomb Raider
+                </a>
+                <a href="/lctrcol_movie.php">
+                  <i class="bx bxs-chevron-right"></i> Cradle of Life
+                </a>
+                <a href="/tr2018_movie.php">
+                  <i class="bx bxs-chevron-right"></i> Tomb Raider (2018)
+                </a>
+              </div>
+            </div>
+            <div class="submenu-item">
+              <a href="#">
+                <i class="bx bx-chevrons-right"></i> Series
+              </a>
+              <div class="sub-links">
+                <a href="/revisioned_tv.php">
+                  <i class="bx bxs-chevron-right"></i> ReVisioned
+                </a>
+                <a href="/trlolc_tv.php">
+                  <i class="bx bxs-chevron-right"></i> Legend of Lara Croft
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main class="content">
+      <div class="container">
+        <!-- Local nav -->
+        <nav class="sub-nav">
+          <button class="dropdown-btn">Page sections</button>
+          <div class="dropdown-content">
+            <a href="#info">Info</a>
+            <a href="#cheats">Cheats</a>
+            <a href="#achievements">Achievements</a>
+            <a href="#masonry1">Masonry gallery</a>
+            <a href="#flex1">Flex gallery</a>
+            <a href="#videos">Video gallery</a>
+            <a href="#actors">Cast</a>
+          </div>
+        </nav>
+
+        <!-- Info block -->
+        <section id="info" class="media-info">
+          <img
+            src="https://placehold.co/500x750"
+            alt="Tomb Raider key art"
+            loading="lazy"
+          >
+          <div class="description">
+            <h2>Tomb Raider 2013 overview</h2>
+            <p>
+              Tomb Raider follows Lara Croft in her first expedition as a young archaeologist.
+              Stranded on the lost island of Yamatai, she must transform from an unsure academic
+              into a survivor who can challenge the cult that rules the island.
+            </p>
+            <p>
+              This template page shows how game info, cheats, achievements, galleries,
+              and cast lists can live together in one layout. Replace this text with details for
+              any game, movie, or series you want to feature.
+            </p>
+          </div>
+        </section>
+
+        <!-- Stats cards -->
+        <section class="grid">
+          <article class="card">
+            <i class="bx bx-calendar bx-icon"></i>
+            <div>
+              <h3>Release date</h3>
+              <p>March 5, 2013</p>
+            </div>
+          </article>
+
+          <article class="card">
+            <i class="bx bx-category bx-icon"></i>
+            <div>
+              <h3>Genre</h3>
+              <p>Action adventure</p>
+            </div>
+          </article>
+
+          <article class="card">
+            <i class="bx bx-star bx-icon"></i>
+            <div>
+              <h3>Rating</h3>
+              <p>Mature</p>
+            </div>
+          </article>
+
+          <article class="card">
+            <i class="bx bx-time bx-icon"></i>
+            <div>
+              <h3>Main story length</h3>
+              <p>Roughly 12 to 15 hours</p>
+            </div>
+          </article>
+
+          <article class="card">
+            <i class="bx bx-joystick bx-icon"></i>
+            <div>
+              <h3>Platforms</h3>
+              <p>PC, PlayStation 3, Xbox 360, later Definitive Edition</p>
+            </div>
+          </article>
+
+          <article class="card">
+            <i class="bx bx-code-block bx-icon"></i>
+            <div>
+              <h3>Developer</h3>
+              <p>Crystal Dynamics</p>
+            </div>
+          </article>
+
+          <article class="card">
+            <i class="bx bx-pencil bx-icon"></i>
+            <div>
+              <h3>Lead writer</h3>
+              <p>Rhianna Pratchett</p>
+            </div>
+          </article>
+
+          <article class="card">
+            <i class="bx bx-tv bx-icon"></i>
+            <div>
+              <h3>Setting</h3>
+              <p>Dragon Triangle, off the coast of Japan</p>
+            </div>
+          </article>
+        </section>
+
+        <!-- Cheats -->
+        <section id="cheats" class="cheats">
+          <div class="section-header">
+            <h2>Cheats and extras</h2>
+          </div>
+          <div class="grid">
+            <div class="platform">
+              <h3>PC extras</h3>
+              <ul>
+                <li>
+                  <div class="description">
+                    <strong>Explorer kit</strong>
+                    <p>Unlocks a survival skin and an early access bow upgrade for Lara.</p>
+                  </div>
+                </li>
+                <li>
+                  <div class="description">
+                    <strong>Scavenger pack</strong>
+                    <p>Provides bonus salvage to speed up early weapon upgrades.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="platform">
+              <h3>Console tips</h3>
+              <ul>
+                <li>
+                  <div class="description">
+                    <strong>Camp fast travel</strong>
+                    <p>Use base camps to return to earlier areas and clean up collectibles.</p>
+                  </div>
+                </li>
+                <li>
+                  <div class="description">
+                    <strong>Quick melee finishers</strong>
+                    <p>Stagger enemies with arrows, then use finishers to save ammo.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="platform">
+              <h3>Completion hints</h3>
+              <ul>
+                <li>
+                  <div class="description">
+                    <strong>Relic hunter</strong>
+                    <p>Study relics from the menu to reveal extra clues about Yamatai.</p>
+                  </div>
+                </li>
+                <li>
+                  <div class="description">
+                    <strong>Tomb raider</strong>
+                    <p>Optional tombs reward large amounts of salvage and experience.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Achievements -->
+        <section id="achievements" class="achievements">
+          <div class="section-header">
+            <h2>Achievements</h2>
+          </div>
+          <div class="grid">
+            <div class="platform">
+              <h3>Xbox achievements</h3>
+              <ul>
+                <li>
+                  <div class="gamerscore">
+                    <span>10</span>
+                    <svg viewBox="0 0 24 24">
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="#008000"
+                        stroke-width="2"
+                        fill="none"
+                      ></circle>
+                      <text
+                        x="7"
+                        y="16"
+                        fill="#ffffff"
+                        font-family="Arial, sans-serif"
+                        font-size="12"
+                        font-weight="bold"
+                      >
+                        G
+                      </text>
+                    </svg>
+                  </div>
+                  <div class="description">
+                    <strong>One Smart Cookie</strong>
+                    <p>Complete one optional tomb.</p>
+                  </div>
+                </li>
+                <li>
+                  <div class="gamerscore">
+                    <span>10</span>
+                    <svg viewBox="0 0 24 24">
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="#008000"
+                        stroke-width="2"
+                        fill="none"
+                      ></circle>
+                      <text
+                        x="7"
+                        y="16"
+                        fill="#ffffff"
+                        font-family="Arial, sans-serif"
+                        font-size="12"
+                        font-weight="bold"
+                      >
+                        G
+                      </text>
+                    </svg>
+                  </div>
+                  <div class="description">
+                    <strong>Bookworm</strong>
+                    <p>Collect a quarter of all documents.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="platform">
+              <h3>PlayStation trophies</h3>
+              <ul>
+                <li>
+                  <i class="bx bx-trophy trophy-icon trophy-bronze"></i>
+                  <div class="description">
+                    <strong>Looking for Trouble</strong>
+                    <p>Find a quarter of all GPS caches.</p>
+                  </div>
+                </li>
+                <li>
+                  <i class="bx bx-trophy trophy-icon trophy-silver"></i>
+                  <div class="description">
+                    <strong>True Adventurer</strong>
+                    <p>Complete all optional tombs on the island.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="platform">
+              <h3>Steam achievements</h3>
+              <ul>
+                <li>
+                  <div class="description">
+                    <strong>No Stone Left Unturned</strong>
+                    <p>Find every document, relic, and GPS cache.</p>
+                  </div>
+                </li>
+                <li>
+                  <div class="description">
+                    <strong>Deadeye</strong>
+                    <p>Shoot 10 enemies off zip lines.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- Masonry gallery -->
+        <section id="masonry1" class="gallery">
+          <div class="section-header">
+            <h2>Masonry gallery</h2>
+          </div>
+          <div class="masonry-grid">
+            <a
+              href="https://placehold.co/800x600"
+              class="lightbox-trigger masonry"
+            >
+              <img
+                src="https://placehold.co/800x600"
+                alt="Concept art one"
+                loading="lazy"
+              >
+            </a>
+            <a
+              href="https://placehold.co/600x900"
+              class="lightbox-trigger masonry"
+            >
+              <img
+                src="https://placehold.co/600x900"
+                alt="Concept art two"
+                loading="lazy"
+              >
+            </a>
+            <a
+              href="https://placehold.co/800x800"
+              class="lightbox-trigger masonry"
+            >
+              <img
+                src="https://placehold.co/800x800"
+                alt="Concept art three"
+                loading="lazy"
+              >
+            </a>
+            <a
+              href="https://placehold.co/700x400"
+              class="lightbox-trigger masonry"
+            >
+              <img
+                src="https://placehold.co/700x400"
+                alt="Concept art four"
+                loading="lazy"
+              >
+            </a>
+          </div>
+        </section>
+
+        <!-- Flex gallery -->
+        <section id="flex1" class="gallery">
+          <div class="section-header">
+            <h2>Screenshot gallery</h2>
+          </div>
+          <div class="flex-grid">
+            <a
+              href="https://placehold.co/1280x720"
+              class="lightbox-trigger flex"
+            >
+              <img
+                src="https://placehold.co/1280x720"
+                alt="Screenshot one"
+                loading="lazy"
+              >
+            </a>
+            <a
+              href="https://placehold.co/1280x720"
+              class="lightbox-trigger flex"
+            >
+              <img
+                src="https://placehold.co/1280x720"
+                alt="Screenshot two"
+                loading="lazy"
+              >
+            </a>
+            <a
+              href="https://placehold.co/1280x720"
+              class="lightbox-trigger flex"
+            >
+              <img
+                src="https://placehold.co/1280x720"
+                alt="Screenshot three"
+                loading="lazy"
+              >
+            </a>
+          </div>
+        </section>
+
+        <!-- Video gallery -->
+        <section id="videos" class="gallery">
+          <div class="section-header">
+            <h2>Video gallery</h2>
+          </div>
+          <div class="video-grid">
+            <article class="video-card">
+              <div class="video-wrapper">
+                <iframe
+                  src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                  loading="lazy"
+                  allowfullscreen
+                ></iframe>
+              </div>
+              <div class="video-info">
+                <p>Cinematic trailer</p>
+                <p>Official reveal trailer for the Survivor era.</p>
+              </div>
+            </article>
+
+            <article class="video-card">
+              <div class="video-wrapper">
+                <iframe
+                  src="https://www.youtube.com/embed/9bZkp7q19f0"
+                  loading="lazy"
+                  allowfullscreen
+                ></iframe>
+              </div>
+              <div class="video-info">
+                <p>Gameplay showcase</p>
+                <p>Early exploration of the coastal forest and mountain village.</p>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Lightbox containers -->
+        <div id="lightbox-masonry" class="lightbox">
+          <span class="close"><i class="bx bx-x"></i></span>
+          <div class="lightbox-content">
+            <img id="lightbox-img-masonry" src="" alt="">
+          </div>
+          <span class="nav-arrow left"><i class="bx bxs-chevron-left"></i></span>
+          <span class="nav-arrow right"><i class="bx bxs-chevron-right"></i></span>
+        </div>
+
+        <div id="lightbox-flex" class="lightbox">
+          <span class="close"><i class="bx bx-x"></i></span>
+          <div class="lightbox-content">
+            <img id="lightbox-img-flex" src="" alt="">
+          </div>
+          <span class="nav-arrow left"><i class="bx bxs-chevron-left"></i></span>
+          <span class="nav-arrow right"><i class="bx bxs-chevron-right"></i></span>
+        </div>
+
+        <!-- Cast -->
+        <section id="actors" class="actors">
+          <div class="section-header">
+            <h2>Main cast</h2>
+          </div>
+          <div class="actors-grid">
+            <article class="actor-card">
+              <img
+                src="https://placehold.co/150"
+                alt="Alicia Vikander"
+                loading="lazy"
+              >
+              <h3>Alicia Vikander</h3>
+              <p>Lara Croft</p>
+            </article>
+            <article class="actor-card">
+              <img
+                src="https://placehold.co/150"
+                alt="Dominic West"
+                loading="lazy"
+              >
+              <h3>Dominic West</h3>
+              <p>Richard Croft</p>
+            </article>
+            <article class="actor-card">
+              <img
+                src="https://placehold.co/150"
+                alt="Walton Goggins"
+                loading="lazy"
+              >
+              <h3>Walton Goggins</h3>
+              <p>Mathias Vogel</p>
+            </article>
+            <article class="actor-card">
+              <img
+                src="https://placehold.co/150"
+                alt="Daniel Wu"
+                loading="lazy"
+              >
+              <h3>Daniel Wu</h3>
+              <p>Lu Ren</p>
+            </article>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
+
+  <!-- Back to top -->
+  <div class="back-to-top" aria-label="Back to top">
+    <i class="bx bxs-chevrons-up"></i>
+  </div>
+
+<script>
+  const header = document.querySelector(".header");
+  const mainNavigation = document.querySelector(".main-navigation");
+  const menuIcon = document.querySelector(".menu-icon");
+  const closeMenuIcon = document.querySelector(".close-menu");
+  const backToTopButton = document.querySelector(".back-to-top");
+  const dropdownBtn = document.querySelector(".dropdown-btn");
+  const dropdownContent = document.querySelector(".dropdown-content");
+
+  let lastScrollTop = 0;
+
+  /* Header hide on scroll and back to top visibility */
+  window.addEventListener("scroll", () => {
+    const currentScroll =
+      window.pageYOffset || document.documentElement.scrollTop;
+
+    if (currentScroll > lastScrollTop) {
+      header.style.top = "-100%";
+      mainNavigation.classList.add("fixed");
+    } else {
+      header.style.top = "0";
+      mainNavigation.classList.remove("fixed");
+    }
+    lastScrollTop = currentScroll <= 0 ? 0 : currentScroll;
+
+    if (currentScroll > 300) {
+      backToTopButton.classList.add("show");
+    } else {
+      backToTopButton.classList.remove("show");
+    }
+  });
+
+  /* Helper to close mobile menu */
+  function closeMobileMenu() {
+    mainNavigation.classList.remove("open");
+    document.body.classList.remove("no-scroll");
+  }
+
+  /* Mobile nav toggle on hamburger */
+  menuIcon.addEventListener("click", () => {
+    if (mainNavigation.classList.contains("open")) {
+      closeMobileMenu();
+    } else {
+      mainNavigation.classList.add("open");
+      document.body.classList.add("no-scroll");
+    }
+  });
+
+  /* Close mobile menu on X */
+  closeMenuIcon.addEventListener("click", closeMobileMenu);
+
+  /* Close when tapping outside the menu */
+  document.addEventListener("click", (event) => {
+    const clickedInside =
+      mainNavigation.contains(event.target) || menuIcon.contains(event.target);
+    if (!clickedInside && mainNavigation.classList.contains("open")) {
+      closeMobileMenu();
+    }
+  });
+
+  /* Close mobile menu only when clicking leaf links (no submenu under them) */
+  document.querySelectorAll(".main-navigation a").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      // parent wrapper that might hold a submenu or sub-links
+      const parent = link.parentElement;
+      const hasSubMenu =
+        parent.querySelector(".submenu") || parent.querySelector(".sub-links");
+
+      // if this link controls a submenu, let the submenu logic handle it
+      if (hasSubMenu) {
+        return;
+      }
+
+      // for normal links on small screens, close the menu
+      if (window.innerWidth <= 900 && mainNavigation.classList.contains("open")) {
+        closeMobileMenu();
+      }
+    });
+  });
+
+  /* Desktop nav submenu handling */
+  document.querySelectorAll(".menu-item > a").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const parent = link.parentElement;
+      const submenu = parent.querySelector(".submenu");
+      if (!submenu) return;
+
+      event.preventDefault();
+
+      document.querySelectorAll(".submenu").forEach((other) => {
+        if (other !== submenu) {
+          other.classList.remove("open");
+        }
+      });
+
+      submenu.classList.toggle("open");
+    });
+  });
+
+  document.querySelectorAll(".submenu-item > a").forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const parent = link.parentElement;
+      const subLinks = parent.querySelector(".sub-links");
+      if (!subLinks) return;
+
+      event.preventDefault();
+
+      document.querySelectorAll(".sub-links").forEach((other) => {
+        if (other !== subLinks) {
+          other.classList.remove("open");
+        }
+      });
+
+      subLinks.classList.toggle("open");
+    });
+  });
+
+  /* Local sub nav on smaller screens */
+  if (dropdownBtn) {
+    dropdownBtn.addEventListener("click", () => {
+      dropdownContent.classList.toggle("show");
+    });
+  }
+
+  document
+    .querySelectorAll(".dropdown-content a")
+    .forEach((link) => {
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        const targetId = link.getAttribute("href").substring(1);
+        const target = document.getElementById(targetId);
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth" });
+        }
+        if (dropdownContent.classList.contains("show")) {
+          dropdownContent.classList.remove("show");
+        }
+      });
+    });
+
+  /* Back to top */
+  backToTopButton.addEventListener("click", () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  });
+
+  /* Lightbox helper */
+  function initLightbox(triggerSelector, lightboxId, imgId) {
+    const triggers = Array.from(
+      document.querySelectorAll(triggerSelector)
+    );
+    if (!triggers.length) return;
+
+    const lightbox = document.getElementById(lightboxId);
+    const imgElement = document.getElementById(imgId);
+    const close = lightbox.querySelector(".close");
+    const prev = lightbox.querySelector(".nav-arrow.left");
+    const next = lightbox.querySelector(".nav-arrow.right");
+
+    let index = 0;
+
+    function showSlide(i) {
+      if (i < 0) i = triggers.length - 1;
+      if (i >= triggers.length) i = 0;
+      index = i;
+      const src = triggers[i].getAttribute("href");
+      imgElement.src = src;
+    }
+
+    triggers.forEach((el, i) => {
+      el.addEventListener("click", (event) => {
+        event.preventDefault();
+        index = i;
+        showSlide(index);
+        lightbox.style.display = "block";
+      });
+    });
+
+    close.addEventListener("click", () => {
+      lightbox.style.display = "none";
+    });
+
+    prev.addEventListener("click", () => {
+      showSlide(index - 1);
+    });
+
+    next.addEventListener("click", () => {
+      showSlide(index + 1);
+    });
+
+    lightbox.addEventListener("click", (event) => {
+      if (event.target === lightbox) {
+        lightbox.style.display = "none";
+      }
+    });
+  }
+
+  initLightbox(".lightbox-trigger.masonry", "lightbox-masonry", "lightbox-img-masonry");
+  initLightbox(".lightbox-trigger.flex", "lightbox-flex", "lightbox-img-flex");
+</script>
+
+</body>
+</html>
