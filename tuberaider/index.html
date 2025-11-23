@@ -245,6 +245,16 @@ body::before {
     .section-header {
       margin-bottom: 20px;
       padding-left: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+
+    .section-header-text {
+      flex: 1;
+      min-width: 200px;
     }
 
     .section-title {
@@ -259,6 +269,38 @@ body::before {
       font-size: 15px;
       color: var(--text-tertiary);
       margin: 0;
+    }
+
+    .section-sort-pills {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .sort-pill {
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      background: var(--bg-card);
+      color: var(--text-secondary);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+    }
+
+    .sort-pill:hover {
+      background: var(--bg-hover);
+      border-color: var(--accent);
+      color: var(--text-primary);
+    }
+
+    .sort-pill.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #020308;
+      box-shadow: 0 0 10px rgba(38, 181, 139, 0.3);
     }
 
 .video-row-shell {
@@ -682,8 +724,16 @@ body::before {
 
     <section class="section">
       <div class="section-header">
-        <h2 class="section-title">Most Viewed</h2>
-        <p class="section-subtitle">Biggest results from the search</p>
+        <div class="section-header-text">
+          <h2 class="section-title">Most Viewed</h2>
+          <p class="section-subtitle">Biggest results from the search</p>
+        </div>
+        <div class="section-sort-pills" id="most-viewed-sort">
+          <button class="sort-pill active" data-timeframe="allTime">All Time</button>
+          <button class="sort-pill" data-timeframe="month">This Month</button>
+          <button class="sort-pill" data-timeframe="week">This Week</button>
+          <button class="sort-pill" data-timeframe="today">Today</button>
+        </div>
       </div>
       <div class="video-row-shell">
         <button class="arrow-btn" id="most-viewed-prev">
@@ -702,8 +752,14 @@ body::before {
 
     <section class="section">
       <div class="section-header">
-        <h2 class="section-title">Trending</h2>
-        <p class="section-subtitle">What's popular right now</p>
+        <div class="section-header-text">
+          <h2 class="section-title">Trending</h2>
+          <p class="section-subtitle">What's popular right now</p>
+        </div>
+        <div class="section-sort-pills" id="trending-sort">
+          <button class="sort-pill active" data-timeframe="week">This Week</button>
+          <button class="sort-pill" data-timeframe="today">Today</button>
+        </div>
       </div>
       <div class="video-row-shell">
         <button class="arrow-btn" id="trending-prev">
@@ -722,8 +778,10 @@ body::before {
 
     <section class="section">
       <div class="section-header">
-        <h2 class="section-title">Live Now</h2>
-        <p class="section-subtitle">Ongoing streams and premieres</p>
+        <div class="section-header-text">
+          <h2 class="section-title">Live Now</h2>
+          <p class="section-subtitle">Ongoing streams and premieres</p>
+        </div>
       </div>
       <div class="video-row-shell">
         <button class="arrow-btn" id="live-prev">
@@ -742,8 +800,10 @@ body::before {
 
     <section class="section">
       <div class="section-header">
-        <h2 class="section-title">Latest</h2>
-        <p class="section-subtitle">Fresh uploads</p>
+        <div class="section-header-text">
+          <h2 class="section-title">Latest</h2>
+          <p class="section-subtitle">Fresh uploads</p>
+        </div>
       </div>
       <div class="video-row-shell">
         <button class="arrow-btn" id="new-prev">
@@ -762,8 +822,10 @@ body::before {
 
     <section class="section">
       <div class="section-header">
-        <h2 class="section-title">Shorts</h2>
-        <p class="section-subtitle">Quick clips</p>
+        <div class="section-header-text">
+          <h2 class="section-title">Shorts</h2>
+          <p class="section-subtitle">Quick clips</p>
+        </div>
       </div>
       <div class="video-row-shell">
         <button class="arrow-btn" id="shorts-prev">
@@ -824,11 +886,25 @@ body::before {
     const lightboxClose = document.getElementById("lightbox-close");
 
     let dataStore = {
-      mostViewed: [],
-      trending: [],
+      mostViewed: {
+        today: [],
+        week: [],
+        month: [],
+        allTime: []
+      },
+      trending: {
+        today: [],
+        week: []
+      },
       newest: [],
       live: [],
       updated: null
+    };
+
+    // State for active sort options
+    let sortState = {
+      mostViewed: 'allTime',
+      trending: 'week'
     };
 
     // State for Load More functionality - tracks how many videos to show per section
@@ -959,7 +1035,16 @@ body::before {
       filtersEl.innerHTML = "";
 
       const tagSet = new Set();
-      const all = [...dataStore.mostViewed, ...dataStore.trending, ...dataStore.newest, ...dataStore.live];
+      const all = [
+        ...(dataStore.mostViewed.today || []),
+        ...(dataStore.mostViewed.week || []),
+        ...(dataStore.mostViewed.month || []),
+        ...(dataStore.mostViewed.allTime || []),
+        ...(dataStore.trending.today || []),
+        ...(dataStore.trending.week || []),
+        ...dataStore.newest,
+        ...dataStore.live
+      ];
 
       all.forEach((video) => {
         const tag = classifyVideo(video);
@@ -1000,13 +1085,23 @@ body::before {
         if (!response.ok) throw new Error("Worker responded with " + response.status);
         const data = await response.json();
 
-        dataStore.mostViewed = data.mostViewed || [];
-        dataStore.trending = data.trending || [];
+        dataStore.mostViewed = data.mostViewed || { today: [], week: [], month: [], allTime: [] };
+        dataStore.trending = data.trending || { today: [], week: [] };
         dataStore.newest = data.newest || [];
         dataStore.live = data.live || [];
         dataStore.updated = data.updated || null;
 
-        const allVideos = [...dataStore.mostViewed, ...dataStore.trending, ...dataStore.newest, ...dataStore.live];
+        // Collect all videos for classification
+        const allVideos = [
+          ...(dataStore.mostViewed.today || []),
+          ...(dataStore.mostViewed.week || []),
+          ...(dataStore.mostViewed.month || []),
+          ...(dataStore.mostViewed.allTime || []),
+          ...(dataStore.trending.today || []),
+          ...(dataStore.trending.week || []),
+          ...dataStore.newest,
+          ...dataStore.live
+        ];
         allVideos.forEach((video) => {
           classifyVideo(video, true);
         });
@@ -1045,10 +1140,18 @@ body::before {
         };
       }
 
-      // Collect all videos from all sources
+      // Get the active timeframe videos
+      const mostViewedVideos = dataStore.mostViewed[sortState.mostViewed] || [];
+      const trendingVideos = dataStore.trending[sortState.trending] || [];
+
+      // Collect all videos from all timeframes for classification purposes
       const allVideos = [
-        ...dataStore.mostViewed,
-        ...dataStore.trending,
+        ...(dataStore.mostViewed.today || []),
+        ...(dataStore.mostViewed.week || []),
+        ...(dataStore.mostViewed.month || []),
+        ...(dataStore.mostViewed.allTime || []),
+        ...(dataStore.trending.today || []),
+        ...(dataStore.trending.week || []),
         ...dataStore.newest,
         ...dataStore.live
       ];
@@ -1056,37 +1159,40 @@ body::before {
       // Collect ALL live videos from all sources by classification
       const liveOnly = allVideos.filter(v => classifyVideo(v) === "live");
 
-      // Filter out shorts and live from regular sections
-      const mostViewedFiltered = dataStore.mostViewed.filter(v => {
-        const tag = classifyVideo(v);
-        return tag !== "shorts" && tag !== "live";
-      });
-      
-      const trendingFiltered = dataStore.trending.filter(v => {
-        const tag = classifyVideo(v);
-        return tag !== "shorts" && tag !== "live";
-      });
-      
-      const newestFiltered = dataStore.newest.filter(v => {
-        const tag = classifyVideo(v);
-        return tag !== "shorts" && tag !== "live";
-      });
-
+      // Collect shorts from all sources
       const shortsOnly = allVideos.filter(v => classifyVideo(v) === "shorts");
 
-      renderRow(mostViewedFiltered, MOST_VIEWED_CONTAINER, MOST_VIEWED_STATUS, MOST_VIEWED_LOAD_MORE, 'mostViewed', false, false);
-      renderRow(trendingFiltered, TRENDING_CONTAINER, TRENDING_STATUS, TRENDING_LOAD_MORE, 'trending', false, false);
+      // For regular sections, use the selected timeframe data directly
+      // These already filter out shorts and live in the renderRow function via passesFilter
+      renderRow(mostViewedVideos, MOST_VIEWED_CONTAINER, MOST_VIEWED_STATUS, MOST_VIEWED_LOAD_MORE, 'mostViewed', false, false);
+      renderRow(trendingVideos, TRENDING_CONTAINER, TRENDING_STATUS, TRENDING_LOAD_MORE, 'trending', false, false);
       renderRow(liveOnly, LIVE_CONTAINER, LIVE_STATUS, LIVE_LOAD_MORE, 'live', false, true);
-      renderRow(newestFiltered, NEW_CONTAINER, NEW_STATUS, NEW_LOAD_MORE, 'newest', false, false);
+      renderRow(dataStore.newest, NEW_CONTAINER, NEW_STATUS, NEW_LOAD_MORE, 'newest', false, false);
       renderRow(shortsOnly, SHORTS_CONTAINER, SHORTS_STATUS, SHORTS_LOAD_MORE, 'shorts', true, false);
     }
 
     function renderRow(videos, container, statusEl, loadMoreBtn, sectionKey, isShortSection, isLiveSection = false) {
       container.innerHTML = "";
 
-      // Live section should always show all live videos regardless of filter
-      // Other sections should apply the active filter
-      const filtered = isLiveSection ? videos : videos.filter((v) => passesFilter(v, isShortSection));
+      // Apply filtering logic based on section type
+      let filtered;
+      
+      if (isLiveSection) {
+        // Live section: show all live videos regardless of content filter
+        filtered = videos;
+      } else if (isShortSection) {
+        // Shorts section: only show shorts, apply content filter
+        filtered = videos.filter((v) => passesFilter(v, true));
+      } else {
+        // Regular sections: filter out shorts and live, then apply content filter
+        filtered = videos.filter((v) => {
+          const tag = classifyVideo(v);
+          // First exclude shorts and live
+          if (tag === "shorts" || tag === "live") return false;
+          // Then apply content filter
+          return passesFilter(v, false);
+        });
+      }
 
       if (!filtered || filtered.length === 0) {
         statusEl.textContent = isLiveSection ? "No live streams at the moment" : "No videos for this filter.";
@@ -1216,6 +1322,42 @@ body::before {
     LIVE_LOAD_MORE.addEventListener("click", () => handleLoadMore('live'));
     NEW_LOAD_MORE.addEventListener("click", () => handleLoadMore('newest'));
     SHORTS_LOAD_MORE.addEventListener("click", () => handleLoadMore('shorts'));
+
+    // --- Sorting Pills Logic ---
+    const mostViewedSortContainer = document.getElementById('most-viewed-sort');
+    const trendingSortContainer = document.getElementById('trending-sort');
+
+    mostViewedSortContainer.addEventListener('click', (e) => {
+      const pill = e.target.closest('.sort-pill');
+      if (!pill) return;
+      
+      const timeframe = pill.dataset.timeframe;
+      sortState.mostViewed = timeframe;
+      
+      // Update active state
+      mostViewedSortContainer.querySelectorAll('.sort-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      
+      // Reset load more and re-render
+      loadMoreState.mostViewed = 8;
+      renderAll();
+    });
+
+    trendingSortContainer.addEventListener('click', (e) => {
+      const pill = e.target.closest('.sort-pill');
+      if (!pill) return;
+      
+      const timeframe = pill.dataset.timeframe;
+      sortState.trending = timeframe;
+      
+      // Update active state
+      trendingSortContainer.querySelectorAll('.sort-pill').forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      
+      // Reset load more and re-render
+      loadMoreState.trending = 8;
+      renderAll();
+    });
 
     fetchVideos();
   </script>
