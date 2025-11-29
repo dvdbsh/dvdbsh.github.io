@@ -1,75 +1,70 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <!-- Sets the browser address bar color to match the site background on mobile -->
     <meta name="theme-color" content="#05070a">
     <title>TubeRaider</title>
-    <!-- Fonts -->
+    
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css" />
+
+    <!-- Tailwind CSS (CDN for standalone file usage) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Outfit', 'system-ui', 'sans-serif'],
+            },
+            colors: {
+              dark: '#05070a',
+              card: '#131824',
+              'card-hover': '#1a2235',
+              accent: '#26b58b',
+              'accent-light': '#2ecfa1',
+              gold: '#f0c76a',
+              'live-red': '#ff4444',
+              secondary: '#b0b9cc',
+              tertiary: '#7a8299',
+              border: '#1f2937',
+            },
+            backgroundImage: {
+              'hero-pattern': "url('scene.webp')", // Assumes file exists, or falls back gracefully
+              'gradient-dark': 'linear-gradient(180deg, #05070a 0%, #0f1420 100%)',
+            },
+            keyframes: {
+              shimmer: {
+                '100%': { transform: 'translateX(100%)' },
+              }
+            },
+            animation: {
+              shimmer: 'shimmer 1.5s infinite',
+            }
+          }
+        }
+      }
+    </script>
+
     <style>
-      :root {
-        --bg-dark: #05070a;
-        --bg-card: #131824;
-        --bg-hover: #1a2235;
-        --accent: #26b58b;
-        --accent-light: #2ecfa1;
-        --text-primary: #ffffff;
-        --text-secondary: #b0b9cc;
-        --text-tertiary: #7a8299;
-        --border: #1f2937;
-        --gold: #f0c76a;
-        --live-red: #ff4444;
-        --live-bg: rgba(255, 68, 68, 0.15);
-        --background-image: url("scene.webp");
-        font-family: "Outfit", system-ui, -apple-system, sans-serif;
-        font-size: 16px; /* Base font size adjusted for mobile readability */
-      }
-
-      * {
-        box-sizing: border-box;
-        scrollbar-width: thin;
-        scrollbar-color: #3b4554 #0a0e17;
-        /* Disable blue highlight on tap for mobile */
-        -webkit-tap-highlight-color: transparent;
-      }
-
-      *::-webkit-scrollbar {
-        width: 6px;
-        height: 6px;
-      }
-
-      *::-webkit-scrollbar-track {
-        background: #0a0e17;
-      }
-
-      *::-webkit-scrollbar-thumb {
-        background: #3b4554;
-        border-radius: 4px;
-      }
-
-      body {
-        margin: 0;
-        padding: 0;
-        background: linear-gradient(180deg, var(--bg-dark) 0%, #0f1420 100%);
-        color: var(--text-primary);
-        line-height: 1.6;
-        min-height: 100vh;
-        position: relative;
-        overflow-x: hidden; /* Prevent horizontal scroll on body */
-      }
-
-      body::before {
+      /* Custom Scrollbar Utilities */
+      .scrollbar-hide::-webkit-scrollbar { display: none; }
+      .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+      
+      body::-webkit-scrollbar { width: 6px; height: 6px; }
+      body::-webkit-scrollbar-track { background: #0a0e17; }
+      body::-webkit-scrollbar-thumb { background: #3b4554; border-radius: 4px; }
+      
+      /* Background overlay hack */
+      .bg-hero-overlay::before {
         content: "";
         position: absolute;
-        top: 0;
-        right: 0;
-        width: 1000px;
-        height: 543px;
-        background-image: var(--background-image);
+        top: 0; right: 0;
+        width: 1000px; height: 543px;
+        background-image: url("scene.webp");
         background-repeat: no-repeat;
         background-size: contain;
         opacity: 0.5;
@@ -77,1076 +72,201 @@
         z-index: -1;
       }
 
-      a {
-        color: inherit;
-        text-decoration: none;
-      }
-
-      /* HEADER */
-      .header {
-        position: sticky;
-        top: 0;
-        z-index: 1000;
-        background: rgba(5, 7, 10, 0.95);
-        backdrop-filter: blur(16px);
-        -webkit-backdrop-filter: blur(16px);
-        border-bottom: 1px solid rgba(31, 41, 55, 0.5);
-        padding: 16px 0;
-        transition: padding 0.3s;
-      }
-
-      .header-inner {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 0 40px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-      }
-
-      .brand {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .brand-icon {
-        width: 32px;
-        height: 32px;
-        border-radius: 8px;
-        background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-weight: 700;
-        font-size: 1rem;
-        color: #020308;
-        box-shadow: 0 0 15px rgba(46, 207, 161, 0.3);
-      }
-
-      .brand-name {
-        font-weight: 700;
-        font-size: 1.5rem;
-        letter-spacing: 0.15em;
-        background: linear-gradient(135deg, var(--accent-light), var(--gold));
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-      }
-
-      .header-info {
-        display: flex;
-        gap: 12px;
-        align-items: center;
-      }
-
-      .info-pill {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        padding: 6px 12px;
-        background: rgba(38, 181, 139, 0.05);
-        border: 1px solid rgba(38, 181, 139, 0.2);
-        border-radius: 20px;
-        font-size: 0.85rem;
-        color: var(--text-secondary);
-        white-space: nowrap;
-      }
-
-      .info-pill i {
-        font-size: 0.95rem;
-        color: var(--accent);
-      }
-
-      /* MAIN */
-      main {
-        max-width: 1400px;
-        margin: 0 auto;
-        padding: 40px;
-      }
-
-      .hero-section {
-        margin-bottom: 50px;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-start;
-      }
-
-      .hero-text h1 {
-        font-size: 3.5rem;
-        font-weight: 800;
-        margin: 0 0 16px;
-        line-height: 1.1;
-        color: var(--text-primary);
-      }
-
-      .hero-text p {
-        font-size: 1.1rem;
-        color: var(--text-secondary);
-        margin: 0;
-        max-width: 500px;
-      }
-
-      /* FILTERS - Mobile Optimized */
-      .filters {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-top: 24px;
-        /* Smooth scrolling for mobile */
-        -webkit-overflow-scrolling: touch; 
-      }
-
-      .filter-pill {
-        padding: 10px 18px;
-        border: 1px solid var(--border);
-        border-radius: 24px;
-        background: var(--bg-card);
-        color: var(--text-secondary);
-        font-size: 0.75rem;
-        font-weight: 600;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        gap: 6px;
-        transition: all 0.2s ease;
-        letter-spacing: 0.05em;
-        text-transform: uppercase;
-        user-select: none;
-      }
-
-      /* Hover for Desktop only */
-      @media (hover: hover) {
-        .filter-pill:hover {
-          background: var(--bg-hover);
-          border-color: var(--accent);
-          color: var(--text-primary);
-        }
-      }
-
-      .filter-pill:active {
-        transform: scale(0.96);
-      }
-
-      .filter-pill.active {
-        background: var(--accent);
-        border-color: var(--accent);
-        color: #020308;
-        box-shadow: 0 0 15px rgba(38, 181, 139, 0.4);
-      }
-
-      .filter-pill i {
-        font-size: 1rem;
-      }
-
-      .filter-pill.active i {
-        color: #020308;
-      }
-
-      /* SECTIONS */
-      .section {
-        margin-bottom: 60px;
-      }
-      
-      .section.hidden-section {
-          display: none !important;
-      }
-
-      .section-header {
-        margin-bottom: 24px;
-        padding-left: 4px;
-        display: flex;
-        justify-content: space-between;
-        align-items: flex-end;
-        flex-wrap: wrap;
-        gap: 16px;
-      }
-
-      .section-header-text {
-        flex: 1;
-        min-width: 200px;
-      }
-
-      .section-title {
-        font-size: 2rem;
-        font-weight: 700;
-        color: var(--text-primary);
-        margin: 0 0 6px;
-        letter-spacing: -0.02em;
-      }
-
-      .section-subtitle {
-        font-size: 0.95rem;
-        color: var(--text-tertiary);
-        margin: 0;
-      }
-
-      .section-sort-pills {
-        display: flex;
-        gap: 8px;
-        flex-wrap: wrap;
-      }
-
-      .sort-pill {
-        padding: 8px 14px;
-        border: 1px solid var(--border);
-        border-radius: 16px;
-        background: var(--bg-card);
-        color: var(--text-secondary);
-        font-size: 0.8rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        white-space: nowrap;
-        user-select: none;
-      }
-
-      .sort-pill.active {
-        background: var(--accent);
-        border-color: var(--accent);
-        color: #020308;
-      }
-
-      .video-row-shell {
-        position: relative;
-        display: block;
-      }
-      
-      /* MAIN VIDEO GRID */
-      .video-row {
-        display: grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap: 24px;
-        padding: 4px;
-      }
-
-      /* SHORTS SCROLLER */
-      .video-row.shorts-row {
-        display: flex;
-        overflow-x: auto;
-        gap: 16px;
-        grid-template-columns: none;
-        scroll-behavior: smooth;
-        -ms-overflow-style: none; /* IE */
-        scrollbar-width: none; /* Firefox */
-        padding-bottom: 20px;
-        scroll-snap-type: x mandatory; 
-        -webkit-overflow-scrolling: touch; /* iOS Momentum */
-      }
-      
-      .video-row.shorts-row::-webkit-scrollbar {
-        display: none;
-      }
-      
-      .video-row.shorts-row .video-card {
-        min-width: calc((100% - 96px) / 7); 
-        width: calc((100% - 96px) / 7);
-        flex-shrink: 0;
-        scroll-snap-align: start; 
-      }
-
-      /* ARROWS */
-      .arrow-btn {
-        display: none; /* Hidden by default, shown on hover via JS/CSS */
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 10;
-        background: rgba(19, 24, 36, 0.95);
-        border: 1px solid var(--border);
-        color: var(--accent);
-        width: 48px;
-        height: 48px;
-        border-radius: 50%;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.8);
-      }
-      
-      /* Only show arrows on Desktop Hover */
-      @media (hover: hover) {
-        .video-row-shell:hover #shorts-prev, 
-        .video-row-shell:hover #shorts-next {
-            display: flex;
-            opacity: 1;
-        }
-      }
-
-      #shorts-prev { left: -24px; }
-      #shorts-next { right: -24px; }
-
-      /* VIDEO CARDS */
-      .video-card {
-        width: 100%;
-        background: var(--bg-card);
-        border-radius: 12px;
-        overflow: hidden;
-        border: 1px solid rgba(31, 41, 55, 0.5);
-        transition: border-color 0.2s ease, transform 0.1s ease;
-        cursor: pointer;
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        height: 100%;
-        -webkit-backface-visibility: hidden; /* Fix flickering */
-      }
-
-      /* Desktop Hover */
-      @media (hover: hover) {
-        .video-card:hover {
-          border-color: var(--accent);
-          box-shadow: 0 0 25px rgba(38, 181, 139, 0.15);
-          z-index: 2;
-        }
-        .video-card:hover .overlay-icon {
-          opacity: 1;
-          transform: translate(-50%, -50%) scale(1);
-        }
-        .video-card:hover .video-thumb img {
-          opacity: 1;
-          transform: scale(1.05);
-        }
-      }
-
-      /* Mobile Active State (Tap) */
-      .video-card:active {
-        transform: scale(0.98);
-        border-color: var(--accent);
-      }
-
-      .video-card.live-card {
-        border-color: rgba(255, 68, 68, 0.3);
-      }
-      
-      .video-thumb {
-        position: relative;
-        width: 100%;
-        background: #0f1420;
-        overflow: hidden;
-        aspect-ratio: 16 / 9;
-      }
-
-      .video-thumb.ratio-shorts {
-        aspect-ratio: 9 / 16; 
-      }
-      
-      .duration-badge {
-        position: absolute;
-        bottom: 8px;
-        right: 8px;
-        background: rgba(0, 0, 0, 0.85);
-        color: white;
-        padding: 4px 6px;
-        border-radius: 4px;
-        font-size: 0.7rem;
-        font-weight: 700;
-        letter-spacing: 0.02em;
-        pointer-events: none;
-      }
-
-      .stats-badge {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        background: rgba(0, 0, 0, 0.85);
-        color: white;
-        padding: 4px 8px;
-        border-radius: 4px;
-        font-size: 0.7rem;
-        font-weight: 600;
-        display: flex;
-        align-items: center;
-        gap: 4px;
-        pointer-events: none;
-      }
-
-      .video-thumb img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        display: block;
-        transition: transform 0.4s ease;
-        opacity: 0.95;
-      }
-
-      .overlay-icon {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%) scale(0.8);
-        width: 54px;
-        height: 54px;
-        border-radius: 50%;
-        background: rgba(38, 181, 139, 0.95);
-        color: #000;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2rem;
-        opacity: 0;
-        transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-        pointer-events: none;
-      }
-      
-      .video-card.live-card .overlay-icon {
-          background: rgba(255, 68, 68, 0.95);
-      }
-
-      .video-info {
-        padding: 14px;
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        flex: 1;
-        justify-content: space-between;
-      }
-
-      .video-title {
-        font-size: 0.95rem;
-        font-weight: 600;
-        color: var(--text-primary);
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        line-height: 1.35;
-      }
-
-      .video-meta {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 6px;
-        font-size: 0.75rem;
-        color: var(--text-tertiary);
-        align-items: center;
-      }
-      
-      .video-footer {
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-top: 6px;
-      }
-
-      .video-tag {
-        display: inline-flex;
-        padding: 4px 10px;
-        background: rgba(38, 181, 139, 0.1);
-        border: 1px solid rgba(38, 181, 139, 0.2);
-        border-radius: 12px;
-        color: var(--accent);
-        font-weight: 700;
-        font-size: 0.65rem;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        white-space: nowrap;
-      }
-
-      .video-tag.short-tag {
-        background: rgba(240, 199, 106, 0.1);
-        border-color: rgba(240, 199, 106, 0.2);
-        color: var(--gold);
-      }
-
-      .video-tag.live-tag {
-        background: var(--live-bg);
-        border-color: rgba(255, 68, 68, 0.3);
-        color: var(--live-red);
-      }
-
-      .status-msg {
-        font-size: 0.9rem;
-        color: var(--text-tertiary);
-        margin-top: 12px;
-        padding-left: 4px;
-      }
-
-      /* LIGHTBOX - IMPROVED DESIGN */
-      .lightbox {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.98); /* Darker for better focus */
-        backdrop-filter: blur(15px);
-        -webkit-backdrop-filter: blur(15px);
-        z-index: 9999;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.3s ease;
-        padding: 40px;
-      }
-
-      .lightbox.active {
-        opacity: 1;
-        pointer-events: auto;
-      }
-
-      .lightbox-content-wrapper {
-        position: relative;
-        width: 100%;
-        max-width: 1100px;
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-        /* Scroll content if tall */
-        max-height: 95vh;
-      }
-
-      .lightbox-video-container {
-        position: relative;
-        width: 100%;
-        background: #000;
-        border-radius: 16px;
-        overflow: hidden;
-        box-shadow: 0 0 50px rgba(38, 181, 139, 0.1);
-        border: 1px solid rgba(38, 181, 139, 0.2);
-        aspect-ratio: 16 / 9;
-        flex-shrink: 0;
-      }
-
-      .lightbox-video-container.short-mode {
-        max-width: 450px;
-        aspect-ratio: 9 / 16;
-        margin: 0 auto; /* Center shorts */
-      }
-
-      .lightbox-iframe {
-        width: 100%;
-        height: 100%;
-        border: none;
-      }
-
-      /* Lightbox Details Section */
-      .lightbox-details {
-        color: var(--text-primary);
-        padding: 8px 4px;
-        animation: fadeIn 0.5s ease 0.2s backwards;
-        overflow-y: auto;
-      }
-
-      .lightbox-header {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        margin-bottom: 12px;
-      }
-
-      .lightbox-title {
-        font-size: 1.5rem;
-        font-weight: 700;
-        line-height: 1.3;
-        margin: 0;
-      }
-      
-      /* ACTION BUTTONS */
-      .action-buttons {
-          display: flex;
-          gap: 10px;
-          margin-top: 4px;
-      }
-      
-      .action-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 8px 16px;
-          border-radius: 20px;
-          font-size: 0.85rem;
-          font-weight: 600;
-          text-decoration: none;
-          transition: all 0.2s;
-          border: 1px solid transparent;
-      }
-      
-      .action-btn.youtube {
-          background: #ff0000;
-          color: white;
-      }
-      
-      .action-btn.youtube:hover {
-          background: #cc0000;
-      }
-      
-      .action-btn.channel {
-          background: rgba(255,255,255,0.1);
-          color: var(--text-primary);
-          border-color: rgba(255,255,255,0.1);
-      }
-      
-      .action-btn.channel:hover {
-          background: rgba(255,255,255,0.2);
-      }
-
-      .lightbox-meta-row {
-        display: flex;
-        align-items: center;
-        flex-wrap: wrap;
-        gap: 8px;
-        color: var(--text-secondary);
-        font-size: 0.95rem;
-        margin-bottom: 16px;
-      }
-
-      .meta-divider {
-        color: var(--text-tertiary);
-      }
-
-      .channel-name {
-        color: var(--accent-light);
-        font-weight: 600;
-      }
-
-      .lightbox-description {
-        font-size: 0.95rem;
-        color: var(--text-secondary);
-        line-height: 1.6;
-        max-width: 800px;
-        white-space: pre-wrap; /* Preserve line breaks */
-        display: -webkit-box;
-        -webkit-line-clamp: 3; /* Limit initially */
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-        transition: all 0.3s;
-      }
-      
-      .lightbox-description.expanded {
-          -webkit-line-clamp: unset;
-      }
-      
-      .read-more-btn {
-          color: var(--accent);
-          font-size: 0.9rem;
-          font-weight: 600;
-          margin-top: 6px;
-          cursor: pointer;
-          display: inline-block;
-          background: none;
-          border: none;
-          padding: 0;
-      }
-      
-      .read-more-btn:hover {
-          text-decoration: underline;
-      }
-
-      .lightbox-close {
-        position: absolute;
-        top: -60px;
-        right: 0;
-        background: rgba(255,255,255,0.1);
-        border: 1px solid rgba(255,255,255,0.1);
-        width: 44px;
-        height: 44px;
-        border-radius: 50%;
-        color: #fff;
-        font-size: 1.5rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        transition: all 0.2s;
-        z-index: 100;
-      }
-
-      .lightbox-close:hover {
-        background: var(--accent);
-        border-color: var(--accent);
-        color: #000;
-      }
-      
-      /* Lightbox Navigation Arrows */
-      .lightbox-nav-btn {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          background: rgba(0,0,0,0.5);
-          color: white;
-          border: 1px solid rgba(255,255,255,0.1);
-          width: 48px;
-          height: 48px;
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          cursor: pointer;
-          transition: all 0.2s;
-          z-index: 101;
-      }
-      
-      .lightbox-nav-btn:hover {
-          background: var(--accent);
-          color: black;
-      }
-      
-      #lb-prev { left: -70px; }
-      #lb-next { right: -70px; }
-
-      @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(10px); }
-        to { opacity: 1; transform: translateY(0); }
-      }
-
-      /* LOAD MORE BUTTON */
-      .load-more-btn {
-        display: block;
-        width: 100%;
-        max-width: 300px;
-        margin: 32px auto 0;
-        padding: 16px 28px;
-        background: var(--bg-card);
-        border: 1px solid var(--border);
-        border-radius: 30px;
-        color: var(--text-secondary);
-        font-size: 0.9rem;
-        font-weight: 700;
-        cursor: pointer;
-        transition: all 0.2s ease;
-        font-family: inherit;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-      }
-
-      .load-more-btn:active {
-        transform: scale(0.97);
-      }
-
-      .load-more-btn.hidden {
-        display: none;
-      }
-
-      /* SKELETONS */
-      .skeleton {
-        background: var(--bg-card);
-        border-radius: 12px;
-        border: 1px solid var(--border);
-        width: 100%;
-        aspect-ratio: 16/10;
-        position: relative;
-        overflow: hidden;
-      }
-      .skeleton::after {
-        content: "";
-        position: absolute;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        left: 0;
-        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
-        animation: shimmer 1.5s infinite;
-        transform: translateX(-100%);
-      }
-      .skeleton.short { aspect-ratio: 9/16; }
-      @keyframes shimmer { 100% { transform: translateX(100%); } }
-
-      /* FOOTER */
-      footer {
-        border-top: 1px solid var(--border);
-        padding: 40px 20px;
-        text-align: center;
-        color: var(--text-tertiary);
-        font-size: 0.9rem;
-        margin-top: 60px;
-        background: var(--bg-dark);
-      }
-
-      /* ========================================= */
-      /* MOBILE RESPONSIVENESS */
-      /* ========================================= */
-      
-      @media (max-width: 1280px) {
-        .video-row { grid-template-columns: repeat(4, 1fr); }
-      }
-      
-      @media (max-width: 1024px) {
-        main { padding: 40px 20px; }
-        .hero-text h1 { font-size: 3rem; }
-        .video-row { grid-template-columns: repeat(3, 1fr); }
-        
-        #lb-prev { left: 10px; }
-        #lb-next { right: 10px; }
-      }
-
-      @media (max-width: 768px) {
-        .video-row { grid-template-columns: repeat(2, 1fr); }
-        .hero-section { flex-direction: column; }
-        .hero-text h1 { font-size: 2.5rem; }
-      }
-
-      @media (max-width: 640px) {
-        main { padding: 20px 16px; }
-        
-        .header { padding: 12px 0; }
-        .header-inner { padding: 0 16px; }
-        .brand-icon { width: 28px; height: 28px; font-size: 0.9rem; }
-        .brand-name { font-size: 1.3rem; }
-        /* Hide text part of header info on small screens */
-        .header-info .info-pill:first-child { display: none; } 
-        
-        .hero-text h1 { font-size: 2rem; margin-bottom: 12px; }
-        .hero-text p { font-size: 1rem; }
-        
-        /* Better Filter Scroll */
-        .filters {
-            flex-wrap: nowrap;
-            overflow-x: auto;
-            margin-left: -16px; /* Bleed to edge */
-            margin-right: -16px;
-            padding-left: 16px;
-            padding-right: 16px;
-            padding-bottom: 12px;
-            /* Hide Scrollbar */
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-            mask-image: linear-gradient(to right, black 95%, transparent 100%);
-            -webkit-mask-image: linear-gradient(to right, black 95%, transparent 100%);
-        }
-        .filters::-webkit-scrollbar { display: none; }
-        .filter-pill { flex-shrink: 0; }
-
-        .section-title { font-size: 1.6rem; }
-        
-        /* 1 Column Layout on Mobile */
-        .video-row { 
-            grid-template-columns: 1fr; 
-            gap: 20px;
-        }
-        
-        /* Cards: Remove hover pop, retain border glow */
-        .video-card { transform: none !important; }
-        .video-card:hover { transform: none; box-shadow: none; }
-        
-        /* Shorts Scroller - Peek Effect */
-        .video-row.shorts-row {
-            margin-left: -16px;
-            margin-right: -16px;
-            padding-left: 16px;
-            padding-right: 16px;
-        }
-        .video-row.shorts-row .video-card {
-            min-width: 140px; 
-            width: 140px; 
-        }
-
-        /* LIGHTBOX MOBILE OPTIMIZATION */
-        .lightbox { 
-            padding: 0; 
-            background: #000; /* Full black immersive */
-            align-items: flex-start; /* Start from top */
-        }
-        
-        .lightbox-content-wrapper {
-            height: 100%;
-            max-height: 100%;
-            justify-content: flex-start; /* Push to top */
-            gap: 0;
-            overflow-y: auto; /* Allow scrolling content */
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .lightbox-video-container {
-            width: 100%;
-            border-radius: 0;
-            border: none;
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 10;
-        }
-        
-        .lightbox-video-container.short-mode {
-            max-width: 100%;
-            aspect-ratio: 9 / 16;
-            margin: 0;
-        }
-        
-        .lightbox-details {
-            padding: 20px 16px 80px 16px; /* Extra bottom padding for safe area */
-        }
-        
-        .lightbox-title {
-            font-size: 1.2rem;
-        }
-        
-        /* New Mobile Close Button - Fixed Bottom Center */
-        .lightbox-close {
-            top: auto;
-            bottom: 30px;
-            right: 50%;
-            transform: translateX(50%);
-            width: 50px;
-            height: 50px;
-            background: rgba(20, 20, 20, 0.8);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            position: fixed; /* Fixed over scroll */
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-        }
-        
-        .lightbox-close i {
-            font-size: 1.2rem;
-        }
-        
-        /* Mobile Nav Buttons - Overlay on Video */
-        .lightbox-nav-btn {
-            width: 40px;
-            height: 40px;
-            background: rgba(0,0,0,0.3);
-            border: none;
-            top: 30%; /* Higher up */
-        }
-        #lb-prev { left: 10px; }
-        #lb-next { right: 10px; }
-      }
+      /* Hide header when lightbox is open if needed, handled via z-index usually */
     </style>
   </head>
-  <body>
-    <header class="header">
-      <div class="header-inner">
-        <div class="brand">
-          <div class="brand-icon">TR</div>
-          <div class="brand-name">TUBERAIDER</div>
-        </div>
-        <div class="header-info">
-          <div class="info-pill">
-            <i class="ph ph-compass"></i> Tomb Raider only
+  <body class="bg-dark text-white font-sans antialiased min-h-screen relative bg-gradient-dark selection:bg-accent selection:text-black overflow-x-hidden bg-hero-overlay">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-40 bg-[#05070a]/95 backdrop-blur-md border-b border-white/5 py-4 transition-transform duration-300" id="main-header">
+      <div class="max-w-[1400px] mx-auto px-4 md:px-10 flex items-center justify-between">
+        <!-- Brand -->
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-accent-light flex items-center justify-center text-black font-bold text-base shadow-[0_0_15px_rgba(46,207,161,0.3)]">
+            TR
           </div>
-          <div class="info-pill" id="header-updated">
-            <i class="ph ph-clock"></i> Just now
+          <div class="font-bold text-xl md:text-2xl tracking-widest text-transparent bg-clip-text bg-gradient-to-br from-accent-light to-gold">
+            TUBERAIDER
+          </div>
+        </div>
+
+        <!-- Info Pills -->
+        <div class="flex gap-3 items-center">
+          <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-accent/5 border border-accent/20 rounded-full text-sm text-secondary whitespace-nowrap">
+            <i class="ph ph-compass text-accent text-base"></i> Tomb Raider only
+          </div>
+          <div class="flex items-center gap-1.5 px-3 py-1.5 bg-accent/5 border border-accent/20 rounded-full text-sm text-secondary whitespace-nowrap" id="header-updated">
+            <i class="ph ph-clock text-accent text-base"></i> Just now
           </div>
         </div>
       </div>
     </header>
-    <main>
-      <div class="hero-section">
-        <div class="hero-text">
-          <h1>TubeRaider</h1>
-          <p>Discover the latest walkthroughs, trailers, speedruns, and content from the Tomb Raider universe.</p>
-          <div class="filters" id="filters"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="max-w-[1400px] mx-auto px-4 py-6 md:p-10">
+      
+      <!-- HERO -->
+      <div class="flex flex-col lg:flex-row justify-between items-start mb-12 gap-6">
+        <div class="w-full">
+          <h1 class="text-4xl md:text-[3.5rem] font-extrabold leading-[1.1] mb-4 text-white">TubeRaider</h1>
+          <p class="text-lg text-secondary max-w-[500px] mb-6">Discover the latest walkthroughs, trailers, speedruns, and content from the Tomb Raider universe.</p>
+          <!-- Filter Container -->
+          <div class="flex flex-nowrap overflow-x-auto scrollbar-hide gap-2.5 pb-2 -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap" id="filters">
+            <!-- Filters injected by JS -->
+          </div>
         </div>
       </div>
+
+      <!-- TEMPLATE: Section Shell -->
       
       <!-- MOST VIEWED -->
-      <section class="section" id="section-most-viewed">
-        <div class="section-header">
-          <div class="section-header-text">
-            <h2 class="section-title">Most Viewed</h2>
-            <p class="section-subtitle">Top videos from the archive</p>
+      <section class="mb-14 group/section" id="section-most-viewed">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-white mb-1">Most Viewed</h2>
+            <p class="text-sm md:text-base text-tertiary">Top videos from the archive</p>
           </div>
-          <div class="section-sort-pills" id="most-viewed-sort">
-            <button class="sort-pill active" data-timeframe="allTime">All Time</button>
-            <button class="sort-pill" data-timeframe="month">This Month</button>
-            <button class="sort-pill" data-timeframe="week">This Week</button>
-            <button class="sort-pill" data-timeframe="today">Today</button>
+          <div class="flex gap-2 flex-wrap" id="most-viewed-sort">
+            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors active:bg-accent active:text-black active:border-accent data-[active=true]:bg-accent data-[active=true]:text-black data-[active=true]:border-accent" data-timeframe="allTime" data-active="true">All Time</button>
+            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors active:bg-accent active:text-black active:border-accent" data-timeframe="month">This Month</button>
+            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors active:bg-accent active:text-black active:border-accent" data-timeframe="week">This Week</button>
+            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors active:bg-accent active:text-black active:border-accent" data-timeframe="today">Today</button>
           </div>
         </div>
-        <div class="video-row-shell">
-          <button class="arrow-btn" id="most-viewed-prev"><i class="ph ph-caret-left"></i></button>
-          <div class="video-row" id="most-viewed-container"></div>
-          <button class="arrow-btn" id="most-viewed-next"><i class="ph ph-caret-right"></i></button>
+
+        <div class="relative group/slider" id="shell-most-viewed">
+          <!-- Arrows removed for grid layout -->
+          
+          <!-- Grid Container -->
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 overflow-x-auto md:overflow-visible scrollbar-hide pb-4 -mx-4 px-4 md:mx-0 md:px-0" id="most-viewed-container">
+            <!-- Content -->
+          </div>
+          
         </div>
-        <button class="load-more-btn hidden" id="most-viewed-load-more">Load More</button>
-        <div class="status-msg" id="most-viewed-status"></div>
+        
+        <button class="hidden w-full max-w-[300px] mx-auto mt-8 py-4 bg-card border border-border rounded-full text-secondary text-sm font-bold uppercase tracking-wider hover:bg-card-hover hover:text-white transition-all active:scale-95" id="most-viewed-load-more">Load More</button>
+        <div class="text-tertiary text-sm mt-3 pl-1" id="most-viewed-status"></div>
       </section>
 
       <!-- TRENDING -->
-      <section class="section" id="section-trending">
-        <div class="section-header">
-          <div class="section-header-text">
-            <h2 class="section-title">Trending</h2>
-            <p class="section-subtitle">What's popular right now</p>
+      <section class="mb-14 group/section" id="section-trending">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-white mb-1">Trending</h2>
+            <p class="text-sm md:text-base text-tertiary">What's popular right now</p>
           </div>
-          <div class="section-sort-pills" id="trending-sort">
-            <button class="sort-pill active" data-timeframe="week">This Week</button>
-            <button class="sort-pill" data-timeframe="today">Today</button>
+          <div class="flex gap-2" id="trending-sort">
+            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors data-[active=true]:bg-accent data-[active=true]:text-black data-[active=true]:border-accent" data-timeframe="week" data-active="true">This Week</button>
+            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors data-[active=true]:bg-accent data-[active=true]:text-black data-[active=true]:border-accent" data-timeframe="today">Today</button>
           </div>
         </div>
-        <div class="video-row-shell">
-          <button class="arrow-btn" id="trending-prev"><i class="ph ph-caret-left"></i></button>
-          <div class="video-row" id="trending-container"></div>
-          <button class="arrow-btn" id="trending-next"><i class="ph ph-caret-right"></i></button>
+        <div class="relative group/slider" id="shell-trending">
+          <!-- Arrows removed for grid layout -->
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 overflow-x-auto md:overflow-visible scrollbar-hide pb-4 -mx-4 px-4 md:mx-0 md:px-0" id="trending-container"></div>
         </div>
-        <button class="load-more-btn hidden" id="trending-load-more">Load More</button>
-        <div class="status-msg" id="trending-status"></div>
+        <button class="hidden w-full max-w-[300px] mx-auto mt-8 py-4 bg-card border border-border rounded-full text-secondary text-sm font-bold uppercase tracking-wider hover:bg-card-hover hover:text-white transition-all active:scale-95" id="trending-load-more">Load More</button>
+        <div class="text-tertiary text-sm mt-3 pl-1" id="trending-status"></div>
       </section>
 
       <!-- LIVE -->
-      <section class="section" id="section-live">
-        <div class="section-header">
-          <div class="section-header-text">
-            <h2 class="section-title">Live Now</h2>
-            <p class="section-subtitle">Ongoing streams and premieres</p>
+      <section class="mb-14 group/section" id="section-live">
+        <div class="flex items-end justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-white mb-1">Live Now</h2>
+            <p class="text-sm md:text-base text-tertiary">Ongoing streams and premieres</p>
           </div>
         </div>
-        <div class="video-row-shell">
-          <button class="arrow-btn" id="live-prev"><i class="ph ph-caret-left"></i></button>
-          <div class="video-row" id="live-container"></div>
-          <button class="arrow-btn" id="live-next"><i class="ph ph-caret-right"></i></button>
+        <div class="relative group/slider" id="shell-live">
+          <!-- Arrows removed for grid layout -->
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 overflow-x-auto md:overflow-visible scrollbar-hide pb-4 -mx-4 px-4 md:mx-0 md:px-0" id="live-container"></div>
         </div>
-        <button class="load-more-btn hidden" id="live-load-more">Load More</button>
-        <div class="status-msg" id="live-status"></div>
+        <button class="hidden w-full max-w-[300px] mx-auto mt-8 py-4 bg-card border border-border rounded-full text-secondary text-sm font-bold uppercase tracking-wider hover:bg-card-hover hover:text-white transition-all active:scale-95" id="live-load-more">Load More</button>
+        <div class="text-tertiary text-sm mt-3 pl-1" id="live-status"></div>
       </section>
 
       <!-- LATEST -->
-      <section class="section" id="section-latest">
-        <div class="section-header">
-          <div class="section-header-text">
-            <h2 class="section-title">Latest</h2>
-            <p class="section-subtitle">Fresh uploads</p>
+      <section class="mb-14 group/section" id="section-latest">
+        <div class="flex items-end justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-white mb-1">Latest</h2>
+            <p class="text-sm md:text-base text-tertiary">Fresh uploads</p>
           </div>
         </div>
-        <div class="video-row-shell">
-          <button class="arrow-btn" id="new-prev"><i class="ph ph-caret-left"></i></button>
-          <div class="video-row" id="new-container"></div>
-          <button class="arrow-btn" id="new-next"><i class="ph ph-caret-right"></i></button>
+        <div class="relative group/slider" id="shell-latest">
+          <!-- Arrows removed for grid layout -->
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 overflow-x-auto md:overflow-visible scrollbar-hide pb-4 -mx-4 px-4 md:mx-0 md:px-0" id="new-container"></div>
         </div>
-        <button class="load-more-btn hidden" id="new-load-more">Load More</button>
-        <div class="status-msg" id="new-status"></div>
+        <button class="hidden w-full max-w-[300px] mx-auto mt-8 py-4 bg-card border border-border rounded-full text-secondary text-sm font-bold uppercase tracking-wider hover:bg-card-hover hover:text-white transition-all active:scale-95" id="new-load-more">Load More</button>
+        <div class="text-tertiary text-sm mt-3 pl-1" id="new-status"></div>
       </section>
 
       <!-- SHORTS -->
-      <section class="section" id="section-shorts">
-        <div class="section-header">
-          <div class="section-header-text">
-            <h2 class="section-title">Shorts</h2>
-            <p class="section-subtitle">Quick clips</p>
+      <section class="mb-14 group/section" id="section-shorts">
+        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
+          <div>
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-white mb-1">Shorts</h2>
+            <p class="text-sm md:text-base text-tertiary">Quick clips</p>
           </div>
-          <div class="section-sort-pills" id="shorts-sort">
-            <button class="sort-pill active" data-sort="latest">Latest</button>
-            <button class="sort-pill" data-sort="popular">Popular</button>
+          <div class="flex gap-2" id="shorts-sort">
+            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors data-[active=true]:bg-accent data-[active=true]:text-black data-[active=true]:border-accent" data-sort="latest" data-active="true">Latest</button>
+            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors data-[active=true]:bg-accent data-[active=true]:text-black data-[active=true]:border-accent" data-sort="popular">Popular</button>
           </div>
         </div>
-        <div class="video-row-shell">
-          <button class="arrow-btn" id="shorts-prev"><i class="ph ph-caret-left"></i></button>
-          <div class="video-row shorts-row" id="shorts-container"></div>
-          <button class="arrow-btn" id="shorts-next"><i class="ph ph-caret-right"></i></button>
+        <div class="relative group/slider" id="shell-shorts">
+          <button class="hidden lg:flex absolute -left-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-card/95 border border-border rounded-full items-center justify-center text-accent shadow-lg opacity-0 group-hover/slider:opacity-100 transition-opacity hover:scale-110" id="shorts-prev"><i class="ph ph-caret-left text-xl"></i></button>
+          
+          <!-- Shorts specific container class for horizontal scroll -->
+          <div class="flex overflow-x-auto gap-4 md:gap-6 pb-6 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0" id="shorts-container">
+            <!-- Shorts Content -->
+          </div>
+          
+          <button class="hidden lg:flex absolute -right-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-card/95 border border-border rounded-full items-center justify-center text-accent shadow-lg opacity-0 group-hover/slider:opacity-100 transition-opacity hover:scale-110" id="shorts-next"><i class="ph ph-caret-right text-xl"></i></button>
         </div>
-        <div class="status-msg" id="shorts-status"></div>
+        <div class="text-tertiary text-sm mt-3 pl-1" id="shorts-status"></div>
       </section>
     </main>
-    <footer>
+
+    <footer class="border-t border-border py-10 px-5 text-center text-tertiary text-sm mt-16 bg-dark">
       <p>© 2025 TubeRaider — Curated Tomb Raider content</p>
     </footer>
 
-    <!-- LIGHTBOX -->
-    <div id="lightbox" class="lightbox">
-      <button class="lightbox-nav-btn" id="lb-prev"><i class="ph ph-caret-left"></i></button>
-      <div class="lightbox-content-wrapper" id="lightbox-wrapper">
-          <!-- Content Injected via JS -->
+    <!-- VIDEO SHEET / LAYER -->
+    <!-- Structure changed to Flex Column for bottom bar layout -->
+    <div id="video-sheet" class="fixed inset-0 z-[100] bg-[#05070a] transform translate-y-full transition-transform duration-500 cubic-bezier(0.32, 0.72, 0, 1) flex flex-col">
+      
+      <!-- Content Wrapper: Flex Row on Desktop (Split View), Flex Col on Mobile -->
+      <div id="sheet-content-wrapper" class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
+          <!-- Dynamic Content Injected Here -->
       </div>
-      <button class="lightbox-nav-btn" id="lb-next"><i class="ph ph-caret-right"></i></button>
-      <button class="lightbox-close" id="lightbox-close">
-        <i class="ph ph-x"></i>
-      </button>
+
+      <!-- Bottom Control Bar (Fixed) -->
+      <div class="h-20 bg-[#05070a] border-t border-white/10 flex items-center justify-between px-6 md:px-10 shrink-0 safe-area-bottom z-50">
+        <button id="sheet-close" class="group flex flex-col items-center gap-1 text-secondary hover:text-white transition-colors">
+            <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
+                <i class="ph ph-x text-xl"></i>
+            </div>
+            <span class="text-[10px] uppercase font-bold tracking-wider opacity-70 group-hover:opacity-100">Close</span>
+        </button>
+
+        <div class="flex items-center gap-6">
+            <button id="sheet-prev" class="group flex flex-col items-center gap-1 text-secondary hover:text-accent transition-colors">
+                <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
+                    <i class="ph ph-caret-left text-xl"></i>
+                </div>
+                <span class="text-[10px] uppercase font-bold tracking-wider opacity-70 group-hover:opacity-100">Prev</span>
+            </button>
+            <button id="sheet-next" class="group flex flex-col items-center gap-1 text-secondary hover:text-accent transition-colors">
+                <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
+                    <i class="ph ph-caret-right text-xl"></i>
+                </div>
+                <span class="text-[10px] uppercase font-bold tracking-wider opacity-70 group-hover:opacity-100">Next</span>
+            </button>
+        </div>
+      </div>
+
     </div>
 
+    <!-- SCRIPT -->
     <script>
       const MOST_VIEWED_CONTAINER = document.getElementById("most-viewed-container");
       const TRENDING_CONTAINER = document.getElementById("trending-container");
@@ -1174,11 +294,12 @@
       const filtersEl = document.getElementById("filters");
       const headerUpdated = document.getElementById("header-updated");
       
-      const lightbox = document.getElementById("lightbox");
-      const lightboxWrapper = document.getElementById("lightbox-wrapper");
-      const lightboxClose = document.getElementById("lightbox-close");
-      const lbPrev = document.getElementById("lb-prev");
-      const lbNext = document.getElementById("lb-next");
+      // Video Sheet Elements
+      const videoSheet = document.getElementById("video-sheet");
+      const sheetContentWrapper = document.getElementById("sheet-content-wrapper");
+      const sheetClose = document.getElementById("sheet-close");
+      const sheetPrev = document.getElementById("sheet-prev");
+      const sheetNext = document.getElementById("sheet-next");
       
       let dataStore = {
         mostViewed: { today: [], week: [], month: [], allTime: [] },
@@ -1215,7 +336,7 @@
         speedrun: { label: "Speedruns", icon: "ph-lightning" }
       };
 
-      // CLASSIFICATION LOGIC
+      // --- HELPERS ---
       function titleAndDescription(video) {
         const title = (video.snippet && video.snippet.title) || "";
         const description = (video.snippet && video.snippet.description) || "";
@@ -1243,14 +364,11 @@
         
         if (t.includes("#shorts") || t.includes(" shorts") || t.includes("ytshorts") || video._isShort) return "shorts";
         
-        // Strict duration for shorts
         if (duration > 0 && duration < 120) return "shorts";
 
-        // Live
         if (video.snippet && (video.snippet.liveBroadcastContent === 'live' || video.snippet.liveBroadcastContent === 'upcoming')) return "live";
         if (t.includes("🔴") || t.includes("live now") || t.includes("[live]")) return "live";
 
-        // Categories
         if (hasTag("soundtrack") || hasTag("ost") || hasWord("ost") || hasPhrase("official score")) return "ost";
         if ((hasTag("trailer") || hasWord("trailer") || hasWord("teaser")) && duration < 300) return "trailer";
         if (hasTag("speedrun") || hasWord("speedrun") || hasPhrase("speed run")) return "speedrun";
@@ -1269,7 +387,7 @@
         return tag === activeFilter;
       }
 
-      // UI BUILDERS
+      // --- FILTERS ---
       function buildFilters() {
         filtersEl.innerHTML = "";
         const tagSet = new Set(['all']);
@@ -1284,24 +402,39 @@
           if (!tagSet.has(key)) return;
           const meta = filterMeta[key];
           const btn = document.createElement("button");
-          btn.className = "filter-pill";
-          if (key === activeFilter) btn.classList.add("active");
+          // Tailwind Classes for Filter Pill
+          btn.className = "flex-shrink-0 px-4 py-2.5 border border-border rounded-3xl bg-card text-secondary text-xs font-bold uppercase tracking-wider cursor-pointer flex items-center gap-1.5 transition-all hover:bg-card-hover hover:border-accent hover:text-white data-[active=true]:bg-accent data-[active=true]:border-accent data-[active=true]:text-black data-[active=true]:shadow-[0_0_15px_rgba(38,181,139,0.4)]";
+          if (key === activeFilter) btn.setAttribute('data-active', 'true');
           btn.dataset.filter = key;
-          btn.innerHTML = `<i class="ph ${meta.icon}"></i>${meta.label}`;
+          btn.innerHTML = `<i class="ph ${meta.icon} text-sm ${key === activeFilter ? 'text-black' : 'text-accent'}"></i>${meta.label}`;
           filtersEl.appendChild(btn);
         });
       }
 
       filtersEl.addEventListener("click", (event) => {
-        const btn = event.target.closest(".filter-pill");
+        const btn = event.target.closest("button");
         if (!btn) return;
         activeFilter = btn.dataset.filter || "all";
-        [...filtersEl.querySelectorAll(".filter-pill")].forEach(b => b.classList.remove("active"));
-        btn.classList.add("active");
+        // Reset active state
+        [...filtersEl.querySelectorAll("button")].forEach(b => {
+             b.removeAttribute('data-active');
+             const icon = b.querySelector('i');
+             if(icon) {
+                 icon.classList.remove('text-black');
+                 icon.classList.add('text-accent');
+             }
+        });
+        // Set new active
+        btn.setAttribute('data-active', 'true');
+        const activeIcon = btn.querySelector('i');
+        if(activeIcon) {
+            activeIcon.classList.remove('text-accent');
+            activeIcon.classList.add('text-black');
+        }
         renderAll(true);
       });
 
-      // FORMATTERS
+      // --- FORMATTERS ---
       function formatViewCount(count) {
         if (!count) return "0";
         const num = parseInt(count);
@@ -1327,26 +460,29 @@
             : `${minutes}:${String(seconds).padStart(2, '0')}`;
       }
 
-      // RENDERING
+      // --- RENDER ---
       function showSkeletons() {
+        const skeletonClass = "w-full aspect-video bg-card rounded-xl border border-border relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/5 after:to-transparent after:animate-shimmer after:-translate-x-full";
+        const shortSkeletonClass = "flex-shrink-0 w-[140px] md:w-[calc((100%-96px)/7)] aspect-[9/16] bg-card rounded-xl border border-border relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/5 after:to-transparent after:animate-shimmer after:-translate-x-full";
+
         [MOST_VIEWED_CONTAINER, TRENDING_CONTAINER, LIVE_CONTAINER, NEW_CONTAINER].forEach(c => {
           c.innerHTML = "";
           for (let i = 0; i < 5; i++) {
             const sk = document.createElement("div");
-            sk.className = "skeleton";
+            sk.className = skeletonClass;
             c.appendChild(sk);
           }
         });
         SHORTS_CONTAINER.innerHTML = "";
-        for (let i = 0; i < 5; i++) {
+        for (let i = 0; i < 7; i++) {
           const sk = document.createElement("div");
-          sk.className = "skeleton short";
+          sk.className = shortSkeletonClass;
           SHORTS_CONTAINER.appendChild(sk);
         }
       }
 
       function renderRow(videos, container, statusEl, loadMoreBtn, sectionKey, isShortSection, isLiveSection = false, sectionEl = null) {
-        const prevScrollLeft = isShortSection ? container.scrollLeft : 0;
+        const prevScrollLeft = container.scrollLeft;
         container.innerHTML = "";
         
         let filtered;
@@ -1364,16 +500,16 @@
 
         if (!filtered || filtered.length === 0) {
           if (activeFilter !== 'all' && sectionEl) {
-              sectionEl.classList.add('hidden-section');
+              sectionEl.classList.add('hidden');
           } else {
               statusEl.textContent = isLiveSection ? "No live streams." : "No videos found.";
-              if(sectionEl) sectionEl.classList.remove('hidden-section');
+              if(sectionEl) sectionEl.classList.remove('hidden');
           }
           if(loadMoreBtn) loadMoreBtn.classList.add('hidden');
           return;
         }
         
-        if (sectionEl) sectionEl.classList.remove('hidden-section');
+        if (sectionEl) sectionEl.classList.remove('hidden');
         statusEl.textContent = "";
         
         const limit = loadMoreState[sectionKey];
@@ -1385,40 +521,49 @@
           if (!videoId) return;
           
           const title = video.snippet?.title || "Untitled";
-          const channel = video.snippet?.channelTitle || "";
+          const channel = video.snippet?.channelTitle || "Unknown Channel";
           const publishedDate = formatDate(video.snippet?.publishedAt);
           const tag = classifyVideo(video);
           const isShort = isShortSection || tag === "shorts";
           const isLive = tag === "live";
           
-          const card = document.createElement("div");
-          card.className = "video-card" + (isShort ? " short" : "") + (isLive ? " live-card" : "");
-          // Pass index and full list for navigation
-          card.onclick = () => openLightbox(index, videosToShow);
-          
-          const thumbClass = isShort ? "video-thumb ratio-shorts" : "video-thumb ratio-16x9";
-          const tagClass = tag === "live" ? "live-tag" : (isShort ? "short-tag" : "");
-          
           const viewCount = formatViewCount(video.statistics?.viewCount);
           const duration = parseDuration(video.contentDetails?.duration);
           
+          // TAILWIND CLASSES construction
+          const cardBase = "group relative flex flex-col w-full bg-card rounded-xl overflow-hidden border border-white/10 transition-all duration-200 cursor-pointer hover:border-accent hover:shadow-[0_0_25px_rgba(38,181,139,0.15)] hover:z-10 active:scale-95 active:border-accent";
+          const liveBorder = isLive ? "border-live-red/30" : "";
+          const shortsWidth = isShort ? "min-w-[140px] w-[140px] md:min-w-[calc((100%-96px)/7)] md:w-[calc((100%-96px)/7)] flex-shrink-0 snap-start" : "";
+          
+          const thumbContainer = isShort ? "relative w-full bg-[#0f1420] overflow-hidden aspect-[9/16]" : "relative w-full bg-[#0f1420] overflow-hidden aspect-video";
+          
+          // Tag Styling
+          let tagStyle = "bg-accent/10 border-accent/20 text-accent";
+          if (isShort) tagStyle = "bg-gold/10 border-gold/20 text-gold";
+          if (tag === "live") tagStyle = "bg-live-red/15 border-live-red/30 text-live-red";
+
+          const card = document.createElement("div");
+          // Merge classes
+          card.className = `${cardBase} ${liveBorder} ${shortsWidth}`;
+          card.onclick = () => openLightbox(index, filtered);
+          
           card.innerHTML = `
-            <div class="${thumbClass}">
-                <img src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg" loading="lazy" alt="">
-                ${viewCount !== "0" ? `<div class="stats-badge"><i class="ph ph-eye"></i>${viewCount}</div>` : ''}
-                ${duration ? `<div class="duration-badge">${duration}</div>` : ''}
-                <div class="overlay-icon"><i class="ph-fill ph-play"></i></div>
+            <div class="${thumbContainer}">
+                <img src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg" loading="lazy" alt="" class="w-full h-full object-cover transition-transform duration-500 opacity-95 group-hover:scale-105">
+                ${viewCount !== "0" ? `<div class="absolute top-2 right-2 bg-black/85 text-white px-2 py-1 rounded text-[10px] font-bold flex items-center gap-1 pointer-events-none"><i class="ph ph-eye"></i>${viewCount}</div>` : ''}
+                ${duration ? `<div class="absolute bottom-2 right-2 bg-black/85 text-white px-1.5 py-0.5 rounded text-[10px] font-bold pointer-events-none">${duration}</div>` : ''}
+                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-accent/95 text-black flex items-center justify-center text-3xl opacity-0 scale-75 transition-all duration-300 shadow-xl pointer-events-none group-hover:opacity-100 group-hover:scale-100 ${isLive ? 'bg-live-red/95' : ''}"><i class="ph-fill ph-play"></i></div>
             </div>
-            <div class="video-info">
-                <div class="video-text-group">
-                    <div class="video-title">${title}</div>
-                    <div class="video-meta">
-                        <span>${channel}</span>
+            <div class="p-3.5 flex flex-col gap-2 flex-1 justify-between">
+                <div>
+                    <div class="text-sm font-semibold text-white line-clamp-2 leading-snug">${title}</div>
+                    <div class="flex flex-wrap gap-1.5 text-xs text-tertiary items-center mt-2">
+                        <span class="font-medium">${channel}</span>
                         ${publishedDate ? `<span>•</span><span>${publishedDate}</span>` : ''}
                     </div>
                 </div>
-                <div class="video-footer">
-                    <div class="video-tag ${tagClass}">${tagLabel(tag)}</div>
+                <div class="flex items-center justify-between mt-1">
+                    <div class="inline-flex px-2.5 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wide border ${tagStyle}">${tagLabel(tag)}</div>
                 </div>
             </div>
           `;
@@ -1430,7 +575,7 @@
             else loadMoreBtn.classList.add('hidden');
         }
         
-        if (isShortSection) container.scrollLeft = prevScrollLeft;
+        container.scrollLeft = prevScrollLeft;
       }
 
       function tagLabel(tag) {
@@ -1469,7 +614,7 @@
         renderRow(shortsOnly, SHORTS_CONTAINER, SHORTS_STATUS, null, 'shorts', true, false, SEC_SHORTS);
       }
 
-      // DATA FETCHING
+      // --- DATA ---
       async function fetchVideos() {
         showSkeletons();
         const CACHE_KEY = 'tuberaider_data';
@@ -1497,7 +642,7 @@
         } catch (e) {
           console.error(e);
           [MOST_VIEWED_STATUS, TRENDING_STATUS, LIVE_STATUS, NEW_STATUS, SHORTS_STATUS].forEach(el => {
-             el.classList.add("error");
+             el.className = "text-red-500 text-sm mt-2";
              el.textContent = "Could not load videos";
           });
         }
@@ -1517,23 +662,26 @@
         buildFilters();
         renderAll(true);
         if (data.updated) {
-            headerUpdated.innerHTML = `<i class="ph ph-clock"></i>${new Date(data.updated).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            headerUpdated.innerHTML = `<i class="ph ph-clock text-accent text-base"></i>${new Date(data.updated).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
         }
       }
 
-      // LIGHTBOX LOGIC - UPDATED TO SHOW DETAILS
+      // --- VIDEO SHEET LOGIC (REPLACES LIGHTBOX) ---
       let currentLightboxList = [];
       let currentLightboxIndex = 0;
 
       function openLightbox(index, list) {
-        // Push state for Android back button support
         history.pushState({modalOpen: true}, "Video", "#video");
         
         currentLightboxList = list;
         currentLightboxIndex = index;
+        
+        // Prevent Body Scroll
+        document.body.classList.add('overflow-hidden');
         updateLightboxContent();
         
-        lightbox.classList.add('active');
+        // Slide Up Animation
+        videoSheet.classList.remove('translate-y-full');
       }
       
       function updateLightboxContent() {
@@ -1543,72 +691,81 @@
           const videoId = typeof videoData.id === 'string' ? videoData.id : (videoData.id && videoData.id.videoId ? videoData.id.videoId : null);
           const isShort = classifyVideo(videoData) === 'shorts';
           
-          // Prepare data
           const title = videoData.snippet?.title || "Unknown Title";
           const channel = videoData.snippet?.channelTitle || "Unknown Channel";
           const channelId = videoData.snippet?.channelId || "";
           const views = formatViewCount(videoData.statistics?.viewCount) + " views";
           const date = formatDate(videoData.snippet?.publishedAt);
-          // Fix indentation by using trim and ensuring no whitespace in variable
           const desc = (videoData.snippet?.description || "No description available.").trim();
           
-          const videoClass = isShort ? "short-mode" : "";
+          // Split Layout Construction
+          // Left Side (or Top on Mobile): Video Container
+          const videoContainerClass = "w-full lg:w-[75%] h-[40vh] lg:h-full bg-black flex items-center justify-center relative";
           
-          // INJECT HTML
-          lightboxWrapper.innerHTML = `
-              <div class="lightbox-video-container ${videoClass}">
-                  <iframe class="lightbox-iframe" 
-                      src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1" 
-                      allowfullscreen allow="autoplay; encrypted-media; picture-in-picture">
-                  </iframe>
+          // Right Side (or Bottom on Mobile): Details Container
+          const detailsContainerClass = "w-full lg:w-[25%] h-full overflow-y-auto bg-[#05070a] border-l border-white/5";
+
+          // Video Aspect Ratio Logic
+          const videoWrapperStyle = isShort 
+              ? "h-full w-auto aspect-[9/16] max-w-full"
+              : "w-full aspect-video max-h-full";
+
+          sheetContentWrapper.innerHTML = `
+              <!-- Left/Top: Video -->
+              <div class="${videoContainerClass}">
+                  <div class="${videoWrapperStyle}">
+                      <iframe class="w-full h-full border-none" 
+                          src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1" 
+                          allowfullscreen allow="autoplay; encrypted-media; picture-in-picture">
+                      </iframe>
+                  </div>
               </div>
               
-              <div class="lightbox-details">
-                  <div class="lightbox-header">
-                      <h3 class="lightbox-title">${title}</h3>
-                      <div class="action-buttons">
-                          <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="action-btn youtube">
-                              <i class="ph-fill ph-youtube-logo"></i> Watch on YouTube
+              <!-- Right/Bottom: Details -->
+              <div class="${detailsContainerClass}">
+                  <div class="p-6 md:p-8 flex flex-col gap-6">
+                      <div class="flex flex-col gap-3">
+                          <h3 class="text-xl md:text-2xl font-bold leading-tight text-white">${title}</h3>
+                          <div class="flex flex-wrap items-center gap-2 text-sm text-secondary">
+                              <span class="font-bold text-accent">${channel}</span>
+                              <span class="w-1 h-1 rounded-full bg-white/30"></span>
+                              <span>${views}</span>
+                              <span class="w-1 h-1 rounded-full bg-white/30"></span>
+                              <span>${date}</span>
+                          </div>
+                      </div>
+
+                      <div class="flex flex-col gap-2">
+                          <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="flex justify-center items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold bg-[#ff0000] text-white hover:brightness-110 transition-all">
+                              <i class="ph-fill ph-youtube-logo text-lg"></i> Watch on YouTube
                           </a>
-                          <a href="https://www.youtube.com/channel/${channelId}" target="_blank" class="action-btn channel">
-                              <i class="ph-fill ph-user"></i> Visit Channel
+                          <a href="https://www.youtube.com/channel/${channelId}" target="_blank" class="flex justify-center items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold bg-white/5 text-white border border-white/10 hover:bg-white/10 transition-all">
+                              <i class="ph-fill ph-user text-lg"></i> Visit Channel
                           </a>
                       </div>
+                      
+                      <hr class="border-white/10" />
+                      
+                      <div class="text-secondary leading-relaxed whitespace-pre-wrap text-sm pb-10">${desc}</div>
                   </div>
-                  
-                  <div class="lightbox-meta-row">
-                      <span class="channel-name">${channel}</span>
-                      <span class="meta-divider">•</span>
-                      <span class="view-count">${views}</span>
-                      <span class="meta-divider">•</span>
-                      <span class="upload-date">${date}</span>
-                  </div>
-                  
-                  <div class="lightbox-description" id="lb-desc">${desc}</div>
-                  <button class="read-more-btn" id="lb-readmore" onclick="toggleDesc()">Read more</button>
               </div>
           `;
           
-          // Check description length to show/hide "Read more"
-          setTimeout(() => {
-              const descEl = document.getElementById('lb-desc');
-              const btn = document.getElementById('lb-readmore');
-              if(descEl && descEl.scrollHeight <= descEl.clientHeight) {
-                  btn.style.display = 'none';
-              }
-          }, 100);
+          // Update Prev/Next Button States (Grey out if no more)
+          if (currentLightboxIndex === 0) {
+              sheetPrev.classList.add('opacity-50', 'pointer-events-none');
+          } else {
+              sheetPrev.classList.remove('opacity-50', 'pointer-events-none');
+          }
+
+          if (currentLightboxIndex >= currentLightboxList.length - 1) {
+              sheetNext.classList.add('opacity-50', 'pointer-events-none');
+          } else {
+              sheetNext.classList.remove('opacity-50', 'pointer-events-none');
+          }
       }
       
-      // Global function for the onclick
-      window.toggleDesc = function() {
-          const desc = document.getElementById('lb-desc');
-          const btn = document.getElementById('lb-readmore');
-          desc.classList.toggle('expanded');
-          btn.textContent = desc.classList.contains('expanded') ? "Show less" : "Read more";
-      }
-      
-      // Nav Functions
-      lbPrev.addEventListener('click', (e) => {
+      sheetPrev.addEventListener('click', (e) => {
           e.stopPropagation();
           if (currentLightboxIndex > 0) {
               currentLightboxIndex--;
@@ -1616,7 +773,7 @@
           }
       });
       
-      lbNext.addEventListener('click', (e) => {
+      sheetNext.addEventListener('click', (e) => {
           e.stopPropagation();
           if (currentLightboxIndex < currentLightboxList.length - 1) {
               currentLightboxIndex++;
@@ -1624,40 +781,36 @@
           }
       });
 
-      function closeLightbox() {
-        lightbox.classList.remove('active');
-        // Clear history state if we are closing manually
+      function closeSheet() {
+        videoSheet.classList.add('translate-y-full');
+        document.body.classList.remove('overflow-hidden');
+        
         if (history.state && history.state.modalOpen) {
              history.back();
         }
-        setTimeout(() => { lightboxWrapper.innerHTML = ""; }, 300);
+        
+        // Cleanup content after animation
+        setTimeout(() => { sheetContentWrapper.innerHTML = ""; }, 500);
       }
       
-      // Handle Back Button
       window.onpopstate = function(event) {
-          if (lightbox.classList.contains('active')) {
-              lightbox.classList.remove('active');
-              setTimeout(() => { lightboxWrapper.innerHTML = ""; }, 300);
+          // If the sheet is open (doesn't have translate-y-full), close it
+          if (!videoSheet.classList.contains('translate-y-full')) {
+              videoSheet.classList.add('translate-y-full');
+              document.body.classList.remove('overflow-hidden');
+              setTimeout(() => { sheetContentWrapper.innerHTML = ""; }, 500);
           }
       };
 
-      lightboxClose.addEventListener("click", () => {
-          // Manually triggering close needs to handle history carefully
+      sheetClose.addEventListener("click", () => {
           if (history.state && history.state.modalOpen) {
-              history.back(); // This will trigger onpopstate which closes it
+              history.back(); 
           } else {
-              closeLightbox(); // Fallback
+              closeSheet(); 
           }
       });
-      
-      lightbox.addEventListener("click", (e) => {
-        if (e.target === lightbox || e.target === lightboxWrapper) {
-             if (history.state && history.state.modalOpen) history.back();
-             else closeLightbox();
-        }
-      });
 
-      // EVENT LISTENERS
+      // --- INIT LISTENERS ---
       const sortConfigs = [
         { key: 'mostViewed', id: 'most-viewed-sort' },
         { key: 'trending', id: 'trending-sort' },
@@ -1668,12 +821,15 @@
           const el = document.getElementById(config.id);
           if (el) {
               el.addEventListener('click', (e) => {
-                 const pill = e.target.closest('.sort-pill');
+                 const pill = e.target.closest('button');
                  if(!pill) return;
                  const type = pill.dataset.timeframe || pill.dataset.sort;
                  sortState[config.key] = type;
-                 el.querySelectorAll('.sort-pill').forEach(p => p.classList.remove('active'));
-                 pill.classList.add('active');
+                 
+                 // Toggle Active Attributes
+                 el.querySelectorAll('button').forEach(p => p.removeAttribute('data-active'));
+                 pill.setAttribute('data-active', 'true');
+                 
                  renderAll();
               });
           }
@@ -1689,11 +845,28 @@
           renderAll();
       }
 
-      // Horizontal Scroll Buttons
-      document.querySelectorAll('.video-row-shell').forEach(shell => {
-          const container = shell.querySelector('.video-row');
-          const prev = shell.querySelector('.arrow-btn:first-child');
-          const next = shell.querySelector('.arrow-btn:last-child');
+      document.querySelectorAll('.group\\/slider').forEach(shell => {
+          const container = shell.querySelector('div[id$="-container"]');
+          const prev = shell.querySelector('button[id$="-prev"]');
+          const next = shell.querySelector('button[id$="-next"]');
+          
+          if(container) {
+              container.addEventListener('scroll', () => {
+                  if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 100) {
+                      const sectionId = shell.parentElement.getAttribute('id');
+                      if(sectionId) {
+                          const key = sectionId.replace('section-', '').replace('latest', 'newest').replace('most-viewed', 'mostViewed');
+                          if (!container.dataset.loading && loadMoreState[key]) {
+                              container.dataset.loading = "true";
+                              setTimeout(() => { 
+                                  handleLoadMore(key); 
+                                  container.dataset.loading = "";
+                              }, 500);
+                          }
+                      }
+                  }
+              });
+          }
           
           if(prev && next && container) {
               prev.addEventListener('click', () => container.scrollBy({ left: -container.clientWidth, behavior: 'smooth' }));
@@ -1704,4 +877,4 @@
       fetchVideos();
     </script>
   </body>
-</html> 
+</html>
