@@ -1,17 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth antialiased">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="theme-color" content="#05070a">
+    <meta name="theme-color" content="#000000">
     <title>TubeRaider</title>
     
-    <!-- Fonts & Icons -->
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css" />
 
-    <!-- Tailwind CSS (CDN for standalone file usage) -->
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       tailwind.config = {
@@ -21,28 +21,17 @@
               sans: ['Outfit', 'system-ui', 'sans-serif'],
             },
             colors: {
-              dark: '#05070a',
-              card: '#131824',
-              'card-hover': '#1a2235',
-              accent: '#26b58b',
-              'accent-light': '#2ecfa1',
-              gold: '#f0c76a',
-              'live-red': '#ff4444',
-              secondary: '#b0b9cc',
-              tertiary: '#7a8299',
-              border: '#1f2937',
+              black: '#000000',
+              dark: '#0a0a0a',
+              surface: '#161616',
+              accent: '#26b58b', 
+              gold: '#eebc51',
+              red: '#e50914',
+              subtle: '#a3a3a3',
             },
-            backgroundImage: {
-              'hero-pattern': "url('scene.webp')", // Assumes file exists, or falls back gracefully
-              'gradient-dark': 'linear-gradient(180deg, #05070a 0%, #0f1420 100%)',
-            },
-            keyframes: {
-              shimmer: {
-                '100%': { transform: 'translateX(100%)' },
-              }
-            },
-            animation: {
-              shimmer: 'shimmer 1.5s infinite',
+            boxShadow: {
+              'premium': '0 20px 40px -10px rgba(0,0,0,0.5)',
+              'glow-accent': '0 0 40px -10px rgba(38, 181, 139, 0.2)',
             }
           }
         }
@@ -50,257 +39,252 @@
     </script>
 
     <style>
-      /* Custom Scrollbar Utilities */
-      .scrollbar-hide::-webkit-scrollbar { display: none; }
-      .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+      .touch-scroll { -webkit-overflow-scrolling: touch; }
+      .aspect-video { aspect-ratio: 16 / 9; }
       
-      body::-webkit-scrollbar { width: 6px; height: 6px; }
-      body::-webkit-scrollbar-track { background: #0a0e17; }
-      body::-webkit-scrollbar-thumb { background: #3b4554; border-radius: 4px; }
-      
-      /* Background overlay hack */
-      .bg-hero-overlay::before {
-        content: "";
+      /* Video Background Wrapper */
+      .hero-video-container {
         position: absolute;
-        top: 0; right: 0;
-        width: 1000px; height: 543px;
-        background-image: url("scene.webp");
-        background-repeat: no-repeat;
-        background-size: contain;
-        opacity: 0.5;
-        pointer-events: none;
-        z-index: -1;
+        top: 0; left: 0; width: 100%; height: 100%;
+        overflow: hidden;
+        z-index: 0;
       }
-
-      /* Hide header when lightbox is open if needed, handled via z-index usually */
+      /* Force iframe to fill and crop */
+      .hero-video-container iframe {
+        position: absolute;
+        top: 50%; left: 50%;
+        width: 100vw; height: 56.25vw; /* 16:9 ratio based on width */
+        min-height: 100vh; min-width: 177.77vh; /* 16:9 ratio based on height */
+        transform: translate(-50%, -50%) scale(1.3); /* Scale slightly to hide controls/bars */
+        pointer-events: none;
+      }
     </style>
   </head>
-  <body class="bg-dark text-white font-sans antialiased min-h-screen relative bg-gradient-dark selection:bg-accent selection:text-black overflow-x-hidden bg-hero-overlay">
+  <body class="bg-black text-white font-sans min-h-screen relative overflow-x-hidden selection:bg-accent selection:text-black">
 
     <!-- HEADER -->
-    <header class="sticky top-0 z-40 bg-[#05070a]/95 backdrop-blur-md border-b border-white/5 py-4 transition-transform duration-300" id="main-header">
-      <div class="max-w-[1400px] mx-auto px-4 md:px-10 flex items-center justify-between">
-        <!-- Brand -->
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-accent to-accent-light flex items-center justify-center text-black font-bold text-base shadow-[0_0_15px_rgba(46,207,161,0.3)]">
-            TR
-          </div>
-          <div class="font-bold text-xl md:text-2xl tracking-widest text-transparent bg-clip-text bg-gradient-to-br from-accent-light to-gold">
-            TUBERAIDER
-          </div>
+    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-gradient-to-b from-black/90 via-black/50 to-transparent" id="navbar">
+      <div class="w-full px-6 md:px-12 h-24 flex items-center justify-between">
+        <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+          <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/10 text-white font-extrabold text-sm tracking-tighter group-hover:bg-accent group-hover:text-black transition-colors duration-300">TR</div>
+          <span class="font-extrabold text-xl tracking-[0.2em] uppercase opacity-90 group-hover:opacity-100 transition-opacity drop-shadow-md">TubeRaider</span>
         </div>
 
-        <!-- Info Pills -->
-        <div class="flex gap-3 items-center">
-          <div class="hidden sm:flex items-center gap-1.5 px-3 py-1.5 bg-accent/5 border border-accent/20 rounded-full text-sm text-secondary whitespace-nowrap">
-            <i class="ph ph-compass text-accent text-base"></i> Tomb Raider only
-          </div>
-          <div class="flex items-center gap-1.5 px-3 py-1.5 bg-accent/5 border border-accent/20 rounded-full text-sm text-secondary whitespace-nowrap" id="header-updated">
-            <i class="ph ph-clock text-accent text-base"></i> Just now
-          </div>
+        <div class="flex items-center">
+           <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 border border-white/10 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest text-subtle shadow-lg" id="header-updated">
+             <i class="ph-fill ph-circle text-accent animate-pulse"></i> Live
+           </div>
         </div>
       </div>
     </header>
 
-    <!-- MAIN CONTENT -->
-    <main class="max-w-[1400px] mx-auto px-4 py-6 md:p-10">
+    <!-- HERO SECTION -->
+    <div class="relative w-full h-[85vh] flex items-end bg-dark overflow-hidden">
       
-      <!-- HERO -->
-      <div class="flex flex-col lg:flex-row justify-between items-start mb-12 gap-6">
-        <div class="w-full">
-          <h1 class="text-4xl md:text-[3.5rem] font-extrabold leading-[1.1] mb-4 text-white">TubeRaider</h1>
-          <p class="text-lg text-secondary max-w-[500px] mb-6">Discover the latest walkthroughs, trailers, speedruns, and content from the Tomb Raider universe.</p>
-          <!-- Filter Container -->
-          <div class="flex flex-nowrap overflow-x-auto scrollbar-hide gap-2.5 pb-2 -mx-4 px-4 md:mx-0 md:px-0 md:flex-wrap" id="filters">
-            <!-- Filters injected by JS -->
-          </div>
-        </div>
+      <!-- Video Background -->
+      <div class="hero-video-container opacity-60 mix-blend-lighten transition-opacity duration-1000" id="hero-bg">
+         <!-- Fallback static image until video loads -->
+         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=2940')] bg-cover bg-center"></div>
       </div>
-
-      <!-- TEMPLATE: Section Shell -->
       
-      <!-- MOST VIEWED -->
-      <section class="mb-14 group/section" id="section-most-viewed">
-        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
-          <div>
-            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-white mb-1">Most Viewed</h2>
-            <p class="text-sm md:text-base text-tertiary">Top videos from the archive</p>
-          </div>
-          <div class="flex gap-2 flex-wrap" id="most-viewed-sort">
-            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors active:bg-accent active:text-black active:border-accent data-[active=true]:bg-accent data-[active=true]:text-black data-[active=true]:border-accent" data-timeframe="allTime" data-active="true">All Time</button>
-            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors active:bg-accent active:text-black active:border-accent" data-timeframe="month">This Month</button>
-            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors active:bg-accent active:text-black active:border-accent" data-timeframe="week">This Week</button>
-            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors active:bg-accent active:text-black active:border-accent" data-timeframe="today">Today</button>
-          </div>
-        </div>
+      <!-- Gradients for Text Readability -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-10"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent z-10"></div>
 
-        <div class="relative group/slider" id="shell-most-viewed">
-          <!-- Arrows removed for grid layout -->
+      <!-- Hero Text Content -->
+      <div class="relative z-20 w-full max-w-[1600px] mx-auto px-6 md:px-12 pb-24 md:pb-32 flex flex-col justify-end h-full pointer-events-none">
+        <div class="max-w-4xl pointer-events-auto">
           
-          <!-- Grid Container -->
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 overflow-x-auto md:overflow-visible scrollbar-hide pb-4 -mx-4 px-4 md:mx-0 md:px-0" id="most-viewed-container">
-            <!-- Content -->
+          <div class="flex items-center gap-3 mb-6">
+             <span class="px-2 py-1 bg-accent text-black text-[10px] font-black uppercase tracking-widest rounded-sm">Featured</span>
+             <span class="px-2 py-1 bg-white/10 text-white border border-white/20 text-[10px] font-bold uppercase tracking-widest rounded-sm backdrop-blur-md">Collection</span>
           </div>
+
+          <h1 class="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.9] mb-6 text-white drop-shadow-2xl">
+            TubeRaider
+          </h1>
           
-        </div>
-        
-        <button class="hidden w-full max-w-[300px] mx-auto mt-8 py-4 bg-card border border-border rounded-full text-secondary text-sm font-bold uppercase tracking-wider hover:bg-card-hover hover:text-white transition-all active:scale-95" id="most-viewed-load-more">Load More</button>
-        <div class="text-tertiary text-sm mt-3 pl-1" id="most-viewed-status"></div>
-      </section>
-
-      <!-- TRENDING -->
-      <section class="mb-14 group/section" id="section-trending">
-        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
-          <div>
-            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-white mb-1">Trending</h2>
-            <p class="text-sm md:text-base text-tertiary">What's popular right now</p>
-          </div>
-          <div class="flex gap-2" id="trending-sort">
-            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors data-[active=true]:bg-accent data-[active=true]:text-black data-[active=true]:border-accent" data-timeframe="week" data-active="true">This Week</button>
-            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors data-[active=true]:bg-accent data-[active=true]:text-black data-[active=true]:border-accent" data-timeframe="today">Today</button>
-          </div>
-        </div>
-        <div class="relative group/slider" id="shell-trending">
-          <!-- Arrows removed for grid layout -->
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 overflow-x-auto md:overflow-visible scrollbar-hide pb-4 -mx-4 px-4 md:mx-0 md:px-0" id="trending-container"></div>
-        </div>
-        <button class="hidden w-full max-w-[300px] mx-auto mt-8 py-4 bg-card border border-border rounded-full text-secondary text-sm font-bold uppercase tracking-wider hover:bg-card-hover hover:text-white transition-all active:scale-95" id="trending-load-more">Load More</button>
-        <div class="text-tertiary text-sm mt-3 pl-1" id="trending-status"></div>
-      </section>
-
-      <!-- LIVE -->
-      <section class="mb-14 group/section" id="section-live">
-        <div class="flex items-end justify-between gap-4 mb-6">
-          <div>
-            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-white mb-1">Live Now</h2>
-            <p class="text-sm md:text-base text-tertiary">Ongoing streams and premieres</p>
-          </div>
-        </div>
-        <div class="relative group/slider" id="shell-live">
-          <!-- Arrows removed for grid layout -->
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 overflow-x-auto md:overflow-visible scrollbar-hide pb-4 -mx-4 px-4 md:mx-0 md:px-0" id="live-container"></div>
-        </div>
-        <button class="hidden w-full max-w-[300px] mx-auto mt-8 py-4 bg-card border border-border rounded-full text-secondary text-sm font-bold uppercase tracking-wider hover:bg-card-hover hover:text-white transition-all active:scale-95" id="live-load-more">Load More</button>
-        <div class="text-tertiary text-sm mt-3 pl-1" id="live-status"></div>
-      </section>
-
-      <!-- LATEST -->
-      <section class="mb-14 group/section" id="section-latest">
-        <div class="flex items-end justify-between gap-4 mb-6">
-          <div>
-            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-white mb-1">Latest</h2>
-            <p class="text-sm md:text-base text-tertiary">Fresh uploads</p>
-          </div>
-        </div>
-        <div class="relative group/slider" id="shell-latest">
-          <!-- Arrows removed for grid layout -->
-          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6 overflow-x-auto md:overflow-visible scrollbar-hide pb-4 -mx-4 px-4 md:mx-0 md:px-0" id="new-container"></div>
-        </div>
-        <button class="hidden w-full max-w-[300px] mx-auto mt-8 py-4 bg-card border border-border rounded-full text-secondary text-sm font-bold uppercase tracking-wider hover:bg-card-hover hover:text-white transition-all active:scale-95" id="new-load-more">Load More</button>
-        <div class="text-tertiary text-sm mt-3 pl-1" id="new-status"></div>
-      </section>
-
-      <!-- SHORTS -->
-      <section class="mb-14 group/section" id="section-shorts">
-        <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
-          <div>
-            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-white mb-1">Shorts</h2>
-            <p class="text-sm md:text-base text-tertiary">Quick clips</p>
-          </div>
-          <div class="flex gap-2" id="shorts-sort">
-            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors data-[active=true]:bg-accent data-[active=true]:text-black data-[active=true]:border-accent" data-sort="latest" data-active="true">Latest</button>
-            <button class="px-3.5 py-2 border border-border rounded-2xl bg-card text-secondary text-xs font-semibold hover:bg-card-hover transition-colors data-[active=true]:bg-accent data-[active=true]:text-black data-[active=true]:border-accent" data-sort="popular">Popular</button>
-          </div>
-        </div>
-        <div class="relative group/slider" id="shell-shorts">
-          <button class="hidden lg:flex absolute -left-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-card/95 border border-border rounded-full items-center justify-center text-accent shadow-lg opacity-0 group-hover/slider:opacity-100 transition-opacity hover:scale-110" id="shorts-prev"><i class="ph ph-caret-left text-xl"></i></button>
+          <p class="text-lg md:text-2xl text-gray-200 font-light leading-relaxed max-w-2xl mb-10 drop-shadow-lg text-pretty">
+            Discover the latest walkthroughs, trailers, speedruns, and curated content from the entire Tomb Raider universe.
+          </p>
           
-          <!-- Shorts specific container class for horizontal scroll -->
-          <div class="flex overflow-x-auto gap-4 md:gap-6 pb-6 snap-x snap-mandatory scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0" id="shorts-container">
-            <!-- Shorts Content -->
-          </div>
-          
-          <button class="hidden lg:flex absolute -right-6 top-1/2 -translate-y-1/2 z-10 w-12 h-12 bg-card/95 border border-border rounded-full items-center justify-center text-accent shadow-lg opacity-0 group-hover/slider:opacity-100 transition-opacity hover:scale-110" id="shorts-next"><i class="ph ph-caret-right text-xl"></i></button>
-        </div>
-        <div class="text-tertiary text-sm mt-3 pl-1" id="shorts-status"></div>
-      </section>
-    </main>
-
-    <footer class="border-t border-border py-10 px-5 text-center text-tertiary text-sm mt-16 bg-dark">
-      <p>© 2025 TubeRaider — Curated Tomb Raider content</p>
-    </footer>
-
-    <!-- VIDEO SHEET / LAYER -->
-    <!-- Structure changed to Flex Column for bottom bar layout -->
-    <div id="video-sheet" class="fixed inset-0 z-[100] bg-[#05070a] transform translate-y-full transition-transform duration-500 cubic-bezier(0.32, 0.72, 0, 1) flex flex-col">
-      
-      <!-- Content Wrapper: Flex Row on Desktop (Split View), Flex Col on Mobile -->
-      <div id="sheet-content-wrapper" class="flex-1 flex flex-col lg:flex-row overflow-hidden relative">
-          <!-- Dynamic Content Injected Here -->
-      </div>
-
-      <!-- Bottom Control Bar (Fixed) -->
-      <div class="h-20 bg-[#05070a] border-t border-white/10 flex items-center justify-between px-6 md:px-10 shrink-0 safe-area-bottom z-50">
-        <button id="sheet-close" class="group flex flex-col items-center gap-1 text-secondary hover:text-white transition-colors">
-            <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-white/10 transition-colors">
-                <i class="ph ph-x text-xl"></i>
-            </div>
-            <span class="text-[10px] uppercase font-bold tracking-wider opacity-70 group-hover:opacity-100">Close</span>
-        </button>
-
-        <div class="flex items-center gap-6">
-            <button id="sheet-prev" class="group flex flex-col items-center gap-1 text-secondary hover:text-accent transition-colors">
-                <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
-                    <i class="ph ph-caret-left text-xl"></i>
-                </div>
-                <span class="text-[10px] uppercase font-bold tracking-wider opacity-70 group-hover:opacity-100">Prev</span>
+          <div class="flex items-center gap-4">
+            <button onclick="document.getElementById('content-start').scrollIntoView({behavior: 'smooth'})" class="bg-white text-black h-14 px-10 rounded font-bold text-sm uppercase tracking-widest hover:bg-accent hover:scale-105 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.3)] flex items-center gap-3 group">
+              <i class="ph-fill ph-play text-xl group-hover:animate-pulse"></i> Start Watching
             </button>
-            <button id="sheet-next" class="group flex flex-col items-center gap-1 text-secondary hover:text-accent transition-colors">
-                <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:bg-accent/10 transition-colors">
-                    <i class="ph ph-caret-right text-xl"></i>
-                </div>
-                <span class="text-[10px] uppercase font-bold tracking-wider opacity-70 group-hover:opacity-100">Next</span>
-            </button>
+          </div>
         </div>
       </div>
-
     </div>
 
-    <!-- SCRIPT -->
+    <!-- MAIN CONTENT -->
+    <div id="content-start" class="relative z-20 bg-black min-h-screen pb-20 -mt-2">
+      
+      <!-- Filter Bar -->
+      <div class="px-6 md:px-12 py-8 md:py-12 border-b border-white/5 mb-12 bg-black">
+        <div class="flex flex-nowrap overflow-x-auto no-scrollbar gap-3 md:gap-4 pb-2" id="filters">
+          <!-- Filters injected via JS -->
+        </div>
+      </div>
+
+      <div class="max-w-[1800px] mx-auto space-y-20 md:space-y-32">
+        
+        <!-- 1. MOST VIEWED -->
+        <section id="section-most-viewed" class="px-6 md:px-12 group/section">
+          <div class="flex items-end justify-between mb-6 md:mb-8 border-l-4 border-accent pl-4">
+            <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight">Most Viewed</h2>
+            <div class="flex gap-2 opacity-60 group-hover/section:opacity-100 transition-opacity duration-300" id="most-viewed-sort">
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-timeframe="allTime" data-active="true">All Time</button>
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-timeframe="week">Week</button>
+            </div>
+          </div>
+          
+          <div class="relative group/slider">
+             <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="most-viewed-container">
+               <!-- Cards Injected Here -->
+             </div>
+             <div class="absolute right-0 top-0 bottom-12 w-40 bg-gradient-to-l from-black to-transparent pointer-events-none z-10 hidden md:block"></div>
+          </div>
+        </section>
+
+        <!-- 2. TRENDING -->
+        <section id="section-trending" class="px-6 md:px-12 group/section">
+          <div class="flex items-end justify-between mb-6 md:mb-8 border-l-4 border-gold pl-4">
+            <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight flex items-center gap-3">
+              Trending <i class="ph-fill ph-trend-up text-gold text-2xl"></i>
+            </h2>
+            <div class="flex gap-2 opacity-60 group-hover/section:opacity-100 transition-opacity duration-300" id="trending-sort">
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-timeframe="week" data-active="true">Week</button>
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-timeframe="today">Today</button>
+            </div>
+          </div>
+          <div class="relative group/slider">
+             <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="trending-container"></div>
+          </div>
+        </section>
+
+        <!-- 3. LIVE -->
+        <section id="section-live" class="px-6 md:px-12 group/section hidden">
+          <div class="flex items-center gap-4 mb-6 md:mb-8 border-l-4 border-red pl-4">
+            <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight">Live Now</h2>
+            <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red"></span></span>
+          </div>
+          <div class="relative group/slider">
+             <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="live-container"></div>
+          </div>
+        </section>
+
+        <!-- 4. LATEST -->
+        <section id="section-latest" class="px-6 md:px-12 group/section">
+          <div class="flex items-end justify-between mb-6 md:mb-8 border-l-4 border-white pl-4">
+            <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight">New Arrivals</h2>
+          </div>
+          <div class="relative group/slider">
+             <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="new-container"></div>
+          </div>
+        </section>
+
+        <!-- 5. SHORTS -->
+        <section id="section-shorts" class="px-6 md:px-12 group/section pb-32">
+          <div class="flex items-end justify-between mb-6 md:mb-8 border-l-4 border-accent pl-4">
+            <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight flex items-center gap-3">
+              Shorts <i class="ph-fill ph-lightning text-accent text-2xl"></i>
+            </h2>
+            <div class="flex gap-2" id="shorts-sort">
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-sort="latest" data-active="true">Latest</button>
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-sort="popular">Popular</button>
+            </div>
+          </div>
+          <div class="relative group/slider">
+             <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="shorts-container"></div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/5 py-24 px-6 bg-black text-center">
+        <div class="max-w-4xl mx-auto flex flex-col items-center justify-center gap-8">
+            <div class="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-white font-black text-xl tracking-tighter border border-white/5">TR</div>
+            <p class="text-subtle text-base leading-relaxed max-w-lg">
+              TubeRaider is a community-driven archive dedicated to preserving and showcasing the finest content from the Tomb Raider franchise.
+            </p>
+            <p class="text-white/20 text-xs font-mono uppercase tracking-widest">© 2025 TubeRaider</p>
+        </div>
+    </footer>
+
+    <!-- VIDEO SHEET (Immersive Layer) -->
+    <div id="video-sheet" class="fixed inset-0 z-[100] transform translate-y-full transition-transform duration-500 cubic-bezier(0.19, 1, 0.22, 1) flex flex-col pointer-events-none">
+        <!-- Backdrop -->
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-xl pointer-events-auto transition-opacity duration-500 opacity-0" id="sheet-backdrop" onclick="closeSheet()"></div>
+        
+        <!-- Sheet Container -->
+        <div class="relative flex flex-col w-full h-full bg-[#121212] shadow-2xl overflow-hidden pointer-events-auto mt-0 lg:mt-0 lg:flex-row lg:h-full lg:max-w-[90%] lg:mx-auto lg:rounded-t-2xl border-t border-white/10 lg:border-x">
+            
+            <!-- Mobile Drag Handle -->
+            <div class="w-full flex justify-center pt-3 pb-1 lg:hidden absolute top-0 z-50 bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
+                <div class="w-12 h-1.5 rounded-full bg-white/20"></div>
+            </div>
+
+            <!-- Video Player -->
+            <div class="w-full lg:w-[75%] bg-black relative flex items-center justify-center group h-[35vh] lg:h-full shadow-2xl z-10">
+                <div id="video-embed-container" class="w-full h-full bg-black flex items-center justify-center"></div>
+            </div>
+
+            <!-- Details Panel -->
+            <div class="flex-1 bg-[#121212] lg:border-l border-white/5 flex flex-col h-full relative z-20">
+                
+                <!-- Sheet Controls -->
+                <div class="h-16 px-6 flex items-center justify-between border-b border-white/5 bg-[#121212]/95 backdrop-blur shrink-0">
+                    <button onclick="closeSheet()" class="text-subtle hover:text-white transition-colors flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest">
+                        <i class="ph-bold ph-arrow-left text-lg"></i> Back
+                    </button>
+                    <div class="flex gap-4">
+                        <button id="sheet-prev" class="text-subtle hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"><i class="ph-bold ph-caret-left text-xl"></i></button>
+                        <button id="sheet-next" class="text-subtle hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"><i class="ph-bold ph-caret-right text-xl"></i></button>
+                    </div>
+                </div>
+
+                <!-- Scrollable Content -->
+                <div class="flex-1 overflow-y-auto p-6 md:p-10 no-scrollbar" id="sheet-details">
+                    <!-- Dynamic Details -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
     <script>
-      const MOST_VIEWED_CONTAINER = document.getElementById("most-viewed-container");
-      const TRENDING_CONTAINER = document.getElementById("trending-container");
-      const LIVE_CONTAINER = document.getElementById("live-container");
-      const NEW_CONTAINER = document.getElementById("new-container");
-      const SHORTS_CONTAINER = document.getElementById("shorts-container");
+      // ELEMENTS
+      const containers = {
+        mostViewed: document.getElementById("most-viewed-container"),
+        trending: document.getElementById("trending-container"),
+        live: document.getElementById("live-container"),
+        latest: document.getElementById("new-container"),
+        shorts: document.getElementById("shorts-container"),
+      };
       
-      const MOST_VIEWED_STATUS = document.getElementById("most-viewed-status");
-      const TRENDING_STATUS = document.getElementById("trending-status");
-      const LIVE_STATUS = document.getElementById("live-status");
-      const NEW_STATUS = document.getElementById("new-status");
-      const SHORTS_STATUS = document.getElementById("shorts-status");
-      
-      const MOST_VIEWED_LOAD_MORE = document.getElementById("most-viewed-load-more");
-      const TRENDING_LOAD_MORE = document.getElementById("trending-load-more");
-      const LIVE_LOAD_MORE = document.getElementById("live-load-more");
-      const NEW_LOAD_MORE = document.getElementById("new-load-more");
-      
-      const SEC_MOST_VIEWED = document.getElementById("section-most-viewed");
-      const SEC_TRENDING = document.getElementById("section-trending");
-      const SEC_LIVE = document.getElementById("section-live");
-      const SEC_LATEST = document.getElementById("section-latest");
-      const SEC_SHORTS = document.getElementById("section-shorts");
+      const sections = {
+        mostViewed: document.getElementById("section-most-viewed"),
+        trending: document.getElementById("section-trending"),
+        live: document.getElementById("section-live"),
+        latest: document.getElementById("section-latest"),
+        shorts: document.getElementById("section-shorts"),
+      };
 
       const filtersEl = document.getElementById("filters");
-      const headerUpdated = document.getElementById("header-updated");
-      
-      // Video Sheet Elements
       const videoSheet = document.getElementById("video-sheet");
-      const sheetContentWrapper = document.getElementById("sheet-content-wrapper");
-      const sheetClose = document.getElementById("sheet-close");
+      const sheetBackdrop = document.getElementById("sheet-backdrop");
+      const videoEmbedContainer = document.getElementById("video-embed-container");
+      const sheetDetails = document.getElementById("sheet-details");
       const sheetPrev = document.getElementById("sheet-prev");
       const sheetNext = document.getElementById("sheet-next");
-      
+      const heroVideoBg = document.getElementById("hero-bg");
+
+      // State
       let dataStore = {
         mostViewed: { today: [], week: [], month: [], allTime: [] },
         trending: { today: [], week: [] },
@@ -309,291 +293,182 @@
         updated: null
       };
       
-      let sortState = {
-        mostViewed: 'allTime',
-        trending: 'week',
-        shorts: 'latest'
-      };
-      
-      let loadMoreState = {
-        mostViewed: 10,
-        trending: 10,
-        live: 10,
-        newest: 10,
-        shorts: 20
-      };
-      
+      let sortState = { mostViewed: 'allTime', trending: 'week', shorts: 'latest' };
+      let loadMoreState = { mostViewed: 10, trending: 10, live: 10, newest: 10, shorts: 20 };
       let activeFilter = "all";
+      let currentLightboxList = [];
+      let currentLightboxIndex = 0;
+
       const filterOrder = ["all", "live", "walkthrough", "review", "ost", "trailer", "remaster", "speedrun"];
       const filterMeta = {
         all: { label: "All", icon: "ph-sparkle" },
         live: { label: "Live", icon: "ph-broadcast" },
-        walkthrough: { label: "Walkthroughs", icon: "ph-game-controller" },
-        review: { label: "Reviews", icon: "ph-star" },
-        ost: { label: "Soundtracks", icon: "ph-music-note" },
-        trailer: { label: "Trailers", icon: "ph-film-strip" },
-        remaster: { label: "Remasters", icon: "ph-magic-wand" },
-        speedrun: { label: "Speedruns", icon: "ph-lightning" }
+        walkthrough: { label: "Walkthrough", icon: "ph-game-controller" },
+        review: { label: "Review", icon: "ph-star" },
+        ost: { label: "OST", icon: "ph-music-note" },
+        trailer: { label: "Trailer", icon: "ph-film-strip" },
+        remaster: { label: "Remaster", icon: "ph-magic-wand" },
+        speedrun: { label: "Speedrun", icon: "ph-lightning" }
       };
 
-      // --- HELPERS ---
-      function titleAndDescription(video) {
-        const title = (video.snippet && video.snippet.title) || "";
-        const description = (video.snippet && video.snippet.description) || "";
-        return (title + " " + description).toLowerCase();
-      }
-
-      function getDurationInSeconds(duration) {
-        if (!duration) return 0;
-        const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-        if (!match) return 0;
-        const hours = parseInt(match[1]) || 0;
-        const minutes = parseInt(match[2]) || 0;
-        const seconds = parseInt(match[3]) || 0;
-        return hours * 3600 + minutes * 60 + seconds;
-      }
-
-      function classifyVideo(video, checkAspectRatio = false) {
+      // UTILS
+      function titleAndDescription(video) { return ((video.snippet?.title || "") + " " + (video.snippet?.description || "")).toLowerCase(); }
+      function getDurationInSeconds(d) { if (!d) return 0; const m = d.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/); if(!m) return 0; return (parseInt(m[1])||0)*3600 + (parseInt(m[2])||0)*60 + (parseInt(m[3])||0); }
+      
+      function classifyVideo(video) {
         const t = titleAndDescription(video);
-        const tags = (video.snippet && video.snippet.tags) ? video.snippet.tags.map(tag => tag.toLowerCase()) : [];
-        const duration = getDurationInSeconds(video.contentDetails && video.contentDetails.duration);
+        const tags = (video.snippet?.tags || []).map(tag => tag.toLowerCase());
+        const d = getDurationInSeconds(video.contentDetails?.duration);
         
-        const hasTag = (word) => tags.includes(word.toLowerCase());
-        const hasWord = (word) => new RegExp(`\\b${word}\\b`, 'i').test(t);
-        const hasPhrase = (phrase) => t.includes(phrase); 
-        
-        if (t.includes("#shorts") || t.includes(" shorts") || t.includes("ytshorts") || video._isShort) return "shorts";
-        
-        if (duration > 0 && duration < 120) return "shorts";
-
-        if (video.snippet && (video.snippet.liveBroadcastContent === 'live' || video.snippet.liveBroadcastContent === 'upcoming')) return "live";
-        if (t.includes("🔴") || t.includes("live now") || t.includes("[live]")) return "live";
-
-        if (hasTag("soundtrack") || hasTag("ost") || hasWord("ost") || hasPhrase("official score")) return "ost";
-        if ((hasTag("trailer") || hasWord("trailer") || hasWord("teaser")) && duration < 300) return "trailer";
-        if (hasTag("speedrun") || hasWord("speedrun") || hasPhrase("speed run")) return "speedrun";
-        if (hasTag("walkthrough") || hasTag("longplay") || hasWord("walkthrough") || hasWord("longplay") || hasPhrase("let's play")) return "walkthrough";
-        if (hasTag("review") || hasWord("review") || hasWord("critique") || hasPhrase("video essay") || hasWord("analysis")) return "review";
-        if (hasTag("remaster") || hasTag("remastered") || hasWord("remaster") || hasWord("remastered")) return "remaster";
-
+        if (t.includes("#shorts") || t.includes(" shorts") || (d > 0 && d < 60)) return "shorts";
+        if (video.snippet?.liveBroadcastContent === 'live' || t.includes("🔴")) return "live";
+        if (tags.includes("ost") || tags.includes("soundtrack")) return "ost";
+        if ((tags.includes("trailer") || t.includes("trailer")) && d < 300) return "trailer";
+        if (tags.includes("speedrun") || t.includes("speedrun")) return "speedrun";
+        if (tags.includes("walkthrough") || t.includes("longplay")) return "walkthrough";
+        if (tags.includes("review") || t.includes("review")) return "review";
+        if (tags.includes("remaster")) return "remaster";
         return "other";
       }
 
-      function passesFilter(video, isShortSection) {
-        const tag = classifyVideo(video);
-        if (isShortSection) return tag === "shorts";
-        if (tag === "shorts") return false;
-        if (activeFilter === "all") return true;
-        return tag === activeFilter;
+      function passesFilter(video) { return activeFilter === "all" ? classifyVideo(video) !== 'shorts' : classifyVideo(video) === activeFilter; }
+      function formatViewCount(c) { if (!c) return "0"; const n = parseInt(c); return n >= 1000000 ? (n / 1000000).toFixed(1) + "M" : n >= 1000 ? (n / 1000).toFixed(1) + "K" : n.toString(); }
+      function formatDate(s) { if(!s) return ""; const d = new Date(s), diff = Math.ceil(Math.abs(new Date() - d)/(1000*60*60*24)); return diff < 7 ? `${diff} days ago` : d.toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'}); }
+      function parseDuration(d) { if (!d) return null; const m = d.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/); if (!m) return null; const h=parseInt(m[1])||0, min=parseInt(m[2])||0, s=parseInt(m[3])||0; return h>0 ? `${h}:${String(min).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${min}:${String(s).padStart(2,'0')}`; }
+
+      // LOGIC
+      function updateHeroVideo() {
+        const candidates = [...(dataStore.trending.week || []), ...(dataStore.mostViewed.allTime || [])];
+        const trailer = candidates.find(v => classifyVideo(v) === 'trailer' || classifyVideo(v) === 'remaster') || candidates[0];
+        
+        if (trailer) {
+            const videoId = typeof trailer.id === 'string' ? trailer.id : trailer.id?.videoId;
+            // Inject background video
+            heroVideoBg.innerHTML = `
+                <iframe 
+                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&playsinline=1&start=10" 
+                    frameborder="0" 
+                    allow="autoplay; encrypted-media" 
+                    allowfullscreen>
+                </iframe>
+                <div class="absolute inset-0 bg-[url('https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg')] bg-cover bg-center -z-10"></div>
+            `;
+        }
       }
 
-      // --- FILTERS ---
+      function processData(data) {
+        dataStore = {
+            mostViewed: data.mostViewed || { today: [], week: [], month: [], allTime: [] },
+            trending: data.trending || { today: [], week: [] },
+            newest: data.newest || [],
+            live: data.live || [],
+            updated: data.updated
+        };
+        [...dataStore.newest, ...dataStore.live].forEach(v => classifyVideo(v));
+        
+        buildFilters();
+        renderAll(true);
+        updateHeroVideo();
+        
+        if (data.updated) {
+            const date = new Date(data.updated);
+            document.getElementById("header-updated").innerHTML = `<i class="ph-fill ph-circle text-accent text-[8px] animate-pulse"></i> Updated ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+        }
+      }
+
       function buildFilters() {
         filtersEl.innerHTML = "";
         const tagSet = new Set(['all']);
         const all = [...(dataStore.mostViewed.today || []), ...(dataStore.mostViewed.week || []), ...(dataStore.mostViewed.allTime || []), ...dataStore.newest, ...dataStore.live];
-        
-        all.forEach(video => {
-          const tag = classifyVideo(video);
-          if (tag !== "other") tagSet.add(tag);
-        });
+        all.forEach(video => { const tag = classifyVideo(video); if (tag !== "other") tagSet.add(tag); });
         
         filterOrder.forEach(key => {
           if (!tagSet.has(key)) return;
           const meta = filterMeta[key];
           const btn = document.createElement("button");
-          // Tailwind Classes for Filter Pill
-          btn.className = "flex-shrink-0 px-4 py-2.5 border border-border rounded-3xl bg-card text-secondary text-xs font-bold uppercase tracking-wider cursor-pointer flex items-center gap-1.5 transition-all hover:bg-card-hover hover:border-accent hover:text-white data-[active=true]:bg-accent data-[active=true]:border-accent data-[active=true]:text-black data-[active=true]:shadow-[0_0_15px_rgba(38,181,139,0.4)]";
+          btn.className = "flex-shrink-0 px-6 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-widest cursor-pointer flex items-center gap-2 transition-all duration-300 border border-white/10 bg-white/5 text-subtle hover:bg-white hover:text-black hover:border-white active:scale-95 data-[active=true]:bg-white data-[active=true]:text-black data-[active=true]:border-white";
           if (key === activeFilter) btn.setAttribute('data-active', 'true');
           btn.dataset.filter = key;
-          btn.innerHTML = `<i class="ph ${meta.icon} text-sm ${key === activeFilter ? 'text-black' : 'text-accent'}"></i>${meta.label}`;
+          btn.innerHTML = `<i class="ph-fill ${meta.icon} text-sm"></i>${meta.label}`;
           filtersEl.appendChild(btn);
         });
       }
 
-      filtersEl.addEventListener("click", (event) => {
-        const btn = event.target.closest("button");
-        if (!btn) return;
-        activeFilter = btn.dataset.filter || "all";
-        // Reset active state
-        [...filtersEl.querySelectorAll("button")].forEach(b => {
-             b.removeAttribute('data-active');
-             const icon = b.querySelector('i');
-             if(icon) {
-                 icon.classList.remove('text-black');
-                 icon.classList.add('text-accent');
-             }
-        });
-        // Set new active
-        btn.setAttribute('data-active', 'true');
-        const activeIcon = btn.querySelector('i');
-        if(activeIcon) {
-            activeIcon.classList.remove('text-accent');
-            activeIcon.classList.add('text-black');
-        }
-        renderAll(true);
-      });
-
-      // --- FORMATTERS ---
-      function formatViewCount(count) {
-        if (!count) return "0";
-        const num = parseInt(count);
-        if (num >= 1000000) return (num / 1000000).toFixed(1) + "M";
-        if (num >= 1000) return (num / 1000).toFixed(1) + "K";
-        return num.toString();
-      }
-
-      function formatDate(dateString) {
-          if(!dateString) return "";
-          return new Date(dateString).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
-      }
-
-      function parseDuration(duration) {
-        if (!duration) return null;
-        const match = duration.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/);
-        if (!match) return null;
-        const hours = parseInt(match[1]) || 0;
-        const minutes = parseInt(match[2]) || 0;
-        const seconds = parseInt(match[3]) || 0;
-        return hours > 0 
-            ? `${hours}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
-            : `${minutes}:${String(seconds).padStart(2, '0')}`;
-      }
-
-      // --- RENDER ---
-      function showSkeletons() {
-        const skeletonClass = "w-full aspect-video bg-card rounded-xl border border-border relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/5 after:to-transparent after:animate-shimmer after:-translate-x-full";
-        const shortSkeletonClass = "flex-shrink-0 w-[140px] md:w-[calc((100%-96px)/7)] aspect-[9/16] bg-card rounded-xl border border-border relative overflow-hidden after:absolute after:inset-0 after:bg-gradient-to-r after:from-transparent after:via-white/5 after:to-transparent after:animate-shimmer after:-translate-x-full";
-
-        [MOST_VIEWED_CONTAINER, TRENDING_CONTAINER, LIVE_CONTAINER, NEW_CONTAINER].forEach(c => {
-          c.innerHTML = "";
-          for (let i = 0; i < 5; i++) {
-            const sk = document.createElement("div");
-            sk.className = skeletonClass;
-            c.appendChild(sk);
-          }
-        });
-        SHORTS_CONTAINER.innerHTML = "";
-        for (let i = 0; i < 7; i++) {
-          const sk = document.createElement("div");
-          sk.className = shortSkeletonClass;
-          SHORTS_CONTAINER.appendChild(sk);
-        }
-      }
-
-      function renderRow(videos, container, statusEl, loadMoreBtn, sectionKey, isShortSection, isLiveSection = false, sectionEl = null) {
-        const prevScrollLeft = container.scrollLeft;
+      function renderRow(videos, container, sectionKey, isShortSection, isLiveSection = false) {
         container.innerHTML = "";
         
-        let filtered;
-        if (isShortSection) {
-          filtered = videos; 
-        } else if (isLiveSection) {
-          filtered = videos.filter(v => classifyVideo(v) === "live");
-        } else {
-          filtered = videos.filter(v => {
+        let filtered = isShortSection ? videos : isLiveSection ? videos.filter(v => classifyVideo(v) === "live") : videos.filter(v => {
             const tag = classifyVideo(v);
             if (tag === "shorts" || tag === "live") return false;
-            return passesFilter(v, false);
-          });
-        }
+            return passesFilter(v);
+        });
+
+        const sectionEl = sections[sectionKey === 'mostViewed' ? 'mostViewed' : sectionKey === 'newest' ? 'latest' : sectionKey];
 
         if (!filtered || filtered.length === 0) {
-          if (activeFilter !== 'all' && sectionEl) {
-              sectionEl.classList.add('hidden');
-          } else {
-              statusEl.textContent = isLiveSection ? "No live streams." : "No videos found.";
-              if(sectionEl) sectionEl.classList.remove('hidden');
-          }
-          if(loadMoreBtn) loadMoreBtn.classList.add('hidden');
+          if (activeFilter !== 'all' && sectionEl) sectionEl.classList.add('hidden');
           return;
         }
         
         if (sectionEl) sectionEl.classList.remove('hidden');
-        statusEl.textContent = "";
         
         const limit = loadMoreState[sectionKey];
         const videosToShow = filtered.slice(0, limit);
-        const hasMore = filtered.length > limit;
         
         videosToShow.forEach((video, index) => {
-          const videoId = typeof video.id === 'string' ? video.id : (video.id && video.id.videoId ? video.id.videoId : null);
+          const videoId = typeof video.id === 'string' ? video.id : video.id?.videoId;
           if (!videoId) return;
           
           const title = video.snippet?.title || "Untitled";
-          const channel = video.snippet?.channelTitle || "Unknown Channel";
-          const publishedDate = formatDate(video.snippet?.publishedAt);
+          const channel = video.snippet?.channelTitle || "Unknown";
+          const date = formatDate(video.snippet?.publishedAt);
           const tag = classifyVideo(video);
           const isShort = isShortSection || tag === "shorts";
-          const isLive = tag === "live";
-          
           const viewCount = formatViewCount(video.statistics?.viewCount);
           const duration = parseDuration(video.contentDetails?.duration);
           
-          // TAILWIND CLASSES construction
-          const cardBase = "group relative flex flex-col w-full bg-card rounded-xl overflow-hidden border border-white/10 transition-all duration-200 cursor-pointer hover:border-accent hover:shadow-[0_0_25px_rgba(38,181,139,0.15)] hover:z-10 active:scale-95 active:border-accent";
-          const liveBorder = isLive ? "border-live-red/30" : "";
-          const shortsWidth = isShort ? "min-w-[140px] w-[140px] md:min-w-[calc((100%-96px)/7)] md:w-[calc((100%-96px)/7)] flex-shrink-0 snap-start" : "";
+          const cardBase = "group flex flex-col w-[280px] md:w-[320px] flex-shrink-0 cursor-pointer snap-start transition-all duration-500 hover:z-10";
+          const shortWidth = "w-[160px] md:w-[190px]";
+          const thumbAspect = isShort ? "aspect-[9/16]" : "aspect-video";
           
-          const thumbContainer = isShort ? "relative w-full bg-[#0f1420] overflow-hidden aspect-[9/16]" : "relative w-full bg-[#0f1420] overflow-hidden aspect-video";
-          
-          // Tag Styling
-          let tagStyle = "bg-accent/10 border-accent/20 text-accent";
-          if (isShort) tagStyle = "bg-gold/10 border-gold/20 text-gold";
-          if (tag === "live") tagStyle = "bg-live-red/15 border-live-red/30 text-live-red";
-
           const card = document.createElement("div");
-          // Merge classes
-          card.className = `${cardBase} ${liveBorder} ${shortsWidth}`;
+          card.className = `${cardBase} ${isShort ? shortWidth : ''}`;
           card.onclick = () => openLightbox(index, filtered);
           
           card.innerHTML = `
-            <div class="${thumbContainer}">
-                <img src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg" loading="lazy" alt="" class="w-full h-full object-cover transition-transform duration-500 opacity-95 group-hover:scale-105">
-                ${viewCount !== "0" ? `<div class="absolute top-2 right-2 bg-black/85 text-white px-2 py-1 rounded text-[10px] font-bold flex items-center gap-1 pointer-events-none"><i class="ph ph-eye"></i>${viewCount}</div>` : ''}
-                ${duration ? `<div class="absolute bottom-2 right-2 bg-black/85 text-white px-1.5 py-0.5 rounded text-[10px] font-bold pointer-events-none">${duration}</div>` : ''}
-                <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-14 h-14 rounded-full bg-accent/95 text-black flex items-center justify-center text-3xl opacity-0 scale-75 transition-all duration-300 shadow-xl pointer-events-none group-hover:opacity-100 group-hover:scale-100 ${isLive ? 'bg-live-red/95' : ''}"><i class="ph-fill ph-play"></i></div>
-            </div>
-            <div class="p-3.5 flex flex-col gap-2 flex-1 justify-between">
-                <div>
-                    <div class="text-sm font-semibold text-white line-clamp-2 leading-snug">${title}</div>
-                    <div class="flex flex-wrap gap-1.5 text-xs text-tertiary items-center mt-2">
-                        <span class="font-medium">${channel}</span>
-                        ${publishedDate ? `<span>•</span><span>${publishedDate}</span>` : ''}
-                    </div>
+            <div class="relative w-full ${thumbAspect} rounded-lg overflow-hidden bg-surface mb-3 shadow-lg border border-white/5 group-hover:scale-105 group-hover:shadow-[0_0_30px_rgba(0,0,0,0.6)] group-hover:border-white/20 transition-all duration-300">
+                <img src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg" loading="lazy" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+                ${duration ? `<div class="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/80 backdrop-blur-md rounded text-[10px] font-bold text-white border border-white/10 tracking-wider">${duration}</div>` : ''}
+                ${tag === 'live' ? `<div class="absolute top-2 left-2 px-2 py-0.5 bg-red text-white text-[10px] font-bold rounded uppercase tracking-wider animate-pulse">LIVE</div>` : ''}
+                <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                    <div class="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center shadow-2xl transform scale-50 group-hover:scale-100 transition-transform duration-300"><i class="ph-fill ph-play text-xl ml-1"></i></div>
                 </div>
-                <div class="flex items-center justify-between mt-1">
-                    <div class="inline-flex px-2.5 py-1 rounded-xl text-[10px] font-bold uppercase tracking-wide border ${tagStyle}">${tagLabel(tag)}</div>
+            </div>
+            
+            <div class="px-1 opacity-70 group-hover:opacity-100 transition-opacity">
+                <h3 class="text-sm font-bold text-white leading-snug line-clamp-2 mb-1 group-hover:text-white transition-colors">${title}</h3>
+                <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-subtle font-medium">
+                    <span class="hover:text-white transition-colors">${channel}</span>
+                    <span>•</span>
+                    <span>${viewCount}</span>
+                    <span>•</span>
+                    <span>${date}</span>
                 </div>
             </div>
           `;
           container.appendChild(card);
         });
-        
-        if (loadMoreBtn) {
-            if (hasMore) loadMoreBtn.classList.remove('hidden');
-            else loadMoreBtn.classList.add('hidden');
-        }
-        
-        container.scrollLeft = prevScrollLeft;
-      }
-
-      function tagLabel(tag) {
-        const labels = { live: "Live", walkthrough: "Walkthrough", review: "Review", ost: "Soundtrack", trailer: "Trailer", remaster: "Remaster", speedrun: "Speedrun", shorts: "Short", other: "Other" };
-        return labels[tag] || "Other";
       }
 
       function renderAll(reset = false) {
-        if (reset) {
-          loadMoreState = { mostViewed: 10, trending: 10, live: 10, newest: 10, shorts: 20 };
-        }
+        if (reset) loadMoreState = { mostViewed: 10, trending: 10, live: 10, newest: 10, shorts: 20 };
         
         let rawMostViewed = dataStore.mostViewed[sortState.mostViewed] || [];
         if (sortState.mostViewed === 'allTime') {
             const combined = [...rawMostViewed, ...dataStore.newest];
             const seen = new Set();
             rawMostViewed = combined.filter(v => {
-                const id = typeof v.id === 'string' ? v.id : (v.id && v.id.videoId ? v.id.videoId : null);
+                const id = typeof v.id === 'string' ? v.id : v.id?.videoId;
                 if (!id || seen.has(id)) return false;
                 seen.add(id);
                 return true;
@@ -607,274 +482,134 @@
             shortsOnly.sort((a, b) => new Date(b.snippet?.publishedAt || 0) - new Date(a.snippet?.publishedAt || 0));
         }
 
-        renderRow(rawMostViewed, MOST_VIEWED_CONTAINER, MOST_VIEWED_STATUS, MOST_VIEWED_LOAD_MORE, 'mostViewed', false, false, SEC_MOST_VIEWED);
-        renderRow(dataStore.trending[sortState.trending] || [], TRENDING_CONTAINER, TRENDING_STATUS, TRENDING_LOAD_MORE, 'trending', false, false, SEC_TRENDING);
-        renderRow(dataStore.live, LIVE_CONTAINER, LIVE_STATUS, LIVE_LOAD_MORE, 'live', false, true, SEC_LIVE);
-        renderRow(dataStore.newest, NEW_CONTAINER, NEW_STATUS, NEW_LOAD_MORE, 'newest', false, false, SEC_LATEST);
-        renderRow(shortsOnly, SHORTS_CONTAINER, SHORTS_STATUS, null, 'shorts', true, false, SEC_SHORTS);
+        renderRow(rawMostViewed, containers.mostViewed, 'mostViewed', false);
+        renderRow(dataStore.trending[sortState.trending] || [], containers.trending, 'trending', false);
+        renderRow(dataStore.live, containers.live, 'live', false, true);
+        renderRow(dataStore.newest, containers.latest, 'newest', false);
+        renderRow(shortsOnly, containers.shorts, 'shorts', true);
       }
 
-      // --- DATA ---
-      async function fetchVideos() {
-        showSkeletons();
-        const CACHE_KEY = 'tuberaider_data';
-        const CACHE_DURATION = 1000 * 60 * 30; // 30 mins
-
-        const cached = localStorage.getItem(CACHE_KEY);
-        if (cached) {
-          const parsed = JSON.parse(cached);
-          if (new Date().getTime() - parsed.timestamp < CACHE_DURATION) {
-            processData(parsed.data);
-            return;
+      // --- INFINITE SCROLL ---
+      function handleInfiniteScroll(container, sectionKey) {
+          if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 300) {
+              if(!container.dataset.loading) {
+                  container.dataset.loading = "true";
+                  loadMoreState[sectionKey] += 10;
+                  renderAll(); 
+                  setTimeout(() => { container.dataset.loading = ""; }, 500);
+              }
           }
-        }
-
-        try {
-          const res = await fetch("https://tuberaider.tombraiderarchives.workers.dev/videos");
-          if (!res.ok) throw new Error("API Error");
-          const data = await res.json();
-          
-          try {
-            localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: new Date().getTime(), data: data }));
-          } catch(e) {}
-          
-          processData(data);
-        } catch (e) {
-          console.error(e);
-          [MOST_VIEWED_STATUS, TRENDING_STATUS, LIVE_STATUS, NEW_STATUS, SHORTS_STATUS].forEach(el => {
-             el.className = "text-red-500 text-sm mt-2";
-             el.textContent = "Could not load videos";
-          });
-        }
       }
 
-      function processData(data) {
-        dataStore = {
-            mostViewed: data.mostViewed || { today: [], week: [], month: [], allTime: [] },
-            trending: data.trending || { today: [], week: [] },
-            newest: data.newest || [],
-            live: data.live || [],
-            updated: data.updated
-        };
-        // Pre-classify
-        [...dataStore.newest, ...dataStore.live].forEach(v => classifyVideo(v, true));
-        
-        buildFilters();
+      Object.keys(containers).forEach(key => {
+          const container = containers[key];
+          const sectionKey = key === 'latest' ? 'newest' : (key === 'mostViewed' ? 'mostViewed' : key);
+          container.addEventListener('scroll', () => handleInfiniteScroll(container, sectionKey));
+      });
+
+      // --- EVENTS ---
+      filtersEl.addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        if (!btn) return;
+        activeFilter = btn.dataset.filter;
+        [...filtersEl.children].forEach(b => b.removeAttribute('data-active'));
+        btn.setAttribute('data-active', 'true');
         renderAll(true);
-        if (data.updated) {
-            headerUpdated.innerHTML = `<i class="ph ph-clock text-accent text-base"></i>${new Date(data.updated).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
-        }
-      }
+      });
 
-      // --- VIDEO SHEET LOGIC (REPLACES LIGHTBOX) ---
-      let currentLightboxList = [];
-      let currentLightboxIndex = 0;
+      ['most-viewed', 'trending', 'shorts'].forEach(key => {
+          const el = document.getElementById(`${key}-sort`);
+          if(el) el.addEventListener('click', (e) => {
+              const btn = e.target.closest('button');
+              if(!btn) return;
+              const type = btn.dataset.timeframe || btn.dataset.sort;
+              sortState[key === 'most-viewed' ? 'mostViewed' : key === 'shorts' ? 'shorts' : 'trending'] = type;
+              [...el.children].forEach(b => b.removeAttribute('data-active'));
+              btn.setAttribute('data-active', 'true');
+              renderAll();
+          });
+      });
 
+      // --- SHEET ---
       function openLightbox(index, list) {
         history.pushState({modalOpen: true}, "Video", "#video");
-        
         currentLightboxList = list;
         currentLightboxIndex = index;
-        
-        // Prevent Body Scroll
         document.body.classList.add('overflow-hidden');
-        updateLightboxContent();
-        
-        // Slide Up Animation
+        updateSheet();
         videoSheet.classList.remove('translate-y-full');
+        sheetBackdrop.classList.remove('opacity-0');
       }
-      
-      function updateLightboxContent() {
-          const videoData = currentLightboxList[currentLightboxIndex];
-          if (!videoData) return;
-          
-          const videoId = typeof videoData.id === 'string' ? videoData.id : (videoData.id && videoData.id.videoId ? videoData.id.videoId : null);
-          const isShort = classifyVideo(videoData) === 'shorts';
-          
-          const title = videoData.snippet?.title || "Unknown Title";
-          const channel = videoData.snippet?.channelTitle || "Unknown Channel";
-          const channelId = videoData.snippet?.channelId || "";
-          const views = formatViewCount(videoData.statistics?.viewCount) + " views";
-          const date = formatDate(videoData.snippet?.publishedAt);
-          const desc = (videoData.snippet?.description || "No description available.").trim();
-          
-          // Split Layout Construction
-          // Left Side (or Top on Mobile): Video Container
-          const videoContainerClass = "w-full lg:w-[75%] h-[40vh] lg:h-full bg-black flex items-center justify-center relative";
-          
-          // Right Side (or Bottom on Mobile): Details Container
-          const detailsContainerClass = "w-full lg:w-[25%] h-full overflow-y-auto bg-[#05070a] border-l border-white/5";
-
-          // Video Aspect Ratio Logic
-          const videoWrapperStyle = isShort 
-              ? "h-full w-auto aspect-[9/16] max-w-full"
-              : "w-full aspect-video max-h-full";
-
-          sheetContentWrapper.innerHTML = `
-              <!-- Left/Top: Video -->
-              <div class="${videoContainerClass}">
-                  <div class="${videoWrapperStyle}">
-                      <iframe class="w-full h-full border-none" 
-                          src="https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0&playsinline=1" 
-                          allowfullscreen allow="autoplay; encrypted-media; picture-in-picture">
-                      </iframe>
-                  </div>
-              </div>
-              
-              <!-- Right/Bottom: Details -->
-              <div class="${detailsContainerClass}">
-                  <div class="p-6 md:p-8 flex flex-col gap-6">
-                      <div class="flex flex-col gap-3">
-                          <h3 class="text-xl md:text-2xl font-bold leading-tight text-white">${title}</h3>
-                          <div class="flex flex-wrap items-center gap-2 text-sm text-secondary">
-                              <span class="font-bold text-accent">${channel}</span>
-                              <span class="w-1 h-1 rounded-full bg-white/30"></span>
-                              <span>${views}</span>
-                              <span class="w-1 h-1 rounded-full bg-white/30"></span>
-                              <span>${date}</span>
-                          </div>
-                      </div>
-
-                      <div class="flex flex-col gap-2">
-                          <a href="https://www.youtube.com/watch?v=${videoId}" target="_blank" class="flex justify-center items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold bg-[#ff0000] text-white hover:brightness-110 transition-all">
-                              <i class="ph-fill ph-youtube-logo text-lg"></i> Watch on YouTube
-                          </a>
-                          <a href="https://www.youtube.com/channel/${channelId}" target="_blank" class="flex justify-center items-center gap-2 px-4 py-3 rounded-xl text-sm font-bold bg-white/5 text-white border border-white/10 hover:bg-white/10 transition-all">
-                              <i class="ph-fill ph-user text-lg"></i> Visit Channel
-                          </a>
-                      </div>
-                      
-                      <hr class="border-white/10" />
-                      
-                      <div class="text-secondary leading-relaxed whitespace-pre-wrap text-sm pb-10">${desc}</div>
-                  </div>
-              </div>
-          `;
-          
-          // Update Prev/Next Button States (Grey out if no more)
-          if (currentLightboxIndex === 0) {
-              sheetPrev.classList.add('opacity-50', 'pointer-events-none');
-          } else {
-              sheetPrev.classList.remove('opacity-50', 'pointer-events-none');
-          }
-
-          if (currentLightboxIndex >= currentLightboxList.length - 1) {
-              sheetNext.classList.add('opacity-50', 'pointer-events-none');
-          } else {
-              sheetNext.classList.remove('opacity-50', 'pointer-events-none');
-          }
-      }
-      
-      sheetPrev.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (currentLightboxIndex > 0) {
-              currentLightboxIndex--;
-              updateLightboxContent();
-          }
-      });
-      
-      sheetNext.addEventListener('click', (e) => {
-          e.stopPropagation();
-          if (currentLightboxIndex < currentLightboxList.length - 1) {
-              currentLightboxIndex++;
-              updateLightboxContent();
-          }
-      });
 
       function closeSheet() {
         videoSheet.classList.add('translate-y-full');
+        sheetBackdrop.classList.add('opacity-0');
         document.body.classList.remove('overflow-hidden');
+        if (history.state?.modalOpen) history.back();
+        setTimeout(() => { videoEmbedContainer.innerHTML = ""; }, 500);
+      }
+
+      function updateSheet() {
+        const video = currentLightboxList[currentLightboxIndex];
+        if(!video) return;
+        const videoId = typeof video.id === 'string' ? video.id : video.id?.videoId;
+        const isShort = classifyVideo(video) === 'shorts';
         
-        if (history.state && history.state.modalOpen) {
-             history.back();
+        videoEmbedContainer.innerHTML = `
+            <iframe class="w-full h-full border-none ${isShort ? 'aspect-[9/16] max-w-[400px] mx-auto' : ''}" 
+                src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0&playsinline=1" 
+                allowfullscreen allow="autoplay; encrypted-media; picture-in-picture">
+            </iframe>
+        `;
+
+        const title = video.snippet?.title;
+        const desc = video.snippet?.description;
+        const channel = video.snippet?.channelTitle;
+        const views = formatViewCount(video.statistics?.viewCount);
+        
+        sheetDetails.innerHTML = `
+            <div class="max-w-2xl">
+                <h1 class="text-xl md:text-3xl font-bold text-white mb-4 leading-tight">${title}</h1>
+                <div class="flex items-center gap-4 mb-8">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white font-bold text-lg border border-white/5">${channel.charAt(0)}</div>
+                        <div>
+                            <div class="text-white font-bold text-sm">${channel}</div>
+                            <div class="text-subtle text-xs">${views} views</div>
+                        </div>
+                    </div>
+                    <a href="https://youtube.com/watch?v=${videoId}" target="_blank" class="ml-auto bg-white hover:bg-gray-200 text-black px-6 py-2 rounded font-bold text-xs uppercase tracking-widest transition-colors shadow-lg">Watch on YT</a>
+                </div>
+                <div class="prose prose-invert prose-sm text-subtle leading-relaxed whitespace-pre-wrap">${desc}</div>
+            </div>
+        `;
+
+        sheetPrev.disabled = currentLightboxIndex === 0;
+        sheetNext.disabled = currentLightboxIndex >= currentLightboxList.length - 1;
+      }
+
+      sheetPrev.onclick = () => { if(currentLightboxIndex > 0) { currentLightboxIndex--; updateSheet(); }};
+      sheetNext.onclick = () => { if(currentLightboxIndex < currentLightboxList.length - 1) { currentLightboxIndex++; updateSheet(); }};
+      window.onpopstate = () => videoSheet.classList.contains('translate-y-full') || closeSheet();
+
+      // --- INIT ---
+      async function init() {
+        const CACHE_KEY = 'tuberaider_data';
+        const cached = localStorage.getItem(CACHE_KEY);
+        let data;
+        if (cached && (new Date().getTime() - JSON.parse(cached).timestamp < 1000 * 60 * 30)) {
+            data = JSON.parse(cached).data;
+        } else {
+            try {
+                const res = await fetch("https://tuberaider.tombraiderarchives.workers.dev/videos");
+                data = await res.json();
+                localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: new Date().getTime(), data }));
+            } catch(e) { console.error(e); }
         }
-        
-        // Cleanup content after animation
-        setTimeout(() => { sheetContentWrapper.innerHTML = ""; }, 500);
+        if(data) processData(data);
       }
       
-      window.onpopstate = function(event) {
-          // If the sheet is open (doesn't have translate-y-full), close it
-          if (!videoSheet.classList.contains('translate-y-full')) {
-              videoSheet.classList.add('translate-y-full');
-              document.body.classList.remove('overflow-hidden');
-              setTimeout(() => { sheetContentWrapper.innerHTML = ""; }, 500);
-          }
-      };
-
-      sheetClose.addEventListener("click", () => {
-          if (history.state && history.state.modalOpen) {
-              history.back(); 
-          } else {
-              closeSheet(); 
-          }
-      });
-
-      // --- INIT LISTENERS ---
-      const sortConfigs = [
-        { key: 'mostViewed', id: 'most-viewed-sort' },
-        { key: 'trending', id: 'trending-sort' },
-        { key: 'shorts', id: 'shorts-sort' }
-      ];
-
-      sortConfigs.forEach(config => {
-          const el = document.getElementById(config.id);
-          if (el) {
-              el.addEventListener('click', (e) => {
-                 const pill = e.target.closest('button');
-                 if(!pill) return;
-                 const type = pill.dataset.timeframe || pill.dataset.sort;
-                 sortState[config.key] = type;
-                 
-                 // Toggle Active Attributes
-                 el.querySelectorAll('button').forEach(p => p.removeAttribute('data-active'));
-                 pill.setAttribute('data-active', 'true');
-                 
-                 renderAll();
-              });
-          }
-      });
-
-      ['most-viewed', 'trending', 'live', 'new'].forEach(key => {
-          const loadBtn = document.getElementById(`${key}-load-more`);
-          if(loadBtn) loadBtn.addEventListener('click', () => handleLoadMore(key === 'new' ? 'newest' : (key === 'most-viewed' ? 'mostViewed' : key)));
-      });
-
-      function handleLoadMore(key) {
-          loadMoreState[key] += 10;
-          renderAll();
-      }
-
-      document.querySelectorAll('.group\\/slider').forEach(shell => {
-          const container = shell.querySelector('div[id$="-container"]');
-          const prev = shell.querySelector('button[id$="-prev"]');
-          const next = shell.querySelector('button[id$="-next"]');
-          
-          if(container) {
-              container.addEventListener('scroll', () => {
-                  if (container.scrollLeft + container.clientWidth >= container.scrollWidth - 100) {
-                      const sectionId = shell.parentElement.getAttribute('id');
-                      if(sectionId) {
-                          const key = sectionId.replace('section-', '').replace('latest', 'newest').replace('most-viewed', 'mostViewed');
-                          if (!container.dataset.loading && loadMoreState[key]) {
-                              container.dataset.loading = "true";
-                              setTimeout(() => { 
-                                  handleLoadMore(key); 
-                                  container.dataset.loading = "";
-                              }, 500);
-                          }
-                      }
-                  }
-              });
-          }
-          
-          if(prev && next && container) {
-              prev.addEventListener('click', () => container.scrollBy({ left: -container.clientWidth, behavior: 'smooth' }));
-              next.addEventListener('click', () => container.scrollBy({ left: container.clientWidth, behavior: 'smooth' }));
-          }
-      });
-
-      fetchVideos();
+      init();
     </script>
   </body>
 </html>
