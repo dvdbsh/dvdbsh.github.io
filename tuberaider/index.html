@@ -8,6 +8,7 @@
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/bold/style.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/regular/style.css" />
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@phosphor-icons/web@2.1.1/src/fill/style.css" />
 
@@ -55,102 +56,126 @@
       .hero-video-container iframe {
         position: absolute;
         top: 50%; left: 50%;
-        width: 100vw; height: 56.25vw; /* 16:9 ratio based on width */
-        min-height: 100vh; min-width: 177.77vh; /* 16:9 ratio based on height */
-        transform: translate(-50%, -50%) scale(1.3); /* Scale slightly to hide controls/bars */
+        width: 100vw; height: 56.25vw;
+        min-height: 100vh; min-width: 177.77vh;
+        transform: translate(-50%, -50%) scale(1.3);
         pointer-events: none;
+      }
+      
+      /* Entrance Animation Classes */
+      .reveal-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .reveal-on-scroll.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+      
+      /* Toggle Switch */
+      .toggle-checkbox:checked {
+        right: 0;
+        border-color: #26b58b;
+      }
+      .toggle-checkbox:checked + .toggle-label {
+        background-color: #26b58b;
       }
     </style>
   </head>
   <body class="bg-black text-white font-sans min-h-screen relative overflow-x-hidden selection:bg-accent selection:text-black">
 
     <!-- HEADER -->
-    <header class="fixed top-0 left-0 right-0 z-50 transition-all duration-500 bg-gradient-to-b from-black/90 via-black/50 to-transparent" id="navbar">
+    <header class="absolute top-0 left-0 right-0 z-50 transition-all duration-500 bg-gradient-to-b from-black/90 via-black/50 to-transparent" id="navbar">
       <div class="w-full px-6 md:px-12 h-24 flex items-center justify-between">
+        <!-- Logo -->
         <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-          <div class="w-10 h-10 rounded-xl bg-white/10 backdrop-blur-sm flex items-center justify-center border border-white/10 text-white font-extrabold text-sm tracking-tighter group-hover:bg-accent group-hover:text-black transition-colors duration-300">TR</div>
-          <span class="font-extrabold text-xl tracking-[0.2em] uppercase opacity-90 group-hover:opacity-100 transition-opacity drop-shadow-md">TubeRaider</span>
+          <div class="w-10 h-10 rounded-xl bg-accent text-black flex items-center justify-center font-extrabold text-sm tracking-tighter shadow-[0_0_20px_rgba(38,181,139,0.4)] transition-transform duration-300 group-hover:scale-105">TR</div>
+          <div class="flex flex-col leading-none">
+             <span class="font-extrabold text-xl tracking-[0.1em] uppercase drop-shadow-md">
+               <span class="text-white">Tube</span><span class="text-accent">Raider</span>
+             </span>
+          </div>
         </div>
 
-        <div class="flex items-center">
-           <div class="flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/60 border border-white/10 backdrop-blur-md text-[10px] font-bold uppercase tracking-widest text-subtle shadow-lg" id="header-updated">
-             <i class="ph-fill ph-circle text-accent animate-pulse"></i> Live
-           </div>
+        <!-- Video Toggle (Moved to Header) -->
+        <div class="flex items-center gap-3 bg-black/40 backdrop-blur-md border border-white/10 px-3 py-1.5 rounded-full shadow-lg z-50">
+            <span class="text-[10px] font-bold uppercase tracking-widest text-subtle hidden md:inline-block">Background Video</span>
+            <button id="bg-video-toggle" class="w-8 h-4 bg-white/20 rounded-full relative transition-colors duration-300">
+                <div class="w-2.5 h-2.5 bg-white rounded-full absolute top-0.5 left-0.5 transition-transform duration-300" id="bg-toggle-knob"></div>
+            </button>
         </div>
       </div>
     </header>
 
     <!-- HERO SECTION -->
-    <div class="relative w-full h-[85vh] flex items-end bg-dark overflow-hidden">
+    <div class="relative w-full h-[85vh] flex items-end bg-dark overflow-hidden group">
       
       <!-- Video Background -->
       <div class="hero-video-container opacity-60 mix-blend-lighten transition-opacity duration-1000" id="hero-bg">
-         <!-- Fallback static image until video loads -->
-         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=2940')] bg-cover bg-center"></div>
+         <!-- Fallback static image -->
+         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1518546305927-5a555bb7020d?q=80&w=2940')] bg-cover bg-center transition-opacity duration-500" id="hero-static-bg"></div>
+         <!-- Video Container -->
+         <div id="hero-iframe-wrapper" class="absolute inset-0 opacity-0 transition-opacity duration-1000"></div>
       </div>
       
-      <!-- Gradients for Text Readability -->
-      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-10"></div>
-      <div class="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent z-10"></div>
+      <!-- Gradients -->
+      <div class="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent z-10 pointer-events-none"></div>
+      <div class="absolute inset-0 bg-gradient-to-r from-black/90 via-transparent to-transparent z-10 pointer-events-none"></div>
 
       <!-- Hero Text Content -->
-      <div class="relative z-20 w-full max-w-[1600px] mx-auto px-6 md:px-12 pb-24 md:pb-32 flex flex-col justify-end h-full pointer-events-none">
-        <div class="max-w-4xl pointer-events-auto">
-          
-          <div class="flex items-center gap-3 mb-6">
-             <span class="px-2 py-1 bg-accent text-black text-[10px] font-black uppercase tracking-widest rounded-sm">Featured</span>
-             <span class="px-2 py-1 bg-white/10 text-white border border-white/20 text-[10px] font-bold uppercase tracking-widest rounded-sm backdrop-blur-md">Collection</span>
-          </div>
-
-          <h1 class="text-6xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.9] mb-6 text-white drop-shadow-2xl">
-            TubeRaider
+      <div class="relative z-20 w-full max-w-[1600px] mx-auto px-6 md:px-12 pb-16 md:pb-32 pt-32 flex flex-col justify-end md:flex-row md:items-end md:justify-between h-full pointer-events-none">
+        
+        <!-- Left: Main Branding -->
+        <div class="max-w-4xl pointer-events-auto mb-8 md:mb-0 reveal-on-scroll is-visible">
+          <h1 class="text-5xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.9] mb-6 text-white drop-shadow-2xl">
+            Tube<span class="text-accent">Raider</span>
           </h1>
-          
-          <p class="text-lg md:text-2xl text-gray-200 font-light leading-relaxed max-w-2xl mb-10 drop-shadow-lg text-pretty">
+          <p class="text-base md:text-2xl text-gray-200 font-light leading-relaxed max-w-xl mb-8 drop-shadow-lg text-pretty">
             Discover the latest walkthroughs, trailers, speedruns, and curated content from the entire Tomb Raider universe.
           </p>
           
           <div class="flex items-center gap-4">
-            <button onclick="document.getElementById('content-start').scrollIntoView({behavior: 'smooth'})" class="bg-white text-black h-14 px-10 rounded font-bold text-sm uppercase tracking-widest hover:bg-accent hover:scale-105 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.3)] flex items-center gap-3 group">
-              <i class="ph-fill ph-play text-xl group-hover:animate-pulse"></i> Start Watching
+            <button onclick="document.getElementById('content-start').scrollIntoView({behavior: 'smooth'})" class="bg-white text-black h-12 md:h-14 px-8 md:px-10 rounded font-bold text-xs md:text-sm uppercase tracking-widest hover:bg-accent hover:scale-105 transition-all duration-300 shadow-[0_0_30px_rgba(255,255,255,0.3)] flex items-center gap-3 group">
+              <i class="ph-fill ph-caret-down text-xl"></i> Browse Archive
             </button>
           </div>
         </div>
+
+        <!-- Right: Dynamic Attribution -->
+        <div class="flex flex-col items-start md:items-end pointer-events-auto text-left md:text-right mt-6 md:mt-0 gap-4 reveal-on-scroll is-visible">
+            <!-- Attribution Box -->
+            <div id="hero-attribution"></div>
+        </div>
+
       </div>
     </div>
 
     <!-- MAIN CONTENT -->
-    <div id="content-start" class="relative z-20 bg-black min-h-screen pb-20 -mt-2">
+    <div id="content-start" class="relative z-20 bg-black min-h-screen pb-0 pt-12 md:pt-20">
       
-      <!-- Filter Bar -->
-      <div class="px-6 md:px-12 py-8 md:py-12 border-b border-white/5 mb-12 bg-black">
-        <div class="flex flex-nowrap overflow-x-auto no-scrollbar gap-3 md:gap-4 pb-2" id="filters">
-          <!-- Filters injected via JS -->
-        </div>
-      </div>
-
-      <div class="max-w-[1800px] mx-auto space-y-20 md:space-y-32">
+      <div class="max-w-[1800px] mx-auto space-y-12 md:space-y-16">
         
-        <!-- 1. MOST VIEWED -->
-        <section id="section-most-viewed" class="px-6 md:px-12 group/section">
-          <div class="flex items-end justify-between mb-6 md:mb-8 border-l-4 border-accent pl-4">
+        <!-- MOST VIEWED (Original Style) -->
+        <section id="section-most-viewed" class="px-6 md:px-12 group/section reveal-on-scroll">
+          <div class="flex flex-col md:flex-row md:items-end justify-between mb-6 md:mb-8 border-l-4 border-accent pl-4 gap-4">
             <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight">Most Viewed</h2>
-            <div class="flex gap-2 opacity-60 group-hover/section:opacity-100 transition-opacity duration-300" id="most-viewed-sort">
+            <div class="flex flex-wrap gap-2 opacity-100 md:opacity-60 group-hover/section:opacity-100 transition-opacity duration-300" id="most-viewed-sort">
                <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-timeframe="allTime" data-active="true">All Time</button>
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-timeframe="month">Month</button>
                <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-timeframe="week">Week</button>
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-timeframe="today">Today</button>
             </div>
           </div>
-          
           <div class="relative group/slider">
-             <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="most-viewed-container">
-               <!-- Cards Injected Here -->
-             </div>
-             <div class="absolute right-0 top-0 bottom-12 w-40 bg-gradient-to-l from-black to-transparent pointer-events-none z-10 hidden md:block"></div>
+             <button class="hidden lg:flex absolute -left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-accent hover:text-black transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="most-viewed-prev"><i class="ph-bold ph-caret-left text-xl"></i></button>
+             <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="most-viewed-container"></div>
+             <button class="hidden lg:flex absolute -right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-accent hover:text-black transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="most-viewed-next"><i class="ph-bold ph-caret-right text-xl"></i></button>
           </div>
         </section>
 
-        <!-- 2. TRENDING -->
-        <section id="section-trending" class="px-6 md:px-12 group/section">
+        <!-- TRENDING (Original Style) -->
+        <section id="section-trending" class="px-6 md:px-12 group/section reveal-on-scroll">
           <div class="flex items-end justify-between mb-6 md:mb-8 border-l-4 border-gold pl-4">
             <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight flex items-center gap-3">
               Trending <i class="ph-fill ph-trend-up text-gold text-2xl"></i>
@@ -161,33 +186,121 @@
             </div>
           </div>
           <div class="relative group/slider">
+             <button class="hidden lg:flex absolute -left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-gold hover:text-black transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="trending-prev"><i class="ph-bold ph-caret-left text-xl"></i></button>
              <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="trending-container"></div>
+             <button class="hidden lg:flex absolute -right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-gold hover:text-black transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="trending-next"><i class="ph-bold ph-caret-right text-xl"></i></button>
           </div>
         </section>
 
-        <!-- 3. LIVE -->
-        <section id="section-live" class="px-6 md:px-12 group/section hidden">
+        <!-- REMASTERED (New Strictly Filtered Row) -->
+        <section id="section-remaster" class="px-6 md:px-12 group/section reveal-on-scroll">
+          <div class="flex items-end justify-between mb-6 md:mb-8 border-l-4 border-purple-500 pl-4">
+            <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight">The Remasters</h2>
+            <div class="flex gap-2 opacity-60 group-hover/section:opacity-100 transition-opacity duration-300" id="remaster-sort">
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-sort="popular" data-active="true">Popular</button>
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-sort="latest">Newest</button>
+            </div>
+          </div>
+          <div class="relative group/slider">
+             <button class="hidden lg:flex absolute -left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-purple-500 hover:text-white transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="remaster-prev"><i class="ph-bold ph-caret-left text-xl"></i></button>
+             <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="remaster-container"></div>
+             <button class="hidden lg:flex absolute -right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-purple-500 hover:text-white transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="remaster-next"><i class="ph-bold ph-caret-right text-xl"></i></button>
+          </div>
+        </section>
+
+        <!-- SPEEDRUNS (New Strictly Filtered Row) -->
+        <section id="section-speedrun" class="px-6 md:px-12 group/section reveal-on-scroll">
+          <div class="flex items-end justify-between mb-6 md:mb-8 border-l-4 border-blue-500 pl-4">
+            <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight">Speedruns</h2>
+            <div class="flex gap-2 opacity-60 group-hover/section:opacity-100 transition-opacity duration-300" id="speedrun-sort">
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-sort="popular" data-active="true">Popular</button>
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-sort="latest">Newest</button>
+            </div>
+          </div>
+          <div class="relative group/slider">
+             <button class="hidden lg:flex absolute -left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-blue-500 hover:text-white transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="speedrun-prev"><i class="ph-bold ph-caret-left text-xl"></i></button>
+             <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="speedrun-container"></div>
+             <button class="hidden lg:flex absolute -right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-blue-500 hover:text-white transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="speedrun-next"><i class="ph-bold ph-caret-right text-xl"></i></button>
+          </div>
+        </section>
+
+        <!-- DEEP DIVES & LORE -->
+        <section id="section-deepdive" class="px-6 md:px-12 group/section reveal-on-scroll">
+          <div class="flex items-end justify-between mb-6 md:mb-8 border-l-4 border-indigo-500 pl-4">
+            <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight flex items-center gap-3">
+                Deep Dives & Lore <i class="ph-fill ph-books text-indigo-500 text-2xl"></i>
+            </h2>
+            <div class="flex gap-2 opacity-60 group-hover/section:opacity-100 transition-opacity duration-300" id="deepdive-sort">
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-sort="popular" data-active="true">Popular</button>
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-sort="latest">Newest</button>
+            </div>
+          </div>
+          <div class="relative group/slider">
+             <button class="hidden lg:flex absolute -left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-indigo-500 hover:text-white transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="deepdive-prev"><i class="ph-bold ph-caret-left text-xl"></i></button>
+             <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="deepdive-container"></div>
+             <button class="hidden lg:flex absolute -right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-indigo-500 hover:text-white transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="deepdive-next"><i class="ph-bold ph-caret-right text-xl"></i></button>
+          </div>
+        </section>
+
+        <!-- LIVE (Strictly Filtered) -->
+        <section id="section-live" class="px-6 md:px-12 group/section hidden reveal-on-scroll">
           <div class="flex items-center gap-4 mb-6 md:mb-8 border-l-4 border-red pl-4">
             <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight">Live Now</h2>
             <span class="relative flex h-3 w-3"><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red opacity-75"></span><span class="relative inline-flex rounded-full h-3 w-3 bg-red"></span></span>
           </div>
           <div class="relative group/slider">
+             <button class="hidden lg:flex absolute -left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-red hover:text-white transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="live-prev"><i class="ph-bold ph-caret-left text-xl"></i></button>
              <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="live-container"></div>
+             <button class="hidden lg:flex absolute -right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-red hover:text-white transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="live-next"><i class="ph-bold ph-caret-right text-xl"></i></button>
           </div>
         </section>
 
-        <!-- 4. LATEST -->
-        <section id="section-latest" class="px-6 md:px-12 group/section">
+        <!-- WALKTHROUGHS (New Strictly Filtered Row) -->
+        <section id="section-walkthrough" class="px-6 md:px-12 group/section reveal-on-scroll">
+          <div class="flex items-end justify-between mb-6 md:mb-8 border-l-4 border-emerald-500 pl-4">
+            <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight">Full Walkthroughs</h2>
+            <div class="flex gap-2 opacity-60 group-hover/section:opacity-100 transition-opacity duration-300" id="walkthrough-sort">
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-sort="popular" data-active="true">Popular</button>
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-sort="latest">Newest</button>
+            </div>
+          </div>
+          <div class="relative group/slider">
+             <button class="hidden lg:flex absolute -left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-emerald-500 hover:text-white transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="walkthrough-prev"><i class="ph-bold ph-caret-left text-xl"></i></button>
+             <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="walkthrough-container"></div>
+             <button class="hidden lg:flex absolute -right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-emerald-500 hover:text-white transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="walkthrough-next"><i class="ph-bold ph-caret-right text-xl"></i></button>
+          </div>
+        </section>
+
+        <!-- REVIEWS (New Strictly Filtered Row) -->
+        <section id="section-review" class="px-6 md:px-12 group/section reveal-on-scroll">
+          <div class="flex items-end justify-between mb-6 md:mb-8 border-l-4 border-orange-500 pl-4">
+            <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight">Reviews</h2>
+            <div class="flex gap-2 opacity-60 group-hover/section:opacity-100 transition-opacity duration-300" id="review-sort">
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-sort="popular" data-active="true">Popular</button>
+               <button class="text-[10px] font-bold uppercase tracking-widest px-4 py-2 border border-white/20 rounded hover:bg-white hover:text-black transition-colors data-[active=true]:bg-white data-[active=true]:text-black" data-sort="latest">Newest</button>
+            </div>
+          </div>
+          <div class="relative group/slider">
+             <button class="hidden lg:flex absolute -left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-orange-500 hover:text-white transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="review-prev"><i class="ph-bold ph-caret-left text-xl"></i></button>
+             <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="review-container"></div>
+             <button class="hidden lg:flex absolute -right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-orange-500 hover:text-white transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="review-next"><i class="ph-bold ph-caret-right text-xl"></i></button>
+          </div>
+        </section>
+
+        <!-- LATEST -->
+        <section id="section-latest" class="px-6 md:px-12 group/section reveal-on-scroll">
           <div class="flex items-end justify-between mb-6 md:mb-8 border-l-4 border-white pl-4">
             <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight">New Arrivals</h2>
           </div>
           <div class="relative group/slider">
+             <button class="hidden lg:flex absolute -left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-white hover:text-black transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="new-prev"><i class="ph-bold ph-caret-left text-xl"></i></button>
              <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="new-container"></div>
+             <button class="hidden lg:flex absolute -right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-white hover:text-black transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="new-next"><i class="ph-bold ph-caret-right text-xl"></i></button>
           </div>
         </section>
 
-        <!-- 5. SHORTS -->
-        <section id="section-shorts" class="px-6 md:px-12 group/section pb-32">
+        <!-- SHORTS -->
+        <section id="section-shorts" class="px-6 md:px-12 group/section pb-12 reveal-on-scroll">
           <div class="flex items-end justify-between mb-6 md:mb-8 border-l-4 border-accent pl-4">
             <h2 class="text-2xl md:text-4xl font-bold text-white tracking-tight flex items-center gap-3">
               Shorts <i class="ph-fill ph-lightning text-accent text-2xl"></i>
@@ -198,60 +311,85 @@
             </div>
           </div>
           <div class="relative group/slider">
+             <button class="hidden lg:flex absolute -left-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-accent hover:text-black transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="shorts-prev"><i class="ph-bold ph-caret-left text-xl"></i></button>
              <div class="flex overflow-x-auto gap-5 pb-12 -mx-6 px-6 md:mx-0 md:px-0 no-scrollbar touch-scroll scroll-pl-6" id="shorts-container"></div>
+             <button class="hidden lg:flex absolute -right-6 top-1/2 -translate-y-1/2 z-20 w-12 h-12 bg-surface/80 border border-white/10 rounded-full items-center justify-center text-white hover:bg-accent hover:text-black transition-all shadow-xl opacity-0 group-hover/slider:opacity-100" id="shorts-next"><i class="ph-bold ph-caret-right text-xl"></i></button>
           </div>
         </section>
-
       </div>
     </div>
 
     <!-- FOOTER -->
-    <footer class="border-t border-white/5 py-24 px-6 bg-black text-center">
-        <div class="max-w-4xl mx-auto flex flex-col items-center justify-center gap-8">
-            <div class="w-16 h-16 rounded-2xl bg-white/5 flex items-center justify-center text-white font-black text-xl tracking-tighter border border-white/5">TR</div>
-            <p class="text-subtle text-base leading-relaxed max-w-lg">
-              TubeRaider is a community-driven archive dedicated to preserving and showcasing the finest content from the Tomb Raider franchise.
-            </p>
-            <p class="text-white/20 text-xs font-mono uppercase tracking-widest">© 2025 TubeRaider</p>
+    <footer class="border-t border-white/5 bg-[#05070a] text-left">
+        <div class="max-w-[1600px] mx-auto px-6 md:px-12 py-16 grid grid-cols-1 md:grid-cols-2 gap-12">
+            
+            <div class="flex flex-col gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-xl bg-accent text-black flex items-center justify-center font-black text-xl tracking-tighter shadow-lg shadow-accent/20">TR</div>
+                    <span class="font-extrabold text-2xl tracking-[0.1em] uppercase text-white">Tube<span class="text-accent">Raider</span></span>
+                </div>
+                
+                <div class="space-y-4 max-w-lg">
+                    <h3 class="text-white font-bold text-lg">About the Archive</h3>
+                    <p class="text-subtle text-sm leading-relaxed">
+                        TubeRaider is an automated archive system designed to track, categorize, and preserve video content from the Tomb Raider ecosystem. 
+                    </p>
+                    <p class="text-subtle text-sm leading-relaxed">
+                        By utilizing the YouTube Data API, we filter through the noise to bring you a distraction-free, cinematic experience focused purely on walkthroughs, lore, speedruns, and official trailers. No algorithm bias—just chronological and curated archives.
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex flex-col justify-end items-start md:items-end gap-2">
+                <div class="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-xs font-bold uppercase tracking-widest text-subtle" id="footer-updated">
+                    <i class="ph-fill ph-circle text-accent animate-pulse"></i> Database Status: Unknown
+                </div>
+                <p class="text-white/20 text-xs font-mono uppercase tracking-widest mt-4">© 2025 TubeRaider</p>
+            </div>
         </div>
     </footer>
 
+    <!-- COOKIE CONSENT -->
+    <div id="cookie-consent" class="fixed bottom-0 left-0 right-0 z-50 p-4 md:p-6 bg-surface/95 backdrop-blur-xl border-t border-white/10 transform translate-y-full transition-transform duration-500 flex flex-col md:flex-row items-center justify-between gap-4 shadow-[0_-10px_40px_rgba(0,0,0,0.5)]">
+      <div class="text-xs md:text-sm text-subtle max-w-3xl text-center md:text-left">
+        <span class="font-bold text-white">We use cookies</span> to ensure you get the best experience on our website. By continuing to use this site, you agree to our use of cookies.
+      </div>
+      <div class="flex gap-3">
+        <button onclick="acceptCookies()" class="px-6 py-2 bg-white text-black text-xs font-bold uppercase tracking-widest rounded hover:bg-accent transition-colors">Accept</button>
+      </div>
+    </div>
+
     <!-- VIDEO SHEET (Immersive Layer) -->
     <div id="video-sheet" class="fixed inset-0 z-[100] transform translate-y-full transition-transform duration-500 cubic-bezier(0.19, 1, 0.22, 1) flex flex-col pointer-events-none">
-        <!-- Backdrop -->
         <div class="absolute inset-0 bg-black/80 backdrop-blur-xl pointer-events-auto transition-opacity duration-500 opacity-0" id="sheet-backdrop" onclick="closeSheet()"></div>
         
-        <!-- Sheet Container -->
         <div class="relative flex flex-col w-full h-full bg-[#121212] shadow-2xl overflow-hidden pointer-events-auto mt-0 lg:mt-0 lg:flex-row lg:h-full lg:max-w-[90%] lg:mx-auto lg:rounded-t-2xl border-t border-white/10 lg:border-x">
             
-            <!-- Mobile Drag Handle -->
             <div class="w-full flex justify-center pt-3 pb-1 lg:hidden absolute top-0 z-50 bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
                 <div class="w-12 h-1.5 rounded-full bg-white/20"></div>
             </div>
 
-            <!-- Video Player -->
+            <!-- Video Player (Top Mobile / Left Desktop) -->
             <div class="w-full lg:w-[75%] bg-black relative flex items-center justify-center group h-[35vh] lg:h-full shadow-2xl z-10">
                 <div id="video-embed-container" class="w-full h-full bg-black flex items-center justify-center"></div>
             </div>
 
-            <!-- Details Panel -->
+            <!-- Details Panel (Bottom Mobile / Right Desktop) -->
             <div class="flex-1 bg-[#121212] lg:border-l border-white/5 flex flex-col h-full relative z-20">
                 
                 <!-- Sheet Controls -->
                 <div class="h-16 px-6 flex items-center justify-between border-b border-white/5 bg-[#121212]/95 backdrop-blur shrink-0">
-                    <button onclick="closeSheet()" class="text-subtle hover:text-white transition-colors flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest">
-                        <i class="ph-bold ph-arrow-left text-lg"></i> Back
+                    <button onclick="closeSheet()" class="text-subtle hover:text-white transition-colors flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest group">
+                        <i class="ph-bold ph-arrow-left text-lg group-hover:-translate-x-1 transition-transform"></i> Back
                     </button>
                     <div class="flex gap-4">
-                        <button id="sheet-prev" class="text-subtle hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"><i class="ph-bold ph-caret-left text-xl"></i></button>
-                        <button id="sheet-next" class="text-subtle hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"><i class="ph-bold ph-caret-right text-xl"></i></button>
+                        <button id="sheet-prev" class="text-subtle hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed p-2"><i class="ph-bold ph-caret-left text-xl"></i></button>
+                        <button id="sheet-next" class="text-subtle hover:text-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed p-2"><i class="ph-bold ph-caret-right text-xl"></i></button>
                     </div>
                 </div>
 
                 <!-- Scrollable Content -->
-                <div class="flex-1 overflow-y-auto p-6 md:p-10 no-scrollbar" id="sheet-details">
-                    <!-- Dynamic Details -->
-                </div>
+                <div class="flex-1 overflow-y-auto p-6 md:p-10 no-scrollbar" id="sheet-details"></div>
             </div>
         </div>
     </div>
@@ -265,6 +403,11 @@
         live: document.getElementById("live-container"),
         latest: document.getElementById("new-container"),
         shorts: document.getElementById("shorts-container"),
+        walkthrough: document.getElementById("walkthrough-container"),
+        speedrun: document.getElementById("speedrun-container"),
+        remaster: document.getElementById("remaster-container"),
+        review: document.getElementById("review-container"),
+        deepdive: document.getElementById("deepdive-container"),
       };
       
       const sections = {
@@ -273,6 +416,11 @@
         live: document.getElementById("section-live"),
         latest: document.getElementById("section-latest"),
         shorts: document.getElementById("section-shorts"),
+        walkthrough: document.getElementById("section-walkthrough"),
+        speedrun: document.getElementById("section-speedrun"),
+        remaster: document.getElementById("section-remaster"),
+        review: document.getElementById("section-review"),
+        deepdive: document.getElementById("section-deepdive"),
       };
 
       const filtersEl = document.getElementById("filters");
@@ -283,8 +431,17 @@
       const sheetPrev = document.getElementById("sheet-prev");
       const sheetNext = document.getElementById("sheet-next");
       const heroVideoBg = document.getElementById("hero-bg");
+      const heroAttribution = document.getElementById("hero-attribution");
+      const heroStaticBg = document.getElementById("hero-static-bg");
+      const heroIframeWrapper = document.getElementById("hero-iframe-wrapper");
+      
+      // Toggle Elements
+      const bgVideoToggle = document.getElementById("bg-video-toggle");
+      const bgToggleKnob = document.getElementById("bg-toggle-knob");
 
-      // State
+      // Cookie Consent Elements
+      const cookieConsent = document.getElementById('cookie-consent');
+
       let dataStore = {
         mostViewed: { today: [], week: [], month: [], allTime: [] },
         trending: { today: [], week: [] },
@@ -293,66 +450,198 @@
         updated: null
       };
       
-      let sortState = { mostViewed: 'allTime', trending: 'week', shorts: 'latest' };
-      let loadMoreState = { mostViewed: 10, trending: 10, live: 10, newest: 10, shorts: 20 };
+      let sortState = { mostViewed: 'allTime', trending: 'week', shorts: 'latest', walkthrough: 'popular', speedrun: 'popular', remaster: 'popular', review: 'popular', deepdive: 'popular' };
+      let loadMoreState = { mostViewed: 10, trending: 10, live: 10, newest: 10, shorts: 20, walkthrough: 10, speedrun: 10, remaster: 10, review: 10, deepdive: 10 };
       let activeFilter = "all";
       let currentLightboxList = [];
       let currentLightboxIndex = 0;
+      let heroVideoId = null;
+      
+      // --- BACKGROUND VIDEO LOGIC (PERSISTENT) ---
+      const savedVideoState = localStorage.getItem('bgVideoEnabled');
+      let isVideoEnabled = savedVideoState !== null 
+        ? (savedVideoState === 'true') 
+        : (window.innerWidth > 768);
 
-      const filterOrder = ["all", "live", "walkthrough", "review", "ost", "trailer", "remaster", "speedrun"];
-      const filterMeta = {
-        all: { label: "All", icon: "ph-sparkle" },
-        live: { label: "Live", icon: "ph-broadcast" },
-        walkthrough: { label: "Walkthrough", icon: "ph-game-controller" },
-        review: { label: "Review", icon: "ph-star" },
-        ost: { label: "OST", icon: "ph-music-note" },
-        trailer: { label: "Trailer", icon: "ph-film-strip" },
-        remaster: { label: "Remaster", icon: "ph-magic-wand" },
-        speedrun: { label: "Speedrun", icon: "ph-lightning" }
+      // SCROLL ANIMATION OBSERVER
+      const observerOptions = {
+        root: null,
+        rootMargin: '0px',
+        threshold: 0.1
       };
 
+      const observer = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target); // Run once
+          }
+        });
+      }, observerOptions);
+
       // UTILS
-      function titleAndDescription(video) { return ((video.snippet?.title || "") + " " + (video.snippet?.description || "")).toLowerCase(); }
+      function titleAndDescription(video) { return ((video.snippet?.title || "") + " " + (video.snippet?.tags || []).join(" ")).toLowerCase(); }
       function getDurationInSeconds(d) { if (!d) return 0; const m = d.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/); if(!m) return 0; return (parseInt(m[1])||0)*3600 + (parseInt(m[2])||0)*60 + (parseInt(m[3])||0); }
       
+      // --- STRICT FILTERING SYSTEM ---
+      const trKeywords = ["tomb raider", "lara croft", "angel of darkness", "tr1", "tr2", "tr3", "tr4", "tr5", "tr6", "anniversary", "legend", "underworld", "osiris", "guardian of light", "shadow of the", "rise of the", "definitive edition"];
+
+      function isRelevant(video) {
+          const t = titleAndDescription(video);
+          // Block known off-topic matches
+          if(t.includes("arc raiders")) return false; 
+          return trKeywords.some(k => t.includes(k));
+      }
+
       function classifyVideo(video) {
+        // First, STRICT relevance check
+        if (!isRelevant(video)) return "other";
+
         const t = titleAndDescription(video);
-        const tags = (video.snippet?.tags || []).map(tag => tag.toLowerCase());
+        const titleLower = (video.snippet?.title || "").toLowerCase();
         const d = getDurationInSeconds(video.contentDetails?.duration);
         
+        // Basic Types
         if (t.includes("#shorts") || t.includes(" shorts") || (d > 0 && d < 60)) return "shorts";
         if (video.snippet?.liveBroadcastContent === 'live' || t.includes("🔴")) return "live";
-        if (tags.includes("ost") || tags.includes("soundtrack")) return "ost";
-        if ((tags.includes("trailer") || t.includes("trailer")) && d < 300) return "trailer";
-        if (tags.includes("speedrun") || t.includes("speedrun")) return "speedrun";
-        if (tags.includes("walkthrough") || t.includes("longplay")) return "walkthrough";
-        if (tags.includes("review") || t.includes("review")) return "review";
-        if (tags.includes("remaster")) return "remaster";
+        
+        // Deep Dive Analysis Filter (Strict)
+        const deepDiveKeywords = ["analysis", "essay", "retrospective", "documentary", "history of", "iceberg", "lore", "explained", "theory", "timeline", "critique"];
+        const streamKeywords = ["stream", "vod", "live", "no commentary", "part ", "walkthrough", "playthrough"];
+        
+        const isDeepDive = deepDiveKeywords.some(k => t.includes(k));
+        const isStreamLike = streamKeywords.some(k => titleLower.includes(k));
+        
+        if (isDeepDive && !isStreamLike) return "deepdive";
+
+        // Categories
+        if ((t.includes("remaster") || t.includes("remastered"))) return "remaster";
+        if (t.includes("speedrun") || t.includes("speed run") || t.includes("world record")) return "speedrun";
+        if (t.includes("walkthrough") || t.includes("longplay") || t.includes("gameplay") || t.includes("playthrough") || t.includes("part 1")) return "walkthrough";
+        if (t.includes("review") || t.includes("retrospective") || t.includes("analysis") || t.includes("history of") || t.includes("iceberg")) return "review";
+        
         return "other";
       }
 
-      function passesFilter(video) { return activeFilter === "all" ? classifyVideo(video) !== 'shorts' : classifyVideo(video) === activeFilter; }
       function formatViewCount(c) { if (!c) return "0"; const n = parseInt(c); return n >= 1000000 ? (n / 1000000).toFixed(1) + "M" : n >= 1000 ? (n / 1000).toFixed(1) + "K" : n.toString(); }
-      function formatDate(s) { if(!s) return ""; const d = new Date(s), diff = Math.ceil(Math.abs(new Date() - d)/(1000*60*60*24)); return diff < 7 ? `${diff} days ago` : d.toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'}); }
+      function formatDate(s) { 
+          if(!s) return ""; 
+          const d = new Date(s); 
+          const diff = Math.ceil(Math.abs(new Date() - d)/(1000*60*60*24)); 
+          if (diff < 7) {
+              return diff === 1 ? "1 day ago" : `${diff} days ago`;
+          }
+          return d.toLocaleDateString('en-US', {year:'numeric', month:'short', day:'numeric'}); 
+      }
       function parseDuration(d) { if (!d) return null; const m = d.match(/PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?/); if (!m) return null; const h=parseInt(m[1])||0, min=parseInt(m[2])||0, s=parseInt(m[3])||0; return h>0 ? `${h}:${String(min).padStart(2,'0')}:${String(s).padStart(2,'0')}` : `${min}:${String(s).padStart(2,'0')}`; }
 
       // LOGIC
+      function toggleHeroVideoState() {
+          isVideoEnabled = !isVideoEnabled;
+          
+          // Save to LocalStorage
+          localStorage.setItem('bgVideoEnabled', isVideoEnabled);
+          
+          if (!isVideoEnabled) {
+              // Turn OFF
+              bgToggleKnob.style.transform = "translateX(0)";
+              bgVideoToggle.style.backgroundColor = "rgba(255,255,255,0.2)";
+              heroIframeWrapper.innerHTML = ""; // Remove iframe to save resources
+              heroIframeWrapper.classList.remove('opacity-100');
+              heroStaticBg.classList.remove('opacity-0');
+          } else {
+              // Turn ON
+              bgToggleKnob.style.transform = "translateX(14px)";
+              bgVideoToggle.style.backgroundColor = "#26b58b";
+              if (heroVideoId) {
+                  injectHeroIframe(heroVideoId);
+              }
+          }
+      }
+
+      function injectHeroIframe(id) {
+          heroIframeWrapper.innerHTML = `
+              <iframe 
+                  src="https://www.youtube.com/embed/${id}?autoplay=1&mute=1&controls=0&loop=1&playlist=${id}&playsinline=1&start=10&modestbranding=1&iv_load_policy=3" 
+                  frameborder="0" 
+                  allow="autoplay; encrypted-media" 
+                  allowfullscreen
+                  style="pointer-events: none;">
+              </iframe>
+          `;
+          // Fade in after slight delay to allow load
+          setTimeout(() => {
+              heroIframeWrapper.classList.add('opacity-100');
+              heroStaticBg.classList.add('opacity-0');
+          }, 500);
+      }
+
+      // Set initial toggle visual state immediately
+      if(isVideoEnabled) {
+          bgToggleKnob.style.transform = "translateX(14px)";
+          bgVideoToggle.style.backgroundColor = "#26b58b";
+      } else {
+          bgToggleKnob.style.transform = "translateX(0)";
+          bgVideoToggle.style.backgroundColor = "rgba(255,255,255,0.2)";
+      }
+
+      // Add Click Listener to Toggle
+      bgVideoToggle.addEventListener('click', toggleHeroVideoState);
+
+      // --- COOKIE CONSENT LOGIC (PERSISTENT) ---
+      function initCookieConsent() {
+        if (!localStorage.getItem('cookieConsent')) {
+          setTimeout(() => {
+            cookieConsent.classList.remove('translate-y-full');
+          }, 2000); // Show after 2 seconds
+        } else {
+            // Ensure it stays hidden if already accepted
+            cookieConsent.classList.add('translate-y-full');
+        }
+      }
+
+      window.acceptCookies = function() {
+        cookieConsent.classList.add('translate-y-full');
+        localStorage.setItem('cookieConsent', 'true');
+      }
+
       function updateHeroVideo() {
         const candidates = [...(dataStore.trending.week || []), ...(dataStore.mostViewed.allTime || [])];
         const trailer = candidates.find(v => classifyVideo(v) === 'trailer' || classifyVideo(v) === 'remaster') || candidates[0];
         
         if (trailer) {
-            const videoId = typeof trailer.id === 'string' ? trailer.id : trailer.id?.videoId;
-            // Inject background video
-            heroVideoBg.innerHTML = `
-                <iframe 
-                    src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${videoId}&playsinline=1&start=10" 
-                    frameborder="0" 
-                    allow="autoplay; encrypted-media" 
-                    allowfullscreen>
-                </iframe>
-                <div class="absolute inset-0 bg-[url('https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg')] bg-cover bg-center -z-10"></div>
+            heroVideoId = typeof trailer.id === 'string' ? trailer.id : trailer.id?.videoId;
+            
+            // Set Static Fallback
+            heroStaticBg.style.backgroundImage = `url('https://i.ytimg.com/vi/${heroVideoId}/maxresdefault.jpg')`;
+            
+            // If Enabled, inject video
+            if(isVideoEnabled) {
+                injectHeroIframe(heroVideoId);
+            }
+
+            // Setup attribution
+            const title = trailer.snippet?.title || "Featured Video";
+            const channel = trailer.snippet?.channelTitle || "TubeRaider";
+            
+            heroAttribution.innerHTML = `
+                <div class="bg-black/60 backdrop-blur-lg border border-white/10 rounded-lg p-4 max-w-sm flex flex-col items-start md:items-end gap-1 shadow-2xl mr-0 md:mr-12 mb-0 md:mb-24 w-full md:w-auto">
+                    <span class="text-[10px] uppercase font-bold text-accent tracking-widest">Playing Now</span>
+                    <h3 class="text-sm font-bold text-white text-left md:text-right line-clamp-1">${title}</h3>
+                    <p class="text-xs text-subtle text-left md:text-right mb-2">${channel}</p>
+                    <button id="hero-watch-btn" class="mt-1 text-xs font-bold uppercase tracking-widest text-white hover:text-accent transition-colors flex items-center gap-1 group">
+                        Watch Full Video <i class="ph-bold ph-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                </div>
             `;
+            
+            const watchBtn = document.getElementById("hero-watch-btn");
+            if(watchBtn) {
+                watchBtn.onclick = () => {
+                    const listToUse = candidates;
+                    openLightbox(candidates.indexOf(trailer), listToUse); 
+                };
+            }
         }
       }
 
@@ -364,56 +653,60 @@
             live: data.live || [],
             updated: data.updated
         };
-        [...dataStore.newest, ...dataStore.live].forEach(v => classifyVideo(v));
+        // Flatten for easy filtering of specific rows
+        let allVideos = [...(dataStore.mostViewed.allTime || []), ...(dataStore.trending.week || []), ...dataStore.newest];
         
-        buildFilters();
+        // Remove duplicates based on ID
+        const seen = new Set();
+        allVideos = allVideos.filter(v => {
+            const id = typeof v.id === 'string' ? v.id : v.id?.videoId;
+            if(!id || seen.has(id)) return false;
+            seen.add(id);
+            return true;
+        });
+
+        // Pre-classify all videos for better filtering later
+        dataStore.allVideos = allVideos;
+
         renderAll(true);
         updateHeroVideo();
         
+        // Observe sections after render
+        document.querySelectorAll('.reveal-on-scroll').forEach(el => observer.observe(el));
+        
         if (data.updated) {
             const date = new Date(data.updated);
-            document.getElementById("header-updated").innerHTML = `<i class="ph-fill ph-circle text-accent text-[8px] animate-pulse"></i> Updated ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`;
+            const footerEl = document.getElementById("footer-updated");
+            if(footerEl) footerEl.innerHTML = `<i class="ph-fill ph-circle text-accent animate-pulse"></i> Last Updated: ${date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', timeZoneName: 'short'})}`;
         }
       }
 
-      function buildFilters() {
-        filtersEl.innerHTML = "";
-        const tagSet = new Set(['all']);
-        const all = [...(dataStore.mostViewed.today || []), ...(dataStore.mostViewed.week || []), ...(dataStore.mostViewed.allTime || []), ...dataStore.newest, ...dataStore.live];
-        all.forEach(video => { const tag = classifyVideo(video); if (tag !== "other") tagSet.add(tag); });
-        
-        filterOrder.forEach(key => {
-          if (!tagSet.has(key)) return;
-          const meta = filterMeta[key];
-          const btn = document.createElement("button");
-          btn.className = "flex-shrink-0 px-6 py-2.5 rounded-full text-[11px] font-bold uppercase tracking-widest cursor-pointer flex items-center gap-2 transition-all duration-300 border border-white/10 bg-white/5 text-subtle hover:bg-white hover:text-black hover:border-white active:scale-95 data-[active=true]:bg-white data-[active=true]:text-black data-[active=true]:border-white";
-          if (key === activeFilter) btn.setAttribute('data-active', 'true');
-          btn.dataset.filter = key;
-          btn.innerHTML = `<i class="ph-fill ${meta.icon} text-sm"></i>${meta.label}`;
-          filtersEl.appendChild(btn);
-        });
-      }
-
-      function renderRow(videos, container, sectionKey, isShortSection, isLiveSection = false) {
+      function renderRow(videos, container, sectionKey, isShortSection = false) {
+        // Infinite scroll optimization
         container.innerHTML = "";
         
-        let filtered = isShortSection ? videos : isLiveSection ? videos.filter(v => classifyVideo(v) === "live") : videos.filter(v => {
-            const tag = classifyVideo(v);
-            if (tag === "shorts" || tag === "live") return false;
-            return passesFilter(v);
-        });
+        const sectionEl = sections[sectionKey];
 
-        const sectionEl = sections[sectionKey === 'mostViewed' ? 'mostViewed' : sectionKey === 'newest' ? 'latest' : sectionKey];
-
-        if (!filtered || filtered.length === 0) {
-          if (activeFilter !== 'all' && sectionEl) sectionEl.classList.add('hidden');
+        if (!videos || videos.length === 0) {
+          if (sectionEl) sectionEl.classList.add('hidden');
           return;
         }
         
         if (sectionEl) sectionEl.classList.remove('hidden');
         
         const limit = loadMoreState[sectionKey];
-        const videosToShow = filtered.slice(0, limit);
+        // Apply Sort based on State (if applicable)
+        let sortedVideos = [...videos];
+        const sortType = sortState[sectionKey];
+        
+        if (sortType === 'latest') {
+             sortedVideos.sort((a, b) => new Date(b.snippet?.publishedAt || 0) - new Date(a.snippet?.publishedAt || 0));
+        } else if (sortType === 'popular') {
+             sortedVideos.sort((a, b) => (parseInt(b.statistics?.viewCount || 0) - parseInt(a.statistics?.viewCount || 0)));
+        }
+        // else: respect incoming order (e.g. for most viewed / trending API returns)
+
+        const videosToShow = sortedVideos.slice(0, limit);
         
         videosToShow.forEach((video, index) => {
           const videoId = typeof video.id === 'string' ? video.id : video.id?.videoId;
@@ -422,26 +715,25 @@
           const title = video.snippet?.title || "Untitled";
           const channel = video.snippet?.channelTitle || "Unknown";
           const date = formatDate(video.snippet?.publishedAt);
-          const tag = classifyVideo(video);
-          const isShort = isShortSection || tag === "shorts";
+          const isShort = isShortSection || classifyVideo(video) === "shorts";
           const viewCount = formatViewCount(video.statistics?.viewCount);
           const duration = parseDuration(video.contentDetails?.duration);
           
-          const cardBase = "group flex flex-col w-[280px] md:w-[320px] flex-shrink-0 cursor-pointer snap-start transition-all duration-500 hover:z-10";
+          const cardBase = "group flex flex-col w-[260px] md:w-[300px] flex-shrink-0 cursor-pointer snap-start transition-opacity duration-300 hover:opacity-90";
           const shortWidth = "w-[160px] md:w-[190px]";
           const thumbAspect = isShort ? "aspect-[9/16]" : "aspect-video";
           
           const card = document.createElement("div");
           card.className = `${cardBase} ${isShort ? shortWidth : ''}`;
-          card.onclick = () => openLightbox(index, filtered);
+          card.onclick = () => openLightbox(index, sortedVideos); 
           
           card.innerHTML = `
-            <div class="relative w-full ${thumbAspect} rounded-lg overflow-hidden bg-surface mb-3 shadow-lg border border-white/5 group-hover:scale-105 group-hover:shadow-[0_0_30px_rgba(0,0,0,0.6)] group-hover:border-white/20 transition-all duration-300">
-                <img src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg" loading="lazy" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
+            <div class="relative w-full ${thumbAspect} rounded-lg overflow-hidden bg-surface mb-3 shadow-lg border border-white/5 transition-colors duration-300 group-hover:border-accent group-hover:shadow-[0_0_20px_rgba(38,181,139,0.15)]">
+                <img src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg" loading="lazy" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity duration-500" />
                 ${duration ? `<div class="absolute bottom-2 right-2 px-1.5 py-0.5 bg-black/80 backdrop-blur-md rounded text-[10px] font-bold text-white border border-white/10 tracking-wider">${duration}</div>` : ''}
-                ${tag === 'live' ? `<div class="absolute top-2 left-2 px-2 py-0.5 bg-red text-white text-[10px] font-bold rounded uppercase tracking-wider animate-pulse">LIVE</div>` : ''}
+                ${sectionKey === 'live' ? `<div class="absolute top-2 left-2 px-2 py-0.5 bg-red text-white text-[10px] font-bold rounded uppercase tracking-wider animate-pulse">LIVE</div>` : ''}
                 <div class="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-                    <div class="w-12 h-12 rounded-full bg-white text-black flex items-center justify-center shadow-2xl transform scale-50 group-hover:scale-100 transition-transform duration-300"><i class="ph-fill ph-play text-xl ml-1"></i></div>
+                    <div class="w-12 h-12 rounded-full bg-accent text-black flex items-center justify-center shadow-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-75"><i class="ph-fill ph-play text-xl ml-1"></i></div>
                 </div>
             </div>
             
@@ -450,7 +742,7 @@
                 <div class="flex flex-wrap items-center gap-x-2 gap-y-1 text-[11px] text-subtle font-medium">
                     <span class="hover:text-white transition-colors">${channel}</span>
                     <span>•</span>
-                    <span>${viewCount}</span>
+                    <span class="view-count-anim" data-count="${video.statistics?.viewCount || 0}">${viewCount}</span>
                     <span>•</span>
                     <span>${date}</span>
                 </div>
@@ -461,32 +753,63 @@
       }
 
       function renderAll(reset = false) {
-        if (reset) loadMoreState = { mostViewed: 10, trending: 10, live: 10, newest: 10, shorts: 20 };
+        if (reset) loadMoreState = { mostViewed: 10, trending: 10, live: 10, newest: 10, shorts: 20, walkthrough: 10, speedrun: 10, remaster: 10, review: 10, deepdive: 10 };
         
+        // --- 1. MOST VIEWED (Standard) ---
+        // Special logic: The API returns pre-sorted arrays for timeframes. We select the array based on sortState.
         let rawMostViewed = dataStore.mostViewed[sortState.mostViewed] || [];
+        // Filter out shorts to keep it clean
+        let mvFiltered = rawMostViewed.filter(v => classifyVideo(v) !== 'shorts' && isRelevant(v));
+        
+        // De-duplicate All Time if needed (though API is usually good)
         if (sortState.mostViewed === 'allTime') {
-            const combined = [...rawMostViewed, ...dataStore.newest];
-            const seen = new Set();
-            rawMostViewed = combined.filter(v => {
+             const seen = new Set();
+             mvFiltered = mvFiltered.filter(v => {
                 const id = typeof v.id === 'string' ? v.id : v.id?.videoId;
-                if (!id || seen.has(id)) return false;
+                if(!id || seen.has(id)) return false;
                 seen.add(id);
                 return true;
-            }).sort((a, b) => (parseInt(b.statistics?.viewCount || 0) - parseInt(a.statistics?.viewCount || 0)));
+             });
         }
-        
-        let shortsOnly = [...dataStore.mostViewed.allTime, ...dataStore.newest].filter(v => classifyVideo(v) === "shorts");
-        if (sortState.shorts === 'popular') {
-            shortsOnly.sort((a, b) => (parseInt(b.statistics?.viewCount || 0) - parseInt(a.statistics?.viewCount || 0)));
-        } else {
-            shortsOnly.sort((a, b) => new Date(b.snippet?.publishedAt || 0) - new Date(a.snippet?.publishedAt || 0));
-        }
+        renderRow(mvFiltered, containers.mostViewed, 'mostViewed');
 
-        renderRow(rawMostViewed, containers.mostViewed, 'mostViewed', false);
-        renderRow(dataStore.trending[sortState.trending] || [], containers.trending, 'trending', false);
-        renderRow(dataStore.live, containers.live, 'live', false, true);
-        renderRow(dataStore.newest, containers.latest, 'newest', false);
-        renderRow(shortsOnly, containers.shorts, 'shorts', true);
+        // --- 2. TRENDING (Standard) ---
+        let trendingVids = dataStore.trending[sortState.trending] || [];
+        trendingVids = trendingVids.filter(v => classifyVideo(v) !== 'shorts' && isRelevant(v));
+        renderRow(trendingVids, containers.trending, 'trending');
+
+        // --- 3. REMASTERS (Curated) ---
+        const remasters = dataStore.allVideos.filter(v => classifyVideo(v) === 'remaster');
+        renderRow(remasters, containers.remaster, 'remaster');
+
+        // --- 4. SPEEDRUNS (Curated) ---
+        const speedruns = dataStore.allVideos.filter(v => classifyVideo(v) === 'speedrun');
+        renderRow(speedruns, containers.speedrun, 'speedrun');
+
+        // --- 5. DEEP DIVES & LORE (New Row) ---
+        const deepdives = dataStore.allVideos.filter(v => classifyVideo(v) === 'deepdive');
+        renderRow(deepdives, containers.deepdive, 'deepdive');
+
+        // --- 6. LIVE (Standard) ---
+        // Extra filter for live to ensure we don't get junk
+        const liveVids = dataStore.live.filter(v => isRelevant(v));
+        renderRow(liveVids, containers.live, 'live');
+
+        // --- 7. WALKTHROUGHS (Curated) ---
+        const walkthroughs = dataStore.allVideos.filter(v => classifyVideo(v) === 'walkthrough');
+        renderRow(walkthroughs, containers.walkthrough, 'walkthrough');
+
+        // --- 8. REVIEWS (Curated) ---
+        const reviews = dataStore.allVideos.filter(v => classifyVideo(v) === 'review');
+        renderRow(reviews, containers.review, 'review');
+        
+        // --- 9. LATEST (Standard) ---
+        const latestVids = dataStore.newest.filter(v => classifyVideo(v) !== 'shorts' && isRelevant(v));
+        renderRow(latestVids, containers.latest, 'latest');
+
+        // --- 10. SHORTS (Standard) ---
+        let shorts = [...(dataStore.mostViewed.allTime || []), ...dataStore.newest].filter(v => classifyVideo(v) === "shorts" && isRelevant(v));
+        renderRow(shorts, containers.shorts, 'shorts', true);
       }
 
       // --- INFINITE SCROLL ---
@@ -503,31 +826,40 @@
 
       Object.keys(containers).forEach(key => {
           const container = containers[key];
-          const sectionKey = key === 'latest' ? 'newest' : (key === 'mostViewed' ? 'mostViewed' : key);
+          // Map container keys to section keys used in loadMoreState
+          let sectionKey = key === 'latest' ? 'newest' : (key === 'mostViewed' ? 'mostViewed' : key);
+          
           container.addEventListener('scroll', () => handleInfiniteScroll(container, sectionKey));
       });
 
-      // --- EVENTS ---
-      filtersEl.addEventListener("click", (e) => {
-        const btn = e.target.closest("button");
-        if (!btn) return;
-        activeFilter = btn.dataset.filter;
-        [...filtersEl.children].forEach(b => b.removeAttribute('data-active'));
-        btn.setAttribute('data-active', 'true');
-        renderAll(true);
-      });
-
-      ['most-viewed', 'trending', 'shorts'].forEach(key => {
+      // --- SORT TOGGLES ---
+      // Handle the different sort buttons
+      const sectionSorts = ['most-viewed', 'trending', 'shorts', 'walkthrough', 'speedrun', 'remaster', 'review', 'deepdive'];
+      
+      sectionSorts.forEach(key => {
           const el = document.getElementById(`${key}-sort`);
           if(el) el.addEventListener('click', (e) => {
               const btn = e.target.closest('button');
               if(!btn) return;
               const type = btn.dataset.timeframe || btn.dataset.sort;
-              sortState[key === 'most-viewed' ? 'mostViewed' : key === 'shorts' ? 'shorts' : 'trending'] = type;
+              const stateKey = key === 'most-viewed' ? 'mostViewed' : key;
+              sortState[stateKey] = type;
               [...el.children].forEach(b => b.removeAttribute('data-active'));
               btn.setAttribute('data-active', 'true');
               renderAll();
           });
+      });
+
+      // Slider Navigation Arrows
+      document.querySelectorAll('.group\\/slider').forEach(shell => {
+          const container = shell.querySelector('div[id$="-container"]');
+          const prev = shell.querySelector('button[id$="-prev"]');
+          const next = shell.querySelector('button[id$="-next"]');
+          
+          if(prev && next && container) {
+              prev.addEventListener('click', () => container.scrollBy({ left: -container.clientWidth * 0.75, behavior: 'smooth' }));
+              next.addEventListener('click', () => container.scrollBy({ left: container.clientWidth * 0.75, behavior: 'smooth' }));
+          }
       });
 
       // --- SHEET ---
@@ -594,6 +926,10 @@
 
       // --- INIT ---
       async function init() {
+        
+        // Initialize Cookie Consent Check immediately
+        document.addEventListener('DOMContentLoaded', initCookieConsent);
+
         const CACHE_KEY = 'tuberaider_data';
         const cached = localStorage.getItem(CACHE_KEY);
         let data;
