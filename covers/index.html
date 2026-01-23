@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+  <title>Liquid Mesh Generator</title>
+  <style>
+    /* Integrating Circular font family with specific weights */
+    @font-face {
+      font-family: 'Circular';
+      src: url('Circular-Black.ttf') format('truetype');
+      font-weight: 900;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Circular';
+      src: url('Circular-Bold.ttf') format('truetype');
+      font-weight: 700;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Circular';
+      src: url('Circular-Medium.ttf') format('truetype');
+      font-weight: 500;
+      font-style: normal;
+    }
+    @font-face {
+      font-family: 'Circular';
+      src: url('Circular-Book.ttf') format('truetype');
+      font-weight: 400;
+      font-style: normal;
+    }
+
+    :root {
+      --bg: #08080a;
+      --panel: #111114;
+      --accent: #3b82f6;
+      --text: #ffffff;
+      --text-dim: #94a3b8;
+    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+      margin: 0;
+      font-family: 'Circular', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+
+    /* Main Viewport - Handles dynamic scaling */
+    .viewport {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: #000;
+      min-width: 0;
+      position: relative;
+    }
+
+    .canvas-scaler {
+      width: min(100%, calc(100vh - 80px));
+      max-width: 800px;
+      aspect-ratio: 1/1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .canvas-container {
+      position: absolute;
+      width: 1000px;
+      height: 1000px;
+      background: #000;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+      overflow: hidden;
+      transform-origin: center center;
+    }
+
+    #meshCanvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Text Overlay Styles */
+    #textOverlay {
+      position: absolute;
+      left: 116px;
+      top: 889px;
+      transform: translateY(-100%);
+      width: 635px;
+      color: white;
+      font-family: 'Circular', sans-serif;
+      font-size: 90.05px;
+      font-weight: 700;
+      line-height: 89px;
+      text-align: left;
+      pointer-events: none;
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    /* Sidebar Controls */
+    .sidebar {
+      width: 340px;
+      background: var(--panel);
+      border-left: 1px solid rgba(255,255,255,0.05);
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      flex-shrink: 0;
+      z-index: 10;
+      overflow-y: auto;
+    }
+
+    .header h1 { font-size: 18px; margin: 0; letter-spacing: -0.02em; font-weight: 700; }
+
+    .control-group { display: flex; flex-direction: column; gap: 8px; }
+    .label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+
+    textarea, select {
+      background: rgba(255,255,255,0.03);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: white;
+      padding: 12px;
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+    }
+    textarea { resize: none; height: 80px; }
+    textarea:focus, select:focus { border-color: var(--accent); }
+    
+    select option { background: var(--panel); color: white; }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 14px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 14px;
+    }
+    .btn-primary:active { transform: scale(0.98); }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+    }
+
+    /* Mobile Responsive Layout */
+    @media (max-width: 900px) {
+      body { flex-direction: column; }
+      .viewport { 
+        padding: 16px;
+        flex: 1;
+        min-height: 0;
+      }
+      .sidebar { 
+        width: 100%; 
+        height: auto;
+        max-height: 45vh;
+        border-left: none; 
+        border-top: 1px solid rgba(255,255,255,0.1);
+        padding: 24px;
+        gap: 16px;
+      }
+      .canvas-scaler {
+        width: 100%;
+        height: 100%;
+      }
+      .header { display: none; } /* Hide title on small screens to save space */
+    }
+  </style>
+</head>
+<body>
+
+  <div class="viewport">
+    <div class="canvas-scaler">
+      <div class="canvas-container" id="captureRegion">
+        <canvas id="meshCanvas" width="1000" height="1000"></canvas>
+        <div id="textOverlay">Enter text</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="header">
+      <h1>Mesh Studio</h1>
+    </div>
+
+    <div class="control-group">
+      <div class="label">Text Content</div>
+      <textarea id="textInput" placeholder="Enter text here...">Enter text</textarea>
+    </div>
+
+    <div class="control-group">
+      <div class="label">Font Weight</div>
+      <select id="weightSelector">
+        <option value="900">Black</option>
+        <option value="700" selected>Bold</option>
+        <option value="500">Medium</option>
+        <option value="400">Book</option>
+      </select>
+    </div>
+
+    <div class="control-group" style="flex-direction: row; gap: 8px;">
+      <button id="regenBtn" class="btn-primary" style="flex: 1;">Regenerate</button>
+      <button id="downloadBtn" class="btn-secondary" style="flex: 1;">Export</button>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('meshCanvas');
+    const ctx = canvas.getContext('2d');
+    const textInput = document.getElementById('textInput');
+    const textOverlay = document.getElementById('textOverlay');
+    const weightSelector = document.getElementById('weightSelector');
+    const container = document.querySelector('.canvas-container');
+    const scaler = document.querySelector('.canvas-scaler');
+    const size = 1000;
+    const gridSize = 4;
+
+    let mesh = [];
+
+    const PALETTES = [
+      { colors: [[60, 20, 220], [247, 67, 102], [255, 191, 0], [21, 169, 252]], weights: [0.4, 0.3, 0.2, 0.1] },
+      { colors: [[10, 55, 44], [105, 221, 88], [127, 255, 212], [0, 128, 128]], weights: [0.5, 0.2, 0.1, 0.2] },
+      { colors: [[91, 34, 68], [181, 126, 220], [247, 202, 201], [255, 182, 193]], weights: [0.3, 0.4, 0.2, 0.1] },
+      { colors: [[193, 79, 48], [255, 127, 80], [255, 219, 88], [220, 20, 60]], weights: [0.3, 0.3, 0.3, 0.1] }
+    ];
+
+    function updateScale() {
+      const rect = scaler.getBoundingClientRect();
+      const scale = Math.min(rect.width, rect.height) / size;
+      container.style.transform = `scale(${scale})`;
+    }
+    
+    // Use ResizeObserver for more robust scaling updates
+    const resizeObserver = new ResizeObserver(updateScale);
+    resizeObserver.observe(scaler);
+    window.addEventListener('resize', updateScale);
+    updateScale();
+
+    function pickWeightedColor(palette) {
+      const r = Math.random();
+      let sum = 0;
+      for (let i = 0; i < palette.weights.length; i++) {
+        sum += palette.weights[i];
+        if (r <= sum) return palette.colors[i];
+      }
+      return palette.colors[0];
+    }
+
+    function initMesh() {
+      const palette = PALETTES[Math.floor(Math.random() * PALETTES.length)];
+      mesh = [];
+      const anchorColor = palette.colors[0];
+
+      for (let y = 0; y < gridSize; y++) {
+        for (let x = 0; x < gridSize; x++) {
+          let px = x / (gridSize - 1);
+          let py = y / (gridSize - 1);
+
+          if (x > 0 && x < gridSize - 1 && y > 0 && y < gridSize - 1) {
+            px += (Math.random() - 0.5) * 0.6;
+            py += (Math.random() - 0.5) * 0.6;
+          }
+
+          let color;
+          const isEdge = x === 0 || x === gridSize-1 || y === 0 || y === gridSize-1;
+          if (isEdge && Math.random() > 0.3) {
+            color = anchorColor;
+          } else {
+            color = pickWeightedColor(palette);
+          }
+
+          mesh.push({ x: px * size, y: py * size, color: color });
+        }
+      }
+      render();
+    }
+
+    function render() {
+      const buffer = document.createElement('canvas');
+      buffer.width = size;
+      buffer.height = size;
+      const bctx = buffer.getContext('2d');
+      const steps = 60; 
+      
+      for (let j = 0; j < gridSize - 1; j++) {
+        for (let i = 0; i < gridSize - 1; i++) {
+          const p00 = mesh[j * gridSize + i];
+          const p10 = mesh[j * gridSize + (i + 1)];
+          const p01 = mesh[(j + 1) * gridSize + i];
+          const p11 = mesh[(j + 1) * gridSize + (i + 1)];
+
+          for (let y = 0; y < steps; y++) {
+            for (let x = 0; x < steps; x++) {
+              const u = x / steps;
+              const v = y / steps;
+              const uNext = (x + 1) / steps;
+              const vNext = (y + 1) / steps;
+
+              const pos = lerp2D(p00, p10, p01, p11, u, v);
+              const posNext = lerp2D(p00, p10, p01, p11, uNext, vNext);
+              const color = lerpColor(p00.color, p10.color, p01.color, p11.color, u, v);
+
+              bctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+              const w = Math.abs(posNext.x - pos.x) + 3;
+              const h = Math.abs(posNext.y - pos.y) + 3;
+              bctx.fillRect(pos.x, pos.y, w, h);
+            }
+          }
+        }
+      }
+
+      ctx.clearRect(0, 0, size, size);
+      ctx.save();
+      ctx.filter = 'blur(50px) saturate(1.1)';
+      ctx.drawImage(buffer, -80, -80, size + 160, size + 160);
+      ctx.restore();
+    }
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+    function lerp2D(p00, p10, p01, p11, u, v) {
+      return {
+        x: lerp(lerp(p00.x, p10.x, u), lerp(p01.x, p11.x, u), v),
+        y: lerp(lerp(p00.y, p10.y, u), lerp(p01.y, p11.y, u), v)
+      };
+    }
+    function lerpColor(c00, c10, c01, c11, u, v) {
+      return [
+        Math.round(lerp(lerp(c00[0], c10[0], u), lerp(c01[0], c11[0], u), v)),
+        Math.round(lerp(lerp(c00[1], c10[1], u), lerp(c01[1], c11[1], u), v)),
+        Math.round(lerp(lerp(c00[2], c10[2], u), lerp(c01[2], c11[2], u), v))
+      ];
+    }
+
+    textInput.oninput = (e) => {
+      textOverlay.textContent = e.target.value;
+    };
+
+    weightSelector.onchange = (e) => {
+      textOverlay.style.fontWeight = e.target.value;
+    };
+
+    document.getElementById('regenBtn').onclick = initMesh;
+    
+    function wrapText(context, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      const lines = [];
+
+      for (let n = 0; n < words.length; n++) {
+        const testLine = line + words[n] + ' ';
+        const metrics = context.measureText(testLine);
+        const testWidth = metrics.width;
+        if (testWidth > maxWidth && n > 0) {
+          lines.push(line);
+          line = words[n] + ' ';
+        } else {
+          line = testLine;
+        }
+      }
+      lines.push(line);
+      return lines;
+    }
+
+    document.getElementById('downloadBtn').onclick = () => {
+      const exportCanvas = document.createElement('canvas');
+      exportCanvas.width = 1000;
+      exportCanvas.height = 1000;
+      const exCtx = exportCanvas.getContext('2d');
+      
+      exCtx.drawImage(canvas, 0, 0);
+      exCtx.fillStyle = 'white';
+      const weight = weightSelector.value;
+      const fontSize = 90.05;
+      const leading = 89;
+      const maxWidth = 635;
+      const startX = 116;
+      const bottomY = 889; 
+      
+      exCtx.font = `${weight} ${fontSize}px Circular, sans-serif`;
+      exCtx.textBaseline = 'bottom';
+      
+      const inputLines = textInput.value.split('\n');
+      let finalLines = [];
+      
+      inputLines.forEach(l => {
+        const wrapped = wrapText(exCtx, l, startX, 0, maxWidth, leading);
+        finalLines = finalLines.concat(wrapped);
+      });
+
+      for(let i = 0; i < finalLines.length; i++) {
+        const lineIndex = finalLines.length - 1 - i;
+        const lineY = bottomY - (i * leading);
+        exCtx.fillText(finalLines[lineIndex].trim(), startX, lineY);
+      }
+
+      const link = document.createElement('a');
+      link.download = `mesh-export-${Date.now()}.png`;
+      link.href = exportCanvas.toDataURL('image/png');
+      link.click();
+    };
+
+    initMesh();
+  </script>
+</body>
+</html>
