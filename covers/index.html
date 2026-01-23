@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
-  <title>Mesh Studio Pro</title>
+  <title>Solid Studio Pro</title>
   <style>
     /* Integrating Circular font family */
     @font-face { font-family: 'Circular'; src: url('Circular/Circular-Black.ttf') format('truetype'); font-weight: 900; }
@@ -12,14 +12,17 @@
     @font-face { font-family: 'Circular'; src: url('Circular/Circular-Book.ttf') format('truetype'); font-weight: 400; }
 
     :root {
-      --bg: #08080a;
-      --panel: #111114;
-      --input-bg: #1c1c21;
+      --bg: #0c0c0e;
+      --panel: #16161a;
+      --input-bg: #222227;
       --accent: #3b82f6;
       --text: #ffffff;
       --text-dim: #94a3b8;
+      --border: rgba(255,255,255,0.08);
     }
     
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
     body {
       margin: 0;
       font-family: 'Circular', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -31,14 +34,16 @@
       overflow: hidden;
     }
 
+    /* Viewport Area */
     .viewport {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 40px;
+      padding: 20px;
       background: #000;
       position: relative;
+      overflow: hidden;
     }
 
     .canvas-scaler {
@@ -50,57 +55,130 @@
     }
 
     .canvas-container {
-      position: absolute;
+      position: relative;
       width: 1000px;
       height: 1000px;
-      background: #000;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+      background: #111;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.6);
       transform-origin: center center;
+      border-radius: 4px;
+      overflow: hidden;
     }
 
-    #meshCanvas {
+    #studioCanvas {
       width: 100%;
       height: 100%;
       display: block;
     }
 
-    /* Side Panel Styles */
+    /* Sidebar Panel */
     .sidebar {
-      width: 340px;
+      width: 420px;
       background: var(--panel);
-      border-left: 1px solid rgba(255,255,255,0.05);
+      border-left: 1px solid var(--border);
       padding: 32px;
       display: flex;
       flex-direction: column;
-      gap: 24px;
+      gap: 28px;
       z-index: 10;
+      overflow-y: auto;
     }
 
-    .header h1 { font-size: 18px; margin: 0; font-weight: 700; }
-    .control-group { display: flex; flex-direction: column; gap: 8px; }
-    .label { font-size: 10px; font-weight: 700; text-transform: uppercase; color: var(--text-dim); }
+    .header h1 { 
+      font-size: 20px; 
+      margin: 0; 
+      font-weight: 800; 
+      letter-spacing: -0.02em;
+    }
+    
+    .header p {
+      font-size: 13px;
+      color: var(--text-dim);
+      margin: 4px 0 0 0;
+    }
+
+    .control-group { display: flex; flex-direction: column; gap: 10px; }
+    .label { 
+      font-size: 11px; 
+      font-weight: 700; 
+      text-transform: uppercase; 
+      color: var(--text-dim); 
+      letter-spacing: 0.05em;
+    }
+
+    /* Color Grid */
+    .color-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 6px;
+      padding: 4px;
+      background: rgba(0,0,0,0.2);
+      border-radius: 8px;
+    }
+
+    .color-swatch {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      cursor: pointer;
+      border: 1.5px solid transparent;
+      transition: transform 0.1s, border-color 0.2s;
+    }
+
+    .color-swatch:hover { transform: scale(1.1); z-index: 2; }
+    .color-swatch.active { border-color: white; transform: scale(1.1); z-index: 2; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
 
     textarea, select {
       background: var(--input-bg);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 8px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
       color: white;
-      padding: 14px;
-      font-size: 16px;
+      padding: 16px;
+      font-size: 15px;
       width: 100%;
+      outline: none;
+      transition: border-color 0.2s;
+      font-family: inherit;
+    }
+    
+    textarea:focus { border-color: var(--accent); }
+
+    .btn-row { display: flex; gap: 12px; margin-top: auto; }
+
+    .btn-primary { 
+      background: var(--accent); 
+      color: white; 
+      border: none; 
+      padding: 16px; 
+      border-radius: 12px; 
+      font-weight: 700; 
+      cursor: pointer; 
+      flex: 2;
+      transition: opacity 0.2s;
+      font-family: inherit;
     }
 
-    .mode-toggle { display: flex; background: var(--input-bg); border-radius: 10px; padding: 4px; }
-    .mode-btn { flex: 1; border: none; background: transparent; color: var(--text-dim); padding: 10px; font-weight: 700; cursor: pointer; }
-    .mode-btn.active { background: rgba(255,255,255,0.1); color: white; border-radius: 6px; }
+    .btn-secondary { 
+      background: rgba(255,255,255,0.05); 
+      color: white; 
+      border: 1px solid var(--border); 
+      padding: 16px; 
+      border-radius: 12px; 
+      cursor: pointer; 
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .btn-primary:active, .btn-secondary:active { opacity: 0.7; }
 
-    .btn-primary { background: var(--accent); color: white; border: none; padding: 16px; border-radius: 12px; font-weight: 700; cursor: pointer; }
-    .btn-secondary { background: rgba(255,255,255,0.05); color: white; border: 1px solid rgba(255,255,255,0.1); padding: 16px; border-radius: 12px; cursor: pointer; }
-
+    /* Mobile Adaptations */
     @media (max-width: 900px) {
       body { flex-direction: column; overflow-y: auto; }
-      .viewport { height: 50vh; flex: none; }
-      .sidebar { width: 100%; }
+      .viewport { height: 50vh; flex: none; padding: 30px; }
+      .sidebar { width: 100%; border-left: none; border-top: 1px solid var(--border); padding: 24px; height: auto; }
+      .btn-row { margin-top: 10px; }
+      .color-grid { grid-template-columns: repeat(12, 1fr); }
     }
   </style>
 </head>
@@ -109,25 +187,25 @@
   <div class="viewport">
     <div class="canvas-scaler">
       <div class="canvas-container">
-        <canvas id="meshCanvas" width="1000" height="1000"></canvas>
+        <canvas id="studioCanvas" width="1000" height="1000"></canvas>
       </div>
     </div>
   </div>
 
   <div class="sidebar">
-    <div class="header"><h1>Mesh Studio Pro</h1></div>
-
-    <div class="control-group">
-      <div class="label">Gradient Mode</div>
-      <div class="mode-toggle">
-        <button id="modeLiquid" class="mode-btn active">Liquid Mesh</button>
-        <button id="modeSoft" class="mode-btn">Soft Radials</button>
-      </div>
+    <div class="header">
+      <h1>Solid Studio Pro</h1>
+      <p>Clean typography & brand backgrounds</p>
     </div>
 
     <div class="control-group">
-      <div class="label">Text Content</div>
-      <textarea id="textInput">Enter text</textarea>
+      <div class="label">Brand Palette (Light & Dark)</div>
+      <div id="colorGrid" class="color-grid"></div>
+    </div>
+
+    <div class="control-group">
+      <div class="label">Typography Content</div>
+      <textarea id="textInput" rows="3">Simple is the new premium.</textarea>
     </div>
 
     <div class="control-group">
@@ -140,152 +218,85 @@
       </select>
     </div>
 
-    <div class="control-group" style="flex-direction: row; gap: 8px;">
-      <button id="regenBtn" class="btn-primary" style="flex: 1;">Regenerate</button>
-      <button id="downloadBtn" class="btn-secondary" style="flex: 1;">Export PNG</button>
+    <div class="btn-row">
+      <button id="downloadBtn" class="btn-primary">Export PNG</button>
+      <button id="randomBtn" class="btn-secondary">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
+      </button>
     </div>
   </div>
 
   <script>
-    const canvas = document.getElementById('meshCanvas');
+    const canvas = document.getElementById('studioCanvas');
     const ctx = canvas.getContext('2d');
     const textInput = document.getElementById('textInput');
     const weightSelector = document.getElementById('weightSelector');
+    const colorGrid = document.getElementById('colorGrid');
     const scaler = document.querySelector('.canvas-scaler');
     const container = document.querySelector('.canvas-container');
     const size = 1000;
-    const gridSize = 4;
 
-    let mesh = [];
-    let currentColors = [];
-    let gradientMode = 'liquid';
+    let activeColor = [21, 169, 252]; 
 
-    const BRAND_COLORS = {
-      "Mustard Yellow": {lighter: [255, 251, 241], original: [255, 219, 88], darker: [190, 149, 0]},
-      "Secondary Gold": {lighter: [254, 233, 145], original: [247, 198, 0], darker: [94, 75, 0]},
-      "Orange": {lighter: [231, 177, 162], original: [193, 79, 48], darker: [70, 28, 17]},
-      "Crimson": {lighter: [245, 147, 167], original: [220, 20, 60], darker: [79, 7, 21]},
-      "Cerise": {lighter: [253, 213, 221], original: [247, 67, 102], darker: [154, 6, 35]},
-      "Rose Quartz": {lighter: [254, 255, 255], original: [247, 202, 201], darker: [227, 71, 67]},
-      "Maroon": {lighter: [191, 86, 149], original: [91, 34, 68], darker: [38, 14, 29]},
-      "Lavender": {lighter: [224, 181, 255], original: [181, 126, 220], darker: [105, 41, 151]},
-      "Deep Purple": {lighter: [115, 107, 181], original: [50, 45, 91], darker: [21, 17, 51]},
-      "Blue": {lighter: [172, 224, 253], original: [21, 169, 252], darker: [1, 76, 118]},
-      "Sky Blue": {lighter: [92, 208, 255], original: [135, 206, 235], darker: [31, 141, 185]},
-      "Teal": {lighter: [26, 254, 255], original: [0, 128, 128], darker: [0, 49, 49]},
-      "Sea Green": {lighter: [219, 246, 215], original: [105, 221, 88], darker: [39, 129, 26]},
-      "Forest": {lighter: [33, 184, 147], original: [10, 55, 44], darker: [1, 33, 25]},
-      "Olive Green": {lighter: [254, 255, 26], original: [128, 128, 0], darker: [74, 74, 0]},
-      "Charcoal": {lighter: [121, 147, 164], original: [54, 69, 79], darker: [31, 40, 45]},
-      "Soft Peach": {lighter: [255, 236, 221], original: [255, 205, 178], darker: [204, 152, 109]},
-      "Cool Mint": {lighter: [225, 255, 240], original: [173, 235, 206], darker: [88, 140, 111]},
-      "Sunset Pink": {lighter: [255, 215, 235], original: [255, 128, 179], darker: [204, 51, 102]},
-      "Aquamarine": {lighter: [227, 255, 242], original: [127, 255, 212], darker: [64, 204, 161]},
-      "Coral": {lighter: [255, 230, 220], original: [255, 127, 80], darker: [204, 91, 61]},
-      "Amber": {lighter: [255, 240, 200], original: [255, 191, 0], darker: [204, 153, 0]},
-      "Pale Lavender": {lighter: [240, 230, 250], original: [210, 180, 240], darker: [160, 120, 200]},
-      "Slate": {lighter: [220, 220, 235], original: [128, 128, 144], darker: [64, 64, 72]},
-      "Blush Pink": {lighter: [255, 230, 240], original: [255, 182, 193], darker: [204, 120, 143]},
-      "Dusty Blue": {lighter: [200, 220, 240], original: [100, 149, 237], darker: [60, 100, 150]}
-    };
+    // Function to generate light/dark variants of a base color
+    function generateVariants(r, g, b) {
+      const adjust = (val, factor) => Math.min(255, Math.max(0, Math.round(val * factor)));
+      return [
+        [adjust(r, 1.4), adjust(g, 1.4), adjust(b, 1.4)], // Light
+        [r, g, b],                                       // Base
+        [adjust(r, 0.6), adjust(g, 0.6), adjust(b, 0.6)]  // Dark
+      ];
+    }
+
+    const BASE_PALETTE = [
+      { name: "Slate", rgb: [100, 116, 139] },
+      { name: "Red", rgb: [239, 68, 68] },
+      { name: "Orange", rgb: [249, 115, 22] },
+      { name: "Amber", rgb: [245, 158, 11] },
+      { name: "Yellow", rgb: [234, 179, 8] },
+      { name: "Green", rgb: [34, 197, 94] },
+      { name: "Emerald", rgb: [16, 185, 129] },
+      { name: "Teal", rgb: [20, 184, 166] },
+      { name: "Cyan", rgb: [6, 182, 212] },
+      { name: "Sky", rgb: [14, 165, 233] },
+      { name: "Blue", rgb: [59, 130, 246] },
+      { name: "Indigo", rgb: [99, 102, 241] },
+      { name: "Violet", rgb: [139, 92, 246] },
+      { name: "Purple", rgb: [168, 85, 247] },
+      { name: "Fuchsia", rgb: [217, 70, 239] },
+      { name: "Pink", rgb: [236, 72, 153] },
+      { name: "Rose", rgb: [244, 63, 94] },
+      { name: "Stone", rgb: [120, 113, 108] }
+    ];
+
+    function initColors() {
+      BASE_PALETTE.forEach((base) => {
+        const variants = generateVariants(...base.rgb);
+        variants.forEach((rgb) => {
+          const swatch = document.createElement('div');
+          swatch.className = 'color-swatch';
+          swatch.style.backgroundColor = `rgb(${rgb.join(',')})`;
+          swatch.onclick = () => {
+            activeColor = rgb;
+            document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+            swatch.classList.add('active');
+            render();
+          };
+          if (base.name === "Blue" && rgb === variants[1]) swatch.classList.add('active'); 
+          colorGrid.appendChild(swatch);
+        });
+      });
+    }
 
     function updateScale() {
       const rect = scaler.getBoundingClientRect();
       const scale = Math.min(rect.width, rect.height) / size;
       container.style.transform = `scale(${scale})`;
     }
-    window.addEventListener('resize', updateScale);
-
-    function initMesh(keepColors = false) {
-      if (!keepColors) {
-        const keys = Object.keys(BRAND_COLORS);
-        const k1 = keys[Math.floor(Math.random() * keys.length)];
-        const k2 = keys[Math.floor(Math.random() * keys.length)];
-        currentColors = [BRAND_COLORS[k1].original, BRAND_COLORS[k1].lighter, BRAND_COLORS[k1].darker, BRAND_COLORS[k2].original];
-      }
-
-      mesh = [];
-      for (let y = 0; y < gridSize; y++) {
-        for (let x = 0; x < gridSize; x++) {
-          let px = x / (gridSize - 1);
-          let py = y / (gridSize - 1);
-          if (x > 0 && x < gridSize - 1 && y > 0 && y < gridSize - 1) {
-            px += (Math.random() - 0.5) * 0.8;
-            py += (Math.random() - 0.5) * 0.8;
-          }
-          mesh.push({
-            x: px * size,
-            y: py * size,
-            color: currentColors[Math.floor(Math.random() * currentColors.length)],
-            radius: 350 + Math.random() * 400
-          });
-        }
-      }
-      render();
-    }
-
-    function lerp(a, b, t) { return a + (b - a) * t; }
-    function lerp2D(p00, p10, p01, p11, u, v) {
-      return {
-        x: lerp(lerp(p00.x, p10.x, u), lerp(p01.x, p11.x, u), v),
-        y: lerp(lerp(p00.y, p10.y, u), lerp(p01.y, p11.y, u), v)
-      };
-    }
-    function lerpColor(c00, c10, c01, c11, u, v) {
-      return [
-        Math.round(lerp(lerp(c00[0], c10[0], u), lerp(c01[0], c11[0], u), v)),
-        Math.round(lerp(lerp(c00[1], c10[1], u), lerp(c01[1], c11[1], u), v)),
-        Math.round(lerp(lerp(c00[2], c10[2], u), lerp(c01[2], c11[2], u), v))
-      ];
-    }
 
     function render() {
-      // 1. Create a background buffer to draw the raw mesh
-      const buffer = document.createElement('canvas');
-      buffer.width = size;
-      buffer.height = size;
-      const bCtx = buffer.getContext('2d');
-
-      if (gradientMode === 'liquid') {
-        const steps = 30; // Mesh density
-        for (let j = 0; j < gridSize - 1; j++) {
-          for (let i = 0; i < gridSize - 1; i++) {
-            const p00 = mesh[j * gridSize + i];
-            const p10 = mesh[j * gridSize + (i + 1)];
-            const p01 = mesh[(j + 1) * gridSize + i];
-            const p11 = mesh[(j + 1) * gridSize + (i + 1)];
-            for (let y = 0; y <= steps; y++) {
-              for (let x = 0; x <= steps; x++) {
-                const u = x / steps;
-                const v = y / steps;
-                const pos = lerp2D(p00, p10, p01, p11, u, v);
-                const col = lerpColor(p00.color, p10.color, p01.color, p11.color, u, v);
-                bCtx.fillStyle = `rgb(${col[0]},${col[1]},${col[2]})`;
-                bCtx.fillRect(pos.x, pos.y, size/steps + 2, size/steps + 2);
-              }
-            }
-          }
-        }
-      } else {
-        bCtx.fillStyle = `rgb(${currentColors[0][0]*0.2},${currentColors[0][1]*0.2},${currentColors[0][2]*0.2})`;
-        bCtx.fillRect(0,0,size,size);
-        bCtx.globalCompositeOperation = 'screen';
-        mesh.forEach(p => {
-          const g = bCtx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
-          g.addColorStop(0, `rgba(${p.color[0]},${p.color[1]},${p.color[2]},1)`);
-          g.addColorStop(1, `rgba(${p.color[0]},${p.color[1]},${p.color[2]},0)`);
-          bCtx.fillStyle = g;
-          bCtx.beginPath(); bCtx.arc(p.x, p.y, p.radius, 0, Math.PI*2); bCtx.fill();
-        });
-      }
-
-      // 2. Draw buffered mesh to main canvas with FILTERS
-      ctx.clearRect(0,0,size,size);
-      ctx.filter = 'blur(45px) saturate(1.6) contrast(1.1)';
-      ctx.drawImage(buffer, -50, -50, size + 100, size + 100);
-      ctx.filter = 'none';
-
-      // 3. Draw Text Layer
+      ctx.fillStyle = `rgb(${activeColor.join(',')})`;
+      ctx.fillRect(0, 0, size, size);
       drawText();
     }
 
@@ -293,15 +304,17 @@
       const text = textInput.value;
       const weight = weightSelector.value;
       
-      ctx.font = `${weight} 90px Circular, sans-serif`;
-      ctx.fillStyle = 'white';
+      const brightness = (activeColor[0] * 299 + activeColor[1] * 587 + activeColor[2] * 114) / 1000;
+      ctx.fillStyle = brightness > 185 ? '#000000' : '#ffffff';
+      
+      ctx.font = `${weight} 90px Circular, -apple-system, sans-serif`;
       ctx.textAlign = 'left';
       ctx.textBaseline = 'top';
 
-      // Wrapping logic
-      const maxWidth = 635;
-      const x = 116;
-      let y = 889 - 90; // Aligning roughly with your original CSS top/transform
+      const maxWidth = 760;
+      const x = 120;
+      const bottomAnchor = 880; 
+      const lineHeight = 104;
       
       const words = text.split(' ');
       let line = '';
@@ -311,48 +324,41 @@
         let testLine = line + words[n] + ' ';
         let metrics = ctx.measureText(testLine);
         if (metrics.width > maxWidth && n > 0) {
-          lines.push(line);
+          lines.push(line.trim());
           line = words[n] + ' ';
         } else {
           line = testLine;
         }
       }
-      lines.push(line);
+      lines.push(line.trim());
 
-      // Draw lines upwards from the bottom anchor
-      y -= (lines.length - 1) * 89; 
+      const totalHeight = lines.length * lineHeight;
+      let y = bottomAnchor - totalHeight;
+
       lines.forEach((l, i) => {
-        ctx.fillText(l.trim(), x, y + (i * 89));
+        ctx.fillText(l, x, y + (i * lineHeight));
       });
     }
 
+    window.addEventListener('resize', updateScale);
     textInput.oninput = render;
     weightSelector.onchange = render;
-    document.getElementById('regenBtn').onclick = () => initMesh(false);
-    
-    document.getElementById('modeLiquid').onclick = (e) => {
-      gradientMode = 'liquid';
-      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      render();
-    };
 
-    document.getElementById('modeSoft').onclick = (e) => {
-      gradientMode = 'soft';
-      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-      e.target.classList.add('active');
-      render();
+    document.getElementById('randomBtn').onclick = () => {
+      const swatches = document.querySelectorAll('.color-swatch');
+      const randomIdx = Math.floor(Math.random() * swatches.length);
+      swatches[randomIdx].click();
     };
 
     document.getElementById('downloadBtn').onclick = () => {
       const link = document.createElement('a');
-      link.download = `mesh-studio-export.png`;
+      link.download = `solid-studio-export.png`;
       link.href = canvas.toDataURL('image/png', 1.0);
       link.click();
     };
 
-    // Initialize
-    initMesh();
+    initColors();
+    render();
     setTimeout(updateScale, 100);
   </script>
 </body>
