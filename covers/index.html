@@ -52,18 +52,17 @@
       display: flex;
       height: 100vh;
       width: 100vw;
-      overflow: hidden; /* Prevent body bounce */
+      overflow: hidden;
     }
 
-    /* Main Viewport */
+    /* Desktop Layout: Side by Side */
     .viewport {
       flex: 1;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: 40px;
       background: #000;
-      min-width: 0;
       position: relative;
       overflow: hidden;
     }
@@ -87,13 +86,12 @@
       transform-origin: center center;
     }
 
-    /* Artifact Fix: Using CSS filter instead of Canvas context filter for smoother mobile rendering */
     #meshCanvas {
       width: 100%;
       height: 100%;
       display: block;
-      filter: blur(40px) saturate(1.2);
-      transform: scale(1.15); /* Scale up to hide blurred edges */
+      filter: blur(40px) saturate(1.15);
+      transform: scale(1.15);
     }
 
     #textOverlay {
@@ -111,11 +109,9 @@
       pointer-events: none;
       word-wrap: break-word;
       white-space: pre-wrap;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.2);
       z-index: 2;
     }
 
-    /* Sidebar Controls - Optimized for Mobile Scrolling */
     .sidebar {
       width: 340px;
       background: var(--panel);
@@ -125,13 +121,13 @@
       flex-direction: column;
       gap: 24px;
       flex-shrink: 0;
-      z-index: 10;
-      overflow-y: auto; /* Enable scrolling */
-      -webkit-overflow-scrolling: touch;
+      height: 100%;
+      overflow-y: auto;
+      scrollbar-width: none;
     }
+    .sidebar::-webkit-scrollbar { display: none; }
 
     .header h1 { font-size: 18px; margin: 0; letter-spacing: -0.02em; font-weight: 700; }
-
     .control-group { display: flex; flex-direction: column; gap: 8px; }
     .label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
 
@@ -142,7 +138,7 @@
       color: white;
       padding: 14px;
       font-family: inherit;
-      font-size: 16px; /* Prevents auto-zoom */
+      font-size: 16px;
       outline: none;
       width: 100%;
       -webkit-appearance: none;
@@ -165,8 +161,6 @@
       cursor: pointer;
       font-size: 15px;
     }
-    .btn-primary:active { opacity: 0.8; transform: scale(0.98); }
-
     .btn-secondary {
       background: rgba(255,255,255,0.05);
       color: white;
@@ -174,19 +168,30 @@
       padding: 16px;
       border-radius: 12px;
       font-size: 15px;
+      cursor: pointer;
     }
 
+    /* Mobile Responsive Logic */
     @media (max-width: 900px) {
-      body { flex-direction: column; }
-      .viewport { flex: 1; min-height: 300px; padding: 10px; }
+      body { 
+        flex-direction: column; 
+        overflow-y: auto; 
+        height: auto; 
+        min-height: 100%;
+      }
+      .viewport { 
+        height: 60vh; 
+        flex: none; 
+        padding: 20px;
+      }
       .sidebar { 
         width: 100%; 
         height: auto; 
-        max-height: 60vh; /* Allow more space for controls on mobile */
         border-left: none; 
         border-top: 1px solid rgba(255,255,255,0.1); 
         padding: 24px;
-        padding-bottom: env(safe-area-inset-bottom, 24px);
+        padding-bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+        overflow-y: visible;
       }
     }
   </style>
@@ -228,7 +233,7 @@
 
   <script>
     const canvas = document.getElementById('meshCanvas');
-    const ctx = canvas.getContext('2d', { alpha: false }); // Performance optimization
+    const ctx = canvas.getContext('2d', { alpha: false });
     const textInput = document.getElementById('textInput');
     const textOverlay = document.getElementById('textOverlay');
     const weightSelector = document.getElementById('weightSelector');
@@ -239,12 +244,34 @@
 
     let mesh = [];
 
-    const PALETTES = [
-      { colors: [[60, 20, 220], [247, 67, 102], [255, 191, 0], [21, 169, 252]], weights: [0.4, 0.3, 0.2, 0.1] },
-      { colors: [[10, 55, 44], [105, 221, 88], [127, 255, 212], [0, 128, 128]], weights: [0.5, 0.2, 0.1, 0.2] },
-      { colors: [[91, 34, 68], [181, 126, 220], [247, 202, 201], [255, 182, 193]], weights: [0.3, 0.4, 0.2, 0.1] },
-      { colors: [[193, 79, 48], [255, 127, 80], [255, 219, 88], [220, 20, 60]], weights: [0.3, 0.3, 0.3, 0.1] }
-    ];
+    const BRAND_COLORS = {
+      "Mustard Yellow": {lighter: [255, 251, 241], original: [255, 219, 88], darker: [190, 149, 0]},
+      "Secondary Gold": {lighter: [254, 233, 145], original: [247, 198, 0], darker: [94, 75, 0]},
+      "Orange": {lighter: [231, 177, 162], original: [193, 79, 48], darker: [70, 28, 17]},
+      "Crimson": {lighter: [245, 147, 167], original: [220, 20, 60], darker: [79, 7, 21]},
+      "Cerise": {lighter: [253, 213, 221], original: [247, 67, 102], darker: [154, 6, 35]},
+      "Rose Quartz": {lighter: [254, 255, 255], original: [247, 202, 201], darker: [227, 71, 67]},
+      "Maroon": {lighter: [191, 86, 149], original: [91, 34, 68], darker: [38, 14, 29]},
+      "Lavender": {lighter: [224, 181, 255], original: [181, 126, 220], darker: [105, 41, 151]},
+      "Deep Purple": {lighter: [115, 107, 181], original: [50, 45, 91], darker: [21, 17, 51]},
+      "Blue": {lighter: [172, 224, 253], original: [21, 169, 252], darker: [1, 76, 118]},
+      "Sky Blue": {lighter: [92, 208, 255], original: [135, 206, 235], darker: [31, 141, 185]},
+      "Teal": {lighter: [26, 254, 255], original: [0, 128, 128], darker: [0, 49, 49]},
+      "Sea Green": {lighter: [219, 246, 215], original: [105, 221, 88], darker: [39, 129, 26]},
+      "Forest": {lighter: [33, 184, 147], original: [10, 55, 44], darker: [1, 33, 25]},
+      "Olive Green": {lighter: [254, 255, 26], original: [128, 128, 0], darker: [74, 74, 0]},
+      "Charcoal": {lighter: [121, 147, 164], original: [54, 69, 79], darker: [31, 40, 45]},
+      "Soft Peach": {lighter: [255, 236, 221], original: [255, 205, 178], darker: [204, 152, 109]},
+      "Cool Mint": {lighter: [225, 255, 240], original: [173, 235, 206], darker: [88, 140, 111]},
+      "Sunset Pink": {lighter: [255, 215, 235], original: [255, 128, 179], darker: [204, 51, 102]},
+      "Aquamarine": {lighter: [227, 255, 242], original: [127, 255, 212], darker: [64, 204, 161]},
+      "Coral": {lighter: [255, 230, 220], original: [255, 127, 80], darker: [204, 91, 61]},
+      "Amber": {lighter: [255, 240, 200], original: [255, 191, 0], darker: [204, 153, 0]},
+      "Pale Lavender": {lighter: [240, 230, 250], original: [210, 180, 240], darker: [160, 120, 200]},
+      "Slate": {lighter: [220, 220, 235], original: [128, 128, 144], darker: [64, 64, 72]},
+      "Blush Pink": {lighter: [255, 230, 240], original: [255, 182, 193], darker: [204, 120, 143]},
+      "Dusty Blue": {lighter: [200, 220, 240], original: [100, 149, 237], darker: [60, 100, 150]}
+    };
 
     function updateScale() {
       const rect = scaler.getBoundingClientRect();
@@ -255,40 +282,23 @@
     window.addEventListener('resize', updateScale);
     updateScale();
 
-    function pickWeightedColor(palette) {
-      const r = Math.random();
-      let sum = 0;
-      for (let i = 0; i < palette.weights.length; i++) {
-        sum += palette.weights[i];
-        if (r <= sum) return palette.colors[i];
-      }
-      return palette.colors[0];
-    }
-
     function initMesh() {
-      const palette = PALETTES[Math.floor(Math.random() * PALETTES.length)];
-      mesh = [];
-      const anchorColor = palette.colors[0];
+      const keys = Object.keys(BRAND_COLORS);
+      const k1 = keys[Math.floor(Math.random() * keys.length)];
+      const k2 = keys[Math.floor(Math.random() * keys.length)];
+      const pool = [BRAND_COLORS[k1].original, BRAND_COLORS[k1].lighter, BRAND_COLORS[k1].darker, BRAND_COLORS[k2].original];
 
+      mesh = [];
       for (let y = 0; y < gridSize; y++) {
         for (let x = 0; x < gridSize; x++) {
           let px = x / (gridSize - 1);
           let py = y / (gridSize - 1);
-
           if (x > 0 && x < gridSize - 1 && y > 0 && y < gridSize - 1) {
-            px += (Math.random() - 0.5) * 0.6;
-            py += (Math.random() - 0.5) * 0.6;
+            px += (Math.random() - 0.5) * 0.7;
+            py += (Math.random() - 0.5) * 0.7;
           }
-
-          let color;
-          const isEdge = x === 0 || x === gridSize-1 || y === 0 || y === gridSize-1;
-          if (isEdge && Math.random() > 0.3) {
-            color = anchorColor;
-          } else {
-            color = pickWeightedColor(palette);
-          }
-
-          mesh.push({ x: px * size, y: py * size, color: color });
+          const base = pool[Math.floor(Math.random() * pool.length)];
+          mesh.push({ x: px * size, y: py * size, color: base.map(c => Math.max(0, Math.min(255, c + (Math.random() - 0.5) * 10))) });
         }
       }
       render();
@@ -298,29 +308,19 @@
       const steps = 60; 
       ctx.fillStyle = '#000';
       ctx.fillRect(0,0,size,size);
-      
       for (let j = 0; j < gridSize - 1; j++) {
         for (let i = 0; i < gridSize - 1; i++) {
           const p00 = mesh[j * gridSize + i];
           const p10 = mesh[j * gridSize + (i + 1)];
           const p01 = mesh[(j + 1) * gridSize + i];
           const p11 = mesh[(j + 1) * gridSize + (i + 1)];
-
           for (let y = 0; y < steps; y++) {
             for (let x = 0; x < steps; x++) {
-              const u = x / steps;
-              const v = y / steps;
-              const uNext = (x + 1) / steps;
-              const vNext = (y + 1) / steps;
-
+              const u = x / steps; const v = y / steps;
               const pos = lerp2D(p00, p10, p01, p11, u, v);
-              const posNext = lerp2D(p00, p10, p01, p11, uNext, vNext);
               const color = lerpColor(p00.color, p10.color, p01.color, p11.color, u, v);
-
               ctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
-              const w = Math.abs(posNext.x - pos.x) + 4; // Slight overlap to prevent gaps
-              const h = Math.abs(posNext.y - pos.y) + 4;
-              ctx.fillRect(pos.x, pos.y, w, h);
+              ctx.fillRect(pos.x, pos.y, 25, 25); // Large steps for blur
             }
           }
         }
@@ -345,68 +345,10 @@
     textInput.oninput = (e) => { textOverlay.textContent = e.target.value; };
     weightSelector.onchange = (e) => { textOverlay.style.fontWeight = e.target.value; };
     document.getElementById('regenBtn').onclick = initMesh;
-
-    function wrapText(context, text, maxWidth) {
-      const words = text.split(' ');
-      let line = '';
-      const lines = [];
-      for (let n = 0; n < words.length; n++) {
-        const testLine = line + words[n] + ' ';
-        const metrics = context.measureText(testLine);
-        if (metrics.width > maxWidth && n > 0) {
-          lines.push(line);
-          line = words[n] + ' ';
-        } else {
-          line = testLine;
-        }
-      }
-      lines.push(line);
-      return lines;
-    }
-
-    document.getElementById('downloadBtn').onclick = async () => {
-      // Artifact-free Export: Re-rendering for export with blur baked in via manual blur logic
-      // to avoid Safari's hardware-accelerated filter artifacts in dataURLs.
-      const exportCanvas = document.createElement('canvas');
-      exportCanvas.width = 1000;
-      exportCanvas.height = 1000;
-      const exCtx = exportCanvas.getContext('2d');
-      
-      // Setup Export Text Styling
-      const weight = weightSelector.value;
-      const fontSize = 90.05;
-      const leading = 89;
-      const maxWidth = 635;
-      const startX = 116;
-      const bottomY = 889;
-
-      // Ensure fonts are ready
-      if (document.fonts) await document.fonts.ready;
-
-      // Apply blur at export time
-      exCtx.filter = 'blur(40px) saturate(1.2)';
-      exCtx.drawImage(canvas, -40, -40, 1080, 1080);
-      exCtx.filter = 'none';
-
-      exCtx.fillStyle = 'white';
-      exCtx.font = `${weight} ${fontSize}px Circular, -apple-system, sans-serif`;
-      exCtx.textBaseline = 'bottom';
-      
-      const inputLines = textInput.value.split('\n');
-      let finalLines = [];
-      inputLines.forEach(l => {
-        finalLines = finalLines.concat(wrapText(exCtx, l, maxWidth));
-      });
-
-      for(let i = 0; i < finalLines.length; i++) {
-        const lineIndex = finalLines.length - 1 - i;
-        const lineY = bottomY - (i * leading);
-        exCtx.fillText(finalLines[lineIndex].trim(), startX, lineY);
-      }
-
+    document.getElementById('downloadBtn').onclick = () => {
       const link = document.createElement('a');
-      link.download = `mesh-studio-${Date.now()}.png`;
-      link.href = exportCanvas.toDataURL('image/png');
+      link.download = `mesh.png`;
+      link.href = canvas.toDataURL('image/png');
       link.click();
     };
 
