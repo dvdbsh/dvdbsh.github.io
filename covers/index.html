@@ -1,365 +1,386 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
-  <title>Solid Studio Pro</title>
-  <style>
-    /* Integrating Circular font family */
-    @font-face { font-family: 'Circular'; src: url('Circular/Circular-Black.ttf') format('truetype'); font-weight: 900; }
-    @font-face { font-family: 'Circular'; src: url('Circular/Circular-Bold.ttf') format('truetype'); font-weight: 700; }
-    @font-face { font-family: 'Circular'; src: url('Circular/Circular-Medium.ttf') format('truetype'); font-weight: 500; }
-    @font-face { font-family: 'Circular'; src: url('Circular/Circular-Book.ttf') format('truetype'); font-weight: 400; }
-
-    :root {
-      --bg: #0c0c0e;
-      --panel: #16161a;
-      --input-bg: #222227;
-      --accent: #3b82f6;
-      --text: #ffffff;
-      --text-dim: #94a3b8;
-      --border: rgba(255,255,255,0.08);
-    }
-    
-    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-    body {
-      margin: 0;
-      font-family: 'Circular', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      display: flex;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-    }
-
-    /* Viewport Area */
-    .viewport {
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      background: #000;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .canvas-scaler {
-      width: 100%;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .canvas-container {
-      position: relative;
-      width: 1000px;
-      height: 1000px;
-      background: #111;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.6);
-      transform-origin: center center;
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    #studioCanvas {
-      width: 100%;
-      height: 100%;
-      display: block;
-    }
-
-    /* Sidebar Panel */
-    .sidebar {
-      width: 420px;
-      background: var(--panel);
-      border-left: 1px solid var(--border);
-      padding: 32px;
-      display: flex;
-      flex-direction: column;
-      gap: 28px;
-      z-index: 10;
-      overflow-y: auto;
-    }
-
-    .header h1 { 
-      font-size: 20px; 
-      margin: 0; 
-      font-weight: 800; 
-      letter-spacing: -0.02em;
-    }
-    
-    .header p {
-      font-size: 13px;
-      color: var(--text-dim);
-      margin: 4px 0 0 0;
-    }
-
-    .control-group { display: flex; flex-direction: column; gap: 10px; }
-    .label { 
-      font-size: 11px; 
-      font-weight: 700; 
-      text-transform: uppercase; 
-      color: var(--text-dim); 
-      letter-spacing: 0.05em;
-    }
-
-    /* Color Grid */
-    .color-grid {
-      display: grid;
-      grid-template-columns: repeat(6, 1fr);
-      gap: 6px;
-      padding: 4px;
-      background: rgba(0,0,0,0.2);
-      border-radius: 8px;
-    }
-
-    .color-swatch {
-      aspect-ratio: 1;
-      border-radius: 4px;
-      cursor: pointer;
-      border: 1.5px solid transparent;
-      transition: transform 0.1s, border-color 0.2s;
-    }
-
-    .color-swatch:hover { transform: scale(1.1); z-index: 2; }
-    .color-swatch.active { border-color: white; transform: scale(1.1); z-index: 2; box-shadow: 0 0 10px rgba(255,255,255,0.2); }
-
-    textarea, select {
-      background: var(--input-bg);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: white;
-      padding: 16px;
-      font-size: 15px;
-      width: 100%;
-      outline: none;
-      transition: border-color 0.2s;
-      font-family: inherit;
-    }
-    
-    textarea:focus { border-color: var(--accent); }
-
-    .btn-row { display: flex; gap: 12px; margin-top: auto; }
-
-    .btn-primary { 
-      background: var(--accent); 
-      color: white; 
-      border: none; 
-      padding: 16px; 
-      border-radius: 12px; 
-      font-weight: 700; 
-      cursor: pointer; 
-      flex: 2;
-      transition: opacity 0.2s;
-      font-family: inherit;
-    }
-
-    .btn-secondary { 
-      background: rgba(255,255,255,0.05); 
-      color: white; 
-      border: 1px solid var(--border); 
-      padding: 16px; 
-      border-radius: 12px; 
-      cursor: pointer; 
-      flex: 1;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    
-    .btn-primary:active, .btn-secondary:active { opacity: 0.7; }
-
-    /* Mobile Adaptations */
-    @media (max-width: 900px) {
-      body { flex-direction: column; overflow-y: auto; }
-      .viewport { height: 50vh; flex: none; padding: 30px; }
-      .sidebar { width: 100%; border-left: none; border-top: 1px solid var(--border); padding: 24px; height: auto; }
-      .btn-row { margin-top: 10px; }
-      .color-grid { grid-template-columns: repeat(12, 1fr); }
-    }
-  </style>
-</head>
-<body>
-
-  <div class="viewport">
-    <div class="canvas-scaler">
-      <div class="canvas-container">
-        <canvas id="studioCanvas" width="1000" height="1000"></canvas>
-      </div>
-    </div>
-  </div>
-
-  <div class="sidebar">
-    <div class="header">
-      <h1>Solid Studio Pro</h1>
-      <p>Clean typography & brand backgrounds</p>
-    </div>
-
-    <div class="control-group">
-      <div class="label">Brand Palette (Light & Dark)</div>
-      <div id="colorGrid" class="color-grid"></div>
-    </div>
-
-    <div class="control-group">
-      <div class="label">Typography Content</div>
-      <textarea id="textInput" rows="3">Simple is the new premium.</textarea>
-    </div>
-
-    <div class="control-group">
-      <div class="label">Font Weight</div>
-      <select id="weightSelector">
-        <option value="900">Black</option>
-        <option value="700" selected>Bold</option>
-        <option value="500">Medium</option>
-        <option value="400">Book</option>
-      </select>
-    </div>
-
-    <div class="btn-row">
-      <button id="downloadBtn" class="btn-primary">Export PNG</button>
-      <button id="randomBtn" class="btn-secondary">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2v6h-6M3 12a9 9 0 0 1 15-6.7L21 8M3 22v-6h6M21 12a9 9 0 0 1-15 6.7L3 16"/></svg>
-      </button>
-    </div>
-  </div>
-
-  <script>
-    const canvas = document.getElementById('studioCanvas');
-    const ctx = canvas.getContext('2d');
-    const textInput = document.getElementById('textInput');
-    const weightSelector = document.getElementById('weightSelector');
-    const colorGrid = document.getElementById('colorGrid');
-    const scaler = document.querySelector('.canvas-scaler');
-    const container = document.querySelector('.canvas-container');
-    const size = 1000;
-
-    let activeColor = [21, 169, 252]; 
-
-    // Function to generate light/dark variants of a base color
-    function generateVariants(r, g, b) {
-      const adjust = (val, factor) => Math.min(255, Math.max(0, Math.round(val * factor)));
-      return [
-        [adjust(r, 1.4), adjust(g, 1.4), adjust(b, 1.4)], // Light
-        [r, g, b],                                       // Base
-        [adjust(r, 0.6), adjust(g, 0.6), adjust(b, 0.6)]  // Dark
-      ];
-    }
-
-    const BASE_PALETTE = [
-      { name: "Slate", rgb: [100, 116, 139] },
-      { name: "Red", rgb: [239, 68, 68] },
-      { name: "Orange", rgb: [249, 115, 22] },
-      { name: "Amber", rgb: [245, 158, 11] },
-      { name: "Yellow", rgb: [234, 179, 8] },
-      { name: "Green", rgb: [34, 197, 94] },
-      { name: "Emerald", rgb: [16, 185, 129] },
-      { name: "Teal", rgb: [20, 184, 166] },
-      { name: "Cyan", rgb: [6, 182, 212] },
-      { name: "Sky", rgb: [14, 165, 233] },
-      { name: "Blue", rgb: [59, 130, 246] },
-      { name: "Indigo", rgb: [99, 102, 241] },
-      { name: "Violet", rgb: [139, 92, 246] },
-      { name: "Purple", rgb: [168, 85, 247] },
-      { name: "Fuchsia", rgb: [217, 70, 239] },
-      { name: "Pink", rgb: [236, 72, 153] },
-      { name: "Rose", rgb: [244, 63, 94] },
-      { name: "Stone", rgb: [120, 113, 108] }
-    ];
-
-    function initColors() {
-      BASE_PALETTE.forEach((base) => {
-        const variants = generateVariants(...base.rgb);
-        variants.forEach((rgb) => {
-          const swatch = document.createElement('div');
-          swatch.className = 'color-swatch';
-          swatch.style.backgroundColor = `rgb(${rgb.join(',')})`;
-          swatch.onclick = () => {
-            activeColor = rgb;
-            document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
-            swatch.classList.add('active');
-            render();
-          };
-          if (base.name === "Blue" && rgb === variants[1]) swatch.classList.add('active'); 
-          colorGrid.appendChild(swatch);
-        });
-      });
-    }
-
-    function updateScale() {
-      const rect = scaler.getBoundingClientRect();
-      const scale = Math.min(rect.width, rect.height) / size;
-      container.style.transform = `scale(${scale})`;
-    }
-
-    function render() {
-      ctx.fillStyle = `rgb(${activeColor.join(',')})`;
-      ctx.fillRect(0, 0, size, size);
-      drawText();
-    }
-
-    function drawText() {
-      const text = textInput.value;
-      const weight = weightSelector.value;
-      
-      const brightness = (activeColor[0] * 299 + activeColor[1] * 587 + activeColor[2] * 114) / 1000;
-      ctx.fillStyle = brightness > 185 ? '#000000' : '#ffffff';
-      
-      ctx.font = `${weight} 90px Circular, -apple-system, sans-serif`;
-      ctx.textAlign = 'left';
-      ctx.textBaseline = 'top';
-
-      const maxWidth = 760;
-      const x = 120;
-      const bottomAnchor = 880; 
-      const lineHeight = 104;
-      
-      const words = text.split(' ');
-      let line = '';
-      const lines = [];
-
-      for(let n = 0; n < words.length; n++) {
-        let testLine = line + words[n] + ' ';
-        let metrics = ctx.measureText(testLine);
-        if (metrics.width > maxWidth && n > 0) {
-          lines.push(line.trim());
-          line = words[n] + ' ';
-        } else {
-          line = testLine;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solid Studio Pro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        /* Custom Font Face Mapping */
+        @font-face {
+            font-family: 'Circular';
+            src: url('fonts/Circular/Circular-Black.ttf') format('truetype');
+            font-weight: 900;
         }
-      }
-      lines.push(line.trim());
+        @font-face {
+            font-family: 'Circular';
+            src: url('fonts/Circular/Circular-Bold.ttf') format('truetype');
+            font-weight: 700;
+        }
+        @font-face {
+            font-family: 'Circular';
+            src: url('fonts/Circular/Circular-Medium.ttf') format('truetype');
+            font-weight: 500;
+        }
+        @font-face {
+            font-family: 'Circular';
+            src: url('fonts/Circular/Circular-Book.ttf') format('truetype');
+            font-weight: 400;
+        }
+        
+        body {
+            font-family: 'Circular', -apple-system, sans-serif;
+            background-color: #09090b;
+            color: white;
+            margin: 0;
+            overflow: hidden;
+        }
 
-      const totalHeight = lines.length * lineHeight;
-      let y = bottomAnchor - totalHeight;
+        .canvas-container {
+            transition: transform 0.2s ease-out;
+            transform-origin: center;
+        }
 
-      lines.forEach((l, i) => {
-        ctx.fillText(l, x, y + (i * lineHeight));
-      });
-    }
+        /* Custom Scrollbar for the Sidebar */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 10px;
+        }
 
-    window.addEventListener('resize', updateScale);
-    textInput.oninput = render;
-    weightSelector.onchange = render;
+        .color-dot-active {
+            outline: 2px solid #3b82f6;
+            outline-offset: 4px;
+            transform: scale(0.85);
+        }
 
-    document.getElementById('randomBtn').onclick = () => {
-      const swatches = document.querySelectorAll('.color-swatch');
-      const randomIdx = Math.floor(Math.random() * swatches.length);
-      swatches[randomIdx].click();
-    };
+        /* Toggle Switch Styling */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #3b82f6;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #3b82f6;
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row h-screen w-screen">
 
-    document.getElementById('downloadBtn').onclick = () => {
-      const link = document.createElement('a');
-      link.download = `solid-studio-export.png`;
-      link.href = canvas.toDataURL('image/png', 1.0);
-      link.click();
-    };
+    <!-- Viewport Area -->
+    <main id="viewport" class="flex-grow bg-[#050507] flex items-center justify-center relative overflow-hidden h-[50vh] md:h-full p-4 md:p-8">
+        <div id="container" class="canvas-container relative bg-black shadow-2xl flex-shrink-0" style="width: 1000px; height: 1000px;">
+            <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block"></canvas>
+        </div>
+    </main>
 
-    initColors();
-    render();
-    setTimeout(updateScale, 100);
-  </script>
+    <!-- Sidebar Panel -->
+    <aside class="w-full md:w-[400px] bg-[#121217] border-l border-white/5 p-6 md:p-8 flex flex-col gap-6 md:gap-8 overflow-y-auto shadow-2xl z-10 md:h-full h-[50vh]">
+        <header class="border-b border-white/5 pb-4">
+            <h1 class="text-xl md:text-2xl font-extrabold tracking-tighter bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
+                Solid Studio Pro
+            </h1>
+        </header>
+
+        <!-- Color Palette -->
+        <section class="space-y-3">
+            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                <i data-lucide="palette" class="w-3.5 h-3.5"></i> Brand Palette
+            </div>
+            <div id="paletteGrid" class="bg-[#1c1c21] rounded-xl p-3 border border-white/5 grid grid-cols-6 gap-2">
+                <!-- Dots injected via JS -->
+            </div>
+        </section>
+
+        <!-- Overlays -->
+        <section class="space-y-4">
+            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                <i data-lucide="layers" class="w-3.5 h-3.5"></i> Overlays
+            </div>
+            <div class="flex flex-col gap-3">
+                <div class="flex items-center justify-between bg-[#1c1c21] p-3 rounded-xl border border-white/5">
+                    <div class="flex flex-col">
+                        <span class="text-sm font-medium">Shape Overlay</span>
+                        <span id="shapeLabel" class="text-[10px] text-zinc-500 uppercase font-bold mt-0.5">Variant 01</span>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <button id="shuffleShapeBtn" class="p-2 hover:bg-white/5 rounded-lg transition-colors text-zinc-400 hover:text-white" title="Shuffle Shape Variant">
+                            <i data-lucide="shuffle" class="w-4 h-4"></i>
+                        </button>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="shapeToggle" class="sr-only peer">
+                            <div class="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                        </label>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between bg-[#1c1c21] p-3 rounded-xl border border-white/5">
+                    <span class="text-sm font-medium">Frame Overlay</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="frameToggle" class="sr-only peer">
+                        <div class="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                </div>
+            </div>
+        </section>
+
+        <!-- Content Input -->
+        <section class="space-y-3">
+            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                <i data-lucide="type" class="w-3.5 h-3.5"></i> Typography Content
+            </div>
+            <textarea
+                id="textInput"
+                class="w-full bg-[#1c1c21] border border-white/5 rounded-xl p-4 text-base focus:border-blue-500 outline-none transition-all resize-none text-white font-inherit"
+                rows="2"
+            >Simple is the new premium.</textarea>
+        </section>
+
+        <!-- Font Weight -->
+        <section class="space-y-3">
+            <div class="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Font Weight</div>
+            <div class="relative">
+                <select
+                    id="weightInput"
+                    class="w-full bg-[#1c1c21] border border-white/5 rounded-xl p-4 pr-10 appearance-none text-base outline-none focus:border-blue-500 transition-all cursor-pointer text-white"
+                >
+                    <option value="900">Circular Black</option>
+                    <option value="700" selected>Circular Bold</option>
+                    <option value="500">Circular Medium</option>
+                    <option value="400">Circular Book</option>
+                </select>
+                <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none w-4 h-4"></i>
+            </div>
+        </section>
+
+        <!-- Primary Actions -->
+        <div class="flex gap-3 mt-auto pt-6">
+            <button
+                id="downloadBtn"
+                class="flex-1 bg-blue-600 hover:bg-blue-500 active:scale-95 transition-all rounded-xl p-4 font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20"
+            >
+                <i data-lucide="download" class="w-4 h-4"></i> Export PNG
+            </button>
+            <button
+                id="randomBtn"
+                class="w-14 h-14 bg-white/5 hover:bg-white/10 active:scale-90 border border-white/5 transition-all rounded-xl flex items-center justify-center"
+                title="Randomize Appearance"
+            >
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </aside>
+
+    <script>
+        // Constants
+        const CANVAS_SIZE = 1000;
+        const BASE_PALETTE = [
+            [100, 116, 139], [239, 68, 68], [249, 115, 22], [245, 158, 11], 
+            [234, 179, 8], [34, 197, 94], [16, 185, 129], [20, 184, 166], 
+            [6, 182, 212], [14, 165, 233], [59, 130, 246], [99, 102, 241], 
+            [139, 92, 246], [168, 85, 247], [217, 70, 239], [236, 72, 153], 
+            [244, 63, 94], [120, 113, 108]
+        ];
+
+        // State
+        let activeColor = [59, 130, 246];
+        let activeShapeIndex = "01";
+        const allColors = [];
+        const images = {};
+
+        // Elements
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('container');
+        const viewport = document.getElementById('viewport');
+        const textInput = document.getElementById('textInput');
+        const weightInput = document.getElementById('weightInput');
+        const paletteGrid = document.getElementById('paletteGrid');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const randomBtn = document.getElementById('randomBtn');
+        const shuffleShapeBtn = document.getElementById('shuffleShapeBtn');
+        const shapeToggle = document.getElementById('shapeToggle');
+        const frameToggle = document.getElementById('frameToggle');
+        const shapeLabel = document.getElementById('shapeLabel');
+
+        // Logic
+        function initColors() {
+            BASE_PALETTE.forEach(([r, g, b]) => {
+                const adjust = (v, f) => Math.min(255, Math.max(0, Math.round(v * f)));
+                allColors.push([adjust(r, 1.4), adjust(g, 1.4), adjust(b, 1.4)]);
+                allColors.push([r, g, b]);
+                allColors.push([adjust(r, 0.6), adjust(g, 0.6), adjust(b, 0.6)]);
+            });
+
+            allColors.forEach(rgb => {
+                const btn = document.createElement('button');
+                btn.className = 'aspect-square rounded-md transition-all duration-200 hover:scale-110';
+                btn.style.backgroundColor = `rgb(${rgb.join(',')})`;
+                btn.onclick = () => {
+                    activeColor = rgb;
+                    updateActiveDot();
+                    render();
+                };
+                paletteGrid.appendChild(btn);
+            });
+            updateActiveDot();
+        }
+
+        async function preloadImages() {
+            const paths = {
+                'shape_01': 'overlay/shape_01.png',
+                'shape_02': 'overlay/shape_02.png',
+                'shape_03': 'overlay/shape_03.png',
+                'frame': 'overlay/frame.png'
+            };
+
+            const load = (key, src) => new Promise(resolve => {
+                const img = new Image();
+                img.onload = () => { images[key] = img; resolve(); };
+                img.onerror = () => { console.warn(`Missing asset: ${src}`); resolve(); };
+                img.src = src;
+            });
+
+            await Promise.all(Object.entries(paths).map(([k, v]) => load(k, v)));
+        }
+
+        function updateActiveDot() {
+            const btns = paletteGrid.querySelectorAll('button');
+            btns.forEach((btn, i) => {
+                if (JSON.stringify(allColors[i]) === JSON.stringify(activeColor)) {
+                    btn.classList.add('color-dot-active');
+                } else {
+                    btn.classList.remove('color-dot-active');
+                }
+            });
+        }
+
+        function updateScale() {
+            const padding = window.innerWidth < 768 ? 20 : 60;
+            const vWidth = viewport.clientWidth - padding;
+            const vHeight = viewport.clientHeight - padding;
+            const scale = Math.min(vWidth / CANVAS_SIZE, vHeight / CANVAS_SIZE);
+            container.style.transform = `scale(${scale})`;
+        }
+
+        function render() {
+            const text = textInput.value;
+            const weight = weightInput.value;
+
+            // 1. Background Color
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = `rgb(${activeColor.join(',')})`;
+            ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+            // 2. Overlays (Using 'overlay' blend mode)
+            ctx.globalCompositeOperation = 'overlay';
+            
+            if (shapeToggle.checked && images[`shape_${activeShapeIndex}`]) {
+                ctx.drawImage(images[`shape_${activeShapeIndex}`], 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+            }
+            
+            if (frameToggle.checked && images['frame']) {
+                ctx.drawImage(images['frame'], 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+            }
+
+            // 3. Text (Reset to source-over)
+            ctx.globalCompositeOperation = 'source-over';
+            
+            const brightness = (activeColor[0] * 299 + activeColor[1] * 587 + activeColor[2] * 114) / 1000;
+            ctx.fillStyle = brightness > 185 ? '#000000' : '#ffffff';
+
+            // Using Circular font family
+            ctx.font = `${weight} 90px "Circular", -apple-system, sans-serif`;
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+
+            const maxWidth = 760;
+            const x = 116;
+            const bottomAnchor = 906;
+            const lineHeight = 89;
+
+            const words = text.split(' ');
+            let line = '';
+            const lines = [];
+
+            for (let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' ';
+                let metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    lines.push(line.trim());
+                    line = words[n] + ' ';
+                } else {
+                    line = testLine;
+                }
+            }
+            lines.push(line.trim());
+
+            const totalHeight = lines.length * lineHeight;
+            let y = bottomAnchor - totalHeight;
+
+            lines.forEach((l, i) => {
+                ctx.fillText(l, x, y + (i * lineHeight));
+            });
+            
+            // UI Feedback
+            shapeLabel.textContent = `Variant ${activeShapeIndex}`;
+        }
+
+        // Wait for fonts to be ready
+        async function waitForFonts() {
+            if (document.fonts) {
+                await document.fonts.ready;
+            }
+        }
+
+        // Events
+        textInput.oninput = render;
+        weightInput.onchange = render;
+        shapeToggle.onchange = render;
+        frameToggle.onchange = render;
+        window.onresize = updateScale;
+        
+        shuffleShapeBtn.onclick = () => {
+            const shapes = ["01", "02", "03"];
+            let nextIndex = shapes.indexOf(activeShapeIndex) + 1;
+            if (nextIndex >= shapes.length) nextIndex = 0;
+            activeShapeIndex = shapes[nextIndex];
+            
+            // If toggle is off, turn it on when user specifically clicks shuffle
+            if (!shapeToggle.checked) shapeToggle.checked = true;
+            
+            render();
+        };
+
+        randomBtn.onclick = () => {
+            activeColor = allColors[Math.floor(Math.random() * allColors.length)];
+            const shapes = ["01", "02", "03"];
+            activeShapeIndex = shapes[Math.floor(Math.random() * shapes.length)];
+            updateActiveDot();
+            render();
+        };
+
+        downloadBtn.onclick = () => {
+            const link = document.createElement('a');
+            link.download = `solid-studio-${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png', 1.0);
+            link.click();
+        };
+
+        // Init
+        window.onload = async () => {
+            lucide.createIcons();
+            initColors();
+            await preloadImages();
+            await waitForFonts(); // Ensure Circular is loaded before first render
+            updateScale();
+            render();
+            setTimeout(updateScale, 100);
+        };
+    </script>
 </body>
 </html>
