@@ -365,11 +365,22 @@
         };
 
         downloadBtn.onclick = () => {
+            const rawText = textInput.value.trim();
+
+            const safeName = rawText
+                ? rawText
+                      .toLowerCase()
+                      .replace(/[^a-z0-9\s]/g, '')
+                      .replace(/\s+/g, '-')
+                      .replace(/^-+|-+$/g, '')
+                : 'solid-studio';
+
             const link = document.createElement('a');
-            link.download = `solid-studio-${Date.now()}.png`;
-            link.href = canvas.toDataURL('image/png', 1.0);
+            link.download = `${safeName}.png`;
+            link.href = canvas.toDataURL('image/png');
             link.click();
         };
+
 
         // Init
         window.onload = async () => {
