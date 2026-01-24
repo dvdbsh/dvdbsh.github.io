@@ -178,12 +178,21 @@
     <script>
         // Constants
         const CANVAS_SIZE = 1000;
+        
+        // Base tailwind-like colors
         const BASE_PALETTE = [
             [100, 116, 139], [239, 68, 68], [249, 115, 22], [245, 158, 11], 
             [234, 179, 8], [34, 197, 94], [16, 185, 129], [20, 184, 166], 
-            [6, 182, 212], [14, 165, 233], [59, 130, 246], [99, 102, 241], 
-            [139, 92, 246], [168, 85, 247], [217, 70, 239], [236, 72, 153], 
-            [244, 63, 94], [120, 113, 108]
+            [6, 182, 212], [14, 165, 233], [59, 130, 246], [99, 102, 241]
+        ];
+
+        // Your requested hex colors
+        const NEW_HEX_COLORS = [
+            "#355B58", "#524A41", "#535647", "#5E3D5E",
+            "#50525A", "#6A5645", "#6A6248", "#4B5D45",
+            "#365567", "#53e14c", "#FA4E63", "#17A8FF",
+            "#F5C81E", "#C24C2D", "#3B356A", "#6C2D55",
+            "#9B4658", "#133F35"
         ];
 
         // State
@@ -207,15 +216,30 @@
         const frameToggle = document.getElementById('frameToggle');
         const shapeLabel = document.getElementById('shapeLabel');
 
-        // Logic
+        // Utils
+        function hexToRgb(hex) {
+            const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+            return result ? [
+                parseInt(result[1], 16),
+                parseInt(result[2], 16),
+                parseInt(result[3], 16)
+            ] : null;
+        }
+
         function initColors() {
+            // Add Base Colors with variants
             BASE_PALETTE.forEach(([r, g, b]) => {
                 const adjust = (v, f) => Math.min(255, Math.max(0, Math.round(v * f)));
-                allColors.push([adjust(r, 1.4), adjust(g, 1.4), adjust(b, 1.4)]);
                 allColors.push([r, g, b]);
-                allColors.push([adjust(r, 0.6), adjust(g, 0.6), adjust(b, 0.6)]);
             });
 
+            // Add Requested Hex Colors
+            NEW_HEX_COLORS.forEach(hex => {
+                const rgb = hexToRgb(hex);
+                if (rgb) allColors.push(rgb);
+            });
+
+            // Create buttons
             allColors.forEach(rgb => {
                 const btn = document.createElement('button');
                 btn.className = 'aspect-square rounded-md transition-all duration-200 hover:scale-110';
@@ -276,7 +300,7 @@
             ctx.fillStyle = `rgb(${activeColor.join(',')})`;
             ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-            // 2. Overlays (Using 'overlay' blend mode)
+            // 2. Overlays
             ctx.globalCompositeOperation = 'overlay';
             
             if (shapeToggle.checked && images[`shape_${activeShapeIndex}`]) {
@@ -287,13 +311,12 @@
                 ctx.drawImage(images['frame'], 0, 0, CANVAS_SIZE, CANVAS_SIZE);
             }
 
-            // 3. Text (Reset to source-over)
+            // 3. Text
             ctx.globalCompositeOperation = 'source-over';
             
             const brightness = (activeColor[0] * 299 + activeColor[1] * 587 + activeColor[2] * 114) / 1000;
             ctx.fillStyle = brightness > 185 ? '#000000' : '#ffffff';
 
-            // Using Circular font family
             ctx.font = `${weight} 90px "Circular", -apple-system, sans-serif`;
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
@@ -326,11 +349,9 @@
                 ctx.fillText(l, x, y + (i * lineHeight));
             });
             
-            // UI Feedback
             shapeLabel.textContent = `Variant ${activeShapeIndex}`;
         }
 
-        // Wait for fonts to be ready
         async function waitForFonts() {
             if (document.fonts) {
                 await document.fonts.ready;
@@ -349,10 +370,7 @@
             let nextIndex = shapes.indexOf(activeShapeIndex) + 1;
             if (nextIndex >= shapes.length) nextIndex = 0;
             activeShapeIndex = shapes[nextIndex];
-            
-            // If toggle is off, turn it on when user specifically clicks shuffle
             if (!shapeToggle.checked) shapeToggle.checked = true;
-            
             render();
         };
 
@@ -366,28 +384,21 @@
 
         downloadBtn.onclick = () => {
             const rawText = textInput.value.trim();
-
             const safeName = rawText
-                ? rawText
-                      .toLowerCase()
-                      .replace(/[^a-z0-9\s]/g, '')
-                      .replace(/\s+/g, '-')
-                      .replace(/^-+|-+$/g, '')
+                ? rawText.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '-').replace(/^-+|-+$/g, '')
                 : 'solid-studio';
-
             const link = document.createElement('a');
             link.download = `${safeName}.png`;
             link.href = canvas.toDataURL('image/png');
             link.click();
         };
 
-
         // Init
         window.onload = async () => {
             lucide.createIcons();
             initColors();
             await preloadImages();
-            await waitForFonts(); // Ensure Circular is loaded before first render
+            await waitForFonts();
             updateScale();
             render();
             setTimeout(updateScale, 100);
