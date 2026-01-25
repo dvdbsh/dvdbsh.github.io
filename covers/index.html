@@ -46,8 +46,14 @@
 
         .color-dot-active {
             outline: 2px solid #3b82f6;
-            outline-offset: 4px;
-            transform: scale(0.85);
+            outline-offset: 3px;
+            transform: scale(0.9);
+        }
+
+        .gradient-selector-active {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+            z-index: 10;
         }
 
         .weight-btn-active {
@@ -58,46 +64,137 @@
 
         html { overscroll-behavior-y: none; }
 
-        /* Export Modal Styles */
         #exportModal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.9);
+            background: rgba(0,0,0,0.95);
             z-index: 100;
             padding: 2rem;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
+
+        .tab-active {
+            background: #27272a;
+            color: white;
+        }
+
+        /* Gradient Palette Styles */
+        .color-palette-popover {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1c1c21;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 12px;
+            width: 200px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            margin-bottom: 12px;
+            z-index: 50;
+        }
+        
+        .color-palette-popover.visible {
+            display: grid;
+        }
     </style>
 </head>
 <body class="flex flex-col md:flex-row h-screen w-screen overflow-hidden">
 
-    <!-- Export Modal -->
+    <!-- Export Modal (Mobile & Fallback) -->
     <div id="exportModal" class="flex">
         <div class="max-w-md w-full flex flex-col items-center gap-6">
-            <p class="text-center font-bold text-lg">Long-press image to save to Photos</p>
+            <p class="text-center font-bold text-lg">Right-click or Long-press to save image</p>
             <img id="exportPreview" class="w-full h-auto rounded-xl shadow-2xl border border-white/10" alt="Export Preview">
             <button id="closeExport" class="bg-white/10 px-8 py-3 rounded-full font-bold hover:bg-white/20 transition-all">Close</button>
         </div>
     </div>
 
     <!-- Viewport Area -->
-    <main id="viewport" class="flex-grow bg-[#050507] flex items-center justify-center relative overflow-hidden h-[40vh] md:h-full p-4 md:p-8 touch-none">
+    <main id="viewport" class="flex-grow bg-[#050507] flex items-center justify-center relative overflow-hidden h-[45vh] md:h-full p-4 md:p-8 touch-none">
         <div id="container" class="canvas-container relative bg-black shadow-2xl flex-shrink-0" style="width: 1000px; height: 1000px;">
             <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block"></canvas>
         </div>
     </main>
 
     <!-- Sidebar Panel -->
-    <aside class="w-full md:w-[400px] bg-[#121217] border-t md:border-t-0 md:border-l border-white/5 p-6 md:p-8 flex flex-col gap-6 md:gap-8 overflow-y-auto shadow-2xl z-10 md:h-full h-[60vh] pb-safe">
-        <header class="border-b border-white/5 pb-4 flex justify-between items-center">
-            <h1 class="text-xl md:text-2xl font-extrabold tracking-tighter bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">Solid Studio Pro</h1>
-            <div class="text-[10px] text-zinc-600 font-mono">v1.1.0</div>
-        </header>
+    <aside class="w-full md:w-[400px] bg-[#121217] border-t md:border-t-0 md:border-l border-white/5 p-6 md:p-8 flex flex-col gap-6 md:gap-8 overflow-y-auto shadow-2xl z-10 md:h-full h-[55vh] pb-safe">
+        
+        <section class="space-y-3">
+            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                <i data-lucide="type" class="w-3.5 h-3.5"></i> Text
+            </div>
+            <textarea id="textInput" class="w-full bg-[#1c1c21] border border-white/5 rounded-xl p-4 text-base focus:border-blue-500 outline-none transition-all resize-none text-white font-inherit" rows="2">Refined by design.</textarea>
+        </section>
 
-        <!-- Image Upload -->
+        <section class="space-y-3">
+            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                <i data-lucide="bold" class="w-3.5 h-3.5"></i> Weight
+            </div>
+            <div class="grid grid-cols-4 gap-2 bg-[#1c1c21] p-2 rounded-xl border border-white/5">
+                <button data-weight="400" class="weight-btn py-3 rounded-lg text-lg font-[400] hover:bg-white/5 bg-transparent transition-all">B</button>
+                <button data-weight="500" class="weight-btn py-3 rounded-lg text-lg font-[500] hover:bg-white/5 bg-transparent transition-all">B</button>
+                <button data-weight="700" class="weight-btn py-3 rounded-lg text-lg font-[700] hover:bg-white/5 bg-transparent transition-all weight-btn-active">B</button>
+                <button data-weight="900" class="weight-btn py-3 rounded-lg text-lg font-[900] hover:bg-white/5 bg-transparent transition-all">B</button>
+            </div>
+        </section>
+
+        <section class="space-y-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <i data-lucide="palette" class="w-3.5 h-3.5"></i> Appearance
+                </div>
+                <div class="flex bg-[#1c1c21] p-1 rounded-lg border border-white/5">
+                    <button id="tabSolid" class="text-[10px] px-3 py-1 rounded-md font-bold uppercase transition-all tab-active">Solid</button>
+                    <button id="tabGradient" class="text-[10px] px-3 py-1 rounded-md font-bold uppercase transition-all text-zinc-500">Gradient</button>
+                </div>
+            </div>
+
+            <!-- Solid Picker -->
+            <div id="solidControls" class="bg-[#1c1c21] rounded-xl p-4 border border-white/5 grid grid-cols-6 gap-3"></div>
+
+            <!-- Gradient Picker -->
+            <div id="gradientControls" class="hidden bg-[#1c1c21] rounded-xl p-5 border border-white/5 space-y-4">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between text-[10px] font-bold uppercase text-zinc-500">
+                        <span>Varying Layers</span>
+                        <button id="shuffleGradientColors" class="hover:text-white transition-colors"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button>
+                    </div>
+                    <div class="flex justify-between items-center px-2 relative">
+                        <!-- Gradient Slot 1 -->
+                        <div class="relative group">
+                            <button id="slot0" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#272a48]"></button>
+                            <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Base</span>
+                        </div>
+                        <!-- Gradient Slot 2 -->
+                        <div class="relative group">
+                            <button id="slot1" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#4490ef]"></button>
+                            <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Layer 1</span>
+                        </div>
+                        <!-- Gradient Slot 3 -->
+                        <div class="relative group">
+                            <button id="slot2" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#272a48]"></button>
+                            <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Layer 2</span>
+                        </div>
+                        <!-- Gradient Slot 4 -->
+                        <div class="relative group">
+                            <button id="slot3" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#d8305f]"></button>
+                            <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Layer 3</span>
+                        </div>
+                        
+                        <!-- Shared Color Picker Popover -->
+                        <div id="colorPopover" class="color-palette-popover"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section class="space-y-3">
             <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
                 <i data-lucide="image" class="w-3.5 h-3.5"></i> Background Image
@@ -114,44 +211,27 @@
             </div>
         </section>
 
-        <!-- Color Palette -->
-        <section class="space-y-3">
-            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
-                <i data-lucide="palette" class="w-3.5 h-3.5"></i> Brand Palette
-            </div>
-            <div id="paletteGrid" class="bg-[#1c1c21] rounded-xl p-3 border border-white/5 grid grid-cols-6 gap-2"></div>
-        </section>
-
-        <!-- Font Weight (Visual Selector) -->
-        <section class="space-y-3">
-            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
-                <i data-lucide="bold" class="w-3.5 h-3.5"></i> Weight
-            </div>
-            <div class="grid grid-cols-4 gap-2 bg-[#1c1c21] p-2 rounded-xl border border-white/5">
-                <button data-weight="400" class="weight-btn py-3 rounded-lg text-lg font-[400] hover:bg-white/5 bg-transparent transition-all">B</button>
-                <button data-weight="500" class="weight-btn py-3 rounded-lg text-lg font-[500] hover:bg-white/5 bg-transparent transition-all">B</button>
-                <button data-weight="700" class="weight-btn py-3 rounded-lg text-lg font-[700] hover:bg-white/5 bg-transparent transition-all weight-btn-active">B</button>
-                <button data-weight="900" class="weight-btn py-3 rounded-lg text-lg font-[900] hover:bg-white/5 bg-transparent transition-all">B</button>
-            </div>
-        </section>
-
-        <!-- Overlays -->
         <section class="space-y-4">
-            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
-                <i data-lucide="layers" class="w-3.5 h-3.5"></i> Overlays
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <i data-lucide="layers" class="w-3.5 h-3.5"></i> Overlays
+                </div>
+                <button id="blendModeToggle" class="text-[10px] font-bold bg-white/5 px-3 py-1 rounded-full hover:bg-white/10 transition-colors uppercase tracking-wider text-zinc-400 hover:text-white">Blend Mode: Blend</button>
             </div>
             <div class="flex flex-col gap-3">
-                <div class="flex items-center justify-between bg-[#1c1c21] p-3 rounded-xl border border-white/5">
-                    <div class="flex flex-col">
-                        <span class="text-sm font-medium">Shape Overlay</span>
-                        <span id="shapeLabel" class="text-[10px] text-zinc-500 uppercase font-bold mt-0.5">Variant 01</span>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <button id="shuffleShapeBtn" class="p-2 hover:bg-white/5 rounded-lg transition-colors text-zinc-400 hover:text-white"><i data-lucide="shuffle" class="w-4 h-4"></i></button>
-                        <label class="relative inline-flex items-center cursor-pointer">
-                            <input type="checkbox" id="shapeToggle" class="sr-only peer">
-                            <div class="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                        </label>
+                <div class="bg-[#1c1c21] p-3 rounded-xl border border-white/5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium">Shape Overlay</span>
+                            <span id="shapeLabel" class="text-[10px] text-zinc-500 uppercase font-bold mt-0.5">Variant 01</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button id="shuffleShapeBtn" class="p-2 hover:bg-white/5 rounded-lg transition-colors text-zinc-400 hover:text-white"><i data-lucide="shuffle" class="w-4 h-4"></i></button>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="shapeToggle" class="sr-only peer">
+                                <div class="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                            </label>
+                        </div>
                     </div>
                 </div>
                 <div class="flex items-center justify-between bg-[#1c1c21] p-3 rounded-xl border border-white/5">
@@ -164,18 +244,10 @@
             </div>
         </section>
 
-        <!-- Content Input -->
-        <section class="space-y-3">
-            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
-                <i data-lucide="type" class="w-3.5 h-3.5"></i> Typography Content
-            </div>
-            <textarea id="textInput" class="w-full bg-[#1c1c21] border border-white/5 rounded-xl p-4 text-base focus:border-blue-500 outline-none transition-all resize-none text-white font-inherit" rows="2">Simple is the new premium.</textarea>
-        </section>
-
-        <!-- Primary Actions -->
         <div class="flex gap-3 mt-auto pt-6 pb-4">
             <button id="exportBtn" class="flex-1 bg-blue-600 hover:bg-blue-500 active:scale-95 transition-all rounded-xl p-4 font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20">
-                <i data-lucide="camera" class="w-4 h-4"></i> Save to Photos
+                <i data-lucide="download" class="w-4 h-4"></i> 
+                <span>Save Image</span>
             </button>
             <button id="randomBtn" class="w-14 h-14 bg-white/5 hover:bg-white/10 active:scale-90 border border-white/5 transition-all rounded-xl flex items-center justify-center">
                 <i data-lucide="refresh-cw" class="w-4 h-4"></i>
@@ -189,9 +261,13 @@
         const NEW_HEX_COLORS = ["#355B58", "#524A41", "#535647", "#5E3D5E", "#50525A", "#6A5645", "#6A6248", "#4B5D45", "#365567", "#53e14c", "#FA4E63", "#17A8FF", "#F5C81E", "#C24C2D", "#3B356A", "#6C2D55", "#9B4658", "#133F35"];
 
         let activeColor = [59, 130, 246];
+        let gradColors = ["#272a48", "#4490ef", "#272a48", "#d8305f"];
         let activeShapeIndex = "01";
         let activeWeight = 700;
         let bgImage = null;
+        let blendMode = 'overlay'; 
+        let backgroundMode = 'solid';
+        let currentSlotIndex = 0;
         const allColors = [];
         const images = {};
 
@@ -200,17 +276,17 @@
         const container = document.getElementById('container');
         const viewport = document.getElementById('viewport');
         const textInput = document.getElementById('textInput');
-        const paletteGrid = document.getElementById('paletteGrid');
+        const solidControls = document.getElementById('solidControls');
+        const gradientControls = document.getElementById('gradientControls');
+        const tabSolid = document.getElementById('tabSolid');
+        const tabGradient = document.getElementById('tabGradient');
         const exportBtn = document.getElementById('exportBtn');
         const randomBtn = document.getElementById('randomBtn');
         const shuffleShapeBtn = document.getElementById('shuffleShapeBtn');
         const shapeToggle = document.getElementById('shapeToggle');
         const frameToggle = document.getElementById('frameToggle');
-        const shapeLabel = document.getElementById('shapeLabel');
-        const imageUpload = document.getElementById('imageUpload');
-        const uploadLabel = document.getElementById('uploadLabel');
-        const clearImage = document.getElementById('clearImage');
-        const weightBtns = document.querySelectorAll('.weight-btn');
+        const blendModeToggle = document.getElementById('blendModeToggle');
+        const colorPopover = document.getElementById('colorPopover');
         const exportModal = document.getElementById('exportModal');
         const exportPreview = document.getElementById('exportPreview');
         const closeExport = document.getElementById('closeExport');
@@ -220,17 +296,40 @@
             return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : null;
         }
 
+        function rgbToHex(r, g, b) {
+            return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+        }
+
         function initColors() {
             BASE_PALETTE.forEach(c => allColors.push(c));
             NEW_HEX_COLORS.forEach(h => { const rgb = hexToRgb(h); if (rgb) allColors.push(rgb); });
+            
+            // Build Solid Grid
             allColors.forEach(rgb => {
                 const btn = document.createElement('button');
-                btn.className = 'aspect-square rounded-md transition-all duration-200 hover:scale-110';
+                btn.className = 'aspect-square rounded-full transition-all duration-200 hover:scale-110';
                 btn.style.backgroundColor = `rgb(${rgb.join(',')})`;
-                btn.onclick = () => { activeColor = rgb; updateActiveDot(); render(); };
-                paletteGrid.appendChild(btn);
+                btn.onclick = () => { activeColor = rgb; updateActiveUI(); render(); };
+                solidControls.appendChild(btn);
             });
-            updateActiveDot();
+
+            // Build Popover Grid
+            allColors.forEach(rgb => {
+                const hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
+                const btn = document.createElement('button');
+                btn.className = 'w-6 h-6 rounded-full border border-white/10 hover:scale-125 transition-transform';
+                btn.style.backgroundColor = hex;
+                btn.onclick = (e) => {
+                    e.stopPropagation();
+                    gradColors[currentSlotIndex] = hex;
+                    document.getElementById(`slot${currentSlotIndex}`).style.backgroundColor = hex;
+                    colorPopover.classList.remove('visible');
+                    render();
+                };
+                colorPopover.appendChild(btn);
+            });
+
+            updateActiveUI();
         }
 
         async function preloadImages() {
@@ -244,20 +343,49 @@
             await Promise.all(Object.entries(paths).map(([k, v]) => load(k, v)));
         }
 
-        function updateActiveDot() {
-            paletteGrid.querySelectorAll('button').forEach((b, i) => {
+        function updateActiveUI() {
+            solidControls.querySelectorAll('button').forEach((b, i) => {
                 if (JSON.stringify(allColors[i]) === JSON.stringify(activeColor)) b.classList.add('color-dot-active');
                 else b.classList.remove('color-dot-active');
+            });
+            
+            gradColors.forEach((hex, i) => {
+                document.getElementById(`slot${i}`).style.backgroundColor = hex;
             });
         }
 
         function render() {
             const text = textInput.value;
-
-            // 1. Background (Solid Color or Image)
             ctx.globalCompositeOperation = 'source-over';
-            ctx.fillStyle = `rgb(${activeColor.join(',')})`;
-            ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+            
+            if (backgroundMode === 'solid') {
+                ctx.fillStyle = `rgb(${activeColor.join(',')})`;
+                ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+            } else {
+                ctx.fillStyle = gradColors[0];
+                ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+                // Varied Layer 1: Bottom Right Focus
+                let grad1 = ctx.createRadialGradient(CANVAS_SIZE * 0.9, CANVAS_SIZE * 0.9, 0, CANVAS_SIZE * 0.8, CANVAS_SIZE * 0.8, CANVAS_SIZE * 0.9);
+                grad1.addColorStop(0, gradColors[1]);
+                grad1.addColorStop(1, 'transparent');
+                ctx.fillStyle = grad1;
+                ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+                // Varied Layer 2: Top Center Focus
+                let grad2 = ctx.createRadialGradient(CANVAS_SIZE * 0.45, CANVAS_SIZE * 0.05, 0, CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.1, CANVAS_SIZE * 0.7);
+                grad2.addColorStop(0, gradColors[2]);
+                grad2.addColorStop(1, 'transparent');
+                ctx.fillStyle = grad2;
+                ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+
+                // Varied Layer 3: Left Side Edge
+                let grad3 = ctx.createRadialGradient(CANVAS_SIZE * 0.05, CANVAS_SIZE * 0.5, 0, CANVAS_SIZE * 0.1, CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.8);
+                grad3.addColorStop(0, gradColors[3]);
+                grad3.addColorStop(1, 'transparent');
+                ctx.fillStyle = grad3;
+                ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+            }
 
             if (bgImage) {
                 const scale = Math.max(CANVAS_SIZE / bgImage.width, CANVAS_SIZE / bgImage.height);
@@ -266,28 +394,35 @@
                 ctx.drawImage(bgImage, x, y, bgImage.width * scale, bgImage.height * scale);
             }
 
-            // 2. Overlays
-            ctx.globalCompositeOperation = 'overlay';
+            const currentBlendMode = blendMode === 'overlay' ? 'overlay' : 'source-over';
+            
             if (shapeToggle.checked && images[`shape_${activeShapeIndex}`]) {
+                ctx.globalCompositeOperation = currentBlendMode; 
                 ctx.drawImage(images[`shape_${activeShapeIndex}`], 0, 0, CANVAS_SIZE, CANVAS_SIZE);
             }
+
             if (frameToggle.checked && images['frame']) {
+                ctx.globalCompositeOperation = currentBlendMode;
                 ctx.drawImage(images['frame'], 0, 0, CANVAS_SIZE, CANVAS_SIZE);
             }
 
-            // 3. Text
             ctx.globalCompositeOperation = 'source-over';
-            const brightness = (activeColor[0] * 299 + activeColor[1] * 587 + activeColor[2] * 114) / 1000;
-            // Contrast check with image fallback
-            ctx.fillStyle = (bgImage || brightness < 185) ? '#ffffff' : '#000000';
-
+            let brightness;
+            if (backgroundMode === 'solid') {
+                brightness = (activeColor[0] * 299 + activeColor[1] * 587 + activeColor[2] * 114) / 1000;
+            } else {
+                const rgbBase = hexToRgb(gradColors[0]);
+                brightness = (rgbBase[0] * 299 + rgbBase[1] * 587 + rgbBase[2] * 114) / 1000;
+            }
+            
+            ctx.fillStyle = (bgImage || brightness < 160) ? '#ffffff' : '#000000';
             ctx.font = `${activeWeight} 90px "Circular", -apple-system, sans-serif`;
             ctx.textAlign = 'left';
-            ctx.textBaseline = 'top';
+            ctx.textBaseline = 'alphabetic';
 
             const maxWidth = 760;
-            const x = 116;
-            const bottomAnchor = 906;
+            const x = 116; 
+            const bottomAnchor = 889; 
             const lineHeight = 89;
 
             const words = text.split(' ');
@@ -296,8 +431,7 @@
 
             for (let n = 0; n < words.length; n++) {
                 let testLine = line + words[n] + ' ';
-                let metrics = ctx.measureText(testLine);
-                if (metrics.width > maxWidth && n > 0) {
+                if (ctx.measureText(testLine).width > maxWidth && n > 0) {
                     lines.push(line.trim());
                     line = words[n] + ' ';
                 } else {
@@ -306,17 +440,54 @@
             }
             lines.push(line.trim());
 
-            const totalHeight = lines.length * lineHeight;
-            let y = bottomAnchor - totalHeight;
-
-            lines.forEach((l, i) => {
-                ctx.fillText(l, x, y + (i * lineHeight));
-            });
+            for (let i = 0; i < lines.length; i++) {
+                const yPos = bottomAnchor - (i * lineHeight);
+                ctx.fillText(lines[lines.length - 1 - i], x, yPos);
+            }
             
-            shapeLabel.textContent = `Variant ${activeShapeIndex}`;
+            document.getElementById('shapeLabel').textContent = `Variant ${activeShapeIndex}`;
+            blendModeToggle.textContent = `Blend Mode: ${blendMode === 'overlay' ? 'Blend' : 'Normal'}`;
         }
 
-        // Image Upload Logic
+        // Popover Control
+        document.querySelectorAll('.grad-slot').forEach((btn, idx) => {
+            btn.onclick = (e) => {
+                e.stopPropagation();
+                currentSlotIndex = idx;
+                colorPopover.classList.add('visible');
+            };
+        });
+
+        document.addEventListener('click', () => {
+            colorPopover.classList.remove('visible');
+        });
+
+        tabSolid.onclick = () => {
+            backgroundMode = 'solid';
+            tabSolid.classList.add('tab-active'); tabSolid.classList.remove('text-zinc-500');
+            tabGradient.classList.remove('tab-active'); tabGradient.classList.add('text-zinc-500');
+            solidControls.classList.remove('hidden'); gradientControls.classList.add('hidden');
+            render();
+        };
+
+        tabGradient.onclick = () => {
+            backgroundMode = 'gradient';
+            tabGradient.classList.add('tab-active'); tabGradient.classList.remove('text-zinc-500');
+            tabSolid.classList.remove('tab-active'); tabSolid.classList.add('text-zinc-500');
+            gradientControls.classList.remove('hidden'); solidControls.classList.add('hidden');
+            render();
+        };
+
+        document.getElementById('shuffleGradientColors').onclick = () => {
+            const pick = () => {
+                const rgb = allColors[Math.floor(Math.random() * allColors.length)];
+                return rgbToHex(rgb[0], rgb[1], rgb[2]);
+            };
+            gradColors = gradColors.map(() => pick());
+            updateActiveUI();
+            render();
+        };
+
         imageUpload.onchange = (e) => {
             const file = e.target.files[0];
             if (!file) return;
@@ -325,8 +496,8 @@
                 const img = new Image();
                 img.onload = () => {
                     bgImage = img;
-                    uploadLabel.textContent = file.name;
-                    clearImage.style.display = 'flex';
+                    document.getElementById('uploadLabel').textContent = file.name;
+                    document.getElementById('clearImage').style.display = 'flex';
                     render();
                 };
                 img.src = f.target.result;
@@ -334,39 +505,52 @@
             reader.readAsDataURL(file);
         };
 
-        clearImage.onclick = () => {
+        document.getElementById('clearImage').onclick = () => {
             bgImage = null;
             imageUpload.value = '';
-            uploadLabel.textContent = 'Upload JPG/PNG';
-            clearImage.style.display = 'none';
+            document.getElementById('uploadLabel').textContent = 'Upload JPG/PNG';
+            document.getElementById('clearImage').style.display = 'none';
             render();
         };
 
-        // Weight Selection Logic
-        weightBtns.forEach(btn => {
+        document.querySelectorAll('.weight-btn').forEach(btn => {
             btn.onclick = () => {
                 activeWeight = parseInt(btn.dataset.weight);
-                weightBtns.forEach(b => b.classList.remove('weight-btn-active'));
+                document.querySelectorAll('.weight-btn').forEach(b => b.classList.remove('weight-btn-active'));
                 btn.classList.add('weight-btn-active');
                 render();
             };
         });
 
-        // Native Export Handling
+        blendModeToggle.onclick = () => {
+            blendMode = blendMode === 'overlay' ? 'source-over' : 'overlay';
+            render();
+        };
+
+        // Improved Export for Desktop
         exportBtn.onclick = () => {
-            exportPreview.src = canvas.toDataURL('image/png');
+            const dataUrl = canvas.toDataURL('image/png', 1.0);
+            
+            // Create a temporary link and trigger it
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = `solid-studio-${Date.now()}.png`;
+            
+            // Append to body to ensure it works in all environments
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Also show preview modal as feedback/alternative
+            exportPreview.src = dataUrl;
             exportModal.style.display = 'flex';
         };
 
-        closeExport.onclick = () => {
-            exportModal.style.display = 'none';
-        };
+        closeExport.onclick = () => { exportModal.style.display = 'none'; };
 
         function updateScale() {
             const padding = window.innerWidth < 768 ? 40 : 80;
-            const vWidth = viewport.clientWidth - padding;
-            const vHeight = viewport.clientHeight - padding;
-            const scale = Math.min(vWidth / CANVAS_SIZE, vHeight / CANVAS_SIZE);
+            const scale = Math.min((viewport.clientWidth - padding) / CANVAS_SIZE, (viewport.clientHeight - padding) / CANVAS_SIZE);
             container.style.transform = `scale(${scale})`;
         }
 
@@ -376,16 +560,18 @@
         frameToggle.onchange = render;
         
         shuffleShapeBtn.onclick = () => {
-            const shapes = ["01", "02", "03"];
-            activeShapeIndex = shapes[(shapes.indexOf(activeShapeIndex) + 1) % shapes.length];
-            if (!shapeToggle.checked) shapeToggle.checked = true;
+            activeShapeIndex = ["01", "02", "03"][(["01", "02", "03"].indexOf(activeShapeIndex) + 1) % 3];
+            shapeToggle.checked = true;
             render();
         };
 
         randomBtn.onclick = () => {
-            activeColor = allColors[Math.floor(Math.random() * allColors.length)];
-            activeShapeIndex = ["01", "02", "03"][Math.floor(Math.random() * 3)];
-            updateActiveDot();
+            if (backgroundMode === 'solid') {
+                activeColor = allColors[Math.floor(Math.random() * allColors.length)];
+                updateActiveUI();
+            } else {
+                document.getElementById('shuffleGradientColors').click();
+            }
             render();
         };
 
@@ -396,7 +582,6 @@
             if (document.fonts) await document.fonts.ready;
             updateScale();
             render();
-            setTimeout(updateScale, 150);
         };
     </script>
 </body>
