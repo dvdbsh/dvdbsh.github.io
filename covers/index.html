@@ -2,32 +2,23 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Solid Studio Pro</title>
+
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="SolidStudio">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#09090b">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
-        /* Custom Font Face Mapping */
-        @font-face {
-            font-family: 'Circular';
-            src: url('fonts/Circular/Circular-Black.ttf') format('truetype');
-            font-weight: 900;
-        }
-        @font-face {
-            font-family: 'Circular';
-            src: url('fonts/Circular/Circular-Bold.ttf') format('truetype');
-            font-weight: 700;
-        }
-        @font-face {
-            font-family: 'Circular';
-            src: url('fonts/Circular/Circular-Medium.ttf') format('truetype');
-            font-weight: 500;
-        }
-        @font-face {
-            font-family: 'Circular';
-            src: url('fonts/Circular/Circular-Book.ttf') format('truetype');
-            font-weight: 400;
-        }
+        @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Black.ttf') format('truetype'); font-weight: 900; }
+        @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Bold.ttf') format('truetype'); font-weight: 700; }
+        @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Medium.ttf') format('truetype'); font-weight: 500; }
+        @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Book.ttf') format('truetype'); font-weight: 400; }
         
         body {
             font-family: 'Circular', -apple-system, sans-serif;
@@ -35,24 +26,23 @@
             color: white;
             margin: 0;
             overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
+
+        textarea, input { font-size: 16px !important; user-select: text; }
 
         .canvas-container {
             transition: transform 0.2s ease-out;
             transform-origin: center;
+            will-change: transform;
         }
 
-        /* Custom Scrollbar for the Sidebar */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #27272a;
-            border-radius: 10px;
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
 
         .color-dot-active {
             outline: 2px solid #3b82f6;
@@ -60,40 +50,88 @@
             transform: scale(0.85);
         }
 
-        /* Toggle Switch Styling */
-        .toggle-checkbox:checked {
-            right: 0;
-            border-color: #3b82f6;
+        .weight-btn-active {
+            background-color: #3b82f6 !important;
+            color: white !important;
+            border-color: #3b82f6 !important;
         }
-        .toggle-checkbox:checked + .toggle-label {
-            background-color: #3b82f6;
+
+        html { overscroll-behavior-y: none; }
+
+        /* Export Modal Styles */
+        #exportModal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.9);
+            z-index: 100;
+            padding: 2rem;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
         }
     </style>
 </head>
-<body class="flex flex-col md:flex-row h-screen w-screen">
+<body class="flex flex-col md:flex-row h-screen w-screen overflow-hidden">
+
+    <!-- Export Modal -->
+    <div id="exportModal" class="flex">
+        <div class="max-w-md w-full flex flex-col items-center gap-6">
+            <p class="text-center font-bold text-lg">Long-press image to save to Photos</p>
+            <img id="exportPreview" class="w-full h-auto rounded-xl shadow-2xl border border-white/10" alt="Export Preview">
+            <button id="closeExport" class="bg-white/10 px-8 py-3 rounded-full font-bold hover:bg-white/20 transition-all">Close</button>
+        </div>
+    </div>
 
     <!-- Viewport Area -->
-    <main id="viewport" class="flex-grow bg-[#050507] flex items-center justify-center relative overflow-hidden h-[50vh] md:h-full p-4 md:p-8">
+    <main id="viewport" class="flex-grow bg-[#050507] flex items-center justify-center relative overflow-hidden h-[40vh] md:h-full p-4 md:p-8 touch-none">
         <div id="container" class="canvas-container relative bg-black shadow-2xl flex-shrink-0" style="width: 1000px; height: 1000px;">
             <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block"></canvas>
         </div>
     </main>
 
     <!-- Sidebar Panel -->
-    <aside class="w-full md:w-[400px] bg-[#121217] border-l border-white/5 p-6 md:p-8 flex flex-col gap-6 md:gap-8 overflow-y-auto shadow-2xl z-10 md:h-full h-[50vh]">
-        <header class="border-b border-white/5 pb-4">
-            <h1 class="text-xl md:text-2xl font-extrabold tracking-tighter bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">
-                Solid Studio Pro
-            </h1>
+    <aside class="w-full md:w-[400px] bg-[#121217] border-t md:border-t-0 md:border-l border-white/5 p-6 md:p-8 flex flex-col gap-6 md:gap-8 overflow-y-auto shadow-2xl z-10 md:h-full h-[60vh] pb-safe">
+        <header class="border-b border-white/5 pb-4 flex justify-between items-center">
+            <h1 class="text-xl md:text-2xl font-extrabold tracking-tighter bg-gradient-to-r from-white to-zinc-400 bg-clip-text text-transparent">Solid Studio Pro</h1>
+            <div class="text-[10px] text-zinc-600 font-mono">v1.1.0</div>
         </header>
+
+        <!-- Image Upload -->
+        <section class="space-y-3">
+            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                <i data-lucide="image" class="w-3.5 h-3.5"></i> Background Image
+            </div>
+            <div class="flex gap-2">
+                <label class="flex-grow bg-[#1c1c21] border border-dashed border-white/10 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer hover:border-blue-500/50 transition-all">
+                    <input type="file" id="imageUpload" class="hidden" accept="image/*">
+                    <i data-lucide="upload-cloud" class="w-4 h-4 text-zinc-400"></i>
+                    <span class="text-xs font-medium text-zinc-400" id="uploadLabel">Upload JPG/PNG</span>
+                </label>
+                <button id="clearImage" class="hidden w-12 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl items-center justify-center transition-all">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
 
         <!-- Color Palette -->
         <section class="space-y-3">
             <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
                 <i data-lucide="palette" class="w-3.5 h-3.5"></i> Brand Palette
             </div>
-            <div id="paletteGrid" class="bg-[#1c1c21] rounded-xl p-3 border border-white/5 grid grid-cols-6 gap-2">
-                <!-- Dots injected via JS -->
+            <div id="paletteGrid" class="bg-[#1c1c21] rounded-xl p-3 border border-white/5 grid grid-cols-6 gap-2"></div>
+        </section>
+
+        <!-- Font Weight (Visual Selector) -->
+        <section class="space-y-3">
+            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                <i data-lucide="bold" class="w-3.5 h-3.5"></i> Weight
+            </div>
+            <div class="grid grid-cols-4 gap-2 bg-[#1c1c21] p-2 rounded-xl border border-white/5">
+                <button data-weight="400" class="weight-btn py-3 rounded-lg text-lg font-[400] hover:bg-white/5 bg-transparent transition-all">B</button>
+                <button data-weight="500" class="weight-btn py-3 rounded-lg text-lg font-[500] hover:bg-white/5 bg-transparent transition-all">B</button>
+                <button data-weight="700" class="weight-btn py-3 rounded-lg text-lg font-[700] hover:bg-white/5 bg-transparent transition-all weight-btn-active">B</button>
+                <button data-weight="900" class="weight-btn py-3 rounded-lg text-lg font-[900] hover:bg-white/5 bg-transparent transition-all">B</button>
             </div>
         </section>
 
@@ -109,9 +147,7 @@
                         <span id="shapeLabel" class="text-[10px] text-zinc-500 uppercase font-bold mt-0.5">Variant 01</span>
                     </div>
                     <div class="flex items-center gap-3">
-                        <button id="shuffleShapeBtn" class="p-2 hover:bg-white/5 rounded-lg transition-colors text-zinc-400 hover:text-white" title="Shuffle Shape Variant">
-                            <i data-lucide="shuffle" class="w-4 h-4"></i>
-                        </button>
+                        <button id="shuffleShapeBtn" class="p-2 hover:bg-white/5 rounded-lg transition-colors text-zinc-400 hover:text-white"><i data-lucide="shuffle" class="w-4 h-4"></i></button>
                         <label class="relative inline-flex items-center cursor-pointer">
                             <input type="checkbox" id="shapeToggle" class="sr-only peer">
                             <div class="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
@@ -133,197 +169,125 @@
             <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
                 <i data-lucide="type" class="w-3.5 h-3.5"></i> Typography Content
             </div>
-            <textarea
-                id="textInput"
-                class="w-full bg-[#1c1c21] border border-white/5 rounded-xl p-4 text-base focus:border-blue-500 outline-none transition-all resize-none text-white font-inherit"
-                rows="2"
-            >Simple is the new premium.</textarea>
-        </section>
-
-        <!-- Font Weight -->
-        <section class="space-y-3">
-            <div class="text-[10px] font-bold uppercase tracking-widest text-zinc-500">Font Weight</div>
-            <div class="relative">
-                <select
-                    id="weightInput"
-                    class="w-full bg-[#1c1c21] border border-white/5 rounded-xl p-4 pr-10 appearance-none text-base outline-none focus:border-blue-500 transition-all cursor-pointer text-white"
-                >
-                    <option value="900">Circular Black</option>
-                    <option value="700" selected>Circular Bold</option>
-                    <option value="500">Circular Medium</option>
-                    <option value="400">Circular Book</option>
-                </select>
-                <i data-lucide="chevron-down" class="absolute right-4 top-1/2 -translate-y-1/2 text-zinc-500 pointer-events-none w-4 h-4"></i>
-            </div>
+            <textarea id="textInput" class="w-full bg-[#1c1c21] border border-white/5 rounded-xl p-4 text-base focus:border-blue-500 outline-none transition-all resize-none text-white font-inherit" rows="2">Simple is the new premium.</textarea>
         </section>
 
         <!-- Primary Actions -->
-        <div class="flex gap-3 mt-auto pt-6">
-            <button
-                id="downloadBtn"
-                class="flex-1 bg-blue-600 hover:bg-blue-500 active:scale-95 transition-all rounded-xl p-4 font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20"
-            >
-                <i data-lucide="download" class="w-4 h-4"></i> Export PNG
+        <div class="flex gap-3 mt-auto pt-6 pb-4">
+            <button id="exportBtn" class="flex-1 bg-blue-600 hover:bg-blue-500 active:scale-95 transition-all rounded-xl p-4 font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20">
+                <i data-lucide="camera" class="w-4 h-4"></i> Save to Photos
             </button>
-            <button
-                id="randomBtn"
-                class="w-14 h-14 bg-white/5 hover:bg-white/10 active:scale-90 border border-white/5 transition-all rounded-xl flex items-center justify-center"
-                title="Randomize Appearance"
-            >
+            <button id="randomBtn" class="w-14 h-14 bg-white/5 hover:bg-white/10 active:scale-90 border border-white/5 transition-all rounded-xl flex items-center justify-center">
                 <i data-lucide="refresh-cw" class="w-4 h-4"></i>
             </button>
         </div>
     </aside>
 
     <script>
-        // Constants
         const CANVAS_SIZE = 1000;
-        
-        // Base tailwind-like colors
-        const BASE_PALETTE = [
-            [100, 116, 139], [239, 68, 68], [249, 115, 22], [245, 158, 11], 
-            [234, 179, 8], [34, 197, 94], [16, 185, 129], [20, 184, 166], 
-            [6, 182, 212], [14, 165, 233], [59, 130, 246], [99, 102, 241]
-        ];
+        const BASE_PALETTE = [[100, 116, 139], [239, 68, 68], [249, 115, 22], [245, 158, 11], [234, 179, 8], [34, 197, 94], [16, 185, 129], [20, 184, 166], [6, 182, 212], [14, 165, 233], [59, 130, 246], [99, 102, 241]];
+        const NEW_HEX_COLORS = ["#355B58", "#524A41", "#535647", "#5E3D5E", "#50525A", "#6A5645", "#6A6248", "#4B5D45", "#365567", "#53e14c", "#FA4E63", "#17A8FF", "#F5C81E", "#C24C2D", "#3B356A", "#6C2D55", "#9B4658", "#133F35"];
 
-        // Your requested hex colors
-        const NEW_HEX_COLORS = [
-            "#355B58", "#524A41", "#535647", "#5E3D5E",
-            "#50525A", "#6A5645", "#6A6248", "#4B5D45",
-            "#365567", "#53e14c", "#FA4E63", "#17A8FF",
-            "#F5C81E", "#C24C2D", "#3B356A", "#6C2D55",
-            "#9B4658", "#133F35"
-        ];
-
-        // State
         let activeColor = [59, 130, 246];
         let activeShapeIndex = "01";
+        let activeWeight = 700;
+        let bgImage = null;
         const allColors = [];
         const images = {};
 
-        // Elements
         const canvas = document.getElementById('mainCanvas');
         const ctx = canvas.getContext('2d');
         const container = document.getElementById('container');
         const viewport = document.getElementById('viewport');
         const textInput = document.getElementById('textInput');
-        const weightInput = document.getElementById('weightInput');
         const paletteGrid = document.getElementById('paletteGrid');
-        const downloadBtn = document.getElementById('downloadBtn');
+        const exportBtn = document.getElementById('exportBtn');
         const randomBtn = document.getElementById('randomBtn');
         const shuffleShapeBtn = document.getElementById('shuffleShapeBtn');
         const shapeToggle = document.getElementById('shapeToggle');
         const frameToggle = document.getElementById('frameToggle');
         const shapeLabel = document.getElementById('shapeLabel');
+        const imageUpload = document.getElementById('imageUpload');
+        const uploadLabel = document.getElementById('uploadLabel');
+        const clearImage = document.getElementById('clearImage');
+        const weightBtns = document.querySelectorAll('.weight-btn');
+        const exportModal = document.getElementById('exportModal');
+        const exportPreview = document.getElementById('exportPreview');
+        const closeExport = document.getElementById('closeExport');
 
-        // Utils
         function hexToRgb(hex) {
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-            return result ? [
-                parseInt(result[1], 16),
-                parseInt(result[2], 16),
-                parseInt(result[3], 16)
-            ] : null;
+            return result ? [parseInt(result[1], 16), parseInt(result[2], 16), parseInt(result[3], 16)] : null;
         }
 
         function initColors() {
-            // Add Base Colors with variants
-            BASE_PALETTE.forEach(([r, g, b]) => {
-                const adjust = (v, f) => Math.min(255, Math.max(0, Math.round(v * f)));
-                allColors.push([r, g, b]);
-            });
-
-            // Add Requested Hex Colors
-            NEW_HEX_COLORS.forEach(hex => {
-                const rgb = hexToRgb(hex);
-                if (rgb) allColors.push(rgb);
-            });
-
-            // Create buttons
+            BASE_PALETTE.forEach(c => allColors.push(c));
+            NEW_HEX_COLORS.forEach(h => { const rgb = hexToRgb(h); if (rgb) allColors.push(rgb); });
             allColors.forEach(rgb => {
                 const btn = document.createElement('button');
                 btn.className = 'aspect-square rounded-md transition-all duration-200 hover:scale-110';
                 btn.style.backgroundColor = `rgb(${rgb.join(',')})`;
-                btn.onclick = () => {
-                    activeColor = rgb;
-                    updateActiveDot();
-                    render();
-                };
+                btn.onclick = () => { activeColor = rgb; updateActiveDot(); render(); };
                 paletteGrid.appendChild(btn);
             });
             updateActiveDot();
         }
 
         async function preloadImages() {
-            const paths = {
-                'shape_01': 'overlay/shape_01.png',
-                'shape_02': 'overlay/shape_02.png',
-                'shape_03': 'overlay/shape_03.png',
-                'frame': 'overlay/frame.png'
-            };
-
-            const load = (key, src) => new Promise(resolve => {
-                const img = new Image();
-                img.onload = () => { images[key] = img; resolve(); };
-                img.onerror = () => { console.warn(`Missing asset: ${src}`); resolve(); };
-                img.src = src;
+            const paths = {'shape_01': 'overlay/shape_01.png', 'shape_02': 'overlay/shape_02.png', 'shape_03': 'overlay/shape_03.png', 'frame': 'overlay/frame.png'};
+            const load = (k, s) => new Promise(resolve => {
+                const i = new Image();
+                i.onload = () => { images[k] = i; resolve(); };
+                i.onerror = () => resolve();
+                i.src = s;
             });
-
             await Promise.all(Object.entries(paths).map(([k, v]) => load(k, v)));
         }
 
         function updateActiveDot() {
-            const btns = paletteGrid.querySelectorAll('button');
-            btns.forEach((btn, i) => {
-                if (JSON.stringify(allColors[i]) === JSON.stringify(activeColor)) {
-                    btn.classList.add('color-dot-active');
-                } else {
-                    btn.classList.remove('color-dot-active');
-                }
+            paletteGrid.querySelectorAll('button').forEach((b, i) => {
+                if (JSON.stringify(allColors[i]) === JSON.stringify(activeColor)) b.classList.add('color-dot-active');
+                else b.classList.remove('color-dot-active');
             });
-        }
-
-        function updateScale() {
-            const padding = window.innerWidth < 768 ? 20 : 60;
-            const vWidth = viewport.clientWidth - padding;
-            const vHeight = viewport.clientHeight - padding;
-            const scale = Math.min(vWidth / CANVAS_SIZE, vHeight / CANVAS_SIZE);
-            container.style.transform = `scale(${scale})`;
         }
 
         function render() {
             const text = textInput.value;
-            const weight = weightInput.value;
 
-            // 1. Background Color
+            // 1. Background (Solid Color or Image)
             ctx.globalCompositeOperation = 'source-over';
             ctx.fillStyle = `rgb(${activeColor.join(',')})`;
             ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
+            if (bgImage) {
+                const scale = Math.max(CANVAS_SIZE / bgImage.width, CANVAS_SIZE / bgImage.height);
+                const x = (CANVAS_SIZE / 2) - (bgImage.width / 2) * scale;
+                const y = (CANVAS_SIZE / 2) - (bgImage.height / 2) * scale;
+                ctx.drawImage(bgImage, x, y, bgImage.width * scale, bgImage.height * scale);
+            }
+
             // 2. Overlays
             ctx.globalCompositeOperation = 'overlay';
-            
             if (shapeToggle.checked && images[`shape_${activeShapeIndex}`]) {
                 ctx.drawImage(images[`shape_${activeShapeIndex}`], 0, 0, CANVAS_SIZE, CANVAS_SIZE);
             }
-            
             if (frameToggle.checked && images['frame']) {
                 ctx.drawImage(images['frame'], 0, 0, CANVAS_SIZE, CANVAS_SIZE);
             }
 
             // 3. Text
             ctx.globalCompositeOperation = 'source-over';
-            
             const brightness = (activeColor[0] * 299 + activeColor[1] * 587 + activeColor[2] * 114) / 1000;
-            ctx.fillStyle = brightness > 185 ? '#000000' : '#ffffff';
+            // Contrast check with image fallback
+            ctx.fillStyle = (bgImage || brightness < 185) ? '#ffffff' : '#000000';
 
-            ctx.font = `${weight} 90px "Circular", -apple-system, sans-serif`;
+            ctx.font = `${activeWeight} 90px "Circular", -apple-system, sans-serif`;
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
 
-            const maxWidth = 740;
+            const maxWidth = 760;
             const x = 116;
-            const bottomAnchor = 889;
+            const bottomAnchor = 906;
             const lineHeight = 89;
 
             const words = text.split(' ');
@@ -352,56 +316,87 @@
             shapeLabel.textContent = `Variant ${activeShapeIndex}`;
         }
 
-        async function waitForFonts() {
-            if (document.fonts) {
-                await document.fonts.ready;
-            }
+        // Image Upload Logic
+        imageUpload.onchange = (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (f) => {
+                const img = new Image();
+                img.onload = () => {
+                    bgImage = img;
+                    uploadLabel.textContent = file.name;
+                    clearImage.style.display = 'flex';
+                    render();
+                };
+                img.src = f.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        clearImage.onclick = () => {
+            bgImage = null;
+            imageUpload.value = '';
+            uploadLabel.textContent = 'Upload JPG/PNG';
+            clearImage.style.display = 'none';
+            render();
+        };
+
+        // Weight Selection Logic
+        weightBtns.forEach(btn => {
+            btn.onclick = () => {
+                activeWeight = parseInt(btn.dataset.weight);
+                weightBtns.forEach(b => b.classList.remove('weight-btn-active'));
+                btn.classList.add('weight-btn-active');
+                render();
+            };
+        });
+
+        // Native Export Handling
+        exportBtn.onclick = () => {
+            exportPreview.src = canvas.toDataURL('image/png');
+            exportModal.style.display = 'flex';
+        };
+
+        closeExport.onclick = () => {
+            exportModal.style.display = 'none';
+        };
+
+        function updateScale() {
+            const padding = window.innerWidth < 768 ? 40 : 80;
+            const vWidth = viewport.clientWidth - padding;
+            const vHeight = viewport.clientHeight - padding;
+            const scale = Math.min(vWidth / CANVAS_SIZE, vHeight / CANVAS_SIZE);
+            container.style.transform = `scale(${scale})`;
         }
 
-        // Events
+        window.onresize = updateScale;
         textInput.oninput = render;
-        weightInput.onchange = render;
         shapeToggle.onchange = render;
         frameToggle.onchange = render;
-        window.onresize = updateScale;
         
         shuffleShapeBtn.onclick = () => {
             const shapes = ["01", "02", "03"];
-            let nextIndex = shapes.indexOf(activeShapeIndex) + 1;
-            if (nextIndex >= shapes.length) nextIndex = 0;
-            activeShapeIndex = shapes[nextIndex];
+            activeShapeIndex = shapes[(shapes.indexOf(activeShapeIndex) + 1) % shapes.length];
             if (!shapeToggle.checked) shapeToggle.checked = true;
             render();
         };
 
         randomBtn.onclick = () => {
             activeColor = allColors[Math.floor(Math.random() * allColors.length)];
-            const shapes = ["01", "02", "03"];
-            activeShapeIndex = shapes[Math.floor(Math.random() * shapes.length)];
+            activeShapeIndex = ["01", "02", "03"][Math.floor(Math.random() * 3)];
             updateActiveDot();
             render();
         };
 
-        downloadBtn.onclick = () => {
-            const rawText = textInput.value.trim();
-            const safeName = rawText
-                ? rawText.toLowerCase().replace(/[^a-z0-9\s]/g, '').replace(/\s+/g, '-').replace(/^-+|-+$/g, '')
-                : 'solid-studio';
-            const link = document.createElement('a');
-            link.download = `${safeName}.png`;
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-        };
-
-        // Init
         window.onload = async () => {
             lucide.createIcons();
             initColors();
             await preloadImages();
-            await waitForFonts();
+            if (document.fonts) await document.fonts.ready;
             updateScale();
             render();
-            setTimeout(updateScale, 100);
+            setTimeout(updateScale, 150);
         };
     </script>
 </body>
