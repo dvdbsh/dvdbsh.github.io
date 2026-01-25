@@ -50,12 +50,6 @@
             transform: scale(0.9);
         }
 
-        .gradient-selector-active {
-            outline: 2px solid #3b82f6;
-            outline-offset: 2px;
-            z-index: 10;
-        }
-
         .weight-btn-active {
             background-color: #3b82f6 !important;
             color: white !important;
@@ -64,7 +58,7 @@
 
         html { overscroll-behavior-y: none; }
 
-        #exportModal {
+        #exportModal, #unsplashModal {
             display: none;
             position: fixed;
             inset: 0;
@@ -81,7 +75,6 @@
             color: white;
         }
 
-        /* Gradient Palette Styles */
         .color-palette-popover {
             display: none;
             position: absolute;
@@ -103,16 +96,41 @@
         .color-palette-popover.visible {
             display: grid;
         }
+
+        .unsplash-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            width: 100%;
+            max-height: 60vh;
+            overflow-y: auto;
+            padding: 4px;
+        }
     </style>
 </head>
 <body class="flex flex-col md:flex-row h-screen w-screen overflow-hidden">
 
-    <!-- Export Modal (Mobile & Fallback) -->
+    <!-- Export Modal -->
     <div id="exportModal" class="flex">
         <div class="max-w-md w-full flex flex-col items-center gap-6">
             <p class="text-center font-bold text-lg">Right-click or Long-press to save image</p>
             <img id="exportPreview" class="w-full h-auto rounded-xl shadow-2xl border border-white/10" alt="Export Preview">
             <button id="closeExport" class="bg-white/10 px-8 py-3 rounded-full font-bold hover:bg-white/20 transition-all">Close</button>
+        </div>
+    </div>
+
+    <!-- Unsplash Modal -->
+    <div id="unsplashModal" class="flex">
+        <div class="max-w-2xl w-full bg-[#121217] p-6 rounded-2xl border border-white/10 flex flex-col gap-4">
+            <div class="flex items-center justify-between">
+                <h2 class="text-xl font-bold">Search Unsplash</h2>
+                <button id="closeUnsplash" class="text-zinc-500 hover:text-white"><i data-lucide="x"></i></button>
+            </div>
+            <div class="flex gap-2">
+                <input type="text" id="unsplashSearch" placeholder="Nature, Minimal, Abstract..." class="flex-1 bg-[#1c1c21] border border-white/5 rounded-xl px-4 py-2 outline-none focus:border-blue-500">
+                <button id="executeUnsplashSearch" class="bg-blue-600 px-4 rounded-xl font-bold hover:bg-blue-500 transition-colors"><i data-lucide="search" class="w-4 h-4"></i></button>
+            </div>
+            <div id="unsplashResults" class="unsplash-grid"></div>
         </div>
     </div>
 
@@ -155,11 +173,7 @@
                     <button id="tabGradient" class="text-[10px] px-3 py-1 rounded-md font-bold uppercase transition-all text-zinc-500">Gradient</button>
                 </div>
             </div>
-
-            <!-- Solid Picker -->
             <div id="solidControls" class="bg-[#1c1c21] rounded-xl p-4 border border-white/5 grid grid-cols-6 gap-3"></div>
-
-            <!-- Gradient Picker -->
             <div id="gradientControls" class="hidden bg-[#1c1c21] rounded-xl p-5 border border-white/5 space-y-4">
                 <div class="space-y-4">
                     <div class="flex items-center justify-between text-[10px] font-bold uppercase text-zinc-500">
@@ -167,28 +181,22 @@
                         <button id="shuffleGradientColors" class="hover:text-white transition-colors"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button>
                     </div>
                     <div class="flex justify-between items-center px-2 relative">
-                        <!-- Gradient Slot 1 -->
                         <div class="relative group">
                             <button id="slot0" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#272a48]"></button>
                             <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Base</span>
                         </div>
-                        <!-- Gradient Slot 2 -->
                         <div class="relative group">
                             <button id="slot1" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#4490ef]"></button>
                             <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Layer 1</span>
                         </div>
-                        <!-- Gradient Slot 3 -->
                         <div class="relative group">
                             <button id="slot2" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#272a48]"></button>
                             <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Layer 2</span>
                         </div>
-                        <!-- Gradient Slot 4 -->
                         <div class="relative group">
                             <button id="slot3" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#d8305f]"></button>
                             <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Layer 3</span>
                         </div>
-                        
-                        <!-- Shared Color Picker Popover -->
                         <div id="colorPopover" class="color-palette-popover"></div>
                     </div>
                 </div>
@@ -199,13 +207,23 @@
             <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
                 <i data-lucide="image" class="w-3.5 h-3.5"></i> Background Image
             </div>
-            <div class="flex gap-2">
-                <label class="flex-grow bg-[#1c1c21] border border-dashed border-white/10 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer hover:border-blue-500/50 transition-all">
+            <div class="grid grid-cols-2 gap-2">
+                <label class="bg-[#1c1c21] border border-dashed border-white/10 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer hover:border-blue-500/50 transition-all">
                     <input type="file" id="imageUpload" class="hidden" accept="image/*">
                     <i data-lucide="upload-cloud" class="w-4 h-4 text-zinc-400"></i>
-                    <span class="text-xs font-medium text-zinc-400" id="uploadLabel">Upload JPG/PNG</span>
+                    <span class="text-xs font-medium text-zinc-400">Local</span>
                 </label>
-                <button id="clearImage" class="hidden w-12 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl items-center justify-center transition-all">
+                <button id="openUnsplash" class="bg-[#1c1c21] border border-white/10 rounded-xl p-3 flex items-center justify-center gap-2 hover:border-blue-500/50 transition-all">
+                    <i data-lucide="search" class="w-4 h-4 text-zinc-400"></i>
+                    <span class="text-xs font-medium text-zinc-400">Unsplash</span>
+                </button>
+            </div>
+            <div id="imageActions" class="hidden flex gap-2">
+                 <button id="colorMatchBtn" class="flex-1 bg-white/5 border border-white/10 hover:bg-white/10 rounded-xl p-3 flex items-center justify-center gap-2 transition-all">
+                    <i data-lucide="pipette" class="w-4 h-4"></i>
+                    <span class="text-xs font-medium">Color Match</span>
+                </button>
+                <button id="clearImage" class="w-12 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl flex items-center justify-center transition-all">
                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
             </div>
@@ -256,6 +274,7 @@
     </aside>
 
     <script>
+        const UNSPLASH_KEY = 'tVKn0RwA3iU5Dr2rQpDtPpOBqIE4YQOAtVKwW05PYjk';
         const CANVAS_SIZE = 1000;
         const BASE_PALETTE = [[100, 116, 139], [239, 68, 68], [249, 115, 22], [245, 158, 11], [234, 179, 8], [34, 197, 94], [16, 185, 129], [20, 184, 166], [6, 182, 212], [14, 165, 233], [59, 130, 246], [99, 102, 241]];
         const NEW_HEX_COLORS = ["#355B58", "#524A41", "#535647", "#5E3D5E", "#50525A", "#6A5645", "#6A6248", "#4B5D45", "#365567", "#53e14c", "#FA4E63", "#17A8FF", "#F5C81E", "#C24C2D", "#3B356A", "#6C2D55", "#9B4658", "#133F35"];
@@ -269,10 +288,10 @@
         let backgroundMode = 'solid';
         let currentSlotIndex = 0;
         const allColors = [];
-        const images = {};
+        const svgs = {};
 
         const canvas = document.getElementById('mainCanvas');
-        const ctx = canvas.getContext('2d');
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
         const container = document.getElementById('container');
         const viewport = document.getElementById('viewport');
         const textInput = document.getElementById('textInput');
@@ -290,6 +309,7 @@
         const exportModal = document.getElementById('exportModal');
         const exportPreview = document.getElementById('exportPreview');
         const closeExport = document.getElementById('closeExport');
+        const unsplashModal = document.getElementById('unsplashModal');
 
         function hexToRgb(hex) {
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -304,7 +324,6 @@
             BASE_PALETTE.forEach(c => allColors.push(c));
             NEW_HEX_COLORS.forEach(h => { const rgb = hexToRgb(h); if (rgb) allColors.push(rgb); });
             
-            // Build Solid Grid
             allColors.forEach(rgb => {
                 const btn = document.createElement('button');
                 btn.className = 'aspect-square rounded-full transition-all duration-200 hover:scale-110';
@@ -313,7 +332,6 @@
                 solidControls.appendChild(btn);
             });
 
-            // Build Popover Grid
             allColors.forEach(rgb => {
                 const hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
                 const btn = document.createElement('button');
@@ -328,19 +346,37 @@
                 };
                 colorPopover.appendChild(btn);
             });
-
             updateActiveUI();
         }
 
-        async function preloadImages() {
-            const paths = {'shape_01': 'overlay/shape_01.png', 'shape_02': 'overlay/shape_02.png', 'shape_03': 'overlay/shape_03.png', 'frame': 'overlay/frame.png'};
+        async function preloadAssets() {
+            const paths = {'shape_01': 'overlay/shape_01.svg', 'shape_02': 'overlay/shape_02.svg', 'shape_03': 'overlay/shape_03.svg', 'frame': 'overlay/frame.svg'};
             const load = (k, s) => new Promise(resolve => {
                 const i = new Image();
-                i.onload = () => { images[k] = i; resolve(); };
+                i.crossOrigin = "anonymous";
+                i.onload = () => { svgs[k] = i; resolve(); };
                 i.onerror = () => resolve();
                 i.src = s;
             });
             await Promise.all(Object.entries(paths).map(([k, v]) => load(k, v)));
+        }
+
+        function drawTintedImage(img, color) {
+            if (!img) return;
+            const offCanvas = document.createElement('canvas');
+            offCanvas.width = CANVAS_SIZE;
+            offCanvas.height = CANVAS_SIZE;
+            const offCtx = offCanvas.getContext('2d');
+            
+            // Draw original image
+            offCtx.drawImage(img, 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+            
+            // Tint
+            offCtx.globalCompositeOperation = 'source-in';
+            offCtx.fillStyle = Array.isArray(color) ? `rgb(${color.join(',')})` : color;
+            offCtx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+            
+            ctx.drawImage(offCanvas, 0, 0);
         }
 
         function updateActiveUI() {
@@ -364,22 +400,19 @@
             } else {
                 ctx.fillStyle = gradColors[0];
                 ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-
-                // Varied Layer 1: Bottom Right Focus
+                
                 let grad1 = ctx.createRadialGradient(CANVAS_SIZE * 0.9, CANVAS_SIZE * 0.9, 0, CANVAS_SIZE * 0.8, CANVAS_SIZE * 0.8, CANVAS_SIZE * 0.9);
                 grad1.addColorStop(0, gradColors[1]);
                 grad1.addColorStop(1, 'transparent');
                 ctx.fillStyle = grad1;
                 ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-                // Varied Layer 2: Top Center Focus
                 let grad2 = ctx.createRadialGradient(CANVAS_SIZE * 0.45, CANVAS_SIZE * 0.05, 0, CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.1, CANVAS_SIZE * 0.7);
                 grad2.addColorStop(0, gradColors[2]);
                 grad2.addColorStop(1, 'transparent');
                 ctx.fillStyle = grad2;
                 ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
-                // Varied Layer 3: Left Side Edge
                 let grad3 = ctx.createRadialGradient(CANVAS_SIZE * 0.05, CANVAS_SIZE * 0.5, 0, CANVAS_SIZE * 0.1, CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.8);
                 grad3.addColorStop(0, gradColors[3]);
                 grad3.addColorStop(1, 'transparent');
@@ -396,23 +429,22 @@
 
             const currentBlendMode = blendMode === 'overlay' ? 'overlay' : 'source-over';
             
-            if (shapeToggle.checked && images[`shape_${activeShapeIndex}`]) {
+            if (shapeToggle.checked && svgs[`shape_${activeShapeIndex}`]) {
                 ctx.globalCompositeOperation = currentBlendMode; 
-                ctx.drawImage(images[`shape_${activeShapeIndex}`], 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+                drawTintedImage(svgs[`shape_${activeShapeIndex}`], activeColor);
             }
 
-            if (frameToggle.checked && images['frame']) {
+            if (frameToggle.checked && svgs['frame']) {
                 ctx.globalCompositeOperation = currentBlendMode;
-                ctx.drawImage(images['frame'], 0, 0, CANVAS_SIZE, CANVAS_SIZE);
+                drawTintedImage(svgs['frame'], activeColor);
             }
 
             ctx.globalCompositeOperation = 'source-over';
             let brightness;
-            if (backgroundMode === 'solid') {
+            if (backgroundMode === 'solid' && !bgImage) {
                 brightness = (activeColor[0] * 299 + activeColor[1] * 587 + activeColor[2] * 114) / 1000;
             } else {
-                const rgbBase = hexToRgb(gradColors[0]);
-                brightness = (rgbBase[0] * 299 + rgbBase[1] * 587 + rgbBase[2] * 114) / 1000;
+                brightness = 0; // Default white text for complex backgrounds
             }
             
             ctx.fillStyle = (bgImage || brightness < 160) ? '#ffffff' : '#000000';
@@ -449,7 +481,68 @@
             blendModeToggle.textContent = `Blend Mode: ${blendMode === 'overlay' ? 'Blend' : 'Normal'}`;
         }
 
-        // Popover Control
+        // Color Matching Logic
+        document.getElementById('colorMatchBtn').onclick = () => {
+            if (!bgImage) return;
+            
+            const tempCanvas = document.createElement('canvas');
+            const tempCtx = tempCanvas.getContext('2d');
+            tempCanvas.width = 100;
+            tempCanvas.height = 100;
+            tempCtx.drawImage(bgImage, 0, 0, 100, 100);
+            const data = tempCtx.getImageData(0, 0, 100, 100).data;
+            
+            let r = 0, g = 0, b = 0;
+            for(let i=0; i<data.length; i+=4) {
+                r += data[i]; g += data[i+1]; b += data[i+2];
+            }
+            const count = data.length / 4;
+            const avgR = r/count, avgG = g/count, avgB = b/count;
+
+            let closest = allColors[0];
+            let minDist = Infinity;
+            
+            allColors.forEach(c => {
+                const dist = Math.sqrt(Math.pow(c[0]-avgR, 2) + Math.pow(c[1]-avgG, 2) + Math.pow(c[2]-avgB, 2));
+                if(dist < minDist) { minDist = dist; closest = c; }
+            });
+
+            activeColor = closest;
+            updateActiveUI();
+            render();
+        };
+
+        // Unsplash Logic
+        document.getElementById('openUnsplash').onclick = () => unsplashModal.style.display = 'flex';
+        document.getElementById('closeUnsplash').onclick = () => unsplashModal.style.display = 'none';
+        
+        document.getElementById('executeUnsplashSearch').onclick = async () => {
+            const query = document.getElementById('unsplashSearch').value || 'landscape';
+            const res = await fetch(`https://api.unsplash.com/search/photos?query=${query}&client_id=${UNSPLASH_KEY}&per_page=20`);
+            const data = await res.json();
+            
+            const grid = document.getElementById('unsplashResults');
+            grid.innerHTML = '';
+            data.results.forEach(photo => {
+                const img = document.createElement('img');
+                img.src = photo.urls.thumb;
+                img.className = 'w-full aspect-square object-cover rounded-lg cursor-pointer hover:opacity-80 transition-opacity';
+                img.onclick = () => {
+                    const fullImg = new Image();
+                    fullImg.crossOrigin = "anonymous";
+                    fullImg.onload = () => {
+                        bgImage = fullImg;
+                        document.getElementById('imageActions').style.display = 'flex';
+                        unsplashModal.style.display = 'none';
+                        render();
+                    };
+                    fullImg.src = photo.urls.regular;
+                };
+                grid.appendChild(img);
+            });
+        };
+
+        // UI Listeners
         document.querySelectorAll('.grad-slot').forEach((btn, idx) => {
             btn.onclick = (e) => {
                 e.stopPropagation();
@@ -488,7 +581,7 @@
             render();
         };
 
-        imageUpload.onchange = (e) => {
+        document.getElementById('imageUpload').onchange = (e) => {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
@@ -496,8 +589,7 @@
                 const img = new Image();
                 img.onload = () => {
                     bgImage = img;
-                    document.getElementById('uploadLabel').textContent = file.name;
-                    document.getElementById('clearImage').style.display = 'flex';
+                    document.getElementById('imageActions').style.display = 'flex';
                     render();
                 };
                 img.src = f.target.result;
@@ -507,9 +599,7 @@
 
         document.getElementById('clearImage').onclick = () => {
             bgImage = null;
-            imageUpload.value = '';
-            document.getElementById('uploadLabel').textContent = 'Upload JPG/PNG';
-            document.getElementById('clearImage').style.display = 'none';
+            document.getElementById('imageActions').style.display = 'none';
             render();
         };
 
@@ -527,26 +617,19 @@
             render();
         };
 
-        // Improved Export for Desktop
         exportBtn.onclick = () => {
             const dataUrl = canvas.toDataURL('image/png', 1.0);
-            
-            // Create a temporary link and trigger it
             const link = document.createElement('a');
             link.href = dataUrl;
             link.download = `solid-studio-${Date.now()}.png`;
-            
-            // Append to body to ensure it works in all environments
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-
-            // Also show preview modal as feedback/alternative
             exportPreview.src = dataUrl;
             exportModal.style.display = 'flex';
         };
 
-        closeExport.onclick = () => { exportModal.style.display = 'none'; };
+        closeExport.onclick = () => exportModal.style.display = 'none';
 
         function updateScale() {
             const padding = window.innerWidth < 768 ? 40 : 80;
@@ -578,7 +661,7 @@
         window.onload = async () => {
             lucide.createIcons();
             initColors();
-            await preloadImages();
+            await preloadAssets();
             if (document.fonts) await document.fonts.ready;
             updateScale();
             render();
