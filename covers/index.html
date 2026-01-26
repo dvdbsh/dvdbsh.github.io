@@ -50,13 +50,7 @@
             transform: scale(0.9);
         }
 
-        .gradient-selector-active {
-            outline: 2px solid #3b82f6;
-            outline-offset: 2px;
-            z-index: 10;
-        }
-
-        .weight-btn-active {
+        .weight-btn-active, .size-btn-active {
             background-color: #3b82f6 !important;
             color: white !important;
             border-color: #3b82f6 !important;
@@ -81,7 +75,6 @@
             color: white;
         }
 
-        /* Gradient Palette Styles */
         .color-palette-popover {
             display: none;
             position: absolute;
@@ -107,7 +100,7 @@
 </head>
 <body class="flex flex-col md:flex-row h-screen w-screen overflow-hidden">
 
-    <!-- Export Modal (Mobile & Fallback) -->
+    <!-- Export Modal -->
     <div id="exportModal" class="flex">
         <div class="max-w-md w-full flex flex-col items-center gap-6">
             <p class="text-center font-bold text-lg">Right-click or Long-press to save image</p>
@@ -133,6 +126,17 @@
             <textarea id="textInput" class="w-full bg-[#1c1c21] border border-white/5 rounded-xl p-4 text-base focus:border-blue-500 outline-none transition-all resize-none text-white font-inherit" rows="2">My Playlist Title</textarea>
         </section>
 
+        <!-- New Font Size Options -->
+        <section class="space-y-3">
+            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                <i data-lucide="maximize" class="w-3.5 h-3.5"></i> Size
+            </div>
+            <div class="grid grid-cols-2 gap-2 bg-[#1c1c21] p-2 rounded-xl border border-white/5">
+                <button data-size="90" class="size-btn py-2.5 rounded-lg text-xs font-bold uppercase hover:bg-white/5 bg-transparent transition-all size-btn-active">Standard</button>
+                <button data-size="120" class="size-btn py-2.5 rounded-lg text-xs font-bold uppercase hover:bg-white/5 bg-transparent transition-all">Large</button>
+            </div>
+        </section>
+
         <section class="space-y-3">
             <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
                 <i data-lucide="bold" class="w-3.5 h-3.5"></i> Weight
@@ -155,11 +159,7 @@
                     <button id="tabGradient" class="text-[10px] px-3 py-1 rounded-md font-bold uppercase transition-all text-zinc-500">Gradient</button>
                 </div>
             </div>
-
-            <!-- Solid Picker -->
             <div id="solidControls" class="bg-[#1c1c21] rounded-xl p-4 border border-white/5 grid grid-cols-6 gap-3"></div>
-
-            <!-- Gradient Picker -->
             <div id="gradientControls" class="hidden bg-[#1c1c21] rounded-xl p-5 border border-white/5 space-y-4">
                 <div class="space-y-4">
                     <div class="flex items-center justify-between text-[10px] font-bold uppercase text-zinc-500">
@@ -167,28 +167,10 @@
                         <button id="shuffleGradientColors" class="hover:text-white transition-colors"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button>
                     </div>
                     <div class="flex justify-between items-center px-2 relative">
-                        <!-- Gradient Slot 1 -->
-                        <div class="relative group">
-                            <button id="slot0" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#272a48]"></button>
-                            <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Base</span>
-                        </div>
-                        <!-- Gradient Slot 2 -->
-                        <div class="relative group">
-                            <button id="slot1" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#4490ef]"></button>
-                            <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Layer 1</span>
-                        </div>
-                        <!-- Gradient Slot 3 -->
-                        <div class="relative group">
-                            <button id="slot2" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#272a48]"></button>
-                            <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Layer 2</span>
-                        </div>
-                        <!-- Gradient Slot 4 -->
-                        <div class="relative group">
-                            <button id="slot3" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#d8305f]"></button>
-                            <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Layer 3</span>
-                        </div>
-                        
-                        <!-- Shared Color Picker Popover -->
+                        <div class="relative group"><button id="slot0" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#272a48]"></button></div>
+                        <div class="relative group"><button id="slot1" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#4490ef]"></button></div>
+                        <div class="relative group"><button id="slot2" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#272a48]"></button></div>
+                        <div class="relative group"><button id="slot3" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#d8305f]"></button></div>
                         <div id="colorPopover" class="color-palette-popover"></div>
                     </div>
                 </div>
@@ -264,6 +246,7 @@
         let gradColors = ["#272a48", "#4490ef", "#272a48", "#d8305f"];
         let activeShapeIndex = "01";
         let activeWeight = 700;
+        let activeFontSize = 90; // Default font size
         let bgImage = null;
         let blendMode = 'overlay'; 
         let backgroundMode = 'solid';
@@ -304,7 +287,6 @@
             BASE_PALETTE.forEach(c => allColors.push(c));
             NEW_HEX_COLORS.forEach(h => { const rgb = hexToRgb(h); if (rgb) allColors.push(rgb); });
             
-            // Build Solid Grid
             allColors.forEach(rgb => {
                 const btn = document.createElement('button');
                 btn.className = 'aspect-square rounded-full transition-all duration-200 hover:scale-110';
@@ -313,7 +295,6 @@
                 solidControls.appendChild(btn);
             });
 
-            // Build Popover Grid
             allColors.forEach(rgb => {
                 const hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
                 const btn = document.createElement('button');
@@ -328,7 +309,6 @@
                 };
                 colorPopover.appendChild(btn);
             });
-
             updateActiveUI();
         }
 
@@ -364,22 +344,16 @@
             } else {
                 ctx.fillStyle = gradColors[0];
                 ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-
-                // Varied Layer 1: Bottom Right Focus
                 let grad1 = ctx.createRadialGradient(CANVAS_SIZE * 0.9, CANVAS_SIZE * 0.9, 0, CANVAS_SIZE * 0.8, CANVAS_SIZE * 0.8, CANVAS_SIZE * 0.9);
                 grad1.addColorStop(0, gradColors[1]);
                 grad1.addColorStop(1, 'transparent');
                 ctx.fillStyle = grad1;
                 ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-
-                // Varied Layer 2: Top Center Focus
                 let grad2 = ctx.createRadialGradient(CANVAS_SIZE * 0.45, CANVAS_SIZE * 0.05, 0, CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.1, CANVAS_SIZE * 0.7);
                 grad2.addColorStop(0, gradColors[2]);
                 grad2.addColorStop(1, 'transparent');
                 ctx.fillStyle = grad2;
                 ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
-
-                // Varied Layer 3: Left Side Edge
                 let grad3 = ctx.createRadialGradient(CANVAS_SIZE * 0.05, CANVAS_SIZE * 0.5, 0, CANVAS_SIZE * 0.1, CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.8);
                 grad3.addColorStop(0, gradColors[3]);
                 grad3.addColorStop(1, 'transparent');
@@ -416,14 +390,14 @@
             }
             
             ctx.fillStyle = (bgImage || brightness < 160) ? '#ffffff' : '#000000';
-            ctx.font = `${activeWeight} 90px "Circular", -apple-system, sans-serif`;
+            ctx.font = `${activeWeight} ${activeFontSize}px "Circular", -apple-system, sans-serif`;
             ctx.textAlign = 'left';
             ctx.textBaseline = 'alphabetic';
 
             const maxWidth = 760;
             const x = 116; 
             const bottomAnchor = 887; 
-            const lineHeight = 89;
+            const lineHeight = activeFontSize * 1.05; // Tight line height for Circular font
 
             const words = text.split(' ');
             let line = '';
@@ -478,6 +452,16 @@
             render();
         };
 
+        // Font Size Logic
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.onclick = () => {
+                activeFontSize = parseInt(btn.dataset.size);
+                document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('size-btn-active'));
+                btn.classList.add('size-btn-active');
+                render();
+            };
+        });
+
         document.getElementById('shuffleGradientColors').onclick = () => {
             const pick = () => {
                 const rgb = allColors[Math.floor(Math.random() * allColors.length)];
@@ -527,21 +511,14 @@
             render();
         };
 
-        // Improved Export for Desktop
         exportBtn.onclick = () => {
             const dataUrl = canvas.toDataURL('image/png', 1.0);
-            
-            // Create a temporary link and trigger it
             const link = document.createElement('a');
             link.href = dataUrl;
             link.download = `solid-studio-${Date.now()}.png`;
-            
-            // Append to body to ensure it works in all environments
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
-
-            // Also show preview modal as feedback/alternative
             exportPreview.src = dataUrl;
             exportModal.style.display = 'flex';
         };
