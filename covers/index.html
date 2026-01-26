@@ -50,7 +50,7 @@
             transform: scale(0.9);
         }
 
-        .weight-btn-active, .size-btn-active {
+        .weight-btn-active, .size-btn-active, .snap-btn-active {
             background-color: #3b82f6 !important;
             color: white !important;
             border-color: #3b82f6 !important;
@@ -96,12 +96,42 @@
         .color-palette-popover.visible {
             display: grid;
         }
+
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .icon-item {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #1c1c21;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .icon-item:hover {
+            background: #27272a;
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .icon-item.active {
+            border-color: #3b82f6;
+            background: rgba(59, 130, 246, 0.1);
+        }
     </style>
 </head>
 <body class="flex flex-col md:flex-row h-screen w-screen overflow-hidden">
 
     <!-- Export Modal -->
-    <div id="exportModal" class="flex">
+    <div id="exportModal">
         <div class="max-w-md w-full flex flex-col items-center gap-6">
             <p class="text-center font-bold text-lg">Right-click or Long-press to save image</p>
             <img id="exportPreview" class="w-full h-auto rounded-xl shadow-2xl border border-white/10" alt="Export Preview">
@@ -112,7 +142,7 @@
     <!-- Viewport Area -->
     <main id="viewport" class="flex-grow bg-[#050507] flex items-center justify-center relative overflow-hidden h-[45vh] md:h-full p-4 md:p-8 touch-none">
         <div id="container" class="canvas-container relative bg-black shadow-2xl flex-shrink-0" style="width: 1000px; height: 1000px;">
-            <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block"></canvas>
+            <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block cursor-crosshair"></canvas>
         </div>
     </main>
 
@@ -126,7 +156,33 @@
             <textarea id="textInput" class="w-full bg-[#1c1c21] border border-white/5 rounded-xl p-4 text-base focus:border-blue-500 outline-none transition-all resize-none text-white font-inherit" rows="2">My Playlist Title</textarea>
         </section>
 
-        <!-- New Font Size Options -->
+        <!-- Icon Picker Section -->
+        <section class="space-y-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <i data-lucide="sparkles" class="w-3.5 h-3.5"></i> Icon Overlay
+                </div>
+                <button id="clearIcon" class="text-[10px] text-red-400 font-bold uppercase hover:opacity-80 hidden">Clear</button>
+            </div>
+            <div class="space-y-2">
+                <input type="text" id="iconSearch" placeholder="Search icons (music, heart, fire...)" class="w-full bg-[#1c1c21] border border-white/5 rounded-lg px-3 py-2 text-sm focus:border-blue-500 outline-none">
+                <div id="iconGrid" class="icon-grid p-2 bg-[#09090b] rounded-xl border border-white/5">
+                    <!-- Icons injected here -->
+                </div>
+            </div>
+            <div class="grid grid-cols-3 gap-1 bg-[#1c1c21] p-1 rounded-xl border border-white/5 mt-2">
+                <button data-snap="0" class="snap-btn p-2 rounded-lg hover:bg-white/5 text-[10px] font-bold">TOP-L</button>
+                <button data-snap="1" class="snap-btn p-2 rounded-lg hover:bg-white/5 text-[10px] font-bold">TOP-C</button>
+                <button data-snap="2" class="snap-btn p-2 rounded-lg hover:bg-white/5 text-[10px] font-bold">TOP-R</button>
+                <button data-snap="3" class="snap-btn p-2 rounded-lg hover:bg-white/5 text-[10px] font-bold">MID-L</button>
+                <button data-snap="4" class="snap-btn p-2 rounded-lg hover:bg-white/5 text-[10px] font-bold">CENTER</button>
+                <button data-snap="5" class="snap-btn p-2 rounded-lg hover:bg-white/5 text-[10px] font-bold">MID-R</button>
+                <button data-snap="6" class="snap-btn p-2 rounded-lg hover:bg-white/5 text-[10px] font-bold">BOT-L</button>
+                <button data-snap="7" class="snap-btn p-2 rounded-lg hover:bg-white/5 text-[10px] font-bold">BOT-C</button>
+                <button data-snap="8" class="snap-btn p-2 rounded-lg hover:bg-white/5 text-[10px] font-bold">BOT-R</button>
+            </div>
+        </section>
+
         <section class="space-y-3">
             <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
                 <i data-lucide="maximize" class="w-3.5 h-3.5"></i> Size
@@ -167,10 +223,10 @@
                         <button id="shuffleGradientColors" class="hover:text-white transition-colors"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button>
                     </div>
                     <div class="flex justify-between items-center px-2 relative">
-                        <div class="relative group"><button id="slot0" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#272a48]"></button></div>
-                        <div class="relative group"><button id="slot1" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#4490ef]"></button></div>
-                        <div class="relative group"><button id="slot2" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#272a48]"></button></div>
-                        <div class="relative group"><button id="slot3" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#d8305f]"></button></div>
+                        <button id="slot0" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10"></button>
+                        <button id="slot1" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10"></button>
+                        <button id="slot2" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10"></button>
+                        <button id="slot3" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10"></button>
                         <div id="colorPopover" class="color-palette-popover"></div>
                     </div>
                 </div>
@@ -246,13 +302,25 @@
         let gradColors = ["#272a48", "#4490ef", "#272a48", "#d8305f"];
         let activeShapeIndex = "01";
         let activeWeight = 700;
-        let activeFontSize = 90; // Default font size
+        let activeFontSize = 90;
         let bgImage = null;
         let blendMode = 'overlay'; 
         let backgroundMode = 'solid';
         let currentSlotIndex = 0;
         const allColors = [];
         const images = {};
+
+        // Icon State
+        let selectedIconName = null;
+        let iconImg = null;
+        let iconPos = { x: 500, y: 300 }; // Default center-topish
+        const ICON_SIZE = 120;
+        let isDraggingIcon = false;
+        const snapPoints = [
+            {x: 150, y: 150}, {x: 500, y: 150}, {x: 850, y: 150},
+            {x: 150, y: 500}, {x: 500, y: 500}, {x: 850, y: 500},
+            {x: 150, y: 850}, {x: 500, y: 850}, {x: 850, y: 850}
+        ];
 
         const canvas = document.getElementById('mainCanvas');
         const ctx = canvas.getContext('2d');
@@ -273,6 +341,9 @@
         const exportModal = document.getElementById('exportModal');
         const exportPreview = document.getElementById('exportPreview');
         const closeExport = document.getElementById('closeExport');
+        const iconSearch = document.getElementById('iconSearch');
+        const iconGrid = document.getElementById('iconGrid');
+        const clearIconBtn = document.getElementById('clearIcon');
 
         function hexToRgb(hex) {
             const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -313,6 +384,7 @@
         }
 
         async function preloadImages() {
+            // Mocking overlay paths - in real world these need to exist
             const paths = {'shape_01': 'overlay/shape_01.png', 'shape_02': 'overlay/shape_02.png', 'shape_03': 'overlay/shape_03.png', 'frame': 'overlay/frame.png'};
             const load = (k, s) => new Promise(resolve => {
                 const i = new Image();
@@ -323,6 +395,134 @@
             await Promise.all(Object.entries(paths).map(([k, v]) => load(k, v)));
         }
 
+        function initIconPicker() {
+            const commonIcons = ['music', 'heart', 'star', 'flame', 'zap', 'disc', 'radio', 'mic', 'headphones', 'volume-2', 'shuffle', 'repeat', 'play', 'pause', 'cloud', 'sun', 'moon', 'ghost', 'skull', 'crown', 'diamond', 'coffee', 'pizza', 'camera', 'map-pin', 'anchor', 'wind', 'droplets', 'leaf', 'tree-pine'];
+            
+            function renderGrid(filter = '') {
+                iconGrid.innerHTML = '';
+                const list = filter ? Object.keys(lucide.icons).filter(k => k.toLowerCase().includes(filter.toLowerCase())) : commonIcons;
+                
+                list.slice(0, 60).forEach(name => {
+                    const div = document.createElement('div');
+                    div.className = `icon-item ${selectedIconName === name ? 'active' : ''}`;
+                    div.innerHTML = `<i data-lucide="${name}" class="w-5 h-5"></i>`;
+                    div.onclick = () => selectIcon(name);
+                    iconGrid.appendChild(div);
+                });
+                lucide.createIcons();
+            }
+
+            iconSearch.oninput = (e) => renderGrid(e.target.value);
+            renderGrid();
+        }
+
+        async function selectIcon(name) {
+            selectedIconName = name;
+            clearIconBtn.classList.remove('hidden');
+            document.querySelectorAll('.icon-item').forEach(el => el.classList.remove('active'));
+            
+            // Create SVG data URL
+            const iconData = lucide.icons[name];
+            if (!iconData) return;
+
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 24 24');
+            svg.setAttribute('fill', 'none');
+            svg.setAttribute('stroke', 'currentColor');
+            svg.setAttribute('stroke-width', '2');
+            svg.setAttribute('stroke-linecap', 'round');
+            svg.setAttribute('stroke-linejoin', 'round');
+            
+            // Reconstruct path elements from lucide data
+            iconData[2].forEach(p => {
+                const path = document.createElementNS('http://www.w3.org/2000/svg', p[0]);
+                Object.entries(p[1]).forEach(([attr, val]) => path.setAttribute(attr, val));
+                svg.appendChild(path);
+            });
+
+            const svgString = new XMLSerializer().serializeToString(svg);
+            const encodedData = window.btoa(svgString);
+            
+            iconImg = new Image();
+            iconImg.onload = render;
+            iconImg.src = `data:image/svg+xml;base64,${encodedData}`;
+            
+            // Visual feedback on grid
+            initIconPicker();
+        }
+
+        clearIconBtn.onclick = () => {
+            selectedIconName = null;
+            iconImg = null;
+            clearIconBtn.classList.add('hidden');
+            render();
+        };
+
+        // Interaction Logic
+        function getCanvasCoords(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = CANVAS_SIZE / rect.width;
+            const scaleY = CANVAS_SIZE / rect.height;
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+            return {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        }
+
+        canvas.addEventListener('mousedown', (e) => {
+            if (!iconImg) return;
+            const coords = getCanvasCoords(e);
+            const dist = Math.hypot(coords.x - iconPos.x, coords.y - iconPos.y);
+            if (dist < ICON_SIZE / 1.5) {
+                isDraggingIcon = true;
+                container.style.transition = 'none'; // Disable scale animation while dragging
+            }
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDraggingIcon) return;
+            const coords = getCanvasCoords(e);
+            iconPos = coords;
+            render();
+        });
+
+        window.addEventListener('mouseup', () => {
+            isDraggingIcon = false;
+            container.style.transition = '';
+        });
+
+        // Touch support
+        canvas.addEventListener('touchstart', (e) => {
+            if (!iconImg) return;
+            const coords = getCanvasCoords(e);
+            const dist = Math.hypot(coords.x - iconPos.x, coords.y - iconPos.y);
+            if (dist < ICON_SIZE / 1.5) {
+                isDraggingIcon = true;
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        canvas.addEventListener('touchmove', (e) => {
+            if (!isDraggingIcon) return;
+            const coords = getCanvasCoords(e);
+            iconPos = coords;
+            render();
+            e.preventDefault();
+        }, { passive: false });
+
+        canvas.addEventListener('touchend', () => isDraggingIcon = false);
+
+        document.querySelectorAll('.snap-btn').forEach((btn, idx) => {
+            btn.onclick = () => {
+                iconPos = { ...snapPoints[idx] };
+                document.querySelectorAll('.snap-btn').forEach(b => b.classList.remove('snap-btn-active'));
+                btn.classList.add('snap-btn-active');
+                render();
+            };
+        });
+
         function updateActiveUI() {
             solidControls.querySelectorAll('button').forEach((b, i) => {
                 if (JSON.stringify(allColors[i]) === JSON.stringify(activeColor)) b.classList.add('color-dot-active');
@@ -330,14 +530,17 @@
             });
             
             gradColors.forEach((hex, i) => {
-                document.getElementById(`slot${i}`).style.backgroundColor = hex;
+                const el = document.getElementById(`slot${i}`);
+                if (el) el.style.backgroundColor = hex;
             });
         }
 
         function render() {
             const text = textInput.value;
+            ctx.clearRect(0,0, CANVAS_SIZE, CANVAS_SIZE);
             ctx.globalCompositeOperation = 'source-over';
             
+            // 1. Background
             if (backgroundMode === 'solid') {
                 ctx.fillStyle = `rgb(${activeColor.join(',')})`;
                 ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
@@ -368,6 +571,7 @@
                 ctx.drawImage(bgImage, x, y, bgImage.width * scale, bgImage.height * scale);
             }
 
+            // 2. Overlays
             const currentBlendMode = blendMode === 'overlay' ? 'overlay' : 'source-over';
             
             if (shapeToggle.checked && images[`shape_${activeShapeIndex}`]) {
@@ -381,6 +585,8 @@
             }
 
             ctx.globalCompositeOperation = 'source-over';
+            
+            // Determine Brightness for Contrast
             let brightness;
             if (backgroundMode === 'solid') {
                 brightness = (activeColor[0] * 299 + activeColor[1] * 587 + activeColor[2] * 114) / 1000;
@@ -388,16 +594,35 @@
                 const rgbBase = hexToRgb(gradColors[0]);
                 brightness = (rgbBase[0] * 299 + rgbBase[1] * 587 + rgbBase[2] * 114) / 1000;
             }
-            
-            ctx.fillStyle = (bgImage || brightness < 160) ? '#ffffff' : '#000000';
+            const contrastColor = (bgImage || brightness < 140) ? '#ffffff' : '#000000';
+
+            // 3. Icon Overlay
+            if (iconImg) {
+                ctx.save();
+                ctx.translate(iconPos.x, iconPos.y);
+                ctx.fillStyle = contrastColor;
+                ctx.strokeStyle = contrastColor;
+                // Draw icon with manual coloring using a temporary canvas if needed, 
+                // but for SVG data urls color is set via string. Using globalComposite for tint:
+                ctx.drawImage(iconImg, -ICON_SIZE/2, -ICON_SIZE/2, ICON_SIZE, ICON_SIZE);
+                
+                // If it's white/black and needs tinting to the contrast color:
+                ctx.globalCompositeOperation = 'source-in';
+                ctx.fillStyle = contrastColor;
+                ctx.fillRect(-ICON_SIZE/2, -ICON_SIZE/2, ICON_SIZE, ICON_SIZE);
+                ctx.restore();
+            }
+
+            // 4. Text Overlay
+            ctx.globalCompositeOperation = 'source-over';
+            ctx.fillStyle = contrastColor;
             ctx.font = `${activeWeight} ${activeFontSize}px "Circular", -apple-system, sans-serif`;
             ctx.textAlign = 'left';
-            ctx.textBaseline = 'alphabetic';
 
             const maxWidth = 760;
             const x = 116; 
             const bottomAnchor = 887; 
-            const lineHeight = activeFontSize * 1.05; // Tight line height for Circular font
+            const lineHeight = activeFontSize * 1.05;
 
             const words = text.split(' ');
             let line = '';
@@ -423,36 +648,25 @@
             blendModeToggle.textContent = `Blend Mode: ${blendMode === 'overlay' ? 'Blend' : 'Normal'}`;
         }
 
-        // Popover Control
-        document.querySelectorAll('.grad-slot').forEach((btn, idx) => {
-            btn.onclick = (e) => {
-                e.stopPropagation();
-                currentSlotIndex = idx;
-                colorPopover.classList.add('visible');
-            };
-        });
-
-        document.addEventListener('click', () => {
-            colorPopover.classList.remove('visible');
-        });
-
+        // Generic Event Handlers
         tabSolid.onclick = () => {
             backgroundMode = 'solid';
-            tabSolid.classList.add('tab-active'); tabSolid.classList.remove('text-zinc-500');
-            tabGradient.classList.remove('tab-active'); tabGradient.classList.add('text-zinc-500');
-            solidControls.classList.remove('hidden'); gradientControls.classList.add('hidden');
+            tabSolid.classList.add('tab-active');
+            tabGradient.classList.remove('tab-active');
+            solidControls.classList.remove('hidden');
+            gradientControls.classList.add('hidden');
             render();
         };
 
         tabGradient.onclick = () => {
             backgroundMode = 'gradient';
-            tabGradient.classList.add('tab-active'); tabGradient.classList.remove('text-zinc-500');
-            tabSolid.classList.remove('tab-active'); tabSolid.classList.add('text-zinc-500');
-            gradientControls.classList.remove('hidden'); solidControls.classList.add('hidden');
+            tabGradient.classList.add('tab-active');
+            tabSolid.classList.remove('tab-active');
+            gradientControls.classList.remove('hidden');
+            solidControls.classList.add('hidden');
             render();
         };
 
-        // Font Size Logic
         document.querySelectorAll('.size-btn').forEach(btn => {
             btn.onclick = () => {
                 activeFontSize = parseInt(btn.dataset.size);
@@ -513,12 +727,6 @@
 
         exportBtn.onclick = () => {
             const dataUrl = canvas.toDataURL('image/png', 1.0);
-            const link = document.createElement('a');
-            link.href = dataUrl;
-            link.download = `solid-studio-${Date.now()}.png`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
             exportPreview.src = dataUrl;
             exportModal.style.display = 'flex';
         };
@@ -526,7 +734,7 @@
         closeExport.onclick = () => { exportModal.style.display = 'none'; };
 
         function updateScale() {
-            const padding = window.innerWidth < 768 ? 40 : 80;
+            const padding = window.innerWidth < 768 ? 20 : 80;
             const scale = Math.min((viewport.clientWidth - padding) / CANVAS_SIZE, (viewport.clientHeight - padding) / CANVAS_SIZE);
             container.style.transform = `scale(${scale})`;
         }
@@ -555,6 +763,7 @@
         window.onload = async () => {
             lucide.createIcons();
             initColors();
+            initIconPicker();
             await preloadImages();
             if (document.fonts) await document.fonts.ready;
             updateScale();
