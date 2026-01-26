@@ -2,328 +2,258 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Solid Studio Pro</title>
+
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SolidStudio">
-    <meta name="theme-color" content="#000000">
-    <title>Solid Studio Pro</title>
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#09090b">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
-        /* iOS System Font Stack */
+        @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Black.ttf') format('truetype'); font-weight: 900; }
+        @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Bold.ttf') format('truetype'); font-weight: 700; }
+        @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Medium.ttf') format('truetype'); font-weight: 500; }
+        @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Book.ttf') format('truetype'); font-weight: 400; }
+        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji";
-            background-color: #000000;
+            font-family: 'Circular', -apple-system, sans-serif;
+            background-color: #09090b;
             color: white;
+            margin: 0;
             overflow: hidden;
             position: fixed;
-            width: 100vw;
-            height: 100dvh;
-            -webkit-font-smoothing: antialiased;
-        }
-
-        * {
-            box-sizing: border-box;
-            -webkit-touch-callout: none;
-            -webkit-user-select: none;
-            user-select: none;
+            width: 100%;
+            height: 100%;
             -webkit-tap-highlight-color: transparent;
+            user-select: none;
         }
 
-        input, textarea {
-            font-size: 17px !important; /* iOS standard input size to prevent auto-zoom */
-            user-select: text;
-            -webkit-user-select: text;
-        }
-
-        /* Native-feeling button scales */
-        button:active {
-            transform: scale(0.96);
-            opacity: 0.8;
-        }
+        textarea, input { font-size: 16px !important; user-select: text; }
 
         .canvas-container {
-            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            transition: transform 0.2s ease-out;
             transform-origin: center;
             will-change: transform;
-            filter: drop-shadow(0 20px 50px rgba(0,0,0,0.5));
         }
 
-        /* iOS Switch Styling */
-        .ios-switch {
-            width: 51px;
-            height: 31px;
-            background: #39393d;
-            border-radius: 16px;
-            position: relative;
-            transition: background 0.2s;
-            cursor: pointer;
-        }
-        .ios-switch::after {
-            content: '';
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            width: 27px;
-            height: 27px;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.15);
-            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        input:checked + .ios-switch {
-            background: #34c759;
-        }
-        input:checked + .ios-switch::after {
-            transform: translateX(20px);
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 10px; }
+
+        .color-dot-active {
+            outline: 2px solid #3b82f6;
+            outline-offset: 3px;
+            transform: scale(0.9);
         }
 
-        /* Native Tab Bar */
-        .segmented-control {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-            padding: 2px;
-            display: flex;
-        }
-        .segment-btn {
-            flex: 1;
-            padding: 6px 0;
-            font-size: 13px;
-            font-weight: 600;
-            border-radius: 8px;
-            transition: all 0.2s;
-        }
-        .segment-btn.active {
-            background: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+        .gradient-selector-active {
+            outline: 2px solid #3b82f6;
+            outline-offset: 2px;
+            z-index: 10;
         }
 
-        /* Control Sheet Styling */
-        #sidebar {
-            background: rgba(28, 28, 30, 0.94);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 0.5px solid rgba(255,255,255,0.1);
-            padding: 16px max(16px, env(safe-area-inset-right)) max(34px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left));
-            border-radius: 24px 24px 0 0;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.4);
+        .weight-btn-active {
+            background-color: #3b82f6 !important;
+            color: white !important;
+            border-color: #3b82f6 !important;
         }
 
-        .section-header {
-            font-size: 13px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: #8e8e93;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .ios-card {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
-            overflow: hidden;
-        }
-
-        .ios-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 16px;
-            border-bottom: 0.5px solid rgba(255,255,255,0.05);
-        }
-        .ios-row:last-child { border-bottom: none; }
+        html { overscroll-behavior-y: none; }
 
         #exportModal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
+            background: rgba(0,0,0,0.95);
             z-index: 100;
+            padding: 2rem;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
-        .weight-btn.active {
-            background-color: #007aff !important;
-            color: white !important;
+        .tab-active {
+            background: #27272a;
+            color: white;
         }
 
-        .color-dot-active {
-            box-shadow: 0 0 0 2px #007aff, 0 0 0 4px rgba(0,122,255,0.3);
-            transform: scale(1.1);
+        /* Gradient Palette Styles */
+        .color-palette-popover {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1c1c21;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 16px;
+            padding: 12px;
+            width: 200px;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            margin-bottom: 12px;
+            z-index: 50;
         }
-
-        /* Layout Fixes */
-        #layoutContainer {
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            height: 100%;
-        }
-
-        #viewport {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        /* Scrollable container for the sheet */
-        .controls-scroll {
-            overflow-y: auto;
-            max-height: 50vh;
-            padding-bottom: 20px;
-        }
-
-        @media (orientation: landscape) {
-            #layoutContainer { flex-direction: row; }
-            #sidebar { 
-                width: 360px; 
-                height: 100%; 
-                border-radius: 0; 
-                border-top: none; 
-                border-left: 0.5px solid rgba(255,255,255,0.1); 
-            }
-            .controls-scroll { max-height: calc(100vh - 120px); }
+        
+        .color-palette-popover.visible {
+            display: grid;
         }
     </style>
 </head>
-<body>
-    <!-- Export View (iOS Action Sheet style) -->
-    <div id="exportModal">
-        <div class="max-w-xs w-full px-6 flex flex-col items-center gap-6">
-            <div class="w-full rounded-2xl overflow-hidden shadow-2xl">
-                <img id="exportPreview" class="w-full h-auto" alt="Preview">
-            </div>
-            <p class="text-center text-sm text-zinc-400">Long-press image to save to Photos</p>
-            <button id="closeExport" class="w-full bg-white text-black py-4 rounded-2xl font-bold text-lg">Done</button>
+<body class="flex flex-col md:flex-row h-screen w-screen overflow-hidden">
+
+    <!-- Export Modal (Mobile & Fallback) -->
+    <div id="exportModal" class="flex">
+        <div class="max-w-md w-full flex flex-col items-center gap-6">
+            <p class="text-center font-bold text-lg">Right-click or Long-press to save image</p>
+            <img id="exportPreview" class="w-full h-auto rounded-xl shadow-2xl border border-white/10" alt="Export Preview">
+            <button id="closeExport" class="bg-white/10 px-8 py-3 rounded-full font-bold hover:bg-white/20 transition-all">Close</button>
         </div>
     </div>
 
-    <div id="layoutContainer">
-        <!-- Main Canvas Area -->
-        <main id="viewport" class="touch-none">
-            <div id="container" class="canvas-container relative">
-                <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block rounded-lg"></canvas>
+    <!-- Viewport Area -->
+    <main id="viewport" class="flex-grow bg-[#050507] flex items-center justify-center relative overflow-hidden h-[45vh] md:h-full p-4 md:p-8 touch-none">
+        <div id="container" class="canvas-container relative bg-black shadow-2xl flex-shrink-0" style="width: 1000px; height: 1000px;">
+            <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block"></canvas>
+        </div>
+    </main>
+
+    <!-- Sidebar Panel -->
+    <aside class="w-full md:w-[400px] bg-[#121217] border-t md:border-t-0 md:border-l border-white/5 p-6 md:p-8 flex flex-col gap-6 md:gap-8 overflow-y-auto shadow-2xl z-10 md:h-full h-[55vh] pb-safe">
+        
+        <section class="space-y-3">
+            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                <i data-lucide="type" class="w-3.5 h-3.5"></i> Text
             </div>
-        </main>
+            <textarea id="textInput" class="w-full bg-[#1c1c21] border border-white/5 rounded-xl p-4 text-base focus:border-blue-500 outline-none transition-all resize-none text-white font-inherit" rows="2">My Playlist Title</textarea>
+        </section>
 
-        <!-- iOS Bottom Sheet -->
-        <aside id="sidebar">
-            <!-- Drag Indicator (Mobile) -->
-            <div class="w-10 h-1 bg-white/20 rounded-full mx-auto mb-6 block md:hidden"></div>
+        <section class="space-y-3">
+            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                <i data-lucide="bold" class="w-3.5 h-3.5"></i> Weight
+            </div>
+            <div class="grid grid-cols-4 gap-2 bg-[#1c1c21] p-2 rounded-xl border border-white/5">
+                <button data-weight="400" class="weight-btn py-3 rounded-lg text-lg font-[400] hover:bg-white/5 bg-transparent transition-all">B</button>
+                <button data-weight="500" class="weight-btn py-3 rounded-lg text-lg font-[500] hover:bg-white/5 bg-transparent transition-all">B</button>
+                <button data-weight="700" class="weight-btn py-3 rounded-lg text-lg font-[700] hover:bg-white/5 bg-transparent transition-all weight-btn-active">B</button>
+                <button data-weight="900" class="weight-btn py-3 rounded-lg text-lg font-[900] hover:bg-white/5 bg-transparent transition-all">B</button>
+            </div>
+        </section>
 
-            <div class="controls-scroll space-y-6">
-                <!-- Text Section -->
-                <section>
-                    <div class="section-header"><i data-lucide="type" class="w-4 h-4"></i> Typography</div>
-                    <div class="ios-card">
-                        <textarea id="textInput" class="w-full bg-transparent p-4 text-white focus:outline-none placeholder-zinc-600 font-medium" rows="2" placeholder="Tap to type...">Refined by design.</textarea>
+        <section class="space-y-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <i data-lucide="palette" class="w-3.5 h-3.5"></i> Appearance
+                </div>
+                <div class="flex bg-[#1c1c21] p-1 rounded-lg border border-white/5">
+                    <button id="tabSolid" class="text-[10px] px-3 py-1 rounded-md font-bold uppercase transition-all tab-active">Solid</button>
+                    <button id="tabGradient" class="text-[10px] px-3 py-1 rounded-md font-bold uppercase transition-all text-zinc-500">Gradient</button>
+                </div>
+            </div>
+
+            <!-- Solid Picker -->
+            <div id="solidControls" class="bg-[#1c1c21] rounded-xl p-4 border border-white/5 grid grid-cols-6 gap-3"></div>
+
+            <!-- Gradient Picker -->
+            <div id="gradientControls" class="hidden bg-[#1c1c21] rounded-xl p-5 border border-white/5 space-y-4">
+                <div class="space-y-4">
+                    <div class="flex items-center justify-between text-[10px] font-bold uppercase text-zinc-500">
+                        <span>Varying Layers</span>
+                        <button id="shuffleGradientColors" class="hover:text-white transition-colors"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button>
                     </div>
-                </section>
-
-                <!-- Weight and Style -->
-                <section>
-                    <div class="section-header"><i data-lucide="bold" class="w-4 h-4"></i> Appearance</div>
-                    <div class="ios-card flex p-1">
-                        <button data-weight="400" class="weight-btn flex-1 py-3 rounded-lg text-lg font-[400]">B</button>
-                        <button data-weight="500" class="weight-btn flex-1 py-3 rounded-lg text-lg font-[500]">B</button>
-                        <button data-weight="700" class="weight-btn flex-1 py-3 rounded-lg text-lg font-[700] active">B</button>
-                        <button data-weight="900" class="weight-btn flex-1 py-3 rounded-lg text-lg font-[900]">B</button>
-                    </div>
-                </section>
-
-                <!-- Color & Tabs -->
-                <section>
-                    <div class="flex items-center justify-between mb-2">
-                        <div class="section-header mb-0"><i data-lucide="palette" class="w-4 h-4"></i> Colors</div>
-                        <div class="segmented-control w-32">
-                            <button id="tabSolid" class="segment-btn active">Solid</button>
-                            <button id="tabGradient" class="segment-btn">Grad</button>
+                    <div class="flex justify-between items-center px-2 relative">
+                        <!-- Gradient Slot 1 -->
+                        <div class="relative group">
+                            <button id="slot0" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#272a48]"></button>
+                            <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Base</span>
                         </div>
-                    </div>
-                    
-                    <div id="solidControls" class="ios-card p-4 grid grid-cols-6 gap-4"></div>
-
-                    <div id="gradientControls" class="hidden ios-card p-4 space-y-4">
-                        <div class="flex justify-between items-center px-2">
-                            <button id="slot0" class="grad-slot w-10 h-10 rounded-full border-2 border-white/20"></button>
-                            <button id="slot1" class="grad-slot w-10 h-10 rounded-full border-2 border-white/20"></button>
-                            <button id="slot2" class="grad-slot w-10 h-10 rounded-full border-2 border-white/20"></button>
-                            <button id="slot3" class="grad-slot w-10 h-10 rounded-full border-2 border-white/20"></button>
-                            <button id="shuffleGradientColors" class="w-10 h-10 flex items-center justify-center bg-white/10 rounded-full"><i data-lucide="refresh-cw" class="w-4 h-4"></i></button>
+                        <!-- Gradient Slot 2 -->
+                        <div class="relative group">
+                            <button id="slot1" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#4490ef]"></button>
+                            <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Layer 1</span>
                         </div>
-                    </div>
-                </section>
-
-                <!-- Overlays -->
-                <section>
-                    <div class="section-header"><i data-lucide="layers" class="w-4 h-4"></i> Overlays</div>
-                    <div class="ios-card">
-                        <div class="ios-row">
-                            <div class="flex flex-col">
-                                <span class="text-[15px] font-medium">Shape Overlay</span>
-                                <span id="shapeLabel" class="text-[12px] text-zinc-500">Variant 01</span>
-                            </div>
-                            <div class="flex items-center gap-4">
-                                <button id="shuffleShapeBtn" class="text-blue-500 text-sm font-semibold">Next</button>
-                                <label class="inline-flex items-center">
-                                    <input type="checkbox" id="shapeToggle" class="sr-only">
-                                    <div class="ios-switch"></div>
-                                </label>
-                            </div>
+                        <!-- Gradient Slot 3 -->
+                        <div class="relative group">
+                            <button id="slot2" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#272a48]"></button>
+                            <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Layer 2</span>
                         </div>
-                        <div class="ios-row">
-                            <span class="text-[15px] font-medium">Frame Overlay</span>
-                            <label class="inline-flex items-center">
-                                <input type="checkbox" id="frameToggle" class="sr-only">
-                                <div class="ios-switch"></div>
+                        <!-- Gradient Slot 4 -->
+                        <div class="relative group">
+                            <button id="slot3" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10 bg-[#d8305f]"></button>
+                            <span class="text-[8px] text-center block mt-1 text-zinc-500 font-bold uppercase">Layer 3</span>
+                        </div>
+                        
+                        <!-- Shared Color Picker Popover -->
+                        <div id="colorPopover" class="color-palette-popover"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="space-y-3">
+            <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                <i data-lucide="image" class="w-3.5 h-3.5"></i> Background Image
+            </div>
+            <div class="flex gap-2">
+                <label class="flex-grow bg-[#1c1c21] border border-dashed border-white/10 rounded-xl p-3 flex items-center justify-center gap-2 cursor-pointer hover:border-blue-500/50 transition-all">
+                    <input type="file" id="imageUpload" class="hidden" accept="image/*">
+                    <i data-lucide="upload-cloud" class="w-4 h-4 text-zinc-400"></i>
+                    <span class="text-xs font-medium text-zinc-400" id="uploadLabel">Upload JPG/PNG</span>
+                </label>
+                <button id="clearImage" class="hidden w-12 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-xl items-center justify-center transition-all">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+            </div>
+        </section>
+
+        <section class="space-y-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-zinc-500">
+                    <i data-lucide="layers" class="w-3.5 h-3.5"></i> Overlays
+                </div>
+                <button id="blendModeToggle" class="text-[10px] font-bold bg-white/5 px-3 py-1 rounded-full hover:bg-white/10 transition-colors uppercase tracking-wider text-zinc-400 hover:text-white">Blend Mode: Blend</button>
+            </div>
+            <div class="flex flex-col gap-3">
+                <div class="bg-[#1c1c21] p-3 rounded-xl border border-white/5 space-y-3">
+                    <div class="flex items-center justify-between">
+                        <div class="flex flex-col">
+                            <span class="text-sm font-medium">Shape Overlay</span>
+                            <span id="shapeLabel" class="text-[10px] text-zinc-500 uppercase font-bold mt-0.5">Variant 01</span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <button id="shuffleShapeBtn" class="p-2 hover:bg-white/5 rounded-lg transition-colors text-zinc-400 hover:text-white"><i data-lucide="shuffle" class="w-4 h-4"></i></button>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" id="shapeToggle" class="sr-only peer">
+                                <div class="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
                             </label>
                         </div>
-                        <div class="ios-row">
-                            <span class="text-[15px] font-medium">Blend Layers</span>
-                            <button id="blendModeToggle" class="text-blue-500 text-sm font-semibold">Overlay</button>
-                        </div>
                     </div>
-                </section>
-
-                <!-- Image Upload -->
-                <section>
-                    <div class="section-header"><i data-lucide="image" class="w-4 h-4"></i> Background</div>
-                    <div class="flex gap-2">
-                        <label class="flex-grow ios-card p-4 flex items-center justify-center gap-2 cursor-pointer active:bg-white/10 transition-colors">
-                            <input type="file" id="imageUpload" class="hidden" accept="image/*">
-                            <i data-lucide="upload" class="w-4 h-4 text-blue-500"></i>
-                            <span class="text-sm font-medium text-blue-500" id="uploadLabel">Add Photo</span>
-                        </label>
-                        <button id="clearImage" class="hidden w-14 ios-card items-center justify-center text-red-500">
-                            <i data-lucide="x" class="w-5 h-5"></i>
-                        </button>
-                    </div>
-                </section>
+                </div>
+                <div class="flex items-center justify-between bg-[#1c1c21] p-3 rounded-xl border border-white/5">
+                    <span class="text-sm font-medium">Frame Overlay</span>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="frameToggle" class="sr-only peer">
+                        <div class="w-11 h-6 bg-zinc-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                    </label>
+                </div>
             </div>
+        </section>
 
-            <!-- Global Actions -->
-            <div class="mt-6 flex gap-3">
-                <button id="randomBtn" class="flex-1 ios-card py-4 font-semibold text-white">Randomize</button>
-                <button id="exportBtn" class="flex-[2] bg-blue-600 rounded-xl py-4 font-bold text-lg shadow-lg">Save Image</button>
-            </div>
-        </aside>
-    </div>
-
-    <!-- Hidden Popover for Color Picking (kept logic) -->
-    <div id="colorPopover" class="hidden fixed z-[200] bg-[#2c2c2e] p-4 rounded-2xl shadow-2xl border border-white/10 grid grid-cols-5 gap-3 max-w-[260px]"></div>
+        <div class="flex gap-3 mt-auto pt-6 pb-24">
+            <button id="exportBtn" class="flex-1 bg-blue-600 hover:bg-blue-500 active:scale-95 transition-all rounded-xl p-4 font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20">
+                <i data-lucide="download" class="w-4 h-4"></i> 
+                <span>Save Image</span>
+            </button>
+            <button id="randomBtn" class="w-14 h-14 bg-white/5 hover:bg-white/10 active:scale-90 border border-white/5 transition-all rounded-xl flex items-center justify-center">
+                <i data-lucide="refresh-cw" class="w-4 h-4"></i>
+            </button>
+        </div>
+    </aside>
 
     <script>
         const CANVAS_SIZE = 1000;
@@ -331,7 +261,7 @@
         const NEW_HEX_COLORS = ["#355B58", "#524A41", "#535647", "#5E3D5E", "#50525A", "#6A5645", "#6A6248", "#4B5D45", "#365567", "#53e14c", "#FA4E63", "#17A8FF", "#F5C81E", "#C24C2D", "#3B356A", "#6C2D55", "#9B4658", "#133F35"];
 
         let activeColor = [59, 130, 246];
-        let gradColors = ["#1c1c1e", "#007aff", "#1c1c1e", "#5856d6"];
+        let gradColors = ["#272a48", "#4490ef", "#272a48", "#d8305f"];
         let activeShapeIndex = "01";
         let activeWeight = 700;
         let bgImage = null;
@@ -374,24 +304,26 @@
             BASE_PALETTE.forEach(c => allColors.push(c));
             NEW_HEX_COLORS.forEach(h => { const rgb = hexToRgb(h); if (rgb) allColors.push(rgb); });
             
+            // Build Solid Grid
             allColors.forEach(rgb => {
                 const btn = document.createElement('button');
-                btn.className = 'aspect-square rounded-full transition-transform active:scale-90';
+                btn.className = 'aspect-square rounded-full transition-all duration-200 hover:scale-110';
                 btn.style.backgroundColor = `rgb(${rgb.join(',')})`;
                 btn.onclick = () => { activeColor = rgb; updateActiveUI(); render(); };
                 solidControls.appendChild(btn);
             });
 
+            // Build Popover Grid
             allColors.forEach(rgb => {
                 const hex = rgbToHex(rgb[0], rgb[1], rgb[2]);
                 const btn = document.createElement('button');
-                btn.className = 'w-8 h-8 rounded-full border border-white/10 active:scale-90';
+                btn.className = 'w-6 h-6 rounded-full border border-white/10 hover:scale-125 transition-transform';
                 btn.style.backgroundColor = hex;
                 btn.onclick = (e) => {
                     e.stopPropagation();
                     gradColors[currentSlotIndex] = hex;
                     document.getElementById(`slot${currentSlotIndex}`).style.backgroundColor = hex;
-                    colorPopover.classList.add('hidden');
+                    colorPopover.classList.remove('visible');
                     render();
                 };
                 colorPopover.appendChild(btn);
@@ -401,15 +333,9 @@
         }
 
         async function preloadImages() {
-            const paths = {
-                'shape_01': 'https://raw.githubusercontent.com/lucide-icons/lucide/main/icons/shapes.svg', // Placeholder SVGs since local assets aren't guaranteed
-                'shape_02': 'overlay/shape_02.png', 
-                'shape_03': 'overlay/shape_03.png', 
-                'frame': 'overlay/frame.png'
-            };
+            const paths = {'shape_01': 'overlay/shape_01.png', 'shape_02': 'overlay/shape_02.png', 'shape_03': 'overlay/shape_03.png', 'frame': 'overlay/frame.png'};
             const load = (k, s) => new Promise(resolve => {
                 const i = new Image();
-                i.crossOrigin = "anonymous";
                 i.onload = () => { images[k] = i; resolve(); };
                 i.onerror = () => resolve();
                 i.src = s;
@@ -439,18 +365,21 @@
                 ctx.fillStyle = gradColors[0];
                 ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
+                // Varied Layer 1: Bottom Right Focus
                 let grad1 = ctx.createRadialGradient(CANVAS_SIZE * 0.9, CANVAS_SIZE * 0.9, 0, CANVAS_SIZE * 0.8, CANVAS_SIZE * 0.8, CANVAS_SIZE * 0.9);
                 grad1.addColorStop(0, gradColors[1]);
                 grad1.addColorStop(1, 'transparent');
                 ctx.fillStyle = grad1;
                 ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
+                // Varied Layer 2: Top Center Focus
                 let grad2 = ctx.createRadialGradient(CANVAS_SIZE * 0.45, CANVAS_SIZE * 0.05, 0, CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.1, CANVAS_SIZE * 0.7);
                 grad2.addColorStop(0, gradColors[2]);
                 grad2.addColorStop(1, 'transparent');
                 ctx.fillStyle = grad2;
                 ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
 
+                // Varied Layer 3: Left Side Edge
                 let grad3 = ctx.createRadialGradient(CANVAS_SIZE * 0.05, CANVAS_SIZE * 0.5, 0, CANVAS_SIZE * 0.1, CANVAS_SIZE * 0.5, CANVAS_SIZE * 0.8);
                 grad3.addColorStop(0, gradColors[3]);
                 grad3.addColorStop(1, 'transparent');
@@ -482,19 +411,19 @@
             if (backgroundMode === 'solid') {
                 brightness = (activeColor[0] * 299 + activeColor[1] * 587 + activeColor[2] * 114) / 1000;
             } else {
-                const rgbBase = hexToRgb(gradColors[0]) || [0,0,0];
+                const rgbBase = hexToRgb(gradColors[0]);
                 brightness = (rgbBase[0] * 299 + rgbBase[1] * 587 + rgbBase[2] * 114) / 1000;
             }
             
             ctx.fillStyle = (bgImage || brightness < 160) ? '#ffffff' : '#000000';
-            ctx.font = `${activeWeight} 90px -apple-system, sans-serif`;
+            ctx.font = `${activeWeight} 90px "Circular", -apple-system, sans-serif`;
             ctx.textAlign = 'left';
             ctx.textBaseline = 'alphabetic';
 
             const maxWidth = 760;
             const x = 116; 
             const bottomAnchor = 889; 
-            const lineHeight = 100;
+            const lineHeight = 89;
 
             const words = text.split(' ');
             let line = '';
@@ -517,40 +446,35 @@
             }
             
             document.getElementById('shapeLabel').textContent = `Variant ${activeShapeIndex}`;
-            blendModeToggle.textContent = blendMode === 'overlay' ? 'Overlay' : 'Normal';
+            blendModeToggle.textContent = `Blend Mode: ${blendMode === 'overlay' ? 'Blend' : 'Normal'}`;
         }
 
-        // Logic for slot clicking & positioning popover
+        // Popover Control
         document.querySelectorAll('.grad-slot').forEach((btn, idx) => {
             btn.onclick = (e) => {
                 e.stopPropagation();
                 currentSlotIndex = idx;
-                const rect = btn.getBoundingClientRect();
-                colorPopover.style.left = `${rect.left}px`;
-                colorPopover.style.top = `${rect.top - 180}px`;
-                colorPopover.classList.toggle('hidden');
+                colorPopover.classList.add('visible');
             };
         });
 
         document.addEventListener('click', () => {
-            colorPopover.classList.add('hidden');
+            colorPopover.classList.remove('visible');
         });
 
         tabSolid.onclick = () => {
             backgroundMode = 'solid';
-            tabSolid.classList.add('active');
-            tabGradient.classList.remove('active');
-            solidControls.classList.remove('hidden');
-            gradientControls.classList.add('hidden');
+            tabSolid.classList.add('tab-active'); tabSolid.classList.remove('text-zinc-500');
+            tabGradient.classList.remove('tab-active'); tabGradient.classList.add('text-zinc-500');
+            solidControls.classList.remove('hidden'); gradientControls.classList.add('hidden');
             render();
         };
 
         tabGradient.onclick = () => {
             backgroundMode = 'gradient';
-            tabGradient.classList.add('active');
-            tabSolid.classList.remove('active');
-            gradientControls.classList.remove('hidden');
-            solidControls.classList.add('hidden');
+            tabGradient.classList.add('tab-active'); tabGradient.classList.remove('text-zinc-500');
+            tabSolid.classList.remove('tab-active'); tabSolid.classList.add('text-zinc-500');
+            gradientControls.classList.remove('hidden'); solidControls.classList.add('hidden');
             render();
         };
 
@@ -564,7 +488,7 @@
             render();
         };
 
-        document.getElementById('imageUpload').onchange = (e) => {
+        imageUpload.onchange = (e) => {
             const file = e.target.files[0];
             if (!file) return;
             const reader = new FileReader();
@@ -573,8 +497,7 @@
                 img.onload = () => {
                     bgImage = img;
                     document.getElementById('uploadLabel').textContent = file.name;
-                    document.getElementById('clearImage').classList.remove('hidden');
-                    document.getElementById('clearImage').classList.add('flex');
+                    document.getElementById('clearImage').style.display = 'flex';
                     render();
                 };
                 img.src = f.target.result;
@@ -584,17 +507,17 @@
 
         document.getElementById('clearImage').onclick = () => {
             bgImage = null;
-            document.getElementById('imageUpload').value = '';
-            document.getElementById('uploadLabel').textContent = 'Add Photo';
-            document.getElementById('clearImage').classList.add('hidden');
+            imageUpload.value = '';
+            document.getElementById('uploadLabel').textContent = 'Upload JPG/PNG';
+            document.getElementById('clearImage').style.display = 'none';
             render();
         };
 
         document.querySelectorAll('.weight-btn').forEach(btn => {
             btn.onclick = () => {
                 activeWeight = parseInt(btn.dataset.weight);
-                document.querySelectorAll('.weight-btn').forEach(b => b.classList.remove('active'));
-                btn.classList.add('active');
+                document.querySelectorAll('.weight-btn').forEach(b => b.classList.remove('weight-btn-active'));
+                btn.classList.add('weight-btn-active');
                 render();
             };
         });
@@ -604,31 +527,37 @@
             render();
         };
 
+        // Improved Export for Desktop
         exportBtn.onclick = () => {
             const dataUrl = canvas.toDataURL('image/png', 1.0);
+            
+            // Create a temporary link and trigger it
+            const link = document.createElement('a');
+            link.href = dataUrl;
+            link.download = `solid-studio-${Date.now()}.png`;
+            
+            // Append to body to ensure it works in all environments
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            // Also show preview modal as feedback/alternative
             exportPreview.src = dataUrl;
             exportModal.style.display = 'flex';
         };
 
-        closeExport.onclick = () => {
-            exportModal.style.display = 'none';
-        };
+        closeExport.onclick = () => { exportModal.style.display = 'none'; };
 
         function updateScale() {
-            const padding = 24;
-            const maxScale = Math.min(
-                (viewport.clientWidth - padding * 2) / CANVAS_SIZE,
-                (viewport.clientHeight - padding * 2) / CANVAS_SIZE
-            );
-            container.style.transform = `scale(${Math.max(maxScale, 0.2)})`;
+            const padding = window.innerWidth < 768 ? 40 : 80;
+            const scale = Math.min((viewport.clientWidth - padding) / CANVAS_SIZE, (viewport.clientHeight - padding) / CANVAS_SIZE);
+            container.style.transform = `scale(${scale})`;
         }
 
-        window.addEventListener('resize', updateScale);
-        window.addEventListener('orientationchange', () => setTimeout(updateScale, 150));
-
-        textInput.addEventListener('input', render);
-        shapeToggle.addEventListener('change', render);
-        frameToggle.addEventListener('change', render);
+        window.onresize = updateScale;
+        textInput.oninput = render;
+        shapeToggle.onchange = render;
+        frameToggle.onchange = render;
         
         shuffleShapeBtn.onclick = () => {
             activeShapeIndex = ["01", "02", "03"][(["01", "02", "03"].indexOf(activeShapeIndex) + 1) % 3];
@@ -650,6 +579,7 @@
             lucide.createIcons();
             initColors();
             await preloadImages();
+            if (document.fonts) await document.fonts.ready;
             updateScale();
             render();
         };
