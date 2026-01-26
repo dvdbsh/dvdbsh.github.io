@@ -9,7 +9,7 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="SolidStudio">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="theme-color" content="#09090b">
+    <meta name="theme-color" content="#000000">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -21,9 +21,9 @@
         @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Book.ttf') format('truetype'); font-weight: 400; }
         
         body {
-            font-family: 'Circular', -apple-system, sans-serif;
-            background-color: #09090b;
-            color: white;
+            font-family: -apple-system, "SF Pro Display", "SF Pro Text", "Circular", sans-serif;
+            background-color: #000000;
+            color: #ffffff;
             margin: 0;
             overflow: hidden;
             position: fixed;
@@ -31,290 +31,343 @@
             height: 100%;
             -webkit-tap-highlight-color: transparent;
             user-select: none;
+            touch-action: none;
         }
 
-        textarea, input, select { font-size: 16px !important; user-select: text; }
+        textarea, input, select { font-size: 16px !important; user-select: text; outline: none; }
 
         .canvas-container {
-            transition: transform 0.2s ease-out;
+            transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
             transform-origin: center;
             will-change: transform;
         }
 
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 10px; }
+        /* Apple Sidebar/Rail Style */
+        .nav-item-active {
+            color: #007aff !important;
+            background: rgba(0, 122, 255, 0.1);
+        }
 
+        .tab-content {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            height: 100%;
+        }
+        .tab-content.active {
+            display: flex;
+            animation: appleFade 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes appleFade {
+            from { opacity: 0; transform: scale(0.98) translateY(10px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        /* Apple Style Controls */
+        .color-dot {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+            box-shadow: inset 0 0 0 1px rgba(0,0,0,0.1);
+        }
         .color-dot-active {
-            outline: 2px solid #3b82f6;
-            outline-offset: 2px;
-            transform: scale(0.9);
+            border-color: #ffffff;
+            transform: scale(1.1);
+            box-shadow: 0 0 0 2px #007aff, 0 8px 20px rgba(0,0,0,0.4);
         }
 
-        .tab-active { background: #27272a; color: white; }
-        
-        /* Accordion Styles */
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-out, opacity 0.3s;
-            opacity: 0;
-        }
-        .accordion-open .accordion-content {
-            max-height: 1200px;
-            opacity: 1;
-            padding-bottom: 1.5rem;
-        }
-        .accordion-header i.chevron {
-            transition: transform 0.3s;
-        }
-        .accordion-open .accordion-header i.chevron {
-            transform: rotate(180deg);
+        .glass-card {
+            background: rgba(28, 28, 30, 0.7);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
         }
 
-        #exportModal {
+        .icon-item {
+            aspect-ratio: 1;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .icon-item:active { transform: scale(0.92); background: rgba(255,255,255,0.1); }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+
+        .apple-modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.85);
             z-index: 100;
             padding: 2rem;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(30px);
         }
 
-        .icon-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
-            gap: 6px;
-            max-height: 160px;
-            overflow-y: auto;
-            padding: 4px;
+        @media (max-width: 768px) {
+            .mobile-viewport { height: 40vh; }
+            .mobile-panel { height: 60vh; }
         }
-        .icon-item {
-            aspect-ratio: 1;
-            background: #1c1c21;
-            border: 1px solid rgba(255,255,255,0.05);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .icon-item:hover { background: #27272a; border-color: #3b82f6; }
-        .icon-item img { width: 20px; height: 20px; pointer-events: none; }
-        
-        /* Custom Select */
-        select {
+
+        .custom-select {
             appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2371717a' stroke-width='2'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-color: rgba(255,255,255,0.05);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='white' stroke-width='2.5'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
             background-repeat: no-repeat;
-            background-position: right 0.75rem center;
-            background-size: 1rem;
+            background-position: right 1rem center;
+            background-size: 0.85rem;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 13px !important;
+            padding: 1rem 2.5rem 1rem 1.25rem;
+            border-radius: 16px;
+            border: 1px solid rgba(255,255,255,0.1);
         }
     </style>
 </head>
 <body class="flex flex-col md:flex-row h-screen w-screen overflow-hidden">
 
     <!-- Export Modal -->
-    <div id="exportModal" class="flex">
-        <div class="max-w-md w-full flex flex-col items-center gap-6">
-            <p class="text-center font-bold text-lg">Long-press to save image</p>
-            <img id="exportPreview" class="w-full h-auto rounded-xl shadow-2xl border border-white/10" alt="Export Preview">
-            <button id="closeExport" class="bg-white/10 px-8 py-3 rounded-full font-bold hover:bg-white/20 transition-all">Close</button>
+    <div id="exportModal" class="apple-modal">
+        <div class="max-w-sm w-full flex flex-col items-center gap-10">
+            <div class="text-center space-y-2">
+                <h2 class="text-2xl font-semibold tracking-tight">Export Complete</h2>
+                <p class="text-zinc-500 text-sm">Design has been rendered at full resolution</p>
+            </div>
+            <img id="exportPreview" class="w-full aspect-square rounded-[32px] shadow-[0_40px_100px_rgba(0,0,0,0.5)] border border-white/10" alt="Export">
+            <button id="closeExport" class="w-full bg-[#ffffff] text-black py-4 rounded-2xl font-bold hover:bg-[#eeeeee] transition-all active:scale-95">Done</button>
         </div>
     </div>
 
-    <!-- Viewport Area -->
-    <main id="viewport" class="flex-grow bg-[#050507] flex items-center justify-center relative overflow-hidden h-[40vh] md:h-full p-4 md:p-8 touch-none">
-        <!-- Snap Guides -->
-        <div id="guideX" class="absolute left-1/2 top-0 bottom-0 w-[1px] bg-blue-500/60 hidden z-20 pointer-events-none"></div>
-        <div id="guideY" class="absolute top-1/2 left-0 right-0 h-[1px] bg-blue-500/60 hidden z-20 pointer-events-none"></div>
+    <!-- Color Picker Modal -->
+    <div id="colorPickerModal" class="apple-modal">
+        <div class="max-w-md w-full glass-card p-10 flex flex-col items-center gap-10">
+            <div class="text-center space-y-1">
+                <h2 class="text-lg font-bold">Pick Point Color</h2>
+                <p class="text-zinc-500 text-xs uppercase tracking-widest font-medium">Select Mesh Shade</p>
+            </div>
+            <div id="modalColorGrid" class="grid grid-cols-5 gap-5"></div>
+            <button id="closePicker" class="w-full bg-white/10 py-4 rounded-2xl font-bold hover:bg-white/20 transition-all">Cancel</button>
+        </div>
+    </div>
 
-        <div id="container" class="canvas-container relative bg-black shadow-2xl flex-shrink-0" style="width: 1000px; height: 1000px;">
-            <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block cursor-crosshair"></canvas>
+    <!-- Designer Viewport -->
+    <main id="viewport" class="flex-grow bg-[#000000] flex items-center justify-center relative overflow-hidden mobile-viewport md:h-full touch-none">
+        <div id="guideX" class="absolute left-1/2 top-0 bottom-0 w-[1px] bg-[#007aff]/50 hidden z-20 pointer-events-none"></div>
+        <div id="guideY" class="absolute top-1/2 left-0 right-0 h-[1px] bg-[#007aff]/50 hidden z-20 pointer-events-none"></div>
+
+        <div id="container" class="canvas-container relative bg-[#0a0a0a] shadow-[0_50px_120px_rgba(0,0,0,0.6)] flex-shrink-0" style="width: 1000px; height: 1000px;">
+            <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block cursor-crosshair rounded-[4px]"></canvas>
         </div>
     </main>
 
-    <!-- Sidebar Panel -->
-    <aside class="w-full md:w-[420px] bg-[#121217] border-t md:border-t-0 md:border-l border-white/5 flex flex-col overflow-hidden shadow-2xl z-10 md:h-full h-[60vh] pb-safe">
+    <!-- Sidebar Control Panel -->
+    <aside class="w-full md:w-[600px] bg-[#1c1c1e] flex flex-col md:flex-row mobile-panel md:h-full shadow-2xl z-40 border-t md:border-t-0 md:border-l border-white/10 overflow-hidden">
         
-        <div class="flex-grow overflow-y-auto p-6 md:p-8 space-y-2">
+        <!-- Rail Nav (iPadOS Style) -->
+        <nav class="flex md:flex-col bg-[#1c1c1e] md:w-24 shrink-0 border-b md:border-b-0 md:border-r border-white/5">
+            <button class="nav-btn flex-1 md:flex-none md:h-24 flex flex-col items-center justify-center gap-1.5 text-zinc-500 transition-all nav-item-active" data-tab="bg">
+                <i data-lucide="palette" class="w-6 h-6"></i>
+                <span class="text-[10px] font-medium">Canvas</span>
+            </button>
+            <button class="nav-btn flex-1 md:flex-none md:h-24 flex flex-col items-center justify-center gap-1.5 text-zinc-500 transition-all" data-tab="overlay">
+                <i data-lucide="layers" class="w-6 h-6"></i>
+                <span class="text-[10px] font-medium">Layers</span>
+            </button>
+            <button class="nav-btn flex-1 md:flex-none md:h-24 flex flex-col items-center justify-center gap-1.5 text-zinc-500 transition-all" data-tab="elements">
+                <i data-lucide="smile" class="w-6 h-6"></i>
+                <span class="text-[10px] font-medium">Icon</span>
+            </button>
+            <button class="nav-btn flex-1 md:flex-none md:h-24 flex flex-col items-center justify-center gap-1.5 text-zinc-500 transition-all" data-tab="text">
+                <i data-lucide="type" class="w-6 h-6"></i>
+                <span class="text-[10px] font-medium">Title</span>
+            </button>
+            <div class="mt-auto hidden md:flex flex-col items-center pb-8 gap-6">
+                <button id="randomBtn" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-orange-500/10 text-orange-500 hover:bg-orange-500/20 active:scale-90 transition-all">
+                    <i data-lucide="zap" class="w-6 h-6"></i>
+                </button>
+                <button id="exportBtn" class="w-12 h-12 flex items-center justify-center rounded-2xl bg-blue-600 text-white shadow-lg shadow-blue-500/30 hover:bg-blue-500 active:scale-90 transition-all">
+                    <i data-lucide="download" class="w-6 h-6"></i>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Tool Content Area -->
+        <div class="flex-grow overflow-y-auto p-8 md:p-12 bg-[#1c1c1e]">
             
-            <!-- Typography Section -->
-            <div class="accordion-item accordion-open" data-section="text">
-                <button class="accordion-header w-full flex items-center justify-between py-3 text-zinc-400 hover:text-white transition-colors">
-                    <div class="flex items-center gap-3">
-                        <i data-lucide="type" class="w-4 h-4"></i>
-                        <span class="text-xs font-bold uppercase tracking-widest">Typography</span>
+            <!-- Mobile Header (Visible only on mobile) -->
+            <header class="flex md:hidden justify-between items-center mb-8">
+                <h1 class="text-xl font-bold tracking-tight">Studio <span class="text-blue-500">Pro</span></h1>
+                <div class="flex gap-3">
+                    <button id="mobileRandom" class="w-10 h-10 flex items-center justify-center rounded-xl bg-orange-500/10 text-orange-400"><i data-lucide="zap" class="w-5 h-5"></i></button>
+                    <button id="mobileExport" class="w-10 h-10 flex items-center justify-center rounded-xl bg-blue-600 text-white"><i data-lucide="download" class="w-5 h-5"></i></button>
+                </div>
+            </header>
+
+            <!-- Tool: Background -->
+            <div id="tabBg" class="tab-content active space-y-12">
+                <div class="glass-card p-6 space-y-6">
+                    <label class="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Background Fill</label>
+                    <div class="flex bg-black/30 p-1.5 rounded-2xl border border-white/5">
+                        <button id="tabSolid" class="flex-1 py-3 rounded-xl font-semibold text-xs transition-all tab-active">Solid</button>
+                        <button id="tabGradient" class="flex-1 py-3 rounded-xl font-semibold text-xs transition-all text-zinc-500">Gradient</button>
                     </div>
-                    <i data-lucide="chevron-down" class="chevron w-4 h-4"></i>
-                </button>
-                <div class="accordion-content space-y-4 pt-2">
-                    <textarea id="textInput" class="w-full bg-[#1c1c21] border border-white/5 rounded-xl p-4 text-base focus:border-blue-500 outline-none transition-all resize-none text-white font-inherit" rows="2">My Playlist Title</textarea>
                     
-                    <div class="grid grid-cols-2 gap-2 bg-[#1c1c21] p-1.5 rounded-xl border border-white/5">
-                        <button data-size="90" class="size-btn py-2 rounded-lg text-[10px] font-bold uppercase hover:bg-white/5 bg-transparent transition-all size-btn-active">Standard</button>
-                        <button data-size="120" class="size-btn py-2 rounded-lg text-[10px] font-bold uppercase hover:bg-white/5 bg-transparent transition-all">Large</button>
+                    <div id="solidGroup" class="pt-4">
+                        <div id="solidControls" class="grid grid-cols-5 gap-5"></div>
                     </div>
 
-                    <div class="grid grid-cols-4 gap-2 bg-[#1c1c21] p-1.5 rounded-xl border border-white/5">
-                        <button data-weight="400" class="weight-btn py-2 rounded-lg text-sm font-[400] transition-all">B</button>
-                        <button data-weight="500" class="weight-btn py-2 rounded-lg text-sm font-[500] transition-all">B</button>
-                        <button data-weight="700" class="weight-btn py-2 rounded-lg text-sm font-[700] transition-all bg-zinc-800">B</button>
-                        <button data-weight="900" class="weight-btn py-2 rounded-lg text-sm font-[900] transition-all">B</button>
+                    <div id="gradientGroup" class="hidden space-y-8 pt-4">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Mesh Points</span>
+                            <button id="shuffleGradientColors" class="text-blue-500 text-xs font-bold px-3 py-1 bg-blue-500/10 rounded-full">Shuffle</button>
+                        </div>
+                        <div class="flex justify-between items-center bg-black/20 p-5 rounded-3xl">
+                            <button id="slot0" class="grad-slot w-14 h-14 rounded-full border-4 border-white/10 ring-4 ring-transparent transition-all"></button>
+                            <button id="slot1" class="grad-slot w-14 h-14 rounded-full border-4 border-white/10 ring-4 ring-transparent transition-all"></button>
+                            <button id="slot2" class="grad-slot w-14 h-14 rounded-full border-4 border-white/10 ring-4 ring-transparent transition-all"></button>
+                            <button id="slot3" class="grad-slot w-14 h-14 rounded-full border-4 border-white/10 ring-4 ring-transparent transition-all"></button>
+                        </div>
                     </div>
+                </div>
 
-                    <div id="textColorGrid" class="grid grid-cols-6 gap-2 pt-2"></div>
+                <div class="glass-card p-6 space-y-6">
+                    <label class="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Photo Layer</label>
+                    <label class="flex items-center gap-5 w-full bg-white/5 rounded-[22px] p-5 cursor-pointer hover:bg-white/10 transition-all border border-white/5">
+                        <input type="file" id="imageUpload" class="hidden" accept="image/*">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500">
+                            <i data-lucide="image" class="w-6 h-6"></i>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-sm font-bold" id="uploadLabel">Upload Image</span>
+                            <span class="text-[10px] text-zinc-500 font-medium">Tap to pick from gallery</span>
+                        </div>
+                    </label>
+                    <button id="clearImage" class="hidden w-full py-4 text-xs font-bold text-red-400 bg-red-400/5 rounded-2xl border border-red-400/10">Remove Background Photo</button>
                 </div>
             </div>
 
-            <!-- Icon Library Section -->
-            <div class="accordion-item" data-section="icons">
-                <button class="accordion-header w-full flex items-center justify-between py-3 text-zinc-400 hover:text-white transition-colors">
-                    <div class="flex items-center gap-3">
-                        <i data-lucide="smile" class="w-4 h-4"></i>
-                        <span class="text-xs font-bold uppercase tracking-widest">Icon Library</span>
-                    </div>
-                    <i data-lucide="chevron-down" class="chevron w-4 h-4"></i>
-                </button>
-                <div class="accordion-content space-y-4 pt-2">
+            <!-- Tool: Overlays -->
+            <div id="tabOverlay" class="tab-content space-y-8">
+                <div class="glass-card p-8 space-y-8">
                     <div class="flex items-center justify-between">
-                        <div class="flex bg-[#1c1c21] p-1 rounded-lg border border-white/5">
-                            <button id="iconTabFill" class="text-[8px] px-3 py-1.5 rounded-md font-bold uppercase transition-all tab-active">Fill</button>
-                            <button id="iconTabStroke" class="text-[8px] px-3 py-1.5 rounded-md font-bold uppercase transition-all text-zinc-500">Stroke</button>
+                        <div class="space-y-0.5">
+                            <h3 class="text-base font-bold">Corner Accent</h3>
+                            <p class="text-[10px] text-blue-500 font-bold uppercase tracking-widest" id="shapeLabel">Variant 01</p>
                         </div>
-                        <div class="relative flex-grow ml-4">
-                            <input type="text" id="iconSearch" placeholder="Search..." class="w-full bg-[#1c1c21] border border-white/5 rounded-lg px-3 py-1.5 text-xs focus:border-blue-500 outline-none text-white">
-                        </div>
-                    </div>
-                    
-                    <div id="iconGrid" class="icon-grid bg-[#09090b] rounded-xl p-2 border border-white/5"></div>
-
-                    <div id="iconControls" class="hidden space-y-4 bg-[#1c1c21] p-4 rounded-xl border border-white/5">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold text-zinc-500 uppercase">Appearance</span>
-                            <button id="removeIcon" class="text-[9px] text-red-400 font-bold uppercase">Remove</button>
-                        </div>
-                        <div id="iconColorGrid" class="grid grid-cols-6 gap-2"></div>
-                        <div class="flex gap-3 items-center">
-                            <input type="range" id="iconSizeSlider" min="50" max="600" value="250" class="flex-grow accent-blue-500">
-                            <span id="iconSizeLabel" class="text-[10px] font-mono text-zinc-500 w-10 text-right">250px</span>
-                        </div>
-                        <div class="grid grid-cols-4 gap-1">
-                            <button class="snap-btn text-[8px] font-bold bg-black/40 py-2 rounded" data-snap="tl">TL</button>
-                            <button class="snap-btn text-[8px] font-bold bg-black/40 py-2 rounded" data-snap="tc">TC</button>
-                            <button class="snap-btn text-[8px] font-bold bg-black/40 py-2 rounded" data-snap="tr">TR</button>
-                            <button class="snap-btn text-[8px] font-bold bg-black/40 py-2 rounded" data-snap="cc">CC</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Background Section -->
-            <div class="accordion-item" data-section="background">
-                <button class="accordion-header w-full flex items-center justify-between py-3 text-zinc-400 hover:text-white transition-colors">
-                    <div class="flex items-center gap-3">
-                        <i data-lucide="palette" class="w-4 h-4"></i>
-                        <span class="text-xs font-bold uppercase tracking-widest">Background</span>
-                    </div>
-                    <i data-lucide="chevron-down" class="chevron w-4 h-4"></i>
-                </button>
-                <div class="accordion-content space-y-4 pt-2">
-                    <div class="flex bg-[#1c1c21] p-1 rounded-lg border border-white/5">
-                        <button id="tabSolid" class="flex-1 text-[10px] py-2 rounded-md font-bold uppercase transition-all tab-active">Solid</button>
-                        <button id="tabGradient" class="flex-1 text-[10px] py-2 rounded-md font-bold uppercase transition-all text-zinc-500">Gradient</button>
-                    </div>
-                    
-                    <div id="solidControls" class="grid grid-cols-6 gap-2"></div>
-                    
-                    <div id="gradientControls" class="hidden space-y-4">
-                        <div class="flex items-center justify-between text-[10px] font-bold uppercase text-zinc-500">
-                            <span>Varying Layers</span>
-                            <button id="shuffleGradientColors" class="hover:text-white transition-colors"><i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i></button>
-                        </div>
-                        <div class="flex justify-between gap-2 px-2">
-                            <button id="slot0" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10"></button>
-                            <button id="slot1" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10"></button>
-                            <button id="slot2" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10"></button>
-                            <button id="slot3" class="grad-slot w-10 h-10 rounded-full border-2 border-white/10"></button>
-                        </div>
-                    </div>
-
-                    <div class="pt-2 border-t border-white/5 space-y-3">
-                        <label class="flex items-center justify-center gap-2 w-full bg-[#1c1c21] border border-dashed border-white/10 rounded-xl p-4 cursor-pointer hover:border-blue-500/50 transition-all">
-                            <input type="file" id="imageUpload" class="hidden" accept="image/*">
-                            <i data-lucide="upload-cloud" class="w-4 h-4 text-zinc-500"></i>
-                            <span class="text-xs font-medium text-zinc-500" id="uploadLabel">Upload JPG/PNG Background</span>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="shapeToggle" class="sr-only peer">
+                            <div class="w-14 h-8 bg-black/40 rounded-full border border-white/10 peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-6"></div>
                         </label>
-                        <button id="clearImage" class="hidden w-full text-[10px] font-bold text-red-500 uppercase tracking-widest py-2 hover:bg-red-500/10 rounded-lg">Clear Image</button>
                     </div>
-                </div>
-            </div>
-
-            <!-- Overlays Section -->
-            <div class="accordion-item" data-section="overlays">
-                <button class="accordion-header w-full flex items-center justify-between py-3 text-zinc-400 hover:text-white transition-colors">
-                    <div class="flex items-center gap-3">
-                        <i data-lucide="layers" class="w-4 h-4"></i>
-                        <span class="text-xs font-bold uppercase tracking-widest">Overlays</span>
-                    </div>
-                    <i data-lucide="chevron-down" class="chevron w-4 h-4"></i>
-                </button>
-                <div class="accordion-content space-y-6 pt-2">
-                    <!-- Shape Layer -->
-                    <div class="space-y-3 bg-[#1c1c21] p-4 rounded-xl border border-white/5">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold text-zinc-500 uppercase">Shape</span>
-                            <label class="relative inline-flex items-center cursor-pointer scale-75">
-                                <input type="checkbox" id="shapeToggle" class="sr-only peer">
-                                <div class="w-11 h-6 bg-zinc-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
-                            </label>
-                        </div>
-                        <div class="grid grid-cols-2 gap-2">
-                            <button id="shuffleShapeBtn" class="bg-black/20 py-2 rounded-lg text-[9px] font-bold flex items-center justify-center gap-2 hover:bg-black/30">
-                                <i data-lucide="shuffle" class="w-3 h-3"></i> Variant
-                            </button>
-                            <select id="shapeBlendMode" class="bg-black/20 text-[9px] font-bold py-2 rounded-lg px-2 outline-none border-none">
-                                <option value="overlay">Blend</option>
-                                <option value="source-over">Normal</option>
-                                <option value="multiply">Multiply</option>
-                                <option value="screen">Screen</option>
-                            </select>
-                        </div>
-                        <div id="shapeColorGrid" class="grid grid-cols-6 gap-2 pt-1"></div>
-                    </div>
-
-                    <!-- Frame Layer -->
-                    <div class="space-y-3 bg-[#1c1c21] p-4 rounded-xl border border-white/5">
-                        <div class="flex items-center justify-between">
-                            <span class="text-[10px] font-bold text-zinc-500 uppercase">Frame</span>
-                            <label class="relative inline-flex items-center cursor-pointer scale-75">
-                                <input type="checkbox" id="frameToggle" class="sr-only peer">
-                                <div class="w-11 h-6 bg-zinc-700 rounded-full peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:after:translate-x-full"></div>
-                            </label>
-                        </div>
-                        <select id="frameBlendMode" class="w-full bg-black/20 text-[9px] font-bold py-2 rounded-lg px-2 outline-none border-none">
+                    <div class="flex gap-4">
+                        <button id="shuffleShapeBtn" class="flex-1 bg-white/5 py-4 rounded-2xl text-[11px] font-bold uppercase tracking-widest flex items-center justify-center gap-3 border border-white/5">
+                            <i data-lucide="shuffle" class="w-4 h-4"></i> Shuffle
+                        </button>
+                        <select id="shapeBlendMode" class="custom-select flex-1">
                             <option value="overlay">Blend</option>
                             <option value="source-over">Normal</option>
                             <option value="multiply">Multiply</option>
                         </select>
-                        <div id="frameColorGrid" class="grid grid-cols-6 gap-2 pt-1"></div>
+                    </div>
+                    <div id="shapeColorGrid" class="grid grid-cols-5 gap-5"></div>
+                </div>
+
+                <div class="glass-card p-8 space-y-8">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-base font-bold">Outer Frame</h3>
+                        <label class="relative inline-flex items-center cursor-pointer">
+                            <input type="checkbox" id="frameToggle" class="sr-only peer">
+                            <div class="w-14 h-8 bg-black/40 rounded-full border border-white/10 peer peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-1 after:left-1 after:bg-white after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:after:translate-x-6"></div>
+                        </label>
+                    </div>
+                    <select id="frameBlendMode" class="custom-select w-full">
+                        <option value="overlay">Blend</option>
+                        <option value="source-over">Normal</option>
+                        <option value="multiply">Multiply</option>
+                    </select>
+                    <div id="frameColorGrid" class="grid grid-cols-5 gap-5"></div>
+                </div>
+            </div>
+
+            <!-- Tool: Elements (Icons) -->
+            <div id="tabElements" class="tab-content space-y-10">
+                <div class="space-y-6">
+                    <div class="flex bg-black/30 p-1.5 rounded-2xl border border-white/5">
+                        <button id="iconTabFill" class="flex-1 py-3 rounded-xl font-bold text-xs transition-all tab-active">Fill</button>
+                        <button id="iconTabStroke" class="flex-1 py-3 rounded-xl font-bold text-xs transition-all text-zinc-500">Stroke</button>
+                    </div>
+                    <div class="relative">
+                        <input type="text" id="iconSearch" placeholder="Search glyphs..." class="w-full bg-black/40 border border-white/5 rounded-2xl py-5 pl-14 pr-6 text-sm focus:border-blue-500 transition-all outline-none text-white">
+                        <i data-lucide="search" class="absolute left-6 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600"></i>
+                    </div>
+                </div>
+                
+                <div id="iconGrid" class="icon-grid pb-6"></div>
+
+                <div id="iconControls" class="hidden glass-card p-8 space-y-10">
+                    <div class="flex items-center justify-between">
+                        <span class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Adjustment</span>
+                        <button id="removeIcon" class="text-[10px] text-red-400 font-bold px-3 py-1.5 bg-red-400/10 rounded-xl">Discard</button>
+                    </div>
+                    <div id="iconColorGrid" class="grid grid-cols-5 gap-5"></div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between text-[10px] font-bold text-zinc-500 uppercase">
+                            <span>Scale</span>
+                            <span id="iconSizeLabel" class="text-blue-500">250px</span>
+                        </div>
+                        <input type="range" id="iconSizeSlider" min="50" max="600" value="250" class="w-full h-1.5 bg-black/40 rounded-full appearance-none cursor-pointer accent-blue-500">
+                    </div>
+                    <div class="grid grid-cols-4 gap-3">
+                        <button class="snap-btn bg-white/5 py-5 rounded-2xl text-[10px] font-bold active:bg-white/10" data-snap="tl">TL</button>
+                        <button class="snap-btn bg-white/5 py-5 rounded-2xl text-[10px] font-bold active:bg-white/10" data-snap="tc">TC</button>
+                        <button class="snap-btn bg-white/5 py-5 rounded-2xl text-[10px] font-bold active:bg-white/10" data-snap="tr">TR</button>
+                        <button class="snap-btn bg-blue-600 text-white py-5 rounded-2xl text-[10px] font-bold shadow-lg" data-snap="cc">MID</button>
                     </div>
                 </div>
             </div>
 
-        </div>
+            <!-- Tool: Typography -->
+            <div id="tabText" class="tab-content space-y-10">
+                <div class="space-y-4">
+                    <label class="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Cover Headline</label>
+                    <textarea id="textInput" class="w-full bg-black/40 border border-white/5 rounded-3xl p-8 text-2xl font-bold focus:border-blue-500 outline-none transition-all resize-none text-white shadow-inner" rows="3" placeholder="Enter title...">My Playlist Title</textarea>
+                </div>
 
-        <!-- Sticky Footer -->
-        <div class="p-6 md:p-8 bg-[#09090b] border-t border-white/5 flex gap-3">
-            <button id="exportBtn" class="flex-grow bg-blue-600 hover:bg-blue-500 active:scale-[0.98] transition-all rounded-xl py-4 font-bold flex items-center justify-center gap-2 shadow-lg shadow-blue-900/20">
-                <i data-lucide="download" class="w-4 h-4"></i> Save Cover
-            </button>
-            <button id="randomBtn" title="Randomize All Colors" class="w-14 h-14 bg-white/5 hover:bg-white/10 active:scale-90 border border-white/5 rounded-xl flex items-center justify-center transition-all">
-                <i data-lucide="zap" class="w-4 h-4"></i>
-            </button>
+                <div class="glass-card p-8 space-y-10">
+                    <div class="space-y-6">
+                        <span class="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Typographic Style</span>
+                        <div class="grid grid-cols-2 gap-5">
+                            <button data-size="90" class="size-btn py-5 rounded-2xl text-[11px] font-bold uppercase transition-all size-btn-active bg-white text-black shadow-lg">Standard</button>
+                            <button data-size="120" class="size-btn py-5 rounded-2xl text-[11px] font-bold uppercase transition-all text-zinc-500 border border-white/10">Large</button>
+                        </div>
+                        <div class="grid grid-cols-4 gap-3">
+                            <button data-weight="400" class="weight-btn py-5 rounded-2xl text-lg font-medium transition-all text-zinc-400 border border-white/10">400</button>
+                            <button data-weight="500" class="weight-btn py-5 rounded-2xl text-lg font-bold transition-all text-zinc-400 border border-white/10">500</button>
+                            <button data-weight="700" class="weight-btn py-5 rounded-2xl text-lg font-bold transition-all bg-white/10 text-white border border-white/20 shadow-lg">700</button>
+                            <button data-weight="900" class="weight-btn py-5 rounded-2xl text-lg font-black transition-all text-zinc-400 border border-white/10">900</button>
+                        </div>
+                    </div>
+
+                    <div class="space-y-6">
+                        <span class="text-[11px] font-bold uppercase tracking-widest text-zinc-500">Text Color</span>
+                        <div id="textColorGrid" class="grid grid-cols-5 gap-5"></div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </aside>
 
@@ -322,8 +375,8 @@
         const CANVAS_SIZE = 1000;
         const BASE_PALETTE = [[255,255,255], [0,0,0], [100, 116, 139], [239, 68, 68], [249, 115, 22], [245, 158, 11], [234, 179, 8], [34, 197, 94], [16, 185, 129], [20, 184, 166], [6, 182, 212], [14, 165, 233], [59, 130, 246], [99, 102, 241]];
         const NEW_HEX_COLORS = ["#355B58", "#524A41", "#535647", "#5E3D5E", "#50525A", "#6A5645", "#6A6248", "#4B5D45", "#365567", "#53e14c", "#FA4E63", "#17A8FF", "#F5C81E", "#C24C2D", "#3B356A", "#6C2D55", "#9B4658", "#133F35"];
+        const VIBRANT_PALETTE = [...BASE_PALETTE.slice(2), ...NEW_HEX_COLORS.map(h => hexToRgb(h))];
 
-        // State Management
         let state = {
             activeBgColor: [59, 130, 246],
             gradColors: ["#272a48", "#4490ef", "#272a48", "#d8305f"],
@@ -338,7 +391,7 @@
             shapeBlend: 'overlay',
             frameBlend: 'overlay',
             backgroundMode: 'solid',
-            currentSlotIndex: 0
+            activeGradSlot: 0
         };
 
         const ICON_NAMES = ['ab-testing', 'add-small', 'add', 'address-book', 'adjust-horizontal-alt', 'adjust-horizontal', 'adjust-vertical-alt', 'adjust-vertical', 'airplay', 'airpods', 'alarm', 'alien', 'align-bottom', 'align-center-horizontal', 'align-center-vertical', 'align-left', 'align-right', 'align-text-center', 'align-text-justify', 'align-text-left', 'align-text-right', 'align-top', 'anchor', 'android', 'angular', 'anja', 'anti-clockwise', 'apple', 'appointments', 'archive', 'area-chart-alt', 'area-chart', 'arrow-down-circle', 'arrow-down-small', 'arrow-down', 'arrow-left-circle', 'arrow-left-small', 'arrow-left', 'arrow-right-circle', 'arrow-right-small', 'arrow-right', 'arrow-up-circle', 'arrow-up-small', 'arrow-up', 'arrow', 'artboard', 'at', 'attach', 'attachment', 'audio-cable', 'audio-document', 'azure', 'backspace', 'bag-alt', 'bag-minus', 'bag-plus', 'bag', 'bank', 'bar-chart', 'barcode', 'basket-minus', 'basket-plus', 'basket', 'bath', 'battery-0', 'battery-1', 'battery-2', 'battery-3', 'battery-4', 'battery-5', 'battery-charge', 'bed-double', 'bed-single', 'bed-top', 'behance', 'bell', 'bin', 'bitbucket', 'bitcoin', 'bluetooth', 'bold', 'book', 'bookmark', 'border-all', 'border-bottom', 'border-horizontal', 'border-inner', 'border-left', 'border-none', 'border-outer', 'border-radius', 'border-right', 'border-top', 'border-vertical', 'bottom-left', 'bottom-right', 'box', 'bracket', 'briefcase-alt', 'briefcase', 'brush', 'bug', 'building', 'bulb-off', 'bulb-on', 'button', 'c-sharp', 'c', 'calculator', 'calendar-minus', 'calendar-no-access', 'calendar-plus', 'calendar-tick', 'calendar-x', 'calendar', 'camera', 'candle-chart', 'car-battery', 'car', 'caret-vertical-circle', 'caret-vertical-small', 'caret-vertical', 'cart-minus', 'cart-plus', 'cart', 'certificate', 'chat-typing-alt', 'chat-typing', 'chat', 'chatbot', 'chrome', 'church', 'circle', 'clipboard-minus', 'clipboard-no-access', 'clipboard-plus', 'clipboard-tick', 'clipboard-x', 'clipboard', 'clock', 'clockwise', 'code', 'codepen', 'cog', 'compass', 'computer', 'contact', 'contract', 'cost-estimate', 'cplusplus', 'credit-card', 'crop', 'css3', 'csv', 'cup', 'curved-connector', 'd3', 'database', 'denied', 'deno', 'depth-chart', 'desk', 'desklamp', 'diamond', 'direction', 'discord', 'discount', 'distribute-horizontal', 'distribute-vertical', 'divider-line', 'doc', 'docker', 'documents', 'dollar', 'donut-chart', 'double-caret-down-circle', 'double-caret-down-small', 'double-caret-down', 'double-caret-left-circle', 'double-caret-left-small', 'double-caret-left', 'double-caret-right-circle', 'double-caret-right-small', 'double-caret-right', 'double-caret-up-circle', 'double-caret-up-small', 'double-caret-up', 'down-circle', 'down-small', 'down', 'download', 'drag-horizontal', 'drag-vertical', 'drag', 'dribbble', 'drop', 'dropper', 'edge', 'edit-1', 'edit-circle', 'edit-small', 'edit', 'elbow-connector', 'envelope-open', 'envelope', 'eps', 'eslint', 'ethereum', 'euro', 'exclamation-circle', 'exclamation-small', 'exclamation', 'expand-alt', 'expand', 'eye-closed', 'eye', 'face-id', 'facebook', 'figma', 'file-minus', 'file-no-access', 'file-plus', 'file-tick', 'file-x', 'file', 'filter', 'fingerprint', 'firebase', 'flag-alt', 'flag', 'flip-horizontal', 'flip-vertical', 'float-center', 'float-left', 'float-right', 'floorplan', 'folder-minus', 'folder-no-access', 'folder-plus', 'folder-tick', 'folder-x', 'folder', 'folders', 'forward-circle', 'forward-small', 'forward', 'frame', 'framer', 'g360', 'game-controller-retro', 'game-controller', 'gantt-chart', 'garage', 'gatsbyjs', 'gba', 'gbc', 'ghost', 'gif', 'gift', 'git-branch', 'git-commit', 'git-compare', 'git-fork', 'git-merge', 'git-pull', 'git', 'github', 'gitlab', 'globe-africa', 'globe-americas', 'globe', 'google-ad', 'google-drive', 'google-play-store', 'google-streetview', 'google', 'graphql', 'grid-layout', 'hashtag', 'hd-screen', 'hdmi-cable', 'headphones', 'headset', 'heart-circle', 'heart-small', 'heart', 'hexagon', 'history', 'home-alt', 'home', 'hospital', 'hourglass', 'house', 'html5', 'id', 'imac', 'image-alt', 'image-document', 'image', 'in-ear-headphones', 'inbox', 'indent-decrease', 'indent-increase', 'info-circle', 'info-small', 'info', 'instagram', 'invoice', 'italic', 'javascript', 'joystick', 'jpg', 'kanban', 'key', 'keyboard', 'ladder', 'lan-cable', 'laptop', 'laravel', 'layers-difference', 'layers-intersect', 'layers-subtract', 'layers-union', 'layers', 'left-circle', 'left-small', 'left', 'lego', 'lifebuoy', 'lightning-cable', 'line', 'link-remove', 'link', 'linkedin', 'linux-alt', 'linux', 'list-layout', 'list-ordered', 'list-unordered', 'litecoin', 'loader', 'location', 'lock-circle', 'lock-small', 'lock', 'logout', 'loop', 'magsafe', 'markdown', 'medium', 'menu', 'message-minus', 'message-no-access', 'message-plus', 'message-text-alt', 'message-text', 'message-tick', 'message-x', 'message', 'messenger', 'micro-sd-card', 'microphone', 'minimise-alt', 'minimise', 'minus-circle', 'minus-small', 'minus', 'mobile', 'money-stack', 'money', 'mongodb', 'mood-flat', 'mood-frown', 'mood-laugh', 'mood-sad', 'mood-smile', 'mood-surprised', 'mood-tongue', 'moon', 'more-horizontal', 'more-vertical', 'mouse', 'mov', 'mp3', 'mp4', 'ms-excel', 'ms-powerpoint', 'ms-word', 'n64', 'nes', 'netlify', 'next-circle', 'next-small', 'next', 'nextjs', 'ngc', 'nintendo-switch', 'nodejs', 'note', 'npm', 'nuxtjs', 'omega', 'opera', 'otp', 'page-break', 'page-number', 'paintbrush', 'paintbucket', 'paragraph', 'password', 'patreon', 'pause-circle', 'pause-small', 'pause', 'paw', 'paws', 'paypal', 'pdf', 'pen', 'phone', 'phonecall-blocked', 'phonecall-receive', 'phonecall', 'pie-chart-alt', 'pie-chart', 'pin-alt', 'pin', 'pinterest', 'plant', 'play-circle', 'play-small', 'play', 'plug', 'plus-circle', 'png', 'pool', 'pound', 'power', 'ppt', 'print', 'python', 'qr-code', 'question-circle', 'question-small', 'question', 'quote', 'rand', 'react', 'receipt', 'reddit', 'redwoodjs', 'refresh-alt', 'refresh', 'rewind-circle', 'rewind-small', 'rewind', 'right-circle', 'right-small', 'right', 'ripple', 'robot', 'roller', 'rollupjs', 'router', 'rss', 'ruby', 'rupee', 'rust', 'safari', 'safe', 'save', 'scan', 'school', 'screen-alt-2', 'screen-alt', 'screen', 'scribble', 'sd-card', 'search-circle', 'search-property', 'search-small', 'search', 'section-add', 'section-remove', 'send-down', 'send-left', 'send-right', 'send-up', 'send', 'servers', 'share', 'shield-tick', 'shield-x', 'shield', 'shop', 'sign', 'signin', 'sim', 'simohamed', 'skull', 'skype', 'slack', 'snapchat', 'snes', 'sort-alphabetically', 'sort-down', 'sort-high-to-low', 'sort-low-to-high', 'sort-reverse-alphabetically', 'sort-up', 'sound-off', 'sound-on', 'spotify', 'spreadsheet', 'square', 'stackoverflow', 'stamp', 'star-circle', 'star-small', 'star', 'stop-circle', 'stop-small', 'stop', 'stopwatch', 'strikethrough', 'subscript', 'sun', 'superscript', 'svelte', 'svg', 'table', 'tablet', 'tag', 'tailwind', 'target', 'telegram', 'terminal', 'text-document-alt', 'text-document', 'text', 'thumb-down', 'thumb-up', 'thumbtack', 'tick-circle', 'tick-small', 'tick', 'tiktok', 'toggle', 'toilet', 'top-left', 'top-right', 'trend-down', 'trend-up', 'triangle', 'trophy', 'tv', 'twitch', 'twitter', 'typescript', 'underline', 'unlock-circle', 'unlock-small', 'unlock', 'up-circle', 'up-small', 'up', 'upload', 'usb-cable', 'user-circle', 'user-minus', 'user-plus', 'user-square', 'user', 'users', 'vector-document', 'venn-diagram', 'view-column', 'view-grid', 'vim', 'volume-1', 'volume-2', 'volume-3', 'vr-headset', 'vue', 'wallet-alt', 'wallet', 'wan', 'wand', 'watch', 'webpack', 'whatsapp', 'wifi-full', 'wifi-low', 'wifi-none', 'windows', 'wordpress', 'x-circle', 'x-small', 'x', 'xls', 'yen', 'youtube', 'zip', 'zoom-in', 'zoom-out'];
@@ -371,21 +424,49 @@
             createColorGrid('iconColorGrid', 'iconColor');
             createColorGrid('shapeColorGrid', 'shapeColor');
             createColorGrid('frameColorGrid', 'frameColor');
-
-            // Set up Accordions
-            document.querySelectorAll('.accordion-header').forEach(header => {
-                header.onclick = () => {
-                    const item = header.parentElement;
-                    const isOpen = item.classList.contains('accordion-open');
-                    if (!isOpen) item.classList.add('accordion-open');
-                    else item.classList.remove('accordion-open');
+            
+            const modalGrid = document.getElementById('modalColorGrid');
+            VIBRANT_PALETTE.forEach(rgb => {
+                const btn = document.createElement('button');
+                btn.className = 'color-dot';
+                btn.style.backgroundColor = `rgb(${rgb.join(',')})`;
+                btn.onclick = () => {
+                    const hex = rgbToHex(...rgb);
+                    state.gradColors[state.activeGradSlot] = hex;
+                    document.getElementById(`slot${state.activeGradSlot}`).style.backgroundColor = hex;
+                    document.getElementById('colorPickerModal').style.display = 'none';
+                    render();
                 };
+                modalGrid.appendChild(btn);
             });
 
+            setupNavigation();
+            setupInteraction();
             loadIcons();
             preloadOverlays();
             updateScale();
             render();
+            
+            document.querySelectorAll('.grad-slot').forEach((btn, i) => {
+                btn.style.backgroundColor = state.gradColors[i];
+                btn.onclick = () => {
+                    state.activeGradSlot = i;
+                    document.getElementById('colorPickerModal').style.display = 'flex';
+                };
+            });
+        }
+
+        function setupNavigation() {
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.onclick = () => {
+                    const tabId = btn.dataset.tab;
+                    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('nav-item-active'));
+                    btn.classList.add('nav-item-active');
+                    document.querySelectorAll('.tab-content').forEach(panel => panel.classList.remove('active'));
+                    const targetPanel = document.getElementById(`tab${tabId.charAt(0).toUpperCase() + tabId.slice(1)}`);
+                    if (targetPanel) targetPanel.classList.add('active');
+                };
+            });
         }
 
         function createColorGrid(containerId, stateKey) {
@@ -393,7 +474,7 @@
             container.innerHTML = '';
             allColors.forEach(rgb => {
                 const btn = document.createElement('button');
-                btn.className = 'aspect-square rounded-full transition-all hover:scale-110 border border-white/10';
+                btn.className = 'color-dot';
                 btn.style.backgroundColor = `rgb(${rgb.join(',')})`;
                 btn.onclick = () => {
                     state[stateKey] = rgb;
@@ -458,12 +539,10 @@
             const tempCanvas = document.createElement('canvas');
             tempCanvas.width = w; tempCanvas.height = h;
             const tCtx = tempCanvas.getContext('2d');
-            
             tCtx.drawImage(img, 0, 0, w, h);
             tCtx.globalCompositeOperation = 'source-in';
             tCtx.fillStyle = `rgb(${color.join(',')})`;
             tCtx.fillRect(0, 0, w, h);
-
             ctx.save();
             ctx.globalCompositeOperation = blend;
             ctx.drawImage(tempCanvas, x, y);
@@ -472,8 +551,6 @@
 
         function render() {
             ctx.clearRect(0,0, CANVAS_SIZE, CANVAS_SIZE);
-            
-            // Background
             if (state.backgroundMode === 'solid') {
                 ctx.fillStyle = `rgb(${state.activeBgColor.join(',')})`;
                 ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
@@ -489,29 +566,19 @@
                     ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
                 });
             }
-
-            // Background Photo
             if (state.bgImage) {
                 const s = Math.max(CANVAS_SIZE / state.bgImage.width, CANVAS_SIZE / state.bgImage.height);
                 ctx.drawImage(state.bgImage, (CANVAS_SIZE/2)-(state.bgImage.width/2)*s, (CANVAS_SIZE/2)-(state.bgImage.height/2)*s, state.bgImage.width*s, state.bgImage.height*s);
             }
-
-            // Shape Layer
             if (document.getElementById('shapeToggle').checked) {
                 drawLayer(overlayImages[`shape_${state.activeShapeIndex}`], state.shapeColor, 0, 0, 1000, 1000, state.shapeBlend);
             }
-
-            // Frame Layer
             if (document.getElementById('frameToggle').checked) {
                 drawLayer(overlayImages['frame'], state.frameColor, 0, 0, 1000, 1000, state.frameBlend);
             }
-
-            // Icon Layer
             if (currentIcon.image) {
                 drawLayer(currentIcon.image, state.iconColor, currentIcon.x - currentIcon.size/2, currentIcon.y - currentIcon.size/2, currentIcon.size, currentIcon.size);
             }
-
-            // Text Layer
             ctx.fillStyle = `rgb(${state.textColor.join(',')})`;
             ctx.font = `${state.activeWeight} ${state.activeFontSize}px "Circular", sans-serif`;
             const lines = wrapText(ctx, document.getElementById('textInput').value, 760);
@@ -531,53 +598,91 @@
             return lines;
         }
 
-        // Interactivity
-        const SNAP_RANGE = 20;
+        function setupInteraction() {
+            const SNAP_RANGE = 25;
+            const getPointerPos = (e) => {
+                const rect = canvas.getBoundingClientRect();
+                const scale = CANVAS_SIZE / rect.width;
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                return { x: (clientX - rect.left) * scale, y: (clientY - rect.top) * scale };
+            };
+            const startDrag = (e) => {
+                if (!currentIcon.image) return;
+                const pos = getPointerPos(e);
+                if (Math.hypot(pos.x - currentIcon.x, pos.y - currentIcon.y) < currentIcon.size/1.5) {
+                    currentIcon.isDragging = true;
+                    if (e.cancelable) e.preventDefault();
+                }
+            };
+            const moveDrag = (e) => {
+                if (!currentIcon.isDragging) return;
+                const pos = getPointerPos(e);
+                let mx = pos.x, my = pos.y;
+                let snappedX = false, snappedY = false;
+                if (Math.abs(mx - 500) < SNAP_RANGE) { mx = 500; snappedX = true; }
+                if (Math.abs(my - 500) < SNAP_RANGE) { my = 500; snappedY = true; }
+                guideX.style.display = snappedX ? 'block' : 'none';
+                guideY.style.display = snappedY ? 'block' : 'none';
+                currentIcon.x = mx; currentIcon.y = my;
+                render();
+                if (e.cancelable) e.preventDefault();
+            };
+            const endDrag = () => {
+                currentIcon.isDragging = false;
+                guideX.style.display = 'none'; guideY.style.display = 'none';
+            };
+            canvas.onmousedown = startDrag; window.onmousemove = moveDrag; window.onmouseup = endDrag;
+            canvas.addEventListener('touchstart', startDrag, { passive: false });
+            window.addEventListener('touchmove', moveDrag, { passive: false });
+            window.addEventListener('touchend', endDrag);
+        }
 
-        canvas.onmousedown = (e) => {
-            if (!currentIcon.image) return;
-            const r = canvas.getBoundingClientRect(), s = CANVAS_SIZE / r.width;
-            const mx = (e.clientX - r.left) * s, my = (e.clientY - r.top) * s;
-            if (Math.hypot(mx - currentIcon.x, my - currentIcon.y) < currentIcon.size/2) currentIcon.isDragging = true;
+        // Action Handlers
+        document.getElementById('exportBtn').onclick = () => {
+            const dataUrl = canvas.toDataURL('image/png', 1.0);
+            document.getElementById('exportPreview').src = dataUrl;
+            document.getElementById('exportModal').style.display = 'flex';
         };
+        document.getElementById('mobileExport').onclick = document.getElementById('exportBtn').onclick;
 
-        window.onmousemove = (e) => {
-            if (!currentIcon.isDragging) return;
-            const r = canvas.getBoundingClientRect(), s = CANVAS_SIZE / r.width;
-            let mx = (e.clientX - r.left) * s, my = (e.clientY - r.top) * s;
-
-            let snappedX = false, snappedY = false;
-            if (Math.abs(mx - 500) < SNAP_RANGE) { mx = 500; snappedX = true; }
-            if (Math.abs(my - 500) < SNAP_RANGE) { my = 500; snappedY = true; }
-
-            guideX.style.display = snappedX ? 'block' : 'none';
-            guideY.style.display = snappedY ? 'block' : 'none';
-
-            currentIcon.x = mx; currentIcon.y = my;
+        document.getElementById('randomBtn').onclick = () => {
+            const randomColor = () => allColors[Math.floor(Math.random() * allColors.length)];
+            const randomVibrant = () => VIBRANT_PALETTE[Math.floor(Math.random() * VIBRANT_PALETTE.length)];
+            
+            if (state.backgroundMode === 'solid') state.activeBgColor = randomColor();
+            else {
+                state.gradColors = state.gradColors.map(() => rgbToHex(...randomVibrant()));
+                document.querySelectorAll('.grad-slot').forEach((btn, i) => btn.style.backgroundColor = state.gradColors[i]);
+            }
+            
+            state.textColor = randomColor(); state.iconColor = randomColor();
+            state.shapeColor = randomColor(); state.frameColor = randomColor();
+            
+            createColorGrid('solidControls', 'activeBgColor');
+            createColorGrid('textColorGrid', 'textColor');
+            createColorGrid('iconColorGrid', 'iconColor');
+            createColorGrid('shapeColorGrid', 'shapeColor');
+            createColorGrid('frameColorGrid', 'frameColor');
             render();
         };
+        document.getElementById('mobileRandom').onclick = document.getElementById('randomBtn').onclick;
 
-        window.onmouseup = () => {
-            currentIcon.isDragging = false;
-            guideX.style.display = 'none';
-            guideY.style.display = 'none';
-        };
-
-        // UI Event Listeners
+        // General Listeners
         document.getElementById('iconSearch').oninput = loadIcons;
         document.getElementById('textInput').oninput = render;
+        document.getElementById('closeExport').onclick = () => { document.getElementById('exportModal').style.display = 'none'; };
+        document.getElementById('closePicker').onclick = () => { document.getElementById('colorPickerModal').style.display = 'none'; };
         
         document.getElementById('iconSizeSlider').oninput = (e) => {
             currentIcon.size = parseInt(e.target.value);
             document.getElementById('iconSizeLabel').textContent = `${currentIcon.size}px`;
             render();
         };
-
         document.getElementById('shapeBlendMode').onchange = (e) => { state.shapeBlend = e.target.value; render(); };
         document.getElementById('frameBlendMode').onchange = (e) => { state.frameBlend = e.target.value; render(); };
         document.getElementById('shapeToggle').onchange = render;
         document.getElementById('frameToggle').onchange = render;
-
         document.getElementById('iconTabFill').onclick = () => { currentIconCategory = 'fill'; loadIcons(); refreshTab('iconTabFill', 'iconTabStroke'); };
         document.getElementById('iconTabStroke').onclick = () => { currentIconCategory = 'stroke'; loadIcons(); refreshTab('iconTabStroke', 'iconTabFill'); };
         
@@ -590,24 +695,24 @@
 
         document.querySelectorAll('.snap-btn').forEach(btn => {
             btn.onclick = () => {
-                const off = currentIcon.size/2 + 50;
+                const off = currentIcon.size/2 + 60;
                 const map = { tl:[off,off], tc:[500,off], tr:[1000-off,off], cc:[500,500] };
                 if (map[btn.dataset.snap]) { currentIcon.x = map[btn.dataset.snap][0]; currentIcon.y = map[btn.dataset.snap][1]; }
                 render();
             };
         });
 
-        document.getElementById('removeIcon').onclick = () => { 
-            currentIcon.image = null; 
-            document.getElementById('iconControls').classList.add('hidden'); 
-            render(); 
-        };
+        document.getElementById('removeIcon').onclick = () => { currentIcon.image = null; document.getElementById('iconControls').classList.add('hidden'); render(); };
         
         document.querySelectorAll('.size-btn').forEach(btn => {
             btn.onclick = () => {
                 state.activeFontSize = parseInt(btn.dataset.size);
-                document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('size-btn-active', 'bg-zinc-800'));
-                btn.classList.add('size-btn-active', 'bg-zinc-800');
+                document.querySelectorAll('.size-btn').forEach(b => {
+                    b.classList.remove('size-btn-active', 'bg-white', 'text-black');
+                    b.classList.add('text-zinc-500', 'border-white/10');
+                });
+                btn.classList.add('size-btn-active', 'bg-white', 'text-black');
+                btn.classList.remove('text-zinc-500', 'border-white/10');
                 render();
             };
         });
@@ -615,36 +720,23 @@
         document.querySelectorAll('.weight-btn').forEach(btn => {
             btn.onclick = () => {
                 state.activeWeight = parseInt(btn.dataset.weight);
-                document.querySelectorAll('.weight-btn').forEach(b => b.classList.remove('bg-zinc-800'));
-                btn.classList.add('bg-zinc-800');
+                document.querySelectorAll('.weight-btn').forEach(b => {
+                    b.classList.remove('bg-white/10', 'text-white', 'border-white/20');
+                    b.classList.add('text-zinc-400', 'border-white/10');
+                });
+                btn.classList.add('bg-white/10', 'text-white', 'border-white/20');
+                btn.classList.remove('text-zinc-400', 'border-white/10');
                 render();
             };
         });
 
         document.getElementById('shuffleShapeBtn').onclick = () => {
             state.activeShapeIndex = ['01','02','03'][(['01','02','03'].indexOf(state.activeShapeIndex)+1)%3];
+            document.getElementById('shapeLabel').textContent = `Variant ${state.activeShapeIndex}`;
             document.getElementById('shapeToggle').checked = true;
             render();
         };
 
-        // Gradient Logic
-        document.querySelectorAll('.grad-slot').forEach((btn, i) => {
-            btn.onclick = () => {
-                state.currentSlotIndex = i;
-                const color = allColors[Math.floor(Math.random() * allColors.length)];
-                state.gradColors[i] = rgbToHex(...color);
-                btn.style.backgroundColor = state.gradColors[i];
-                render();
-            };
-        });
-
-        document.getElementById('shuffleGradientColors').onclick = () => {
-            state.gradColors = state.gradColors.map(() => rgbToHex(...allColors[Math.floor(Math.random() * allColors.length)]));
-            document.querySelectorAll('.grad-slot').forEach((btn, i) => btn.style.backgroundColor = state.gradColors[i]);
-            render();
-        };
-
-        // Background Image Logic
         document.getElementById('imageUpload').onchange = (e) => {
             const file = e.target.files[0]; if (!file) return;
             const reader = new FileReader();
@@ -662,77 +754,33 @@
         };
 
         document.getElementById('clearImage').onclick = () => {
-            state.bgImage = null;
-            document.getElementById('imageUpload').value = '';
-            document.getElementById('uploadLabel').textContent = 'Upload JPG/PNG Background';
+            state.bgImage = null; document.getElementById('imageUpload').value = '';
+            document.getElementById('uploadLabel').textContent = 'Upload Image';
             document.getElementById('clearImage').classList.add('hidden');
             render();
         };
 
-        // Tab Switching
         document.getElementById('tabSolid').onclick = () => { 
-            state.backgroundMode = 'solid'; 
-            refreshTab('tabSolid', 'tabGradient'); 
-            document.getElementById('solidControls').classList.remove('hidden'); 
-            document.getElementById('gradientControls').classList.add('hidden'); 
-            render(); 
+            state.backgroundMode = 'solid'; refreshTab('tabSolid', 'tabGradient'); 
+            document.getElementById('solidGroup').classList.remove('hidden'); 
+            document.getElementById('gradientGroup').classList.add('hidden'); render(); 
         };
         document.getElementById('tabGradient').onclick = () => { 
-            state.backgroundMode = 'gradient'; 
-            refreshTab('tabGradient', 'tabSolid'); 
-            document.getElementById('gradientControls').classList.remove('hidden'); 
-            document.getElementById('solidControls').classList.add('hidden'); 
-            render(); 
-        };
-
-        // Global Randomizer
-        document.getElementById('randomBtn').onclick = () => {
-            const randomColor = () => allColors[Math.floor(Math.random() * allColors.length)];
-            
-            if (state.backgroundMode === 'solid') {
-                state.activeBgColor = randomColor();
-            } else {
-                document.getElementById('shuffleGradientColors').click();
-            }
-
-            state.textColor = randomColor();
-            state.iconColor = randomColor();
-            state.shapeColor = randomColor();
-            state.frameColor = randomColor();
-            
-            // Sync UI dot selectors
-            updateColorSelection(document.getElementById('solidControls'), state.activeBgColor);
-            updateColorSelection(document.getElementById('textColorGrid'), state.textColor);
-            updateColorSelection(document.getElementById('iconColorGrid'), state.iconColor);
-            updateColorSelection(document.getElementById('shapeColorGrid'), state.shapeColor);
-            updateColorSelection(document.getElementById('frameColorGrid'), state.frameColor);
-            
-            render();
-        };
-
-        // Exporting
-        document.getElementById('exportBtn').onclick = () => {
-            const dataUrl = canvas.toDataURL('image/png');
-            document.getElementById('exportPreview').src = dataUrl;
-            document.getElementById('exportModal').style.display = 'flex';
-        };
-        document.getElementById('closeExport').onclick = () => {
-            document.getElementById('exportModal').style.display = 'none';
+            state.backgroundMode = 'gradient'; refreshTab('tabGradient', 'tabSolid'); 
+            document.getElementById('gradientGroup').classList.remove('hidden'); 
+            document.getElementById('solidGroup').classList.add('hidden'); render(); 
         };
 
         function updateScale() {
-            const pad = window.innerWidth < 768 ? 40 : 80;
-            const s = Math.min((viewport.clientWidth - pad) / CANVAS_SIZE, (viewport.clientHeight - pad) / CANVAS_SIZE);
+            const pad = window.innerWidth < 768 ? 60 : 120;
+            const viewportH = document.getElementById('viewport').clientHeight;
+            const viewportW = document.getElementById('viewport').clientWidth;
+            const s = Math.min((viewportW - pad) / CANVAS_SIZE, (viewportH - pad) / CANVAS_SIZE);
             document.getElementById('container').style.transform = `scale(${s})`;
         }
 
         window.onresize = updateScale;
-        window.onload = () => {
-            lucide.createIcons();
-            initApp();
-            // Ensure slot button colors match state on load
-            document.querySelectorAll('.grad-slot').forEach((btn, i) => btn.style.backgroundColor = state.gradColors[i]);
-        };
+        window.onload = () => { lucide.createIcons(); initApp(); };
     </script>
 </body>
 </html>
