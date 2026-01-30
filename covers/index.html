@@ -15,263 +15,279 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     
     <style>
-        @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Black.ttf') format('truetype'); font-weight: 900; }
-        @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Bold.ttf') format('truetype'); font-weight: 700; }
-        @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Medium.ttf') format('truetype'); font-weight: 500; }
         @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Book.ttf') format('truetype'); font-weight: 400; }
+        @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Bold.ttf') format('truetype'); font-weight: 700; }
 
         :root {
-            --accent: rgb(59, 130, 246);
+            --accent: #007AFF; /* Apple Blue */
             --bg-deep: #000000;
-            --bg-panel: #111112;
-            --bg-card: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.08);
+            --bg-panel: rgba(28, 28, 30, 0.7);
+            --bg-card: rgba(255, 255, 255, 0.04);
+            --border: rgba(255, 255, 255, 0.1);
+            --system-gray: #8E8E93;
         }
 
         body {
-            font-family: -apple-system, "SF Pro Display", "SF Pro Text", "Circular", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
             background-color: var(--bg-deep);
             color: #ffffff;
             margin: 0;
             overflow: hidden;
             height: 100vh;
             -webkit-tap-highlight-color: transparent;
+            -webkit-user-select: none;
+        }
+
+        /* Glassmorphism Refined */
+        .glass {
+            background: var(--bg-panel);
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            border: 0.5px solid var(--border);
         }
 
         .custom-scrollbar::-webkit-scrollbar { width: 4px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
+
+        /* Stage Design */
+        .workspace-stage {
+            background-image: 
+                radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 80%),
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 100% 100%, 40px 40px, 40px 40px;
+        }
 
         .canvas-container {
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: transform;
         }
 
-        .glass {
-            background: var(--bg-card);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--border);
-        }
-
+        /* iOS Style Segmented Control */
         .segmented-control {
             display: flex;
-            background: rgba(0,0,0,0.4);
-            padding: 3px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
+            background: rgba(118, 118, 128, 0.24);
+            padding: 2px;
+            border-radius: 10px;
+            position: relative;
         }
         .segment-btn {
             flex: 1;
-            padding: 7px 0;
-            font-size: 11px;
-            font-weight: 700;
-            border-radius: 9px;
-            transition: all 0.2s;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            padding: 6px 0;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 8px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            color: #EBEBF5;
+            z-index: 1;
         }
         .segment-btn.active {
-            background: rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.15);
+            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
             color: #fff;
         }
 
+        /* Native-feeling Rail */
         .nav-rail-item {
-            color: #555;
+            color: var(--system-gray);
             transition: all 0.2s;
-            position: relative;
+            border-radius: 12px;
+            margin: 4px;
         }
         .nav-rail-item.active {
-            color: #fff;
-        }
-        .nav-rail-item.active::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            width: 3px;
-            height: 24px;
-            background: var(--accent);
-            border-radius: 0 4px 4px 0;
+            color: var(--accent);
+            background: rgba(0, 122, 255, 0.1);
         }
 
+        /* Apple Swatches */
         .swatch {
             width: 100%;
             aspect-ratio: 1;
-            border-radius: 10px;
+            border-radius: 50%;
             border: 2px solid transparent;
-            transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
             cursor: pointer;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
         }
         .swatch.active { 
             border-color: #fff; 
-            transform: scale(0.9);
-            box-shadow: 0 0 15px rgba(255,255,255,0.1);
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
         .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeIn 0.3s ease-out; }
+        .tab-content.active { display: block; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* iOS Sliders */
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 28px;
+            background: transparent;
+        }
+        input[type="range"]::-webkit-slider-runnable-track {
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 2px;
+        }
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            background: #ffffff;
+            box-shadow: 0 3px 8px rgba(0,0,0,0.3);
+            margin-top: -10px;
+            cursor: pointer;
+        }
+
+        /* Native Modals */
         .apple-modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.95);
+            background: rgba(0,0,0,0.6);
             z-index: 100;
-            backdrop-filter: blur(30px);
+            backdrop-filter: blur(10px);
             align-items: center;
             justify-content: center;
             padding: 20px;
         }
 
-        .icon-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-        }
         .icon-box {
             aspect-ratio: 1;
-            background: rgba(255,255,255,0.03);
-            border-radius: 14px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid var(--border);
             cursor: pointer;
-            transition: background 0.2s;
+            transition: all 0.2s;
         }
-        .icon-box:active { background: rgba(255,255,255,0.1); transform: scale(0.95); }
+        .icon-box:active { background: rgba(255,255,255,0.15); transform: scale(0.92); }
 
-        input[type="range"] {
-            -webkit-appearance: none;
-            height: 4px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 5px;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            width: 20px;
-            height: 20px;
-            background: white;
-            border-radius: 50%;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
+        /* Button Press Effect */
+        button:active { transform: scale(0.97); }
 
-        /* Mobile Layout Optimizations */
         @media (max-width: 768px) {
-            .mobile-viewport { 
-                height: 42vh; 
-                min-height: 300px;
-                flex-shrink: 0;
-            }
+            .mobile-viewport { height: 45vh; }
             .mobile-panel { 
-                height: 58vh; 
-                flex-grow: 1;
+                height: 55vh; 
+                border-radius: 30px 30px 0 0;
+                margin-top: -30px;
+                box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
             }
-            .nav-rail-item.active::after {
-                left: 50%; bottom: 0; transform: translateX(-50%);
-                width: 24px; height: 3px; border-radius: 4px 4px 0 0;
-            }
+            .nav-rail-item { margin: 0; border-radius: 0; }
         }
     </style>
 </head>
-<body class="flex flex-col md:flex-row">
+<body class="flex flex-col md:flex-row bg-black">
 
-    <!-- Modals -->
+    <!-- Export Modal -->
     <div id="exportModal" class="apple-modal">
-        <div class="max-w-md w-full glass p-6 md:p-8 rounded-[32px] text-center space-y-6">
-            <div class="space-y-2">
-                <h2 class="text-xl font-bold">Design Ready</h2>
-                <p id="exportInstruction" class="text-xs text-zinc-400">Long-press image to save</p>
+        <div class="max-w-sm w-full glass p-6 rounded-[32px] text-center space-y-6">
+            <div class="space-y-1">
+                <h2 class="text-lg font-semibold tracking-tight">Export Artwork</h2>
+                <p id="exportInstruction" class="text-xs text-zinc-400">Long-press to save to Photos</p>
             </div>
-            <img id="exportPreview" class="w-full aspect-square rounded-2xl shadow-2xl border border-white/10 mx-auto" alt="Export">
-            <div class="flex gap-3">
-                <button id="closeExport" class="flex-1 py-4 rounded-2xl font-bold bg-white/10 hover:bg-white/20 transition-all">Close</button>
-                <a id="downloadLink" download="artwork-cover.png" class="flex-1 py-4 rounded-2xl font-bold bg-blue-600 text-center hidden md:block">Download</a>
+            <div class="relative group">
+                <img id="exportPreview" class="w-full aspect-square rounded-2xl shadow-2xl border border-white/10 mx-auto" alt="Export">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <button id="closeExport" class="py-3.5 rounded-2xl font-semibold bg-white/10 hover:bg-white/15 transition-all text-sm">Cancel</button>
+                <a id="downloadLink" download="artwork.png" class="py-3.5 rounded-2xl font-semibold bg-blue-600 text-center text-sm">Save Image</a>
             </div>
         </div>
     </div>
 
     <!-- Workspace -->
-    <main id="viewport" class="mobile-viewport bg-[#080809] flex items-center justify-center relative overflow-hidden md:flex-grow">
-        <div id="guideX" class="absolute left-1/2 top-0 bottom-0 w-[1px] bg-blue-500/50 hidden z-20 pointer-events-none"></div>
-        <div id="guideY" class="absolute top-1/2 left-0 right-0 h-[1px] bg-blue-500/50 hidden z-20 pointer-events-none"></div>
+    <main id="viewport" class="mobile-viewport workspace-stage flex-grow flex items-center justify-center relative overflow-hidden">
+        <div id="guideX" class="absolute left-1/2 top-0 bottom-0 w-[0.5px] bg-blue-500/40 hidden z-20 pointer-events-none"></div>
+        <div id="guideY" class="absolute top-1/2 left-0 right-0 h-[0.5px] bg-blue-500/40 hidden z-20 pointer-events-none"></div>
 
-        <div id="container" class="canvas-container shadow-[0_30px_90px_rgba(0,0,0,0.9)] flex-shrink-0" style="width: 1000px; height: 1000px;">
-            <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block bg-black rounded-[4px] cursor-move"></canvas>
+        <div id="container" class="canvas-container shadow-[0_40px_100px_rgba(0,0,0,0.8)] flex-shrink-0" style="width: 1000px; height: 1000px;">
+            <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block bg-zinc-900 rounded-sm cursor-move"></canvas>
+        </div>
+        
+        <!-- Header Info -->
+        <div class="absolute top-6 left-6 hidden md:block">
+            <h1 class="text-sm font-bold tracking-widest text-white/40 uppercase">Covr Stdio / 1.0</h1>
         </div>
     </main>
 
-    <!-- Sidebar -->
-    <aside class="mobile-panel w-full md:w-[380px] flex flex-col md:flex-row bg-panel border-t md:border-t-0 md:border-l border-white/5 z-40 overflow-hidden">
+    <!-- Inspector -->
+    <aside class="mobile-panel w-full md:w-[420px] glass flex flex-col md:flex-row z-40 overflow-hidden shadow-2xl">
         
-        <!-- Rail Navigation -->
-        <nav class="flex md:flex-col md:w-20 bg-black/40 border-b md:border-b-0 md:border-r border-white/5 shrink-0">
-            <button class="nav-rail-item flex-1 md:flex-none md:h-20 flex flex-col items-center justify-center gap-1.5 active" data-tab="text">
+        <!-- Navigation Rail -->
+        <nav class="flex md:flex-col md:w-20 bg-black/20 md:border-r border-white/5 shrink-0 pt-2 pb-safe">
+            <button class="nav-rail-item flex-1 md:flex-none md:h-16 flex flex-col items-center justify-center gap-1 active" data-tab="text">
                 <i data-lucide="type" class="w-5 h-5"></i>
-                <span class="text-[8px] font-bold uppercase tracking-wider">Title</span>
+                <span class="text-[9px] font-medium opacity-80">Title</span>
             </button>
-            <button class="nav-rail-item flex-1 md:flex-none md:h-20 flex flex-col items-center justify-center gap-1.5" data-tab="base">
-                <i data-lucide="box" class="w-5 h-5"></i>
-                <span class="text-[8px] font-bold uppercase tracking-wider">Canvas</span>
+            <button class="nav-rail-item flex-1 md:flex-none md:h-16 flex flex-col items-center justify-center gap-1" data-tab="base">
+                <i data-lucide="layout-template" class="w-5 h-5"></i>
+                <span class="text-[9px] font-medium opacity-80">Canvas</span>
             </button>
-            <button class="nav-rail-item flex-1 md:flex-none md:h-20 flex flex-col items-center justify-center gap-1.5" data-tab="layers">
-                <i data-lucide="layers" class="w-5 h-5"></i>
-                <span class="text-[8px] font-bold uppercase tracking-wider">Style</span>
+            <button class="nav-rail-item flex-1 md:flex-none md:h-16 flex flex-col items-center justify-center gap-1" data-tab="layers">
+                <i data-lucide="layers-2" class="w-5 h-5"></i>
+                <span class="text-[9px] font-medium opacity-80">Style</span>
             </button>
-            <button class="nav-rail-item flex-1 md:flex-none md:h-20 flex flex-col items-center justify-center gap-1.5" data-tab="elements">
-                <i data-lucide="smile" class="w-5 h-5"></i>
-                <span class="text-[8px] font-bold uppercase tracking-wider">Icons</span>
+            <button class="nav-rail-item flex-1 md:flex-none md:h-16 flex flex-col items-center justify-center gap-1" data-tab="elements">
+                <i data-lucide="shapes" class="w-5 h-5"></i>
+                <span class="text-[9px] font-medium opacity-80">Glyphs</span>
             </button>
-            <button id="railExportBtn" class="nav-rail-item flex-1 md:flex-none md:h-20 flex flex-col items-center justify-center gap-1.5 text-blue-500">
-                <i data-lucide="download" class="w-5 h-5"></i>
-                <span class="text-[8px] font-bold uppercase tracking-wider">Save</span>
+            <div class="hidden md:block flex-grow"></div>
+            <button id="railExportBtn" class="nav-rail-item flex-1 md:flex-none md:h-20 flex flex-col items-center justify-center gap-1 text-white bg-blue-600/20 md:m-2 md:rounded-2xl">
+                <i data-lucide="share" class="w-5 h-5"></i>
+                <span class="text-[9px] font-bold uppercase tracking-tighter">Export</span>
             </button>
         </nav>
 
-        <!-- Tool Content -->
+        <!-- Tool Inspector -->
         <div class="flex-grow flex flex-col overflow-hidden custom-scrollbar">
-            <!-- Mobile Header Area (Reduced) -->
-            <div class="md:hidden flex justify-center py-2 border-b border-white/5 bg-black/20">
-                <div class="w-10 h-1 bg-white/10 rounded-full"></div>
+            <!-- Mobile Handle -->
+            <div class="md:hidden flex justify-center py-3">
+                <div class="w-10 h-1.5 bg-white/20 rounded-full"></div>
             </div>
 
-            <div class="p-4 md:p-6 space-y-5 overflow-y-auto flex-grow pb-12">
+            <div class="p-6 space-y-8 overflow-y-auto flex-grow pb-24">
                 
                 <!-- Tab: Typography -->
-                <div id="tabText" class="tab-content active space-y-4">
-                    <textarea id="titleInput" class="w-full bg-black/40 border border-white/5 rounded-2xl p-4 text-lg font-bold outline-none focus:border-blue-500 transition-all resize-none placeholder-zinc-700" rows="2" placeholder="Title goes here..."></textarea>
+                <div id="tabText" class="tab-content active space-y-6">
+                    <div class="space-y-3">
+                        <label class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest px-1">Artwork Title</label>
+                        <textarea id="titleInput" class="w-full bg-black/30 border border-white/5 rounded-2xl p-4 text-xl font-bold outline-none focus:ring-2 focus:ring-blue-500/50 transition-all resize-none placeholder-zinc-700" rows="3" placeholder="Enter title..."></textarea>
+                    </div>
 
-                    <div class="glass p-5 rounded-2xl space-y-5">
-                        <div class="space-y-3">
+                    <div class="bg-white/5 rounded-[24px] p-5 space-y-6">
+                        <div class="space-y-4">
+                            <label class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Typography Style</label>
                             <div class="grid grid-cols-2 gap-2">
-                                <button data-size="90" class="font-size-btn py-3 rounded-xl text-[10px] font-bold bg-white text-black transition-all">COMPACT</button>
-                                <button data-size="120" class="font-size-btn py-3 rounded-xl text-[10px] font-bold bg-white/5 text-zinc-500 transition-all">DISPLAY</button>
+                                <button data-size="90" class="font-size-btn py-3.5 rounded-xl text-xs font-bold bg-white text-black transition-all">COMPACT</button>
+                                <button data-size="120" class="font-size-btn py-3.5 rounded-xl text-xs font-bold bg-white/10 text-zinc-400 transition-all">DISPLAY</button>
                             </div>
                             <div class="grid grid-cols-4 gap-2">
                                 <button data-weight="400" class="font-weight-btn py-3 rounded-xl text-xs font-medium bg-white/5 text-zinc-500">400</button>
-                                <button data-weight="500" class="font-weight-btn py-3 rounded-xl text-xs font-bold bg-white/5 text-zinc-500">500</button>
-                                <button data-weight="700" class="font-weight-btn py-3 rounded-xl text-xs font-black bg-white/10 text-white border border-white/10">700</button>
+                                <button data-weight="500" class="font-weight-btn py-3 rounded-xl text-xs font-semibold bg-white/5 text-zinc-500">500</button>
+                                <button data-weight="700" class="font-weight-btn py-3 rounded-xl text-xs font-bold bg-white/20 text-white shadow-lg">700</button>
                                 <button data-weight="900" class="font-weight-btn py-3 rounded-xl text-xs font-black bg-white/5 text-zinc-500">900</button>
                             </div>
                         </div>
-                        <div id="textSwatches" class="grid grid-cols-6 gap-2"></div>
+                        <div class="space-y-4">
+                            <label class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Text Color</label>
+                            <div id="textSwatches" class="grid grid-cols-6 gap-3"></div>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Tab: Background -->
-                <div id="tabBase" class="tab-content space-y-4">
-                    <button id="resetBtn" class="w-full py-3.5 bg-white/5 border border-white/5 rounded-2xl text-[10px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-                        <i data-lucide="refresh-ccw" class="w-3.5 h-3.5"></i>
-                        Reset to Default
-                    </button>
-
+                <div id="tabBase" class="tab-content space-y-6">
                     <div class="segmented-control">
                         <button id="modeSolid" class="segment-btn active">Solid</button>
                         <button id="modeGradient" class="segment-btn">Mesh</button>
@@ -279,94 +295,101 @@
                     </div>
                     
                     <div id="solidConfig" class="space-y-4">
-                        <div id="solidSwatches" class="grid grid-cols-6 gap-2.5"></div>
+                        <div id="solidSwatches" class="grid grid-cols-6 gap-3"></div>
                     </div>
                     
-                    <div id="gradientConfig" class="hidden space-y-5">
-                        <div class="flex justify-between items-center bg-black/40 p-3 rounded-2xl border border-white/5">
-                            <div id="gradPoints" class="flex gap-2.5">
-                                <button data-idx="0" class="w-8 h-8 rounded-full border-2 border-white/20 active-grad-point" style="background: #272a48"></button>
-                                <button data-idx="1" class="w-8 h-8 rounded-full border-2 border-white/20" style="background: #4490ef"></button>
-                                <button data-idx="2" class="w-8 h-8 rounded-full border-2 border-white/20" style="background: #272a48"></button>
-                                <button data-idx="3" class="w-8 h-8 rounded-full border-2 border-white/20" style="background: #d8305f"></button>
+                    <div id="gradientConfig" class="hidden space-y-6">
+                        <div class="flex items-center justify-between bg-black/40 p-4 rounded-2xl border border-white/5">
+                            <div id="gradPoints" class="flex gap-3">
+                                <button data-idx="0" class="w-9 h-9 rounded-full border-2 border-white/40 active-grad-point ring-offset-2 ring-offset-black" style="background: #272a48"></button>
+                                <button data-idx="1" class="w-9 h-9 rounded-full border-2 border-white/10" style="background: #4490ef"></button>
+                                <button data-idx="2" class="w-9 h-9 rounded-full border-2 border-white/10" style="background: #272a48"></button>
+                                <button data-idx="3" class="w-9 h-9 rounded-full border-2 border-white/10" style="background: #d8305f"></button>
                             </div>
-                            <button id="shuffleGrad" class="text-[9px] font-bold text-blue-500 uppercase tracking-widest px-2">Shuffle</button>
+                            <button id="shuffleGrad" class="bg-blue-600/10 text-blue-500 px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider">Shuffle</button>
                         </div>
-                        <div id="gradSwatches" class="grid grid-cols-6 gap-2.5"></div>
+                        <div id="gradSwatches" class="grid grid-cols-6 gap-3"></div>
                     </div>
                     
                     <div id="imageConfig" class="hidden space-y-4">
-                        <label class="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-white/10 rounded-2xl hover:bg-white/5 cursor-pointer transition-all">
+                        <label class="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-white/10 rounded-[24px] bg-white/5 hover:bg-white/10 cursor-pointer transition-all">
                             <input type="file" id="imageInput" class="hidden" accept="image/*">
-                            <i data-lucide="upload-cloud" class="w-6 h-6 text-zinc-600 mb-2"></i>
-                            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest" id="imageName">Import Asset</span>
+                            <i data-lucide="image-plus" class="w-8 h-8 text-zinc-500 mb-2"></i>
+                            <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-widest" id="imageName">Add Background Asset</span>
                         </label>
-                        <button id="removeImage" class="w-full py-3 text-[10px] font-bold text-red-400 bg-red-400/5 rounded-xl hidden uppercase tracking-widest">Remove Background</button>
+                        <button id="removeImage" class="w-full py-3.5 text-[11px] font-bold text-red-400 bg-red-400/10 rounded-xl hidden uppercase tracking-widest">Remove Background</button>
                     </div>
+
+                    <button id="resetBtn" class="w-full py-4 bg-white/5 border border-white/5 rounded-2xl text-[11px] font-bold uppercase tracking-widest text-zinc-400">
+                        Reset Studio
+                    </button>
                 </div>
 
                 <!-- Tab: Overlays -->
-                <div id="tabLayers" class="tab-content space-y-4">
-                    <div class="glass p-4 rounded-2xl flex items-center justify-between">
-                        <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest">Blend Engine</span>
-                        <select id="globalBlend" class="bg-black/40 text-[10px] font-bold uppercase py-2 px-3 rounded-lg border border-white/10 outline-none appearance-none cursor-pointer">
-                            <option value="overlay">Overlay</option>
-                            <option value="screen">Screen</option>
-                            <option value="multiply">Multiply</option>
-                            <option value="source-over">Normal</option>
-                            <option value="color-dodge">Dodge</option>
-                            <option value="hard-light">Hard Light</option>
-                        </select>
-                    </div>
+                <div id="tabLayers" class="tab-content space-y-6">
+                    <div class="bg-white/5 p-5 rounded-[24px] space-y-6">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Blend Mode</span>
+                            <select id="globalBlend" class="bg-black/60 text-xs font-semibold py-2 px-4 rounded-xl border border-white/10 outline-none">
+                                <option value="overlay">Overlay</option>
+                                <option value="screen">Screen</option>
+                                <option value="multiply">Multiply</option>
+                                <option value="source-over">Normal</option>
+                                <option value="color-dodge">Dodge</option>
+                                <option value="hard-light">Hard Light</option>
+                            </select>
+                        </div>
 
-                    <div class="glass p-4 rounded-2xl space-y-4">
-                        <div class="flex justify-between items-center">
-                            <div>
-                                <h3 class="text-xs font-bold uppercase tracking-wider">Accent Shape</h3>
-                                <p id="shapeInfo" class="text-[8px] text-blue-500 font-bold uppercase tracking-widest mt-0.5">Variant 01</p>
+                        <div class="pt-4 border-t border-white/5 space-y-4">
+                            <div class="flex justify-between items-center">
+                                <div>
+                                    <h3 class="text-sm font-semibold tracking-tight">Vignette & Shapes</h3>
+                                    <p id="shapeInfo" class="text-[10px] text-blue-500 font-bold uppercase tracking-widest">Variant 01</p>
+                                </div>
+                                <input type="checkbox" id="shapeToggle" class="w-12 h-6 appearance-none bg-white/10 rounded-full relative cursor-pointer checked:bg-blue-600 transition-colors before:content-[''] before:absolute before:w-5 before:h-5 before:bg-white before:rounded-full before:top-0.5 before:left-0.5 before:transition-transform checked:before:translate-x-6">
                             </div>
-                            <input type="checkbox" id="shapeToggle" class="w-10 h-5 appearance-none bg-white/10 rounded-full relative cursor-pointer checked:bg-blue-600 transition-colors before:content-[''] before:absolute before:w-4 before:h-4 before:bg-white before:rounded-full before:top-0.5 before:left-0.5 before:transition-transform checked:before:translate-x-5">
+                            <button id="nextShape" class="w-full py-3 bg-white/10 rounded-xl text-[10px] font-bold uppercase tracking-widest">Switch Variant</button>
+                            <div id="shapeSwatches" class="grid grid-cols-6 gap-3"></div>
                         </div>
-                        <button id="nextShape" class="w-full py-2.5 bg-white/5 rounded-xl text-[9px] font-bold uppercase tracking-widest hover:bg-white/10 transition-all">Cycle Variants</button>
-                        <div id="shapeSwatches" class="grid grid-cols-6 gap-2"></div>
-                    </div>
 
-                    <div class="glass p-4 rounded-2xl space-y-4">
-                        <div class="flex justify-between items-center">
-                            <h3 class="text-xs font-bold uppercase tracking-wider">Inner Frame</h3>
-                            <input type="checkbox" id="frameToggle" class="w-10 h-5 appearance-none bg-white/10 rounded-full relative cursor-pointer checked:bg-blue-600 transition-colors before:content-[''] before:absolute before:w-4 before:h-4 before:bg-white before:rounded-full before:top-0.5 before:left-0.5 before:transition-transform checked:before:translate-x-5">
+                        <div class="pt-4 border-t border-white/5 space-y-4">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-sm font-semibold tracking-tight">Edge Framing</h3>
+                                <input type="checkbox" id="frameToggle" class="w-12 h-6 appearance-none bg-white/10 rounded-full relative cursor-pointer checked:bg-blue-600 transition-colors before:content-[''] before:absolute before:w-5 before:h-5 before:bg-white before:rounded-full before:top-0.5 before:left-0.5 before:transition-transform checked:before:translate-x-6">
+                            </div>
+                            <div id="frameSwatches" class="grid grid-cols-6 gap-3"></div>
                         </div>
-                        <div id="frameSwatches" class="grid grid-cols-6 gap-2"></div>
                     </div>
                 </div>
 
                 <!-- Tab: Icons -->
-                <div id="tabElements" class="tab-content space-y-4">
+                <div id="tabElements" class="tab-content space-y-6">
                     <div class="relative">
-                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-zinc-600"></i>
-                        <input type="text" id="iconSearch" placeholder="SEARCH GLYPHS..." class="w-full bg-black/40 border border-white/5 rounded-xl py-3.5 pl-10 pr-4 text-[10px] font-bold uppercase tracking-widest outline-none focus:border-blue-500 transition-all">
+                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500"></i>
+                        <input type="text" id="iconSearch" placeholder="SEARCH SYSTEM GLYPHS" class="w-full bg-black/40 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-xs font-bold uppercase tracking-widest outline-none focus:ring-2 focus:ring-blue-500">
                     </div>
                     
-                    <div id="iconGrid" class="icon-grid max-h-[350px] overflow-y-auto pr-2 custom-scrollbar"></div>
+                    <div id="iconGrid" class="grid grid-cols-4 gap-3 max-h-[40vh] overflow-y-auto pr-1 custom-scrollbar"></div>
                     
-                    <div id="iconProps" class="hidden glass p-4 rounded-2xl space-y-5">
+                    <div id="iconProps" class="hidden bg-white/5 p-5 rounded-[24px] space-y-6">
                         <div class="flex justify-between items-center">
-                             <button id="clearIcon" class="text-red-500/80 text-[9px] font-bold uppercase tracking-widest px-2">Clear Glyph</button>
+                            <h3 class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Glyph Controls</h3>
+                             <button id="clearIcon" class="text-red-400 text-[10px] font-bold uppercase bg-red-400/10 px-3 py-1.5 rounded-lg">Remove</button>
                         </div>
                         <div class="grid grid-cols-4 gap-2">
-                            <button class="snap-btn py-3 bg-white/5 rounded-lg text-[9px] font-bold uppercase" data-pos="tl">TL</button>
-                            <button class="snap-btn py-3 bg-white/5 rounded-lg text-[9px] font-bold uppercase" data-pos="tc">TC</button>
-                            <button class="snap-btn py-3 bg-white/5 rounded-lg text-[9px] font-bold uppercase" data-pos="tr">TR</button>
-                            <button class="snap-btn py-3 bg-blue-600 rounded-lg text-[9px] font-bold uppercase" data-pos="cc">Center</button>
+                            <button class="snap-btn py-3 bg-white/5 rounded-xl text-[10px] font-bold" data-pos="tl">TL</button>
+                            <button class="snap-btn py-3 bg-white/5 rounded-xl text-[10px] font-bold" data-pos="tc">TC</button>
+                            <button class="snap-btn py-3 bg-white/5 rounded-xl text-[10px] font-bold" data-pos="tr">TR</button>
+                            <button class="snap-btn py-3 bg-blue-600 rounded-xl text-[10px] font-bold" data-pos="cc">CTR</button>
                         </div>
-                        <div class="space-y-2.5">
-                            <div class="flex justify-between text-[9px] font-bold text-zinc-500 uppercase tracking-widest">
-                                <span>Scale</span>
+                        <div class="space-y-4">
+                            <div class="flex justify-between text-[11px] font-bold text-zinc-500 uppercase">
+                                <span>Scale Factor</span>
                                 <span id="iconSizeVal" class="text-white">250px</span>
                             </div>
-                            <input type="range" id="iconSize" min="50" max="600" value="250" class="w-full">
+                            <input type="range" id="iconSize" min="50" max="600" value="250">
                         </div>
-                        <div id="iconSwatches" class="grid grid-cols-6 gap-2"></div>
+                        <div id="iconSwatches" class="grid grid-cols-6 gap-3"></div>
                     </div>
                 </div>
 
@@ -376,7 +399,7 @@
 
     <script>
         const CANVAS_SIZE = 1000;
-        const BASE_PALETTE = [[255,255,255], [0,0,0], [100, 116, 139], [239, 68, 68], [249, 115, 22], [245, 158, 11], [234, 179, 8], [34, 197, 94], [16, 185, 129], [20, 184, 166], [6, 182, 212], [14, 165, 233], [59, 130, 246], [99, 102, 241]];
+        const BASE_PALETTE = [[255,255,255], [0,0,0], [142, 142, 147], [255, 59, 48], [255, 149, 0], [255, 204, 0], [52, 199, 89], [0, 122, 255], [88, 86, 214], [175, 82, 222]];
         const NEW_HEX_COLORS = ["#355B58", "#524A41", "#535647", "#5E3D5E", "#50525A", "#6A5645", "#6A6248", "#4B5D45", "#365567", "#53e14c", "#FA4E63", "#17A8FF", "#F5C81E", "#C24C2D", "#3B356A", "#6C2D55", "#9B4658", "#133F35"];
         
         function hexToRgbArr(h) {
@@ -385,11 +408,11 @@
         }
 
         const PALETTE = [...BASE_PALETTE, ...NEW_HEX_COLORS.map(hexToRgbArr)];
-        const VIBRANT_PALETTE = [...BASE_PALETTE.slice(2), ...NEW_HEX_COLORS.map(hexToRgbArr)];
+        const VIBRANT_PALETTE = [...BASE_PALETTE.slice(3), ...NEW_HEX_COLORS.map(hexToRgbArr)];
 
         let state = {
             bgMode: 'solid',
-            bgColor: [59, 130, 246],
+            bgColor: [0, 122, 255],
             gradColors: ["#272a48", "#4490ef", "#272a48", "#d8305f"],
             bgImg: null,
             textColor: [255, 255, 255],
@@ -515,7 +538,7 @@
 
             ctx.fillStyle = `rgb(${state.textColor.join(',')})`;
             ctx.font = `${state.fontWeight} ${state.fontSize}px "Circular", -apple-system, sans-serif`;
-            const lines = wrapText(ctx, document.getElementById('titleInput').value, 740);
+            const lines = wrapText(ctx, document.getElementById('titleInput').value || "UNTITLED ARTWORK", 740);
             lines.forEach((l, i) => ctx.fillText(l, 116, 889 - (lines.length-1-i)*state.fontSize*1.1));
         }
 
@@ -575,7 +598,7 @@
             canvas.addEventListener('touchstart', (e) => {
                 const p = getPos(e);
                 if (Math.hypot(p.x-state.icon.x, p.y-state.icon.y) < state.icon.size/1.5) state.icon.dragging = true;
-            });
+            }, { passive: false });
             window.addEventListener('touchmove', (e) => {
                 if (!state.icon.dragging) return;
                 const p = getPos(e); state.icon.x = p.x; state.icon.y = p.y; render();
@@ -585,44 +608,24 @@
 
             document.getElementById('shuffleGrad').onclick = shuffleMeshColors;
             document.getElementById('railExportBtn').onclick = showExport;
-
-            // Glyph Clear Logic
             document.getElementById('clearIcon').onclick = () => {
-                state.icon.img = null;
-                state.icon.name = '';
+                state.icon.img = null; state.icon.name = '';
                 document.getElementById('iconProps').classList.add('hidden');
                 render();
             };
 
-            // Reset Logic
             document.getElementById('resetBtn').onclick = () => {
                 state = {
-                    bgMode: 'solid',
-                    bgColor: [59, 130, 246],
+                    bgMode: 'solid', bgColor: [0, 122, 255],
                     gradColors: ["#272a48", "#4490ef", "#272a48", "#d8305f"],
-                    bgImg: null,
-                    textColor: [255, 255, 255],
-                    iconColor: [255, 255, 255],
-                    shapeColor: [255, 255, 255],
-                    frameColor: [255, 255, 255],
-                    shapeIdx: "01",
-                    fontWeight: 700,
-                    fontSize: 90,
-                    activeGradIdx: 0,
+                    bgImg: null, textColor: [255, 255, 255], iconColor: [255, 255, 255],
+                    shapeColor: [255, 255, 255], frameColor: [255, 255, 255],
+                    shapeIdx: "01", fontWeight: 700, fontSize: 90, activeGradIdx: 0,
                     icon: { img: null, name: '', x: 500, y: 500, size: 250, dragging: false }
                 };
-                
-                document.getElementById('titleInput').value = "PLAYLIST TITLE";
+                document.getElementById('titleInput').value = "";
                 document.getElementById('shapeToggle').checked = false;
                 document.getElementById('frameToggle').checked = false;
-                document.getElementById('globalBlend').value = 'overlay';
-                document.getElementById('iconProps').classList.add('hidden');
-                
-                document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
-                document.getElementById('modeSolid').classList.add('active');
-                ['solidConfig', 'gradientConfig', 'imageConfig'].forEach(id => document.getElementById(id).classList.add('hidden'));
-                document.getElementById('solidConfig').classList.remove('hidden');
-                
                 init();
             };
 
@@ -659,7 +662,7 @@
 
             document.getElementById('removeImage').onclick = () => {
                 state.bgImg = null; document.getElementById('removeImage').classList.add('hidden');
-                document.getElementById('imageName').textContent = 'Import Background'; render();
+                document.getElementById('imageName').textContent = 'Add Background Asset'; render();
             };
 
             document.getElementById('nextShape').onclick = () => {
@@ -692,10 +695,10 @@
                     state.fontSize = parseInt(btn.dataset.size);
                     document.querySelectorAll('.font-size-btn').forEach(b => {
                         b.classList.remove('bg-white', 'text-black');
-                        b.classList.add('bg-white/5', 'text-zinc-500');
+                        b.classList.add('bg-white/10', 'text-zinc-400');
                     });
                     btn.classList.add('bg-white', 'text-black');
-                    btn.classList.remove('bg-white/5', 'text-zinc-500');
+                    btn.classList.remove('bg-white/10', 'text-zinc-400');
                     render();
                 };
             });
@@ -704,10 +707,10 @@
                 btn.onclick = () => {
                     state.fontWeight = parseInt(btn.dataset.weight);
                     document.querySelectorAll('.font-weight-btn').forEach(b => {
-                        b.classList.remove('bg-white/10', 'text-white', 'border-white/10');
+                        b.classList.remove('bg-white/20', 'text-white', 'shadow-lg');
                         b.classList.add('bg-white/5', 'text-zinc-500');
                     });
-                    btn.classList.add('bg-white/10', 'text-white', 'border-white/10');
+                    btn.classList.add('bg-white/20', 'text-white', 'shadow-lg');
                     btn.classList.remove('bg-white/5', 'text-zinc-500');
                     render();
                 };
@@ -851,7 +854,6 @@
     }
 ];
 
-
         function loadIcons(filter = "") {
             const g = document.getElementById('iconGrid');
             g.innerHTML = "";
@@ -860,16 +862,14 @@
             if (query === "") {
                 ICON_GROUPS.forEach(group => {
                     const header = document.createElement('div');
-                    header.className = 'col-span-4 text-[9px] font-bold text-zinc-600 uppercase tracking-[0.2em] mt-6 mb-2 first:mt-0';
+                    header.className = 'col-span-4 text-[9px] font-bold text-zinc-600 uppercase tracking-widest mt-4 mb-2 first:mt-0';
                     header.textContent = group.title;
                     g.appendChild(header);
-                    
                     group.icons.forEach(icon => renderIconBox(icon, g));
                 });
             } else {
                 const flattened = ICON_GROUPS.flatMap(group => group.icons);
-                const filtered = flattened.filter(icon => icon.name.includes(query) || icon.tags.includes(query));
-                filtered.forEach(icon => renderIconBox(icon, g));
+                flattened.filter(i => i.name.includes(query) || i.tags.includes(query)).forEach(icon => renderIconBox(icon, g));
             }
             lucide.createIcons();
         }
@@ -877,28 +877,19 @@
         function renderIconBox(icon, container) {
             const b = document.createElement('div'); 
             b.className = 'icon-box';
-            b.innerHTML = `<i data-lucide="${icon.name}" class="w-6 h-6 text-zinc-400"></i>`;
+            b.innerHTML = `<i data-lucide="${icon.name}" class="w-5 h-5 text-zinc-400"></i>`;
             b.onclick = () => {
-                lucide.createIcons({
-                    attrs: { class: 'w-6 h-6' },
-                    nameAttr: 'data-lucide',
-                    icons: { [icon.name]: lucide.icons[icon.name] }
-                });
                 const svgElement = b.querySelector('svg');
                 if (!svgElement) return;
                 const i = new Image(); 
-                i.crossOrigin = "anonymous";
                 i.onload = () => { 
-                    state.icon.img = i; 
-                    state.icon.name = icon.name;
+                    state.icon.img = i; state.icon.name = icon.name;
                     document.getElementById('iconProps').classList.remove('hidden'); 
                     render(); 
                 };
                 const serializer = new XMLSerializer();
                 let svgString = serializer.serializeToString(svgElement);
-                if (!svgString.includes('width=')) {
-                    svgString = svgString.replace('<svg', '<svg width="100" height="100"');
-                }
+                if (!svgString.includes('width=')) svgString = svgString.replace('<svg', '<svg width="100" height="100"');
                 i.src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgString)))}`;
             };
             container.appendChild(b);
@@ -906,9 +897,8 @@
 
         function resizeCanvas() {
             const v = document.getElementById('viewport');
-            const padX = window.innerWidth < 768 ? 20 : 100;
-            const padY = window.innerWidth < 768 ? 20 : 100;
-            
+            const padX = window.innerWidth < 768 ? 40 : 120;
+            const padY = window.innerWidth < 768 ? 40 : 120;
             const s = Math.min((v.clientWidth - padX) / CANVAS_SIZE, (v.clientHeight - padY) / CANVAS_SIZE);
             document.getElementById('container').style.transform = `scale(${s})`;
         }
