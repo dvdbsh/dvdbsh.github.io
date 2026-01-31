@@ -5,12 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Covr Stdio</title>
 
-    <!-- App Icons -->
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
-    <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-
+    <!-- iOS Native Capabilities -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Covr Stdio">
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
     
@@ -19,140 +18,187 @@
         @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Bold.ttf') format('truetype'); font-weight: 700; }
 
         :root {
-            --accent: #007AFF; /* Apple Blue */
+            --accent: #007AFF;
             --bg-deep: #000000;
-            --bg-panel: rgba(28, 28, 30, 0.7);
-            --bg-card: rgba(255, 255, 255, 0.04);
+            --bg-panel: #111112;
+            --bg-card: #1c1c1e;
             --border: rgba(255, 255, 255, 0.1);
-            --system-gray: #8E8E93;
+            --sat: env(safe-area-inset-top);
+            --sab: env(safe-area-inset-bottom);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", sans-serif;
             background-color: var(--bg-deep);
             color: #ffffff;
             margin: 0;
             overflow: hidden;
             height: 100vh;
+            position: fixed;
+            width: 100%;
             -webkit-tap-highlight-color: transparent;
-            -webkit-user-select: none;
         }
 
-        /* Glassmorphism Refined */
-        .glass {
-            background: var(--bg-panel);
-            backdrop-filter: blur(30px) saturate(180%);
-            -webkit-backdrop-filter: blur(30px) saturate(180%);
-            border: 0.5px solid var(--border);
-        }
-
-        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 10px; }
-
-        /* Stage Design */
-        .workspace-stage {
-            background-image: 
-                radial-gradient(circle at 50% 50%, rgba(255,255,255,0.03) 0%, transparent 80%),
-                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-            background-size: 100% 100%, 40px 40px, 40px 40px;
-        }
-
-        .canvas-container {
-            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-            will-change: transform;
-        }
-
-        /* iOS Style Segmented Control */
-        .segmented-control {
+        .app-shell {
             display: flex;
-            background: rgba(118, 118, 128, 0.24);
-            padding: 2px;
-            border-radius: 10px;
-            position: relative;
+            flex-direction: column;
+            height: 100vh;
+            padding-top: var(--sat);
         }
-        .segment-btn {
+
+        @media (min-width: 768px) {
+            .app-shell {
+                flex-direction: row;
+                padding-top: 0;
+            }
+        }
+
+        .stage {
             flex: 1;
-            padding: 6px 0;
-            font-size: 13px;
-            font-weight: 500;
-            border-radius: 8px;
-            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-            color: #EBEBF5;
-            z-index: 1;
-        }
-        .segment-btn.active {
-            background: rgba(255,255,255,0.15);
-            box-shadow: 0 3px 8px rgba(0,0,0,0.12);
-            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: #000;
+            overflow: hidden;
         }
 
-        /* Native-feeling Rail */
-        .nav-rail-item {
-            color: var(--system-gray);
+        .inspector {
+            background: var(--bg-panel);
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            z-index: 50;
+            height: 55vh;
+            padding-bottom: var(--sab);
+        }
+
+        @media (min-width: 768px) {
+            .inspector {
+                width: 400px;
+                height: 100vh;
+                border-top: none;
+                border-left: 1px solid var(--border);
+                flex-direction: row;
+                padding-bottom: 0;
+            }
+        }
+
+        .tab-bar {
+            display: flex;
+            background: #000;
+            border-bottom: 1px solid var(--border);
+            height: 64px;
+            flex-shrink: 0;
+        }
+
+        @media (min-width: 768px) {
+            .tab-bar {
+                flex-direction: column;
+                width: 80px;
+                height: 100%;
+                border-bottom: none;
+                border-right: 1px solid var(--border);
+            }
+        }
+
+        .tab-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            color: #8E8E93;
             transition: all 0.2s;
-            border-radius: 12px;
-            margin: 4px;
-        }
-        .nav-rail-item.active {
-            color: var(--accent);
-            background: rgba(0, 122, 255, 0.1);
         }
 
-        /* Apple Swatches */
+        .tab-item.active {
+            color: #fff;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .tab-item i { width: 22px; height: 22px; }
+        .tab-item span { font-size: 10px; font-weight: 600; }
+
         .swatch {
             width: 100%;
             aspect-ratio: 1;
             border-radius: 50%;
             border: 2px solid transparent;
-            transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
-            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
         }
-        .swatch.active { 
-            border-color: #fff; 
-            transform: scale(1.15);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        .swatch.active {
+            border-color: #fff;
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        .tool-scroller {
+            flex: 1;
+            overflow-y: auto;
+            padding: 24px;
+            padding-bottom: 40px;
+            -webkit-overflow-scrolling: touch;
         }
 
         .tab-content { display: none; }
-        .tab-content.active { display: block; animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .tab-content.active { display: block; animation: fadeIn 0.3s ease-out; }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* iOS Sliders */
+        .card {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 16px;
+            border: 1px solid var(--border);
+        }
+
+        .segmented {
+            display: flex;
+            background: rgba(118, 118, 128, 0.24);
+            padding: 2px;
+            border-radius: 10px;
+        }
+        .seg-btn {
+            flex: 1;
+            padding: 8px 0;
+            font-size: 13px;
+            font-weight: 500;
+            border-radius: 8px;
+            color: #EBEBF5;
+        }
+        .seg-btn.active {
+            background: #636366;
+            color: #fff;
+        }
+
         input[type="range"] {
             -webkit-appearance: none;
             width: 100%;
-            height: 28px;
-            background: transparent;
-        }
-        input[type="range"]::-webkit-slider-runnable-track {
             height: 4px;
             background: rgba(255,255,255,0.1);
             border-radius: 2px;
+            margin: 15px 0;
         }
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            height: 24px;
-            width: 24px;
+            width: 28px;
+            height: 28px;
+            background: #fff;
             border-radius: 50%;
-            background: #ffffff;
             box-shadow: 0 3px 8px rgba(0,0,0,0.3);
-            margin-top: -10px;
-            cursor: pointer;
         }
 
-        /* Native Modals */
         .apple-modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.6);
+            background: rgba(0,0,0,0.85);
             z-index: 100;
             backdrop-filter: blur(10px);
             align-items: center;
@@ -160,122 +206,81 @@
             padding: 20px;
         }
 
-        .icon-box {
-            aspect-ratio: 1;
-            background: rgba(255,255,255,0.05);
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
+        .canvas-container {
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            will-change: transform;
+        }
+
+        /* Active Grad Point Highlight */
+        .grad-point {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.2);
             transition: all 0.2s;
         }
-        .icon-box:active { background: rgba(255,255,255,0.15); transform: scale(0.92); }
-
-        /* Button Press Effect */
-        button:active { transform: scale(0.97); }
-
-        @media (max-width: 768px) {
-            .mobile-viewport { height: 45vh; }
-            .mobile-panel { 
-                height: 55vh; 
-                border-radius: 30px 30px 0 0;
-                margin-top: -30px;
-                box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
-            }
-            .nav-rail-item { margin: 0; border-radius: 0; }
+        .grad-point.active {
+            border-color: #fff;
+            transform: scale(1.1);
+            box-shadow: 0 0 0 2px var(--accent);
         }
     </style>
 </head>
-<body class="flex flex-col md:flex-row bg-black">
+<body>
 
-    <!-- Export Modal -->
-    <div id="exportModal" class="apple-modal">
-        <div class="max-w-sm w-full glass p-6 rounded-[32px] text-center space-y-6">
-            <div class="space-y-1">
-                <h2 class="text-lg font-semibold tracking-tight">Export Artwork</h2>
-                <p id="exportInstruction" class="text-xs text-zinc-400">Long-press to save to Photos</p>
+    <div class="app-shell">
+        <main id="viewport" class="stage">
+            <div id="guideX" class="absolute left-1/2 top-0 bottom-0 w-[1px] bg-blue-500/50 hidden z-20 pointer-events-none"></div>
+            <div id="guideY" class="absolute top-1/2 left-0 right-0 h-[1px] bg-blue-500/50 hidden z-20 pointer-events-none"></div>
+
+            <div id="container" class="canvas-container shadow-2xl flex-shrink-0" style="width: 1000px; height: 1000px;">
+                <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block bg-zinc-900 rounded-sm"></canvas>
             </div>
-            <div class="relative group">
-                <img id="exportPreview" class="w-full aspect-square rounded-2xl shadow-2xl border border-white/10 mx-auto" alt="Export">
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-                <button id="closeExport" class="py-3.5 rounded-2xl font-semibold bg-white/10 hover:bg-white/15 transition-all text-sm">Cancel</button>
-                <a id="downloadLink" download="artwork.png" class="py-3.5 rounded-2xl font-semibold bg-blue-600 text-center text-sm">Save Image</a>
-            </div>
-        </div>
-    </div>
+        </main>
 
-    <!-- Workspace -->
-    <main id="viewport" class="mobile-viewport workspace-stage flex-grow flex items-center justify-center relative overflow-hidden">
-        <div id="guideX" class="absolute left-1/2 top-0 bottom-0 w-[0.5px] bg-blue-500/40 hidden z-20 pointer-events-none"></div>
-        <div id="guideY" class="absolute top-1/2 left-0 right-0 h-[0.5px] bg-blue-500/40 hidden z-20 pointer-events-none"></div>
+        <aside class="inspector">
+            <nav class="tab-bar">
+                <button class="tab-item active" data-tab="text">
+                    <i data-lucide="type"></i>
+                    <span>Title</span>
+                </button>
+                <button class="tab-item" data-tab="base">
+                    <i data-lucide="layout"></i>
+                    <span>Canvas</span>
+                </button>
+                <button class="tab-item" data-tab="layers">
+                    <i data-lucide="layers"></i>
+                    <span>Style</span>
+                </button>
+                <button class="tab-item" data-tab="elements">
+                    <i data-lucide="shapes"></i>
+                    <span>Glyphs</span>
+                </button>
+                <button id="railExportBtn" class="tab-item text-blue-500">
+                    <i data-lucide="share"></i>
+                    <span>Export</span>
+                </button>
+            </nav>
 
-        <div id="container" class="canvas-container shadow-[0_40px_100px_rgba(0,0,0,0.8)] flex-shrink-0" style="width: 1000px; height: 1000px;">
-            <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block bg-zinc-900 rounded-sm cursor-move"></canvas>
-        </div>
-        
-        <!-- Header Info -->
-        <div class="absolute top-6 left-6 hidden md:block">
-            <h1 class="text-sm font-bold tracking-widest text-white/40 uppercase">Covr Stdio / 1.0</h1>
-        </div>
-    </main>
-
-    <!-- Inspector -->
-    <aside class="mobile-panel w-full md:w-[420px] glass flex flex-col md:flex-row z-40 overflow-hidden shadow-2xl">
-        
-        <!-- Navigation Rail -->
-        <nav class="flex md:flex-col md:w-20 bg-black/20 md:border-r border-white/5 shrink-0 pt-2 pb-safe">
-            <button class="nav-rail-item flex-1 md:flex-none md:h-16 flex flex-col items-center justify-center gap-1 active" data-tab="text">
-                <i data-lucide="type" class="w-5 h-5"></i>
-                <span class="text-[9px] font-medium opacity-80">Title</span>
-            </button>
-            <button class="nav-rail-item flex-1 md:flex-none md:h-16 flex flex-col items-center justify-center gap-1" data-tab="base">
-                <i data-lucide="layout-template" class="w-5 h-5"></i>
-                <span class="text-[9px] font-medium opacity-80">Canvas</span>
-            </button>
-            <button class="nav-rail-item flex-1 md:flex-none md:h-16 flex flex-col items-center justify-center gap-1" data-tab="layers">
-                <i data-lucide="layers-2" class="w-5 h-5"></i>
-                <span class="text-[9px] font-medium opacity-80">Style</span>
-            </button>
-            <button class="nav-rail-item flex-1 md:flex-none md:h-16 flex flex-col items-center justify-center gap-1" data-tab="elements">
-                <i data-lucide="shapes" class="w-5 h-5"></i>
-                <span class="text-[9px] font-medium opacity-80">Glyphs</span>
-            </button>
-            <div class="hidden md:block flex-grow"></div>
-            <button id="railExportBtn" class="nav-rail-item flex-1 md:flex-none md:h-20 flex flex-col items-center justify-center gap-1 text-white bg-blue-600/20 md:m-2 md:rounded-2xl">
-                <i data-lucide="share" class="w-5 h-5"></i>
-                <span class="text-[9px] font-bold uppercase tracking-tighter">Export</span>
-            </button>
-        </nav>
-
-        <!-- Tool Inspector -->
-        <div class="flex-grow flex flex-col overflow-hidden custom-scrollbar">
-            <!-- Mobile Handle -->
-            <div class="md:hidden flex justify-center py-3">
-                <div class="w-10 h-1.5 bg-white/20 rounded-full"></div>
-            </div>
-
-            <div class="p-6 space-y-8 overflow-y-auto flex-grow pb-24">
+            <div class="tool-scroller custom-scrollbar">
                 
-                <!-- Tab: Typography -->
                 <div id="tabText" class="tab-content active space-y-6">
-                    <div class="space-y-3">
-                        <label class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest px-1">Artwork Title</label>
-                        <textarea id="titleInput" class="w-full bg-black/30 border border-white/5 rounded-2xl p-4 text-xl font-bold outline-none focus:ring-2 focus:ring-blue-500/50 transition-all resize-none placeholder-zinc-700" rows="3" placeholder="Enter title..."></textarea>
+                    <div class="space-y-2">
+                        <label class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest ml-1">Artwork Title</label>
+                        <textarea id="titleInput" class="w-full bg-zinc-900/50 border border-white/5 rounded-2xl p-4 text-lg font-semibold outline-none focus:border-blue-500 transition-all resize-none" rows="3" placeholder="Enter title..."></textarea>
                     </div>
 
-                    <div class="bg-white/5 rounded-[24px] p-5 space-y-6">
+                    <div class="card space-y-6">
                         <div class="space-y-4">
                             <label class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Typography Style</label>
                             <div class="grid grid-cols-2 gap-2">
-                                <button data-size="90" class="font-size-btn py-3.5 rounded-xl text-xs font-bold bg-white text-black transition-all">COMPACT</button>
-                                <button data-size="120" class="font-size-btn py-3.5 rounded-xl text-xs font-bold bg-white/10 text-zinc-400 transition-all">DISPLAY</button>
+                                <button data-size="90" class="font-size-btn py-3 rounded-xl text-xs font-bold bg-white text-black">COMPACT</button>
+                                <button data-size="120" class="font-size-btn py-3 rounded-xl text-xs font-bold bg-white/10 text-zinc-400">DISPLAY</button>
                             </div>
                             <div class="grid grid-cols-4 gap-2">
-                                <button data-weight="400" class="font-weight-btn py-3 rounded-xl text-xs font-medium bg-white/5 text-zinc-500">400</button>
-                                <button data-weight="500" class="font-weight-btn py-3 rounded-xl text-xs font-semibold bg-white/5 text-zinc-500">500</button>
-                                <button data-weight="700" class="font-weight-btn py-3 rounded-xl text-xs font-bold bg-white/20 text-white shadow-lg">700</button>
+                                <button data-weight="400" class="font-weight-btn py-3 rounded-xl text-xs bg-white/5 text-zinc-500">400</button>
+                                <button data-weight="500" class="font-weight-btn py-3 rounded-xl text-xs bg-white/5 text-zinc-500">500</button>
+                                <button data-weight="700" class="font-weight-btn py-3 rounded-xl text-xs font-bold bg-white/20 text-white">700</button>
                                 <button data-weight="900" class="font-weight-btn py-3 rounded-xl text-xs font-black bg-white/5 text-zinc-500">900</button>
                             </div>
                         </div>
@@ -286,12 +291,11 @@
                     </div>
                 </div>
 
-                <!-- Tab: Background -->
                 <div id="tabBase" class="tab-content space-y-6">
-                    <div class="segmented-control">
-                        <button id="modeSolid" class="segment-btn active">Solid</button>
-                        <button id="modeGradient" class="segment-btn">Mesh</button>
-                        <button id="modeImage" class="segment-btn">Photo</button>
+                    <div class="segmented">
+                        <button id="modeSolid" class="seg-btn active">Solid</button>
+                        <button id="modeGradient" class="seg-btn">Mesh</button>
+                        <button id="modeImage" class="seg-btn">Photo</button>
                     </div>
                     
                     <div id="solidConfig" class="space-y-4">
@@ -300,37 +304,35 @@
                     
                     <div id="gradientConfig" class="hidden space-y-6">
                         <div class="flex items-center justify-between bg-black/40 p-4 rounded-2xl border border-white/5">
-                            <div id="gradPoints" class="flex gap-3">
-                                <button data-idx="0" class="w-9 h-9 rounded-full border-2 border-white/40 active-grad-point ring-offset-2 ring-offset-black" style="background: #272a48"></button>
-                                <button data-idx="1" class="w-9 h-9 rounded-full border-2 border-white/10" style="background: #4490ef"></button>
-                                <button data-idx="2" class="w-9 h-9 rounded-full border-2 border-white/10" style="background: #272a48"></button>
-                                <button data-idx="3" class="w-9 h-9 rounded-full border-2 border-white/10" style="background: #d8305f"></button>
+                            <div id="gradPoints" class="flex gap-4">
+                                <button data-idx="0" class="grad-point active" style="background: #ef4444"></button>
+                                <button data-idx="1" class="grad-point" style="background: #22c55e"></button>
+                                <button data-idx="2" class="grad-point" style="background: #eab308"></button>
+                                <button data-idx="3" class="grad-point" style="background: #3b82f6"></button>
                             </div>
-                            <button id="shuffleGrad" class="bg-blue-600/10 text-blue-500 px-4 py-2 rounded-full text-[11px] font-bold uppercase tracking-wider">Shuffle</button>
+                            <button id="shuffleGrad" class="text-[10px] font-bold text-blue-500 uppercase tracking-widest px-2">Shuffle</button>
                         </div>
                         <div id="gradSwatches" class="grid grid-cols-6 gap-3"></div>
                     </div>
                     
                     <div id="imageConfig" class="hidden space-y-4">
-                        <label class="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-white/10 rounded-[24px] bg-white/5 hover:bg-white/10 cursor-pointer transition-all">
+                        <label class="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-white/10 rounded-2xl bg-white/5 hover:bg-white/10 cursor-pointer">
                             <input type="file" id="imageInput" class="hidden" accept="image/*">
-                            <i data-lucide="image-plus" class="w-8 h-8 text-zinc-500 mb-2"></i>
-                            <span class="text-[11px] font-bold text-zinc-400 uppercase tracking-widest" id="imageName">Add Background Asset</span>
+                            <i data-lucide="image" class="w-8 h-8 text-zinc-600 mb-2"></i>
+                            <span class="text-[10px] font-bold text-zinc-500 uppercase tracking-widest" id="imageName">Upload Photo</span>
                         </label>
-                        <button id="removeImage" class="w-full py-3.5 text-[11px] font-bold text-red-400 bg-red-400/10 rounded-xl hidden uppercase tracking-widest">Remove Background</button>
                     </div>
 
-                    <button id="resetBtn" class="w-full py-4 bg-white/5 border border-white/5 rounded-2xl text-[11px] font-bold uppercase tracking-widest text-zinc-400">
+                    <button id="resetBtn" class="w-full py-4 bg-white/5 border border-white/5 rounded-2xl text-[11px] font-bold uppercase tracking-widest text-zinc-500">
                         Reset Studio
                     </button>
                 </div>
 
-                <!-- Tab: Overlays -->
                 <div id="tabLayers" class="tab-content space-y-6">
-                    <div class="bg-white/5 p-5 rounded-[24px] space-y-6">
+                    <div class="card space-y-6">
                         <div class="flex items-center justify-between">
-                            <span class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Blend Mode</span>
-                            <select id="globalBlend" class="bg-black/60 text-xs font-semibold py-2 px-4 rounded-xl border border-white/10 outline-none">
+                            <span class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Blend Engine</span>
+                            <select id="globalBlend" class="bg-black text-[11px] font-bold py-2 px-3 rounded-lg border border-white/10">
                                 <option value="overlay">Overlay</option>
                                 <option value="screen">Screen</option>
                                 <option value="multiply">Multiply</option>
@@ -342,39 +344,34 @@
 
                         <div class="pt-4 border-t border-white/5 space-y-4">
                             <div class="flex justify-between items-center">
-                                <div>
-                                    <h3 class="text-sm font-semibold tracking-tight">Vignette & Shapes</h3>
-                                    <p id="shapeInfo" class="text-[10px] text-blue-500 font-bold uppercase tracking-widest">Variant 01</p>
-                                </div>
-                                <input type="checkbox" id="shapeToggle" class="w-12 h-6 appearance-none bg-white/10 rounded-full relative cursor-pointer checked:bg-blue-600 transition-colors before:content-[''] before:absolute before:w-5 before:h-5 before:bg-white before:rounded-full before:top-0.5 before:left-0.5 before:transition-transform checked:before:translate-x-6">
+                                <h3 class="text-xs font-bold uppercase tracking-wider">Style Overlay</h3>
+                                <input type="checkbox" id="shapeToggle" class="w-10 h-5 appearance-none bg-white/10 rounded-full relative cursor-pointer checked:bg-blue-600 transition-colors before:content-[''] before:absolute before:w-4 before:h-4 before:bg-white before:rounded-full before:top-0.5 before:left-0.5 before:transition-transform checked:before:translate-x-5">
                             </div>
-                            <button id="nextShape" class="w-full py-3 bg-white/10 rounded-xl text-[10px] font-bold uppercase tracking-widest">Switch Variant</button>
+                            <button id="nextShape" class="w-full py-2.5 bg-white/5 rounded-xl text-[10px] font-bold uppercase tracking-widest">Next Style</button>
                             <div id="shapeSwatches" class="grid grid-cols-6 gap-3"></div>
                         </div>
 
                         <div class="pt-4 border-t border-white/5 space-y-4">
                             <div class="flex justify-between items-center">
-                                <h3 class="text-sm font-semibold tracking-tight">Edge Framing</h3>
-                                <input type="checkbox" id="frameToggle" class="w-12 h-6 appearance-none bg-white/10 rounded-full relative cursor-pointer checked:bg-blue-600 transition-colors before:content-[''] before:absolute before:w-5 before:h-5 before:bg-white before:rounded-full before:top-0.5 before:left-0.5 before:transition-transform checked:before:translate-x-6">
+                                <h3 class="text-xs font-bold uppercase tracking-wider">Edge Border</h3>
+                                <input type="checkbox" id="frameToggle" class="w-10 h-5 appearance-none bg-white/10 rounded-full relative cursor-pointer checked:bg-blue-600 transition-colors before:content-[''] before:absolute before:w-4 before:h-4 before:bg-white before:rounded-full before:top-0.5 before:left-0.5 before:transition-transform checked:before:translate-x-5">
                             </div>
                             <div id="frameSwatches" class="grid grid-cols-6 gap-3"></div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Tab: Icons -->
                 <div id="tabElements" class="tab-content space-y-6">
                     <div class="relative">
                         <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500"></i>
-                        <input type="text" id="iconSearch" placeholder="SEARCH SYSTEM GLYPHS" class="w-full bg-black/40 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-xs font-bold uppercase tracking-widest outline-none focus:ring-2 focus:ring-blue-500">
+                        <input type="text" id="iconSearch" placeholder="SEARCH GLYPHS" class="w-full bg-zinc-900/50 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-[11px] font-bold uppercase tracking-widest outline-none focus:border-blue-500">
                     </div>
                     
                     <div id="iconGrid" class="grid grid-cols-4 gap-3 max-h-[40vh] overflow-y-auto pr-1 custom-scrollbar"></div>
                     
-                    <div id="iconProps" class="hidden bg-white/5 p-5 rounded-[24px] space-y-6">
+                    <div id="iconProps" class="hidden card space-y-6">
                         <div class="flex justify-between items-center">
-                            <h3 class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest">Glyph Controls</h3>
-                             <button id="clearIcon" class="text-red-400 text-[10px] font-bold uppercase bg-red-400/10 px-3 py-1.5 rounded-lg">Remove</button>
+                             <button id="clearIcon" class="text-red-500 text-[10px] font-bold uppercase bg-red-500/10 px-3 py-2 rounded-lg">Remove</button>
                         </div>
                         <div class="grid grid-cols-4 gap-2">
                             <button class="snap-btn py-3 bg-white/5 rounded-xl text-[10px] font-bold" data-pos="tl">TL</button>
@@ -384,7 +381,7 @@
                         </div>
                         <div class="space-y-4">
                             <div class="flex justify-between text-[11px] font-bold text-zinc-500 uppercase">
-                                <span>Scale Factor</span>
+                                <span>Scale</span>
                                 <span id="iconSizeVal" class="text-white">250px</span>
                             </div>
                             <input type="range" id="iconSize" min="50" max="600" value="250">
@@ -394,26 +391,53 @@
                 </div>
 
             </div>
+        </aside>
+    </div>
+
+    <div id="exportModal" class="apple-modal">
+        <div class="max-w-sm w-full bg-zinc-900 p-6 rounded-[32px] text-center space-y-6 border border-white/10">
+            <h2 class="text-lg font-bold">Share Artwork</h2>
+            <img id="exportPreview" class="w-full aspect-square rounded-2xl shadow-2xl border border-white/5 mx-auto" alt="Export">
+            <div class="grid grid-cols-2 gap-3">
+                <button id="closeExport" class="py-4 rounded-2xl font-bold bg-white/5 text-sm">Close</button>
+                <a id="downloadLink" download="artwork.png" class="py-4 rounded-2xl font-bold bg-blue-600 text-sm flex items-center justify-center">Download</a>
+            </div>
         </div>
-    </aside>
+    </div>
 
     <script>
         const CANVAS_SIZE = 1000;
-        const BASE_PALETTE = [[255,255,255], [0,0,0], [142, 142, 147], [255, 59, 48], [255, 149, 0], [255, 204, 0], [52, 199, 89], [0, 122, 255], [88, 86, 214], [175, 82, 222]];
-        const NEW_HEX_COLORS = ["#355B58", "#524A41", "#535647", "#5E3D5E", "#50525A", "#6A5645", "#6A6248", "#4B5D45", "#365567", "#53e14c", "#FA4E63", "#17A8FF", "#F5C81E", "#C24C2D", "#3B356A", "#6C2D55", "#9B4658", "#133F35"];
+        
+        // Organized Palette by color groups
+        const ORDERED_HEX_COLORS = [
+            // Neutrals
+            "#ffffff", "#8E8E93", "#50525A", "#1c1c1e", "#000000",
+            // Reds / Warm
+            "#ef4444", "#FA4E63", "#9B4658", "#C24C2D", "#ec7299", "#ec4899",
+            // Oranges / Yellows
+            "#f97316", "#f59e0b", "#eab308", "#F5C81E", "#6A5645", "#524A41",
+            // Greens
+            "#22c55e", "#53e14c", "#4B5D45", "#355B58", "#133F35", "#10b981",
+            // Blues
+            "#007AFF", "#17A8FF", "#3b82f6", "#365567", "#0ea5e9",
+            // Purples / Indigo
+            "#a855f7", "#6366f1", "#3B356A", "#5E3D5E", "#6C2D55"
+        ];
         
         function hexToRgbArr(h) {
             const r = parseInt(h.slice(1, 3), 16), g = parseInt(h.slice(3, 5), 16), b = parseInt(h.slice(5, 7), 16);
             return [r, g, b];
         }
 
-        const PALETTE = [...BASE_PALETTE, ...NEW_HEX_COLORS.map(hexToRgbArr)];
-        const VIBRANT_PALETTE = [...BASE_PALETTE.slice(3), ...NEW_HEX_COLORS.map(hexToRgbArr)];
+        const PALETTE = ORDERED_HEX_COLORS.map(hexToRgbArr);
+        // Vibrant palette (excluding black, white, and greys for gradients)
+        const VIBRANT_PALETTE = ORDERED_HEX_COLORS.slice(5).map(hexToRgbArr);
 
         let state = {
             bgMode: 'solid',
             bgColor: [0, 122, 255],
-            gradColors: ["#272a48", "#4490ef", "#272a48", "#d8305f"],
+            gradColors: ["#ef4444", "#22c55e", "#eab308", "#3b82f6"],
+            gradPos: [[0.1, 0.1], [0.9, 0.1], [0.1, 0.9], [0.9, 0.9]], 
             bgImg: null,
             textColor: [255, 255, 255],
             iconColor: [255, 255, 255],
@@ -432,7 +456,7 @@
 
         function init() {
             createSwatches('solidSwatches', 'bgColor');
-            createSwatches('gradSwatches', 'gradColors', true);
+            createSwatches('gradSwatches', 'gradColors', true, VIBRANT_PALETTE);
             createSwatches('textSwatches', 'textColor');
             createSwatches('iconSwatches', 'iconColor');
             createSwatches('shapeSwatches', 'shapeColor');
@@ -446,10 +470,10 @@
             render();
         }
 
-        function createSwatches(containerId, stateKey, isGrad = false) {
+        function createSwatches(containerId, stateKey, isGrad = false, paletteToUse = PALETTE) {
             const container = document.getElementById(containerId);
             container.innerHTML = '';
-            PALETTE.forEach(rgb => {
+            paletteToUse.forEach(rgb => {
                 const btn = document.createElement('button');
                 btn.className = 'swatch';
                 btn.style.backgroundColor = `rgb(${rgb.join(',')})`;
@@ -484,10 +508,10 @@
         }
 
         function setupTabs() {
-            document.querySelectorAll('.nav-rail-item').forEach(btn => {
+            document.querySelectorAll('.tab-item').forEach(btn => {
                 if (btn.id === 'railExportBtn') return;
                 btn.onclick = () => {
-                    document.querySelectorAll('.nav-rail-item, .tab-content').forEach(el => el.classList.remove('active'));
+                    document.querySelectorAll('.tab-item, .tab-content').forEach(el => el.classList.remove('active'));
                     btn.classList.add('active');
                     document.getElementById(`tab${btn.dataset.tab.charAt(0).toUpperCase() + btn.dataset.tab.slice(1)}`).classList.add('active');
                     setTimeout(resizeCanvas, 50);
@@ -496,7 +520,7 @@
 
             document.querySelectorAll('#modeSolid, #modeGradient, #modeImage').forEach(btn => {
                 btn.onclick = () => {
-                    document.querySelectorAll('.segment-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.seg-btn').forEach(b => b.classList.remove('active'));
                     btn.classList.add('active');
                     state.bgMode = btn.id.replace('mode', '').toLowerCase();
                     ['solidConfig', 'gradientConfig', 'imageConfig'].forEach(id => document.getElementById(id).classList.add('hidden'));
@@ -516,12 +540,34 @@
             } else if (state.bgMode === 'gradient') {
                 ctx.fillStyle = state.gradColors[0];
                 ctx.fillRect(0,0, CANVAS_SIZE, CANVAS_SIZE);
-                [['0.9,0.9,0.8,0.8,0.9', 1], ['0.4,0.1,0.5,0.2,0.7', 2], ['0.1,0.5,0.2,0.6,0.8', 3]].forEach(([c, i]) => {
-                    const r = c.split(',').map(n => parseFloat(n) * CANVAS_SIZE);
-                    const g = ctx.createRadialGradient(r[0], r[1], 0, r[2], r[3], r[4]);
-                    g.addColorStop(0, state.gradColors[i]); g.addColorStop(1, 'transparent');
-                    ctx.fillStyle = g; ctx.fillRect(0,0, CANVAS_SIZE, CANVAS_SIZE);
+                
+                state.gradColors.forEach((color, i) => {
+                    const pos = state.gradPos[i] || [0.5, 0.5];
+                    const x = pos[0] * CANVAS_SIZE;
+                    const y = pos[1] * CANVAS_SIZE;
+                    
+                    const radius = CANVAS_SIZE * 1.1;
+                    const g = ctx.createRadialGradient(x, y, 0, x, y, radius);
+                    g.addColorStop(0, color);
+                    g.addColorStop(1, 'transparent');
+                    
+                    ctx.save();
+                    ctx.globalAlpha = 0.85;
+                    ctx.fillStyle = g;
+                    ctx.fillRect(0,0, CANVAS_SIZE, CANVAS_SIZE);
+                    ctx.restore();
                 });
+
+                ctx.save();
+                ctx.globalAlpha = 0.03; 
+                ctx.globalCompositeOperation = 'soft-light'; 
+                for (let i = 0; i < 6000; i++) {
+                    const x = Math.random() * CANVAS_SIZE;
+                    const y = Math.random() * CANVAS_SIZE;
+                    ctx.fillStyle = Math.random() > 0.5 ? '#fff' : '#000';
+                    ctx.fillRect(x, y, 2, 2);
+                }
+                ctx.restore();
             }
 
             if (state.bgImg) {
@@ -538,7 +584,8 @@
 
             ctx.fillStyle = `rgb(${state.textColor.join(',')})`;
             ctx.font = `${state.fontWeight} ${state.fontSize}px "Circular", -apple-system, sans-serif`;
-            const lines = wrapText(ctx, document.getElementById('titleInput').value || "UNTITLED ARTWORK", 740);
+            const val = document.getElementById('titleInput').value || "UNTITLED ARTWORK";
+            const lines = wrapText(ctx, val, 740);
             lines.forEach((l, i) => ctx.fillText(l, 116, 889 - (lines.length-1-i)*state.fontSize*1.1));
         }
 
@@ -601,42 +648,45 @@
             }, { passive: false });
             window.addEventListener('touchmove', (e) => {
                 if (!state.icon.dragging) return;
-                const p = getPos(e); state.icon.x = p.x; state.icon.y = p.y; render();
+                const p = getPos(e); 
+                let mx = p.x, my = p.y;
+                // Added snap logic to touch events for mobile
+                let sx = Math.abs(mx-500) < snapRange, sy = Math.abs(my-500) < snapRange;
+                if (sx) mx = 500; if (sy) my = 500;
+                document.getElementById('guideX').style.display = sx ? 'block' : 'none';
+                document.getElementById('guideY').style.display = sy ? 'block' : 'none';
+                state.icon.x = mx; state.icon.y = my; render();
                 e.preventDefault();
             }, { passive: false });
-            window.addEventListener('touchend', () => state.icon.dragging = false);
+            window.addEventListener('touchend', () => {
+                state.icon.dragging = false;
+                document.getElementById('guideX').style.display = 'none';
+                document.getElementById('guideY').style.display = 'none';
+            });
 
             document.getElementById('shuffleGrad').onclick = shuffleMeshColors;
-            document.getElementById('railExportBtn').onclick = showExport;
-            document.getElementById('clearIcon').onclick = () => {
-                state.icon.img = null; state.icon.name = '';
-                document.getElementById('iconProps').classList.add('hidden');
-                render();
+            document.getElementById('railExportBtn').onclick = () => {
+                const url = canvas.toDataURL('image/png', 1.0);
+                document.getElementById('exportPreview').src = url;
+                document.getElementById('downloadLink').href = url;
+                document.getElementById('exportModal').style.display = 'flex';
             };
+            document.getElementById('closeExport').onclick = () => document.getElementById('exportModal').style.display = 'none';
 
             document.getElementById('resetBtn').onclick = () => {
                 state = {
                     bgMode: 'solid', bgColor: [0, 122, 255],
-                    gradColors: ["#272a48", "#4490ef", "#272a48", "#d8305f"],
+                    gradColors: ["#ef4444", "#22c55e", "#eab308", "#3b82f6"],
+                    gradPos: [[0.1, 0.1], [0.9, 0.1], [0.1, 0.9], [0.9, 0.9]],
                     bgImg: null, textColor: [255, 255, 255], iconColor: [255, 255, 255],
                     shapeColor: [255, 255, 255], frameColor: [255, 255, 255],
                     shapeIdx: "01", fontWeight: 700, fontSize: 90, activeGradIdx: 0,
                     icon: { img: null, name: '', x: 500, y: 500, size: 250, dragging: false }
                 };
                 document.getElementById('titleInput').value = "";
-                document.getElementById('shapeToggle').checked = false;
-                document.getElementById('frameToggle').checked = false;
+                document.querySelectorAll('#gradPoints button').forEach((btn, i) => btn.style.background = state.gradColors[i]);
                 init();
             };
-
-            function showExport() {
-                const url = canvas.toDataURL('image/png', 1.0);
-                document.getElementById('exportPreview').src = url;
-                document.getElementById('downloadLink').href = url;
-                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-                document.getElementById('exportInstruction').style.display = isMobile ? 'block' : 'none';
-                document.getElementById('exportModal').style.display = 'flex';
-            }
 
             document.getElementById('titleInput').oninput = render;
             document.getElementById('shapeToggle').onclick = render;
@@ -655,19 +705,13 @@
                 r.onload = (ev) => {
                     const i = new Image(); i.onload = () => {
                         state.bgImg = i; document.getElementById('imageName').textContent = f.name;
-                        document.getElementById('removeImage').classList.remove('hidden'); render();
+                        render();
                     }; i.src = ev.target.result;
                 }; r.readAsDataURL(f);
             };
 
-            document.getElementById('removeImage').onclick = () => {
-                state.bgImg = null; document.getElementById('removeImage').classList.add('hidden');
-                document.getElementById('imageName').textContent = 'Add Background Asset'; render();
-            };
-
             document.getElementById('nextShape').onclick = () => {
                 state.shapeIdx = state.shapeIdx === '01' ? '02' : state.shapeIdx === '02' ? '03' : '01';
-                document.getElementById('shapeInfo').textContent = 'Variant ' + state.shapeIdx;
                 document.getElementById('shapeToggle').checked = true; render();
             };
 
@@ -680,12 +724,10 @@
                 };
             });
 
-            document.getElementById('closeExport').onclick = () => document.getElementById('exportModal').style.display = 'none';
-
             document.getElementById('gradPoints').querySelectorAll('button').forEach(btn => {
                 btn.onclick = () => {
-                    document.querySelectorAll('#gradPoints button').forEach(b => b.classList.remove('active-grad-point', 'ring-2', 'ring-blue-500'));
-                    btn.classList.add('active-grad-point', 'ring-2', 'ring-blue-500');
+                    document.querySelectorAll('#gradPoints button').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
                     state.activeGradIdx = parseInt(btn.dataset.idx);
                 };
             });
@@ -698,7 +740,6 @@
                         b.classList.add('bg-white/10', 'text-zinc-400');
                     });
                     btn.classList.add('bg-white', 'text-black');
-                    btn.classList.remove('bg-white/10', 'text-zinc-400');
                     render();
                 };
             });
@@ -707,18 +748,15 @@
                 btn.onclick = () => {
                     state.fontWeight = parseInt(btn.dataset.weight);
                     document.querySelectorAll('.font-weight-btn').forEach(b => {
-                        b.classList.remove('bg-white/20', 'text-white', 'shadow-lg');
+                        b.classList.remove('bg-white/20', 'text-white');
                         b.classList.add('bg-white/5', 'text-zinc-500');
                     });
-                    btn.classList.add('bg-white/20', 'text-white', 'shadow-lg');
-                    btn.classList.remove('bg-white/5', 'text-zinc-500');
+                    btn.classList.add('bg-white/20', 'text-white');
                     render();
                 };
             });
 
-            document.getElementById('iconSearch').addEventListener('input', (e) => {
-                loadIcons(e.target.value);
-            });
+            document.getElementById('iconSearch').addEventListener('input', (e) => loadIcons(e.target.value));
         }
 
         async function preloadAssets() {
@@ -729,182 +767,57 @@
         }
 
         const ICON_GROUPS = [
-    {
-        title: "Music & Sound",
-        icons: [
-            { name: 'music', tags: 'music audio sound song melody playlist media' },
-            { name: 'disc', tags: 'music audio record vinyl album media' },
-            { name: 'headphones', tags: 'music audio listen headset media' },
-            { name: 'mic', tags: 'music audio voice vocal recording' },
-            { name: 'mic-off', tags: 'music audio mute voice recording' },
-            { name: 'speaker', tags: 'music audio sound output volume' },
-            { name: 'radio', tags: 'music audio broadcast fm am' },
-            { name: 'list-music', tags: 'music playlist list queue audio' },
-            { name: 'cassette-tape', tags: 'music audio retro vintage tape' },
-            { name: 'audio-lines', tags: 'music audio waveform signal sound' },
-            { name: 'activity', tags: 'audio waveform pulse rhythm signal' },
-            { name: 'volume', tags: 'audio sound volume loud' },
-            { name: 'volume-1', tags: 'audio sound volume low' },
-            { name: 'volume-2', tags: 'audio sound volume medium' },
-            { name: 'volume-x', tags: 'audio sound mute silent' },
-            { name: 'play', tags: 'media playback start music video' },
-            { name: 'pause', tags: 'media playback pause stop' },
-            { name: 'stop-circle', tags: 'media playback stop end' },
-            { name: 'skip-forward', tags: 'media playback next forward' },
-            { name: 'skip-back', tags: 'media playback previous rewind' },
-            { name: 'repeat', tags: 'media playback loop repeat' },
-            { name: 'repeat-1', tags: 'media playback loop single' },
-            { name: 'shuffle', tags: 'media playback random mix' },
-            { name: 'sliders-horizontal', tags: 'audio control mixer adjust' }
-        ]
-    },
-
-    {
-        title: "Faces & Emotions",
-        icons: [
-            { name: 'smile', tags: 'face emoji mood happy emotion' },
-            { name: 'frown', tags: 'face emoji mood sad emotion' },
-            { name: 'meh', tags: 'face emoji mood neutral emotion' },
-            { name: 'angry', tags: 'face emoji mood angry emotion' },
-            { name: 'laugh', tags: 'face emoji mood happy fun emotion' },
-            { name: 'heart', tags: 'emotion love like favorite mood' },
-            { name: 'heart-off', tags: 'emotion unlike remove mood' },
-            { name: 'thumbs-up', tags: 'emotion approval like positive' },
-            { name: 'thumbs-down', tags: 'emotion dislike negative skip' },
-            { name: 'star', tags: 'emotion favorite rating save' },
-            { name: 'star-half', tags: 'emotion rating partial score' },
-            { name: 'eye', tags: 'face vision view attention' },
-            { name: 'eye-off', tags: 'face hidden private blind' }
-        ]
-    },
-
-    {
-        title: "Mood & Energy",
-        icons: [
-            { name: 'flame', tags: 'energy hot fire trending hype' },
-            { name: 'sparkles', tags: 'energy magic fresh clean new' },
-            { name: 'zap', tags: 'energy electric fast power' },
-            { name: 'ghost', tags: 'mood spooky eerie dark' },
-            { name: 'skull', tags: 'mood dark metal death' },
-            { name: 'sunrise', tags: 'mood morning calm fresh' },
-            { name: 'sunset', tags: 'mood evening chill warm' },
-            { name: 'moon', tags: 'mood night dark sleep' },
-            { name: 'cloud-moon', tags: 'mood night chill calm' },
-            { name: 'cloud-sun', tags: 'mood bright optimistic light' }
-        ]
-    },
-
-    {
-        title: "Nature & Space",
-        icons: [
-            { name: 'sun', tags: 'nature light day weather' },
-            { name: 'cloud', tags: 'nature weather sky' },
-            { name: 'cloud-rain', tags: 'nature weather rain sad' },
-            { name: 'cloud-snow', tags: 'nature weather winter cold' },
-            { name: 'cloud-lightning', tags: 'nature weather storm energy' },
-            { name: 'waves', tags: 'nature water ocean sound' },
-            { name: 'wind', tags: 'nature air breeze weather' },
-            { name: 'trees', tags: 'nature forest outdoors' },
-            { name: 'leaf', tags: 'nature eco calm organic' },
-            { name: 'mountain', tags: 'nature adventure travel climb' },
-            { name: 'rocket', tags: 'space launch speed future' },
-            { name: 'satellite', tags: 'space orbit signal tech' },
-            { name: 'globe', tags: 'world earth international' },
-            { name: 'orbit', tags: 'space cycle rotation' },
-            { name: 'atom', tags: 'science physics energy' },
-            { name: 'infinity', tags: 'symbol endless loop forever' },
-            { name: 'compass', tags: 'navigation direction explore' },
-            { name: 'binoculars', tags: 'explore discover search view' }
-        ]
-    },
-
-    {
-        title: "Lifestyle & Media",
-        icons: [
-            { name: 'coffee', tags: 'drink morning energy lifestyle' },
-            { name: 'pizza', tags: 'food eat lifestyle' },
-            { name: 'utensils', tags: 'food dining lifestyle' },
-            { name: 'camera', tags: 'photo media image' },
-            { name: 'film', tags: 'movie cinema media' },
-            { name: 'video', tags: 'media clip recording' },
-            { name: 'tv', tags: 'media screen watch' },
-            { name: 'monitor', tags: 'screen display desktop' },
-            { name: 'smartphone', tags: 'device mobile phone' }
-        ]
-    },
-
-    {
-        title: "Objects & Utility",
-        icons: [
-            { name: 'clock', tags: 'time watch schedule' },
-            { name: 'calendar', tags: 'time date schedule' },
-            { name: 'bell', tags: 'notification alert reminder' },
-            { name: 'bookmark', tags: 'save later favorite' },
-            { name: 'folder', tags: 'files library collection' },
-            { name: 'archive', tags: 'storage history collection' },
-            { name: 'settings', tags: 'preferences config gear' },
-            { name: 'sliders', tags: 'controls adjust settings' },
-            { name: 'battery', tags: 'power energy charge' },
-            { name: 'plug', tags: 'power connection cable' },
-            { name: 'key', tags: 'access unlock security' },
-            { name: 'map-pin', tags: 'location place navigation' },
-            { name: 'navigation', tags: 'location direction gps' },
-            { name: 'gift', tags: 'present reward celebration' }
-        ]
-    }
-];
+            { title: "Music", icons: [{name:'music'},{name:'disc'},{name:'headphones'},{name:'mic'},{name:'radio'},{name:'play'},{name:'pause'},{name:'shuffle'}] },
+            { title: "Mood", icons: [{name:'smile'},{name:'frown'},{name:'heart'},{name:'star'},{name:'flame'},{name:'zap'},{name:'ghost'},{name:'sparkles'}] },
+            { title: "Space", icons: [{name:'moon'},{name:'sun'},{name:'rocket'},{name:'globe'},{name:'cloud'}] }
+        ];
 
         function loadIcons(filter = "") {
-            const g = document.getElementById('iconGrid');
-            g.innerHTML = "";
+            const g = document.getElementById('iconGrid'); g.innerHTML = "";
             const query = filter.toLowerCase().trim();
-            
             if (query === "") {
                 ICON_GROUPS.forEach(group => {
-                    const header = document.createElement('div');
-                    header.className = 'col-span-4 text-[9px] font-bold text-zinc-600 uppercase tracking-widest mt-4 mb-2 first:mt-0';
-                    header.textContent = group.title;
-                    g.appendChild(header);
+                    const header = document.createElement('div'); header.className = 'col-span-4 text-[9px] font-bold text-zinc-600 uppercase tracking-widest mt-4 mb-2 first:mt-0';
+                    header.textContent = group.title; g.appendChild(header);
                     group.icons.forEach(icon => renderIconBox(icon, g));
                 });
             } else {
                 const flattened = ICON_GROUPS.flatMap(group => group.icons);
-                flattened.filter(i => i.name.includes(query) || i.tags.includes(query)).forEach(icon => renderIconBox(icon, g));
+                flattened.filter(i => i.name.includes(query)).forEach(icon => renderIconBox(icon, g));
             }
             lucide.createIcons();
         }
 
         function renderIconBox(icon, container) {
-            const b = document.createElement('div'); 
-            b.className = 'icon-box';
+            const b = document.createElement('div'); b.className = 'bg-white/5 aspect-square rounded-xl flex items-center justify-center cursor-pointer';
             b.innerHTML = `<i data-lucide="${icon.name}" class="w-5 h-5 text-zinc-400"></i>`;
             b.onclick = () => {
-                const svgElement = b.querySelector('svg');
-                if (!svgElement) return;
-                const i = new Image(); 
-                i.onload = () => { 
+                const svgElement = b.querySelector('svg'); if (!svgElement) return;
+                const i = new Image(); i.onload = () => { 
                     state.icon.img = i; state.icon.name = icon.name;
-                    document.getElementById('iconProps').classList.remove('hidden'); 
-                    render(); 
+                    document.getElementById('iconProps').classList.remove('hidden'); render(); 
                 };
-                const serializer = new XMLSerializer();
-                let svgString = serializer.serializeToString(svgElement);
-                if (!svgString.includes('width=')) svgString = svgString.replace('<svg', '<svg width="100" height="100"');
-                i.src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svgString)))}`;
+                const s = new XMLSerializer(); let str = s.serializeToString(svgElement);
+                if (!str.includes('width=')) str = str.replace('<svg', '<svg width="100" height="100"');
+                i.src = `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(str)))}`;
             };
             container.appendChild(b);
         }
 
         function resizeCanvas() {
             const v = document.getElementById('viewport');
-            const padX = window.innerWidth < 768 ? 40 : 120;
-            const padY = window.innerWidth < 768 ? 40 : 120;
-            const s = Math.min((v.clientWidth - padX) / CANVAS_SIZE, (v.clientHeight - padY) / CANVAS_SIZE);
+            const pad = window.innerWidth < 768 ? 40 : 120;
+            const s = Math.min((v.clientWidth - pad) / CANVAS_SIZE, (v.clientHeight - pad) / CANVAS_SIZE);
             document.getElementById('container').style.transform = `scale(${s})`;
         }
 
         window.onresize = resizeCanvas;
         window.onload = init;
+        document.body.addEventListener('touchmove', (e) => {
+            if (e.target.closest('.tool-scroller')) return;
+            e.preventDefault();
+        }, { passive: false });
     </script>
+    <script>lucide.createIcons();</script>
 </body>
 </html>
