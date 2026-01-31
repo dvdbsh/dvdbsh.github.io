@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Covr Stdio</title>
 
-    <!-- iOS Native Capabilities -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Covr Stdio">
@@ -20,9 +19,9 @@
         :root {
             --accent: #007AFF;
             --bg-deep: #000000;
-            --bg-panel: #111112;
+            --bg-panel: #161617; /* Refined Apple dark gray */
             --bg-card: #1c1c1e;
-            --border: rgba(255, 255, 255, 0.1);
+            --border: rgba(255, 255, 255, 0.08);
             --sat: env(safe-area-inset-top);
             --sab: env(safe-area-inset-bottom);
         }
@@ -43,14 +42,10 @@
             display: flex;
             flex-direction: column;
             height: 100vh;
-            padding-top: var(--sat);
         }
 
         @media (min-width: 768px) {
-            .app-shell {
-                flex-direction: row;
-                padding-top: 0;
-            }
+            .app-shell { flex-direction: row; }
         }
 
         .stage {
@@ -60,16 +55,19 @@
             justify-content: center;
             position: relative;
             background: #000;
+            padding-top: var(--sat);
             overflow: hidden;
         }
 
+        /* Fixed the harsh line by extending background to bottom of viewport */
         .inspector {
             background: var(--bg-panel);
             border-top: 1px solid var(--border);
             display: flex;
             flex-direction: column;
             z-index: 50;
-            height: 55vh;
+            height: 58vh;
+            /* Flex ensures content stays above safe area but bg fills it */
             padding-bottom: var(--sab);
         }
 
@@ -86,7 +84,7 @@
 
         .tab-bar {
             display: flex;
-            background: #000;
+            background: #111112;
             border-bottom: 1px solid var(--border);
             height: 64px;
             flex-shrink: 0;
@@ -111,6 +109,7 @@
             gap: 4px;
             color: #8E8E93;
             transition: all 0.2s;
+            cursor: pointer;
         }
 
         .tab-item.active {
@@ -132,14 +131,14 @@
         .swatch.active {
             border-color: #fff;
             transform: scale(1.1);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
         .tool-scroller {
             flex: 1;
             overflow-y: auto;
             padding: 24px;
-            padding-bottom: 40px;
+            padding-bottom: 24px;
             -webkit-overflow-scrolling: touch;
         }
 
@@ -147,7 +146,7 @@
         .tab-content.active { display: block; animation: fadeIn 0.3s ease-out; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(8px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -171,10 +170,13 @@
             font-weight: 500;
             border-radius: 8px;
             color: #EBEBF5;
+            cursor: pointer;
+            text-align: center;
         }
         .seg-btn.active {
             background: #636366;
             color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
         input[type="range"] {
@@ -194,13 +196,25 @@
             box-shadow: 0 3px 8px rgba(0,0,0,0.3);
         }
 
+        /* Smart Guides Styles */
+        .guide-line {
+            position: absolute;
+            background: #007AFF;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 100;
+            display: none;
+        }
+        .guide-v { width: 1px; top: 0; bottom: 0; }
+        .guide-h { height: 1px; left: 0; right: 0; }
+
         .apple-modal {
             display: none;
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.85);
-            z-index: 100;
-            backdrop-filter: blur(10px);
+            z-index: 200;
+            backdrop-filter: blur(20px);
             align-items: center;
             justify-content: center;
             padding: 20px;
@@ -210,28 +224,15 @@
             transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
             will-change: transform;
         }
-
-        /* Active Grad Point Highlight */
-        .grad-point {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.2);
-            transition: all 0.2s;
-        }
-        .grad-point.active {
-            border-color: #fff;
-            transform: scale(1.1);
-            box-shadow: 0 0 0 2px var(--accent);
-        }
     </style>
 </head>
 <body>
 
     <div class="app-shell">
         <main id="viewport" class="stage">
-            <div id="guideX" class="absolute left-1/2 top-0 bottom-0 w-[1px] bg-blue-500/50 hidden z-20 pointer-events-none"></div>
-            <div id="guideY" class="absolute top-1/2 left-0 right-0 h-[1px] bg-blue-500/50 hidden z-20 pointer-events-none"></div>
+            <!-- Dynamic Guide Lines -->
+            <div id="vGuide" class="guide-line guide-v"></div>
+            <div id="hGuide" class="guide-line guide-h"></div>
 
             <div id="container" class="canvas-container shadow-2xl flex-shrink-0" style="width: 1000px; height: 1000px;">
                 <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block bg-zinc-900 rounded-sm"></canvas>
@@ -239,6 +240,7 @@
         </main>
 
         <aside class="inspector">
+            <!-- Navigation -->
             <nav class="tab-bar">
                 <button class="tab-item active" data-tab="text">
                     <i data-lucide="type"></i>
@@ -262,12 +264,14 @@
                 </button>
             </nav>
 
+            <!-- Tools -->
             <div class="tool-scroller custom-scrollbar">
                 
+                <!-- Tab: Typography -->
                 <div id="tabText" class="tab-content active space-y-6">
                     <div class="space-y-2">
                         <label class="text-[11px] font-bold text-zinc-500 uppercase tracking-widest ml-1">Artwork Title</label>
-                        <textarea id="titleInput" class="w-full bg-zinc-900/50 border border-white/5 rounded-2xl p-4 text-lg font-semibold outline-none focus:border-blue-500 transition-all resize-none" rows="3" placeholder="Enter title..."></textarea>
+                        <textarea id="titleInput" class="w-full bg-zinc-900/40 border border-white/5 rounded-2xl p-4 text-lg font-semibold outline-none focus:border-blue-500 transition-all resize-none" rows="3" placeholder="Enter title..."></textarea>
                     </div>
 
                     <div class="card space-y-6">
@@ -291,6 +295,7 @@
                     </div>
                 </div>
 
+                <!-- Tab: Background -->
                 <div id="tabBase" class="tab-content space-y-6">
                     <div class="segmented">
                         <button id="modeSolid" class="seg-btn active">Solid</button>
@@ -323,11 +328,12 @@
                         </label>
                     </div>
 
-                    <button id="resetBtn" class="w-full py-4 bg-white/5 border border-white/5 rounded-2xl text-[11px] font-bold uppercase tracking-widest text-zinc-500">
+                    <button id="resetBtn" class="w-full py-4 bg-white/5 border border-white/10 rounded-2xl text-[11px] font-bold uppercase tracking-widest text-zinc-500">
                         Reset Studio
                     </button>
                 </div>
 
+                <!-- Tab: Overlays -->
                 <div id="tabLayers" class="tab-content space-y-6">
                     <div class="card space-y-6">
                         <div class="flex items-center justify-between">
@@ -361,17 +367,18 @@
                     </div>
                 </div>
 
+                <!-- Tab: Icons -->
                 <div id="tabElements" class="tab-content space-y-6">
                     <div class="relative">
                         <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500"></i>
-                        <input type="text" id="iconSearch" placeholder="SEARCH GLYPHS" class="w-full bg-zinc-900/50 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-[11px] font-bold uppercase tracking-widest outline-none focus:border-blue-500">
+                        <input type="text" id="iconSearch" placeholder="SEARCH GLYPHS" class="w-full bg-zinc-900/40 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-[11px] font-bold uppercase tracking-widest outline-none focus:border-blue-500">
                     </div>
                     
                     <div id="iconGrid" class="grid grid-cols-4 gap-3 max-h-[40vh] overflow-y-auto pr-1 custom-scrollbar"></div>
                     
                     <div id="iconProps" class="hidden card space-y-6">
                         <div class="flex justify-between items-center">
-                             <button id="clearIcon" class="text-red-500 text-[10px] font-bold uppercase bg-red-500/10 px-3 py-2 rounded-lg">Remove</button>
+                             <button id="clearIcon" class="text-red-500 text-[10px] font-bold uppercase bg-red-500/10 px-3 py-2 rounded-lg">Remove Glyph</button>
                         </div>
                         <div class="grid grid-cols-4 gap-2">
                             <button class="snap-btn py-3 bg-white/5 rounded-xl text-[10px] font-bold" data-pos="tl">TL</button>
@@ -408,20 +415,20 @@
     <script>
         const CANVAS_SIZE = 1000;
         
-        // Organized Palette by color groups
-        const ORDERED_HEX_COLORS = [
+        // Final Palette Reorganization
+        const PALETTE_GROUPS = [
             // Neutrals
-            "#ffffff", "#8E8E93", "#50525A", "#1c1c1e", "#000000",
-            // Reds / Warm
+            "#ffffff", "#8E8E93", "#50525A", "#1c1c1e", "#000000", "#333333",
+            // Red/Pinks
             "#ef4444", "#FA4E63", "#9B4658", "#C24C2D", "#ec7299", "#ec4899",
-            // Oranges / Yellows
-            "#f97316", "#f59e0b", "#eab308", "#F5C81E", "#6A5645", "#524A41",
-            // Greens
+            // Orange/Yellows
+            "#f97316", "#f59e0b", "#eab308", "#F5C81E", "#D97706", "#78350F",
+            // Greens/Organic
             "#22c55e", "#53e14c", "#4B5D45", "#355B58", "#133F35", "#10b981",
-            // Blues
-            "#007AFF", "#17A8FF", "#3b82f6", "#365567", "#0ea5e9",
-            // Purples / Indigo
-            "#a855f7", "#6366f1", "#3B356A", "#5E3D5E", "#6C2D55"
+            // Blues/Teals
+            "#007AFF", "#17A8FF", "#3b82f6", "#365567", "#0ea5e9", "#06b6d4",
+            // Royal/Deep
+            "#a855f7", "#6366f1", "#3B356A", "#5E3D5E", "#6C2D55", "#4c1d95"
         ];
         
         function hexToRgbArr(h) {
@@ -429,9 +436,9 @@
             return [r, g, b];
         }
 
-        const PALETTE = ORDERED_HEX_COLORS.map(hexToRgbArr);
-        // Vibrant palette (excluding black, white, and greys for gradients)
-        const VIBRANT_PALETTE = ORDERED_HEX_COLORS.slice(5).map(hexToRgbArr);
+        const PALETTE = PALETTE_GROUPS.map(hexToRgbArr);
+        // Exclude greys and black/white for vibrant mesh backgrounds
+        const VIBRANT_PALETTE = PALETTE_GROUPS.slice(6).map(hexToRgbArr);
 
         let state = {
             bgMode: 'solid',
@@ -453,6 +460,9 @@
         const overlays = {};
         const canvas = document.getElementById('mainCanvas');
         const ctx = canvas.getContext('2d');
+
+        // New Snap Points
+        const SNAP_POINTS = [100, 250, 333, 500, 666, 750, 900];
 
         function init() {
             createSwatches('solidSwatches', 'bgColor');
@@ -540,24 +550,20 @@
             } else if (state.bgMode === 'gradient') {
                 ctx.fillStyle = state.gradColors[0];
                 ctx.fillRect(0,0, CANVAS_SIZE, CANVAS_SIZE);
-                
                 state.gradColors.forEach((color, i) => {
                     const pos = state.gradPos[i] || [0.5, 0.5];
                     const x = pos[0] * CANVAS_SIZE;
                     const y = pos[1] * CANVAS_SIZE;
-                    
                     const radius = CANVAS_SIZE * 1.1;
                     const g = ctx.createRadialGradient(x, y, 0, x, y, radius);
                     g.addColorStop(0, color);
                     g.addColorStop(1, 'transparent');
-                    
                     ctx.save();
                     ctx.globalAlpha = 0.85;
                     ctx.fillStyle = g;
                     ctx.fillRect(0,0, CANVAS_SIZE, CANVAS_SIZE);
                     ctx.restore();
                 });
-
                 ctx.save();
                 ctx.globalAlpha = 0.03; 
                 ctx.globalCompositeOperation = 'soft-light'; 
@@ -577,7 +583,6 @@
 
             if (document.getElementById('shapeToggle').checked) drawLayer('shape_'+state.shapeIdx, state.shapeColor, 0, 0, 1000, 1000, blend);
             if (document.getElementById('frameToggle').checked) drawLayer('frame', state.frameColor, 0, 0, 1000, 1000, blend);
-
             if (state.icon.img) {
                 drawLayer(state.icon.img, state.iconColor, state.icon.x - state.icon.size/2, state.icon.y - state.icon.size/2, state.icon.size, state.icon.size, blend);
             }
@@ -616,55 +621,77 @@
         }
 
         function setupHandlers() {
-            const snapRange = 25;
+            const snapThreshold = 25;
+            const vGuide = document.getElementById('vGuide');
+            const hGuide = document.getElementById('hGuide');
+
             const getPos = (e) => {
                 const r = canvas.getBoundingClientRect(), s = CANVAS_SIZE/r.width;
                 const cx = e.touches ? e.touches[0].clientX : e.clientX, cy = e.touches ? e.touches[0].clientY : e.clientY;
                 return { x: (cx-r.left)*s, y: (cy-r.top)*s };
             };
-            
-            canvas.addEventListener('mousedown', (e) => {
+
+            const updateGuides = (x, y) => {
+                let vMatch = -1, hMatch = -1;
+                SNAP_POINTS.forEach(p => {
+                    if (Math.abs(x - p) < snapThreshold) vMatch = p;
+                    if (Math.abs(y - p) < snapThreshold) hMatch = p;
+                });
+
+                const r = canvas.getBoundingClientRect();
+                if (vMatch !== -1) {
+                    vGuide.style.display = 'block';
+                    vGuide.style.left = (r.left + (vMatch * r.width / CANVAS_SIZE)) + 'px';
+                } else vGuide.style.display = 'none';
+
+                if (hMatch !== -1) {
+                    hGuide.style.display = 'block';
+                    hGuide.style.top = (r.top + (hMatch * r.height / CANVAS_SIZE)) + 'px';
+                } else hGuide.style.display = 'none';
+
+                return { nx: vMatch !== -1 ? vMatch : x, ny: hMatch !== -1 ? hMatch : y };
+            };
+
+            const handleDrag = (e) => {
+                if (!state.icon.dragging) return;
+                const p = getPos(e);
+                const snapped = updateGuides(p.x, p.y);
+                state.icon.x = snapped.nx;
+                state.icon.y = snapped.ny;
+                render();
+            };
+
+            const endDrag = () => {
+                state.icon.dragging = false;
+                vGuide.style.display = 'none';
+                hGuide.style.display = 'none';
+            };
+
+            canvas.onmousedown = (e) => {
                 const p = getPos(e);
                 if (Math.hypot(p.x-state.icon.x, p.y-state.icon.y) < state.icon.size/1.5) state.icon.dragging = true;
-            });
-            window.addEventListener('mousemove', (e) => {
-                if (!state.icon.dragging) return;
-                const p = getPos(e); let mx = p.x, my = p.y;
-                let sx = Math.abs(mx-500) < snapRange, sy = Math.abs(my-500) < snapRange;
-                if (sx) mx = 500; if (sy) my = 500;
-                document.getElementById('guideX').style.display = sx ? 'block' : 'none';
-                document.getElementById('guideY').style.display = sy ? 'block' : 'none';
-                state.icon.x = mx; state.icon.y = my; render();
-            });
-            window.addEventListener('mouseup', () => {
-                state.icon.dragging = false;
-                document.getElementById('guideX').style.display = 'none';
-                document.getElementById('guideY').style.display = 'none';
-            });
+            };
+            window.onmousemove = handleDrag;
+            window.onmouseup = endDrag;
 
-            canvas.addEventListener('touchstart', (e) => {
+            canvas.ontouchstart = (e) => {
                 const p = getPos(e);
                 if (Math.hypot(p.x-state.icon.x, p.y-state.icon.y) < state.icon.size/1.5) state.icon.dragging = true;
-            }, { passive: false });
-            window.addEventListener('touchmove', (e) => {
-                if (!state.icon.dragging) return;
-                const p = getPos(e); 
-                let mx = p.x, my = p.y;
-                // Added snap logic to touch events for mobile
-                let sx = Math.abs(mx-500) < snapRange, sy = Math.abs(my-500) < snapRange;
-                if (sx) mx = 500; if (sy) my = 500;
-                document.getElementById('guideX').style.display = sx ? 'block' : 'none';
-                document.getElementById('guideY').style.display = sy ? 'block' : 'none';
-                state.icon.x = mx; state.icon.y = my; render();
-                e.preventDefault();
-            }, { passive: false });
-            window.addEventListener('touchend', () => {
-                state.icon.dragging = false;
-                document.getElementById('guideX').style.display = 'none';
-                document.getElementById('guideY').style.display = 'none';
-            });
+            };
+            window.ontouchmove = (e) => {
+                handleDrag(e);
+                if (state.icon.dragging) e.preventDefault();
+            };
+            window.ontouchend = endDrag;
 
-            document.getElementById('shuffleGrad').onclick = shuffleMeshColors;
+            // Glyph Removal
+            document.getElementById('clearIcon').onclick = () => {
+                state.icon.img = null;
+                state.icon.name = '';
+                document.getElementById('iconProps').classList.add('hidden');
+                render();
+            };
+
             document.getElementById('railExportBtn').onclick = () => {
                 const url = canvas.toDataURL('image/png', 1.0);
                 document.getElementById('exportPreview').src = url;
@@ -685,6 +712,7 @@
                 };
                 document.getElementById('titleInput').value = "";
                 document.querySelectorAll('#gradPoints button').forEach((btn, i) => btn.style.background = state.gradColors[i]);
+                document.getElementById('iconProps').classList.add('hidden');
                 init();
             };
 
@@ -692,6 +720,7 @@
             document.getElementById('shapeToggle').onclick = render;
             document.getElementById('frameToggle').onclick = render;
             document.getElementById('globalBlend').onchange = render;
+            document.getElementById('shuffleGrad').onclick = shuffleMeshColors;
             
             document.getElementById('iconSize').oninput = (e) => {
                 state.icon.size = parseInt(e.target.value);
@@ -767,10 +796,130 @@
         }
 
         const ICON_GROUPS = [
-            { title: "Music", icons: [{name:'music'},{name:'disc'},{name:'headphones'},{name:'mic'},{name:'radio'},{name:'play'},{name:'pause'},{name:'shuffle'}] },
-            { title: "Mood", icons: [{name:'smile'},{name:'frown'},{name:'heart'},{name:'star'},{name:'flame'},{name:'zap'},{name:'ghost'},{name:'sparkles'}] },
-            { title: "Space", icons: [{name:'moon'},{name:'sun'},{name:'rocket'},{name:'globe'},{name:'cloud'}] }
-        ];
+    {
+        title: "Music & Sound",
+        icons: [
+            { name: 'music', tags: 'music audio sound song melody playlist media' },
+            { name: 'disc', tags: 'music audio record vinyl album media' },
+            { name: 'headphones', tags: 'music audio listen headset media' },
+            { name: 'mic', tags: 'music audio voice vocal recording' },
+            { name: 'mic-off', tags: 'music audio mute voice recording' },
+            { name: 'speaker', tags: 'music audio sound output volume' },
+            { name: 'radio', tags: 'music audio broadcast fm am' },
+            { name: 'list-music', tags: 'music playlist list queue audio' },
+            { name: 'cassette-tape', tags: 'music audio retro vintage tape' },
+            { name: 'audio-lines', tags: 'music audio waveform signal sound' },
+            { name: 'activity', tags: 'audio waveform pulse rhythm signal' },
+            { name: 'volume', tags: 'audio sound volume loud' },
+            { name: 'volume-1', tags: 'audio sound volume low' },
+            { name: 'volume-2', tags: 'audio sound volume medium' },
+            { name: 'volume-x', tags: 'audio sound mute silent' },
+            { name: 'play', tags: 'media playback start music video' },
+            { name: 'pause', tags: 'media playback pause stop' },
+            { name: 'stop-circle', tags: 'media playback stop end' },
+            { name: 'skip-forward', tags: 'media playback next forward' },
+            { name: 'skip-back', tags: 'media playback previous rewind' },
+            { name: 'repeat', tags: 'media playback loop repeat' },
+            { name: 'repeat-1', tags: 'media playback loop single' },
+            { name: 'shuffle', tags: 'media playback random mix' },
+            { name: 'sliders-horizontal', tags: 'audio control mixer adjust' }
+        ]
+    },
+
+    {
+        title: "Faces & Emotions",
+        icons: [
+            { name: 'smile', tags: 'face emoji mood happy emotion' },
+            { name: 'frown', tags: 'face emoji mood sad emotion' },
+            { name: 'meh', tags: 'face emoji mood neutral emotion' },
+            { name: 'angry', tags: 'face emoji mood angry emotion' },
+            { name: 'laugh', tags: 'face emoji mood happy fun emotion' },
+            { name: 'heart', tags: 'emotion love like favorite mood' },
+            { name: 'heart-off', tags: 'emotion unlike remove mood' },
+            { name: 'thumbs-up', tags: 'emotion approval like positive' },
+            { name: 'thumbs-down', tags: 'emotion dislike negative skip' },
+            { name: 'star', tags: 'emotion favorite rating save' },
+            { name: 'star-half', tags: 'emotion rating partial score' },
+            { name: 'eye', tags: 'face vision view attention' },
+            { name: 'eye-off', tags: 'face hidden private blind' }
+        ]
+    },
+
+    {
+        title: "Mood & Energy",
+        icons: [
+            { name: 'flame', tags: 'energy hot fire trending hype' },
+            { name: 'sparkles', tags: 'energy magic fresh clean new' },
+            { name: 'zap', tags: 'energy electric fast power' },
+            { name: 'ghost', tags: 'mood spooky eerie dark' },
+            { name: 'skull', tags: 'mood dark metal death' },
+            { name: 'sunrise', tags: 'mood morning calm fresh' },
+            { name: 'sunset', tags: 'mood evening chill warm' },
+            { name: 'moon', tags: 'mood night dark sleep' },
+            { name: 'cloud-moon', tags: 'mood night chill calm' },
+            { name: 'cloud-sun', tags: 'mood bright optimistic light' }
+        ]
+    },
+
+    {
+        title: "Nature & Space",
+        icons: [
+            { name: 'sun', tags: 'nature light day weather' },
+            { name: 'cloud', tags: 'nature weather sky' },
+            { name: 'cloud-rain', tags: 'nature weather rain sad' },
+            { name: 'cloud-snow', tags: 'nature weather winter cold' },
+            { name: 'cloud-lightning', tags: 'nature weather storm energy' },
+            { name: 'waves', tags: 'nature water ocean sound' },
+            { name: 'wind', tags: 'nature air breeze weather' },
+            { name: 'trees', tags: 'nature forest outdoors' },
+            { name: 'leaf', tags: 'nature eco calm organic' },
+            { name: 'mountain', tags: 'nature adventure travel climb' },
+            { name: 'rocket', tags: 'space launch speed future' },
+            { name: 'satellite', tags: 'space orbit signal tech' },
+            { name: 'globe', tags: 'world earth international' },
+            { name: 'orbit', tags: 'space cycle rotation' },
+            { name: 'atom', tags: 'science physics energy' },
+            { name: 'infinity', tags: 'symbol endless loop forever' },
+            { name: 'compass', tags: 'navigation direction explore' },
+            { name: 'binoculars', tags: 'explore discover search view' }
+        ]
+    },
+
+    {
+        title: "Lifestyle & Media",
+        icons: [
+            { name: 'coffee', tags: 'drink morning energy lifestyle' },
+            { name: 'pizza', tags: 'food eat lifestyle' },
+            { name: 'utensils', tags: 'food dining lifestyle' },
+            { name: 'camera', tags: 'photo media image' },
+            { name: 'film', tags: 'movie cinema media' },
+            { name: 'video', tags: 'media clip recording' },
+            { name: 'tv', tags: 'media screen watch' },
+            { name: 'monitor', tags: 'screen display desktop' },
+            { name: 'smartphone', tags: 'device mobile phone' }
+        ]
+    },
+
+    {
+        title: "Objects & Utility",
+        icons: [
+            { name: 'clock', tags: 'time watch schedule' },
+            { name: 'calendar', tags: 'time date schedule' },
+            { name: 'bell', tags: 'notification alert reminder' },
+            { name: 'bookmark', tags: 'save later favorite' },
+            { name: 'folder', tags: 'files library collection' },
+            { name: 'archive', tags: 'storage history collection' },
+            { name: 'settings', tags: 'preferences config gear' },
+            { name: 'sliders', tags: 'controls adjust settings' },
+            { name: 'battery', tags: 'power energy charge' },
+            { name: 'plug', tags: 'power connection cable' },
+            { name: 'key', tags: 'access unlock security' },
+            { name: 'map-pin', tags: 'location place navigation' },
+            { name: 'navigation', tags: 'location direction gps' },
+            { name: 'gift', tags: 'present reward celebration' }
+        ]
+    }
+];
 
         function loadIcons(filter = "") {
             const g = document.getElementById('iconGrid'); g.innerHTML = "";
