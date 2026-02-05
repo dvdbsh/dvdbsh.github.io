@@ -1,0 +1,310 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Pro Liquid Mesh Generator</title>
+  <style>
+    :root {
+      --bg: #08080a;
+      --panel: #111114;
+      --accent: #3b82f6;
+      --text: #ffffff;
+      --text-dim: #94a3b8;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+    }
+
+    /* Main Viewport - Now scales to fit properly */
+    .viewport {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      background: radial-gradient(circle at center, #1a1a20 0%, #08080a 100%);
+      min-width: 0;
+    }
+
+    .canvas-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      max-width: calc(100vh - 80px); /* Keeps it square and within viewport height */
+      aspect-ratio: 1/1;
+      background: #000;
+      border-radius: 12px;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #meshCanvas {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    /* Sidebar Controls */
+    .sidebar {
+      width: 340px;
+      background: var(--panel);
+      border-left: 1px solid rgba(255,255,255,0.05);
+      padding: 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      flex-shrink: 0;
+    }
+
+    .header h1 { font-size: 24px; margin: 0 0 8px 0; letter-spacing: -0.02em; }
+    .header p { color: var(--text-dim); font-size: 14px; margin: 0; line-height: 1.4; }
+
+    .control-group { display: flex; flex-direction: column; gap: 12px; }
+    .label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-dim); }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+      border: none;
+      padding: 16px;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-primary:hover { filter: brightness(1.1); transform: translateY(-1px); }
+    .btn-primary:active { transform: translateY(1px); filter: brightness(0.9); }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      color: white;
+      border: 1px solid rgba(255,255,255,0.1);
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-secondary:hover { background: rgba(255,255,255,0.1); }
+
+    .status-badge {
+      font-size: 10px;
+      font-weight: 700;
+      color: var(--accent);
+      background: rgba(59, 130, 246, 0.1);
+      padding: 4px 10px;
+      border-radius: 100px;
+      align-self: flex-start;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 900px) {
+      body { flex-direction: column; overflow-y: auto; }
+      .sidebar { width: 100%; border-left: none; border-top: 1px solid rgba(255,255,255,0.1); flex-shrink: 1; }
+      .viewport { height: auto; aspect-ratio: 1/1; padding: 20px; }
+      .canvas-container { max-width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="viewport">
+    <div class="canvas-container">
+      <canvas id="meshCanvas" width="1600" height="1600"></canvas>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <div class="header">
+      <div class="status-badge">Engine V2.0</div>
+      <h1>Liquid Mesh</h1>
+      <p>Bespoke generative gradients using bilinear vertex interpolation and smart palette weighting.</p>
+    </div>
+
+    <div class="control-group">
+      <div class="label">Generative</div>
+      <button id="regenBtn" class="btn-primary">Generate New Mesh</button>
+    </div>
+
+    <div class="control-group">
+      <div class="label">Export</div>
+      <button id="downloadBtn" class="btn-secondary">Download 1600px PNG</button>
+    </div>
+
+    <div id="log" style="font-size: 11px; color: var(--text-dim); font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; margin-top: auto;">
+      Initialized
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('meshCanvas');
+    const ctx = canvas.getContext('2d');
+    const size = 1600;
+    const gridSize = 4;
+
+    let mesh = [];
+
+    // Refined Palettes with logic-friendly structures
+    const PALETTES = [
+      {
+        name: "Electric",
+        colors: [[60, 20, 220], [247, 67, 102], [255, 191, 0], [21, 169, 252]],
+        weights: [0.4, 0.3, 0.2, 0.1]
+      },
+      {
+        name: "Deep Emerald",
+        colors: [[10, 55, 44], [105, 221, 88], [127, 255, 212], [0, 128, 128]],
+        weights: [0.5, 0.2, 0.1, 0.2]
+      },
+      {
+        name: "Velvet Dawn",
+        colors: [[91, 34, 68], [181, 126, 220], [247, 202, 201], [255, 182, 193]],
+        weights: [0.3, 0.4, 0.2, 0.1]
+      },
+      {
+        name: "Solar",
+        colors: [[193, 79, 48], [255, 127, 80], [255, 219, 88], [220, 20, 60]],
+        weights: [0.3, 0.3, 0.3, 0.1]
+      }
+    ];
+
+    function pickWeightedColor(palette) {
+      const r = Math.random();
+      let sum = 0;
+      for (let i = 0; i < palette.weights.length; i++) {
+        sum += palette.weights[i];
+        if (r <= sum) return palette.colors[i];
+      }
+      return palette.colors[0];
+    }
+
+    function initMesh() {
+      const palette = PALETTES[Math.floor(Math.random() * PALETTES.length)];
+      mesh = [];
+      
+      // Determine a primary "anchor" color for the palette to ensure harmony
+      const anchorColor = palette.colors[0];
+
+      for (let y = 0; y < gridSize; y++) {
+        for (let x = 0; x < gridSize; x++) {
+          let px = x / (gridSize - 1);
+          let py = y / (gridSize - 1);
+
+          // Apply "Liquid" distortion immediately on init
+          if (x > 0 && x < gridSize - 1 && y > 0 && y < gridSize - 1) {
+            px += (Math.random() - 0.5) * 0.6; // Increased jitter for better stretch
+            py += (Math.random() - 0.5) * 0.6;
+          }
+
+          // Smart Color logic: edges favor darker/anchor colors, center favors highlights
+          let color;
+          const isEdge = x === 0 || x === gridSize-1 || y === 0 || y === gridSize-1;
+          if (isEdge && Math.random() > 0.3) {
+            color = anchorColor;
+          } else {
+            color = pickWeightedColor(palette);
+          }
+
+          mesh.push({
+            x: px * size,
+            y: py * size,
+            color: color
+          });
+        }
+      }
+      render();
+    }
+
+    function render() {
+      const buffer = document.createElement('canvas');
+      buffer.width = size;
+      buffer.height = size;
+      const bctx = buffer.getContext('2d');
+      
+      const steps = 70; // Higher density for ultra-smooth transitions
+      
+      for (let j = 0; j < gridSize - 1; j++) {
+        for (let i = 0; i < gridSize - 1; i++) {
+          const p00 = mesh[j * gridSize + i];
+          const p10 = mesh[j * gridSize + (i + 1)];
+          const p01 = mesh[(j + 1) * gridSize + i];
+          const p11 = mesh[(j + 1) * gridSize + (i + 1)];
+
+          for (let y = 0; y < steps; y++) {
+            for (let x = 0; x < steps; x++) {
+              const u = x / steps;
+              const v = y / steps;
+              const uNext = (x + 1) / steps;
+              const vNext = (y + 1) / steps;
+
+              const pos = lerp2D(p00, p10, p01, p11, u, v);
+              const posNext = lerp2D(p00, p10, p01, p11, uNext, vNext);
+              const color = lerpColor(p00.color, p10.color, p01.color, p11.color, u, v);
+
+              bctx.fillStyle = `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
+              
+              const w = Math.abs(posNext.x - pos.x) + 4;
+              const h = Math.abs(posNext.y - pos.y) + 4;
+              bctx.fillRect(pos.x, pos.y, w, h);
+            }
+          }
+        }
+      }
+
+      ctx.clearRect(0, 0, size, size);
+      
+      // Final blending pass: uses large blur + subtle saturation boost
+      ctx.save();
+      ctx.filter = 'blur(60px) saturate(1.1)';
+      ctx.drawImage(buffer, -120, -120, size + 240, size + 240);
+      ctx.restore();
+
+      document.getElementById('log').textContent = `Mesh Rendered • 1600px`;
+    }
+
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    function lerp2D(p00, p10, p01, p11, u, v) {
+      return {
+        x: lerp(lerp(p00.x, p10.x, u), lerp(p01.x, p11.x, u), v),
+        y: lerp(lerp(p00.y, p10.y, u), lerp(p01.y, p11.y, u), v)
+      };
+    }
+
+    function lerpColor(c00, c10, c01, c11, u, v) {
+      // Linear interpolation in RGB space
+      return [
+        Math.round(lerp(lerp(c00[0], c10[0], u), lerp(c01[0], c11[0], u), v)),
+        Math.round(lerp(lerp(c00[1], c10[1], u), lerp(c01[1], c11[1], u), v)),
+        Math.round(lerp(lerp(c00[2], c10[2], u), lerp(c01[2], c11[2], u), v))
+      ];
+    }
+
+    document.getElementById('regenBtn').onclick = initMesh;
+    document.getElementById('downloadBtn').onclick = () => {
+      const link = document.createElement('a');
+      link.download = `liquid-mesh-${Date.now()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    };
+
+    // Initial Generation
+    initMesh();
+  </script>
+</body>
+</html>
