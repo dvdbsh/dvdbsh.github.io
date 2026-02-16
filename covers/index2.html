@@ -3,279 +3,611 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Volumetric</title>
-    
-    <!-- iOS Web App Meta Tags -->
+    <title>Covr Studio</title>
+
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Volumetric">
-    <meta name="theme-color" content="#000000">
+    <meta name="apple-mobile-web-app-title" content="Covr Studio">
     
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
     <style>
+        @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Book.ttf') format('truetype'); font-weight: 400; }
+        @font-face { font-family: 'Circular'; src: url('fonts/Circular/Circular-Bold.ttf') format('truetype'); font-weight: 700; }
+
         :root {
-            --ios-bg: #000000;
-            --ios-secondary: #1c1c1e;
-            --safe-top: env(safe-area-inset-top);
-            --safe-bottom: env(safe-area-inset-bottom);
+            --bg-deep: #000000;
+            --bg-panel: #111112;
+            --border: rgba(255, 255, 255, 0.06);
+            --sat: env(safe-area-inset-top);
+            --sab: env(safe-area-inset-bottom);
         }
 
         body {
-            background-color: var(--ios-bg);
+            font-family: 'Circular', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: var(--bg-deep);
             color: #ffffff;
-            overscroll-behavior: none;
+            margin: 0;
+            overflow: hidden;
+            height: 100vh;
+            height: 100dvh;
+            width: 100%;
             -webkit-tap-highlight-color: transparent;
-            user-select: none;
-            -webkit-user-select: none;
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
         }
 
-        .app-container {
-            padding-top: calc(var(--safe-top) + 1.5rem);
-            padding-bottom: calc(var(--safe-bottom) + 2rem);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
 
         .canvas-container {
-            position: relative;
+            box-shadow: 0 40px 80px -20px rgba(0, 0, 0, 0.8), 
+                        inset 0 0 0 1px rgba(255, 255, 255, 0.05);
+        }
+
+        /* Active High Contrast Styling */
+        .tab-item.active, .sub-tab-btn.active, .palette-btn.active, .size-btn.active, .weight-btn.active {
+            background-color: #ffffff !important;
+            border-color: #ffffff !important;
+            color: #000000 !important;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .tab-item.active span, .tab-item.active i, .weight-btn.active span {
+            color: #000000 !important;
+        }
+
+        .palette-btn.active .ring-neutral-900 {
+            border-color: #ffffff !important;
+        }
+
+        /* Snapping Slider */
+        .custom-range {
+            -webkit-appearance: none;
             width: 100%;
-            max-width: 500px;
-            aspect-ratio: 1 / 1;
-            margin: auto;
-            border-radius: 3rem;
-            overflow: hidden;
-            background: #000;
-            box-shadow: 0 0 0 0.5px rgba(255, 255, 255, 0.15);
-            transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            height: 4px;
+            background: #262626;
+            border-radius: 2px;
+            outline: none;
         }
 
-        .canvas-container:active {
-            transform: scale(0.98);
+        .custom-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #ffffff;
+            cursor: pointer;
+            border-radius: 50%;
+            border: 2px solid #a855f7;
+            box-shadow: 0 0 10px rgba(168, 85, 247, 0.4);
         }
 
-        canvas {
-            width: 100%;
-            height: 100%;
-            display: block;
+        /* Layout Splits */
+        .app-shell {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            height: 100dvh;
         }
 
-        .ios-btn {
-            background: var(--ios-secondary);
-            color: #0A84FF; /* iOS System Blue */
-            font-weight: 500;
-            font-size: 17px;
-            padding: 18px;
-            border-radius: 14px;
-            transition: background 0.2s, transform 0.1s;
+        @media (min-width: 768px) {
+            .app-shell { flex-direction: row; }
+        }
+
+        .stage {
+            flex-shrink: 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-        }
-
-        .ios-btn:active {
-            background: #2c2c2e;
-            transform: scale(0.97);
-        }
-
-        .ios-btn-primary {
-            background: #ffffff;
-            color: #000000;
-            font-weight: 600;
-        }
-
-        .ios-btn-primary:active {
-            background: #d1d1d6;
-        }
-
-        #loadingOverlay {
-            position: absolute;
-            inset: 0;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            position: relative;
+            background: #000;
+            padding: 1.5rem;
+            padding-top: max(4.5rem, var(--sat));
             z-index: 10;
         }
 
-        .ios-spinner {
-            width: 24px;
-            height: 24px;
-            border: 3px solid rgba(255, 255, 255, 0.2);
-            border-top-color: #ffffff;
+        @media (min-width: 768px) {
+            .stage { flex: 1; padding: 3rem; }
+        }
+
+        .inspector {
+            flex: 1;
+            background: var(--bg-panel);
+            border-top: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            z-index: 20;
+            overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .inspector {
+                width: 400px;
+                flex: none;
+                border-top: none;
+                border-left: 1px solid var(--border);
+            }
+        }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        
+        .sub-tab-content { display: none; }
+        .sub-tab-content.active { display: block; }
+
+        .guide-line {
+            position: absolute;
+            background: #a855f7;
+            opacity: 0.5;
+            pointer-events: none;
+            z-index: 100;
+            display: none;
+        }
+        .guide-v { width: 1px; top: 0; bottom: 0; }
+        .guide-h { height: 1px; left: 0; right: 0; }
+
+        .swatch {
+            width: 100%;
+            aspect-ratio: 1;
             border-radius: 50%;
-            animation: ios-spin 0.8s linear infinite;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+            position: relative;
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1);
+        }
+        
+        .swatch::after {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 50%;
+            pointer-events: none;
         }
 
-        @keyframes ios-spin {
-            to { transform: rotate(360deg); }
+        .swatch.active {
+            border-color: #fff;
+            transform: scale(1.15);
+            z-index: 5;
         }
-
-        .status-pill {
-            background: var(--ios-secondary);
-            padding: 4px 12px;
-            border-radius: 100px;
-            font-size: 11px;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            color: #8e8e93;
-            text-transform: uppercase;
-        }
+        .swatch.active::after { border-color: transparent; }
     </style>
 </head>
-<body class="overflow-hidden">
+<body class="selection:bg-purple-500/30 overflow-hidden">
 
-    <div class="app-container px-8">
-        <!-- Minimal Header -->
-        <header class="flex flex-col items-center gap-2">
-            <span class="status-pill" id="themeLabel">Volumetric</span>
-        </header>
-
-        <!-- Main View -->
-        <div class="canvas-container" id="mainCanvasGroup">
-            <canvas id="gradientCanvas" width="1200" height="1200"></canvas>
-            <div id="loadingOverlay">
-                <div class="ios-spinner"></div>
-            </div>
-        </div>
-
-        <!-- Single Action Footer -->
-        <div class="flex flex-col gap-4">
-            <button id="generateBtn" class="ios-btn ios-btn-primary">
-                New Gradient
-            </button>
+    <div class="app-shell">
+        <main id="viewport" class="stage">
+            <div id="bg-glow" class="absolute inset-0 blur-[150px] pointer-events-none opacity-20 transition-all duration-1000 scale-150"></div>
             
-            <div class="flex justify-between items-center px-2">
-                <button id="downloadBtn" class="text-[#0A84FF] text-[15px] font-medium active:opacity-50 transition-opacity">
-                    Export Image
-                </button>
-                <div class="w-1.5 h-1.5 rounded-full bg-zinc-800"></div>
-                <p class="text-[12px] text-zinc-600 font-medium">1.2MP • Deep Black</p>
+            <div id="vGuide" class="guide-line guide-v"></div>
+            <div id="hGuide" class="guide-line guide-h"></div>
+
+            <div id="container" class="relative flex flex-col items-center w-full max-w-[480px]">
+                <div id="canvas-wrap" class="w-full aspect-square rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden canvas-container border border-white/5 bg-neutral-900">
+                    <canvas id="mainCanvas" width="1000" height="1000" class="w-full h-full block cursor-crosshair"></canvas>
+                </div>
             </div>
-        </div>
+        </main>
+
+        <aside class="inspector">
+            <nav class="flex border-b border-white/5 bg-black/20 shrink-0 overflow-x-auto no-scrollbar">
+                <button class="tab-item active flex-1 p-4 flex flex-col items-center gap-1 transition-all" data-tab="cover">
+                    <i data-lucide="layers" class="w-4 h-4"></i>
+                    <span class="text-[9px] font-bold uppercase tracking-widest">Cover</span>
+                </button>
+                <button class="tab-item flex-1 p-4 flex flex-col items-center gap-1 transition-all" data-tab="text">
+                    <i data-lucide="type" class="w-4 h-4"></i>
+                    <span class="text-[9px] font-bold uppercase tracking-widest">Title</span>
+                </button>
+                <button class="tab-item flex-1 p-4 flex flex-col items-center gap-1 transition-all" data-tab="glyphs">
+                    <i data-lucide="shapes" class="w-4 h-4"></i>
+                    <span class="text-[9px] font-bold uppercase tracking-widest">Glyphs</span>
+                </button>
+                <button id="exportBtn" class="flex-1 p-4 flex flex-col items-center gap-1 transition-all text-blue-500">
+                    <i data-lucide="share" class="w-4 h-4"></i>
+                    <span class="text-[9px] font-bold uppercase tracking-widest">Save</span>
+                </button>
+            </nav>
+
+            <div class="flex-1 overflow-y-auto no-scrollbar p-6 space-y-8 pb-[calc(var(--sab)+24px)]">
+                
+                <div id="tabCover" class="tab-content active space-y-8">
+                    <div class="flex bg-white/5 p-1 rounded-2xl gap-1">
+                        <button class="sub-tab-btn active flex-1 py-2.5 text-[9px] font-bold uppercase tracking-widest rounded-xl transition-all" data-sub="mesh">Mesh</button>
+                        <button class="sub-tab-btn flex-1 py-2.5 text-[9px] font-bold uppercase tracking-widest rounded-xl transition-all" data-sub="solid">Solid</button>
+                        <button class="sub-tab-btn flex-1 py-2.5 text-[9px] font-bold uppercase tracking-widest rounded-xl transition-all" data-sub="photo">Photo</button>
+                    </div>
+
+                    <div id="subMesh" class="sub-tab-content active space-y-8">
+                        <section class="space-y-4">
+                            <label class="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Select Palette</label>
+                            <div id="palette-list" class="grid grid-cols-1 gap-2"></div>
+                        </section>
+                        <section class="space-y-4">
+                            <label class="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Blur Snap</label>
+                            <div class="relative w-full py-4">
+                                <input type="range" id="blur-slider" min="0" max="4" step="1" value="2" class="custom-range relative z-10">
+                                <div class="absolute top-1/2 left-0 w-full flex justify-between px-1 pointer-events-none -translate-y-1/2">
+                                    <div class="w-1 h-1 rounded-full bg-neutral-700"></div><div class="w-1 h-1 rounded-full bg-neutral-700"></div><div class="w-1 h-1 rounded-full bg-neutral-700"></div><div class="w-1 h-1 rounded-full bg-neutral-700"></div><div class="w-1 h-1 rounded-full bg-neutral-700"></div>
+                                </div>
+                            </div>
+                        </section>
+                        <button id="btn-generate" class="w-full flex items-center justify-center gap-3 py-4 bg-purple-600 hover:bg-purple-500 active:scale-[0.97] rounded-2xl font-bold transition-all shadow-xl shadow-purple-900/20 text-white">
+                            <i data-lucide="refresh-cw" class="w-5 h-5" id="refresh-icon"></i> Randomize Mesh
+                        </button>
+                    </div>
+
+                    <div id="subSolid" class="sub-tab-content space-y-4">
+                        <label class="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Background Color</label>
+                        <div id="bgSwatches" class="grid grid-cols-6 gap-2"></div>
+                    </div>
+
+                    <div id="subPhoto" class="sub-tab-content space-y-4">
+                        <label class="text-[10px] font-black text-neutral-500 uppercase tracking-widest">Cover Photo</label>
+                        <label class="flex flex-col items-center justify-center w-full aspect-video border-2 border-dashed border-white/10 rounded-3xl bg-white/5 hover:bg-white/10 cursor-pointer transition-all">
+                            <input type="file" id="imageInput" class="hidden" accept="image/*">
+                            <i data-lucide="image" class="w-8 h-8 text-neutral-600 mb-2"></i>
+                            <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest" id="imageName">Pick a photo</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div id="tabText" class="tab-content space-y-6">
+                    <div class="space-y-2">
+                        <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Cover Title</label>
+                        <textarea id="titleInput" class="w-full bg-white/5 border border-white/5 rounded-2xl p-4 text-lg font-semibold outline-none focus:border-purple-500 transition-all resize-none no-scrollbar" rows="2" placeholder="Title..."></textarea>
+                    </div>
+
+                    <div class="p-5 bg-white/5 rounded-3xl space-y-6 border border-white/5">
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Text Size</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <button data-size="90" class="size-btn py-3 rounded-xl text-[10px] font-black bg-white/10 text-neutral-400 uppercase">Regular</button>
+                                <button data-size="135" class="size-btn py-3 rounded-xl text-[10px] font-black bg-white text-black active uppercase">Large</button>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Font Weight</label>
+                            <div class="grid grid-cols-3 gap-2">
+                                <button data-weight="400" class="weight-btn py-2.5 rounded-xl bg-white/5 text-neutral-500 flex items-center justify-center">
+                                    <span class="font-normal text-lg">B</span>
+                                </button>
+                                <button data-weight="700" class="weight-btn py-2.5 rounded-xl bg-white/20 text-white flex items-center justify-center">
+                                    <span class="font-bold text-lg">B</span>
+                                </button>
+                                <button data-weight="900" class="weight-btn active py-2.5 rounded-xl bg-white text-black flex items-center justify-center">
+                                    <span class="font-black text-lg">B</span>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest text-white/50">Text Color</label>
+                            <div id="textSwatches" class="grid grid-cols-6 gap-2"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tabGlyphs" class="tab-content space-y-6">
+                    <div class="relative">
+                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500"></i>
+                        <input type="text" id="iconSearch" placeholder="SEARCH GLYPHS" class="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-[11px] font-bold uppercase tracking-widest outline-none focus:border-purple-500">
+                    </div>
+                    
+                    <div id="iconGrid" class="grid grid-cols-4 gap-3 max-h-[35vh] overflow-y-auto pr-1 no-scrollbar"></div>
+                    
+                    <div id="iconProps" class="hidden p-5 bg-white/5 rounded-3xl space-y-6 border border-white/5">
+                        <div class="flex justify-between items-center">
+                             <button id="clearIcon" class="text-red-500 text-[10px] font-bold uppercase bg-red-500/10 px-3 py-2 rounded-lg">Remove Glyph</button>
+                        </div>
+                        <div class="space-y-4">
+                            <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-widest">Icon Scale</label>
+                            <div class="relative w-full py-4">
+                                <input type="range" id="iconSize-slider" min="0" max="4" step="1" value="2" class="custom-range relative z-10">
+                                <div class="absolute top-1/2 left-0 w-full flex justify-between px-1 pointer-events-none -translate-y-1/2">
+                                    <div class="w-1 h-1 rounded-full bg-neutral-700"></div><div class="w-1 h-1 rounded-full bg-neutral-700"></div><div class="w-1 h-1 rounded-full bg-neutral-700"></div><div class="w-1 h-1 rounded-full bg-neutral-700"></div><div class="w-1 h-1 rounded-full bg-neutral-700"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="iconSwatches" class="grid grid-cols-6 gap-2"></div>
+                    </div>
+                </div>
+
+            </div>
+        </aside>
     </div>
 
     <script>
-        const THEMES = [
-            { name: "Neon Dusk", colors: ['#ef4444', '#ec4899', '#a855f7', '#6366f1', '#4c1d95'], bg: '#000000' },
-            { name: "Electric Ocean", colors: ['#06b6d4', '#007AFF', '#17A8FF', '#10b981', '#133F35'], bg: '#000000' },
-            { name: "Solar Flare", colors: ['#F5C81E', '#ef4444', '#f97316', '#D97706', '#78350F'], bg: '#000000' },
-            { name: "Cyber Violet", colors: ['#a855f7', '#6366f1', '#ec4899', '#3B356A', '#6C2D55'], bg: '#000000' },
-            { name: "Midnight Rose", colors: ['#fb7185', '#e11d48', '#881337', '#4c0519', '#27272a'], bg: '#000000' }
+        const ICON_GROUPS = [
+            { title: "Music & Sound", icons: ['music', 'disc', 'headphones', 'mic', 'radio', 'list-music', 'cassette-tape', 'audio-lines', 'activity', 'volume-2', 'play', 'pause'] },
+            { title: "Faces & Vibes", icons: ['smile', 'frown', 'meh', 'laugh', 'heart', 'star', 'eye', 'flame', 'sparkles', 'zap'] },
+            { title: "Nature & Objects", icons: ['sun', 'moon', 'cloud', 'waves', 'trees', 'leaf', 'rocket', 'globe', 'coffee', 'camera', 'gift', 'clock'] }
         ];
 
-        const canvas = document.getElementById('gradientCanvas');
-        const ctx = canvas.getContext('2d', { willReadFrequently: true, alpha: false });
-        const generateBtn = document.getElementById('generateBtn');
-        const downloadBtn = document.getElementById('downloadBtn');
-        const themeLabel = document.getElementById('themeLabel');
-        const loadingOverlay = document.getElementById('loadingOverlay');
+        const MASTER_PALETTE = [
+            '#ffffff', '#000000', '#8E8E93', '#50525A', '#1c1c1e', '#333333',
+            '#ef4444', '#FA4E63', '#9B4658', '#C24C2D', '#ec7299', '#ec4899',
+            '#f97316', '#f59e0b', '#eab308', '#F5C81E', '#D97706', '#78350F',
+            '#22c55e', '#53e14c', '#4B5D45', '#355B58', '#133F35', '#10b981',
+            '#007AFF', '#17A8FF', '#3b82f6', '#365567', '#0ea5e9', '#06b6d4',
+            '#a855f7', '#6366f1', '#3B356A', '#5E3D5E', '#6C2D55', '#4c1d95'
+        ];
 
-        let isGenerating = false;
+        // Restored sub-palettes to 5-color spread using MASTER_PALETTE hexes
+        const palettes = {
+            'High Energy': ['#ef4444', '#FA4E63', '#f97316', '#C24C2D', '#D97706'],
+            'Golden Hour': ['#f59e0b', '#eab308', '#F5C81E', '#D97706', '#78350F'],
+            'Hyperpop': ['#ec4899', '#ec7299', '#a855f7', '#6366f1', '#FA4E63'],
+            'Submerged': ['#007AFF', '#17A8FF', '#3b82f6', '#0ea5e9', '#06b6d4'],
+            'Stargaze': ['#a855f7', '#6366f1', '#3B356A', '#5E3D5E', '#6C2D55'],
+            'Organic': ['#22c55e', '#53e14c', '#4B5D45', '#355B58', '#133F35', '#10b981'], // Kept Organic as requested
+        };
 
-        function hexToRgb(hex) {
-            const r = parseInt(hex.slice(1, 3), 16);
-            const g = parseInt(hex.slice(3, 5), 16);
-            const b = parseInt(hex.slice(5, 7), 16);
-            return { r, g, b };
+        const CANVAS_SIZE = 1000;
+        const SNAP_POINTS = [100, 250, 333, 500, 666, 750, 900];
+        const blurLevels = [0.1 * 1.5, 0.3 * 1.5, 0.5 * 1.5, 0.7 * 1.5, 0.9 * 1.5];
+        const iconSizeLevels = [120, 180, 250, 350, 500];
+
+        let state = {
+            mode: 'mesh',
+            vibe: 'High Energy',
+            bgColor: '#1c1c1e',
+            bgImg: null,
+            chaos: blurLevels[2],
+            points: [],
+            title: '',
+            fontSize: 135,
+            fontWeight: 900,
+            textColor: '#ffffff',
+            icon: { img: null, color: '#ffffff', x: 500, y: 500, size: 250, dragging: false }
+        };
+
+        const canvas = document.getElementById('mainCanvas');
+        const ctx = canvas.getContext('2d');
+
+        function generatePoints() {
+            const colors = palettes[state.vibe];
+            const numBlobs = 12;
+            state.points = [];
+            for (let i = 0; i < numBlobs; i++) {
+                state.points.push({
+                    x: Math.random() * 1.6 - 0.3,
+                    y: Math.random() * 1.6 - 0.3,
+                    radius: Math.random() * 0.5 + 0.3,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    opacity: Math.random() * 0.3 + 0.6
+                });
+            }
+            render();
         }
 
-        function drawGaussianGlow(x, y, radius, color, alpha) {
-            const rgb = hexToRgb(color);
-            const grad = ctx.createRadialGradient(x, y, 0, x, y, radius);
+        function render() {
+            ctx.clearRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
             
-            const steps = 45; 
-            for (let i = 0; i <= steps; i++) {
-                const t = i / steps;
-                const currentAlpha = alpha * Math.exp(-Math.pow(t * 2.1, 2));
-                grad.addColorStop(t, `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, ${currentAlpha})`);
+            if (state.mode === 'solid') {
+                ctx.fillStyle = state.bgColor;
+                ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+            } else if (state.mode === 'mesh') {
+                ctx.fillStyle = palettes[state.vibe][0];
+                ctx.fillRect(0, 0, CANVAS_SIZE, CANVAS_SIZE);
+                ctx.filter = `blur(${state.chaos * 120 * (CANVAS_SIZE / 600)}px)`;
+                state.points.forEach(p => {
+                    const centerX = p.x * CANVAS_SIZE, centerY = p.y * CANVAS_SIZE, radius = p.radius * CANVAS_SIZE;
+                    const g = ctx.createRadialGradient(centerX, centerY, 0, centerX, centerY, radius);
+                    g.addColorStop(0, p.color); g.addColorStop(1, 'transparent');
+                    ctx.fillStyle = g; ctx.globalAlpha = p.opacity; ctx.fillRect(centerX - radius, centerY - radius, radius * 2, radius * 2);
+                });
+                ctx.filter = 'none'; ctx.globalAlpha = 1.0;
+            } else if (state.mode === 'photo' && state.bgImg) {
+                const s = Math.max(CANVAS_SIZE / state.bgImg.width, CANVAS_SIZE / state.bgImg.height);
+                ctx.drawImage(state.bgImg, (CANVAS_SIZE - state.bgImg.width * s) / 2, (CANVAS_SIZE - state.bgImg.height * s) / 2, state.bgImg.width * s, state.bgImg.height * s);
             }
 
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, 1200, 1200);
-        }
-
-        function applyGlobalGrain() {
-            const imageData = ctx.getImageData(0, 0, 1200, 1200);
-            const data = imageData.data;
-            const intensity = 7; 
-            
-            for (let i = 0; i < data.length; i += 4) {
-                const noise = (Math.random() - 0.5) * intensity;
-                data[i] += noise;
-                data[i + 1] += noise;
-                data[i + 2] += noise;
-            }
-            ctx.putImageData(imageData, 0, 0);
-        }
-
-        async function generate() {
-            if (isGenerating) return;
-            isGenerating = true;
-            
-            loadingOverlay.style.display = 'flex';
-
-            // Ensure smooth transition
-            await new Promise(r => requestAnimationFrame(() => setTimeout(r, 60)));
-
-            const theme = THEMES[Math.floor(Math.random() * THEMES.length)];
-            themeLabel.innerText = theme.name;
-            
-            const shuffledColors = [...theme.colors].sort(() => Math.random() - 0.5);
-
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.fillStyle = '#000000';
-            ctx.fillRect(0, 0, 1200, 1200);
-
-            // Large base glow
-            drawGaussianGlow(600 + (Math.random()-0.5)*400, 600 + (Math.random()-0.5)*400, 900, shuffledColors[0], 0.18);
-
-            // Structural blooms
-            const offsetX = (Math.random() - 0.5) * 300;
-            const offsetY = (Math.random() - 0.5) * 300;
-            drawGaussianGlow(600 + offsetX, 600 + offsetY, 500, shuffledColors[1], 0.45);
-            drawGaussianGlow(600 - offsetX, 600 - offsetY, 450, shuffledColors[2], 0.35);
-
-            // Highlights
-            for(let i=0; i<2; i++) {
-                const hx = 600 + (Math.random() - 0.5) * 600;
-                const hy = 600 + (Math.random() - 0.5) * 600;
-                drawGaussianGlow(hx, hy, 200 + Math.random()*200, shuffledColors[3] || shuffledColors[0], 0.25);
+            if (state.icon.img) {
+                const x = state.icon.x - state.icon.size/2, y = state.icon.y - state.icon.size/2;
+                const temp = document.createElement('canvas');
+                temp.width = temp.height = state.icon.size;
+                const tCtx = temp.getContext('2d');
+                tCtx.drawImage(state.icon.img, 0, 0, state.icon.size, state.icon.size);
+                tCtx.globalCompositeOperation = 'source-in';
+                tCtx.fillStyle = state.icon.color;
+                tCtx.fillRect(0, 0, state.icon.size, state.icon.size);
+                ctx.drawImage(temp, x, y);
             }
 
-            applyGlobalGrain();
+            ctx.fillStyle = state.textColor;
+            ctx.font = `${state.fontWeight} ${state.fontSize}px 'Circular', sans-serif`;
+            const lines = wrapText(ctx, state.title || "UNTITLED COVER", 780);
+            lines.forEach((l, i) => ctx.fillText(l, 110, 880 - (lines.length - 1 - i) * state.fontSize * 1.15));
 
-            isGenerating = false;
-            loadingOverlay.style.display = 'none';
+            const glowColor = state.mode === 'mesh' ? palettes[state.vibe][0] : state.bgColor;
+            document.getElementById('bg-glow').style.backgroundColor = glowColor;
         }
 
-        function download() {
-            const dataUrl = canvas.toDataURL('image/png');
-            const link = document.createElement('a');
-            link.download = `volumetric-${Date.now()}.png`;
-            link.href = dataUrl;
-            link.click();
-            
-            // Visual feedback
-            canvas.style.opacity = '0.4';
-            setTimeout(() => canvas.style.opacity = '1', 150);
+        function wrapText(ctx, text, max) {
+            let words = text.split(' '), line = '', lines = [];
+            words.forEach(w => {
+                if (ctx.measureText(line + w).width > max) { lines.push(line.trim()); line = w + ' '; }
+                else line += w + ' ';
+            });
+            lines.push(line.trim()); return lines;
         }
 
-        window.addEventListener('load', () => {
-            generate();
-            document.addEventListener('touchmove', (e) => {
-                if (e.touches.length > 1) e.preventDefault();
-            }, { passive: false });
+        function setupUI() {
+            const pList = document.getElementById('palette-list');
+            Object.keys(palettes).forEach(key => {
+                const btn = document.createElement('button');
+                btn.className = `palette-btn group flex items-center gap-3 p-4 rounded-2xl transition-all border-2 border-transparent bg-white/5 hover:bg-white/10`;
+                btn.dataset.vibe = key;
+                btn.innerHTML = `<div class="flex -space-x-1.5">${palettes[key].slice(0,3).map(c=>`<div class="w-4 h-4 rounded-full ring-2 ring-neutral-900" style="background:${c}"></div>`).join('')}</div><span class="capitalize text-sm font-semibold text-neutral-400">${key}</span>`;
+                btn.onclick = () => { state.vibe = key; updateSelection(); generatePoints(); };
+                pList.appendChild(btn);
+            });
+
+            [{ id: 'textSwatches', key: 'textColor' }, { id: 'iconSwatches', key: 'iconColor' }, { id: 'bgSwatches', key: 'bgColor' }].forEach(map => {
+                const container = document.getElementById(map.id);
+                MASTER_PALETTE.forEach(color => {
+                    const s = document.createElement('button');
+                    s.className = `swatch`;
+                    s.style.backgroundColor = color;
+                    s.onclick = () => {
+                        container.querySelectorAll('.swatch').forEach(el => el.classList.remove('active'));
+                        s.classList.add('active');
+                        state[map.key] = color;
+                        render();
+                    };
+                    if (state[map.key] === color) s.classList.add('active');
+                    container.appendChild(s);
+                });
+            });
+
+            document.querySelectorAll('.tab-item').forEach(btn => {
+                btn.onclick = () => {
+                    document.querySelectorAll('.tab-item, .tab-content').forEach(el => el.classList.remove('active'));
+                    btn.classList.add('active');
+                    document.getElementById(`tab${btn.dataset.tab.charAt(0).toUpperCase() + btn.dataset.tab.slice(1)}`).classList.add('active');
+                };
+            });
+
+            document.querySelectorAll('.sub-tab-btn').forEach(btn => {
+                btn.onclick = () => {
+                    document.querySelectorAll('.sub-tab-btn, .sub-tab-content').forEach(el => el.classList.remove('active'));
+                    btn.classList.add('active');
+                    state.mode = btn.dataset.sub;
+                    document.getElementById(`sub${state.mode.charAt(0).toUpperCase() + state.mode.slice(1)}`).classList.add('active');
+                    render();
+                };
+            });
+            updateSelection();
+        }
+
+        function updateSelection() {
+            document.querySelectorAll('.palette-btn').forEach(b => b.classList.toggle('active', b.dataset.vibe === state.vibe));
+        }
+
+        const getPos = (e) => {
+            const r = canvas.getBoundingClientRect(), s = CANVAS_SIZE/r.width;
+            const cx = e.touches ? e.touches[0].clientX : e.clientX, cy = e.touches ? e.touches[0].clientY : e.clientY;
+            return { x: (cx-r.left)*s, y: (cy-r.top)*s };
+        };
+
+        const updateGuides = (x, y) => {
+            const r = canvas.getBoundingClientRect();
+            let vMatch = -1, hMatch = -1;
+            SNAP_POINTS.forEach(p => {
+                if (Math.abs(x - p) < 25) vMatch = p;
+                if (Math.abs(y - p) < 25) hMatch = p;
+            });
+            const vg = document.getElementById('vGuide'), hg = document.getElementById('hGuide');
+            if (vMatch !== -1) { vg.style.display = 'block'; vg.style.left = (r.left + (vMatch * r.width / CANVAS_SIZE)) + 'px'; } else vg.style.display = 'none';
+            if (hMatch !== -1) { hg.style.display = 'block'; hg.style.top = (r.top + (hMatch * r.height / CANVAS_SIZE)) + 'px'; } else hg.style.display = 'none';
+            return { nx: vMatch !== -1 ? vMatch : x, ny: hMatch !== -1 ? hMatch : y };
+        };
+
+        canvas.onmousedown = (e) => {
+            const p = getPos(e);
+            if (state.icon.img && Math.hypot(p.x - state.icon.x, p.y - state.icon.y) < state.icon.size/1.5) state.icon.dragging = true;
+        };
+        window.onmousemove = (e) => {
+            if (!state.icon.dragging) return;
+            const p = getPos(e); const snapped = updateGuides(p.x, p.y);
+            state.icon.x = snapped.nx; state.icon.y = snapped.ny; render();
+        };
+        window.onmouseup = () => {
+            state.icon.dragging = false;
+            document.getElementById('vGuide').style.display = 'none';
+            document.getElementById('hGuide').style.display = 'none';
+        };
+
+        canvas.ontouchstart = (e) => {
+            const p = getPos(e);
+            if (state.icon.img && Math.hypot(p.x - state.icon.x, p.y - state.icon.y) < state.icon.size/1.5) state.icon.dragging = true;
+        };
+        window.ontouchmove = (e) => {
+            if (!state.icon.dragging) return;
+            const p = getPos(e); const snapped = updateGuides(p.x, p.y);
+            state.icon.x = snapped.nx; state.icon.y = snapped.ny; render(); e.preventDefault();
+        };
+        window.ontouchend = window.onmouseup;
+
+        document.getElementById('titleInput').oninput = (e) => { state.title = e.target.value; render(); };
+        document.getElementById('blur-slider').oninput = (e) => { state.chaos = blurLevels[e.target.value]; render(); };
+        document.getElementById('iconSize-slider').oninput = (e) => { state.icon.size = iconSizeLevels[e.target.value]; document.getElementById('iconSizeVal').innerText = state.icon.size+'px'; render(); };
+        document.getElementById('btn-generate').onclick = () => { 
+            const icon = document.getElementById('refresh-icon');
+            icon.classList.add('animate-spin'); 
+            setTimeout(() => { generatePoints(); icon.classList.remove('animate-spin'); }, 200); 
+        };
+        document.getElementById('clearIcon').onclick = () => { state.icon.img = null; document.getElementById('iconProps').classList.add('hidden'); render(); };
+        
+        document.querySelectorAll('.size-btn').forEach(b => b.onclick = () => {
+            state.fontSize = parseInt(b.dataset.size);
+            document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('active', 'bg-white', 'text-black'));
+            b.classList.add('active', 'bg-white', 'text-black'); render();
         });
 
-        generateBtn.addEventListener('click', generate);
-        downloadBtn.addEventListener('click', download);
-        document.getElementById('mainCanvasGroup').addEventListener('click', generate);
+        document.querySelectorAll('.weight-btn').forEach(b => b.onclick = () => {
+            state.fontWeight = parseInt(b.dataset.weight);
+            document.querySelectorAll('.weight-btn').forEach(btn => btn.classList.remove('active', 'bg-white', 'text-black'));
+            b.classList.add('active', 'bg-white', 'text-black'); render();
+        });
+
+        document.getElementById('imageInput').onchange = (e) => {
+            const f = e.target.files[0]; if (!f) return;
+            const r = new FileReader();
+            r.onload = (ev) => {
+                const i = new Image(); i.onload = () => { state.bgImg = i; document.getElementById('imageName').textContent = f.name; render(); };
+                i.src = ev.target.result;
+            }; r.readAsDataURL(f);
+        };
+
+        function loadIcons(filter = "") {
+            const grid = document.getElementById('iconGrid');
+            grid.innerHTML = "";
+            const query = filter.toLowerCase().trim();
+            if (query === "") {
+                ICON_GROUPS.forEach(group => {
+                    const h = document.createElement('div'); h.className = 'col-span-4 text-[9px] font-bold text-zinc-600 uppercase tracking-widest mt-4 mb-2 first:mt-0';
+                    h.textContent = group.title; grid.appendChild(h);
+                    group.icons.forEach(name => renderIconBox(name, grid));
+                });
+            } else {
+                const flat = ICON_GROUPS.flatMap(g => g.icons).filter(name => name.includes(query));
+                flat.forEach(name => renderIconBox(name, grid));
+            }
+            lucide.createIcons();
+        }
+
+        function renderIconBox(name, container) {
+            const b = document.createElement('div');
+            b.className = 'bg-white/5 aspect-square rounded-2xl flex items-center justify-center cursor-pointer hover:bg-white/10';
+            b.innerHTML = `<i data-lucide="${name}" class="w-6 h-6 text-neutral-400"></i>`;
+            b.onclick = () => {
+                const svg = b.querySelector('svg');
+                const s = new XMLSerializer();
+                let str = s.serializeToString(svg);
+                if (!str.includes('xmlns')) str = str.replace('<svg', '<svg xmlns="http://www.w3.org/2000/svg"');
+                const blob = new Blob([str], {type: 'image/svg+xml;charset=utf-8'});
+                const url = URL.createObjectURL(blob);
+                const i = new Image();
+                i.onload = () => { state.icon.img = i; document.getElementById('iconProps').classList.remove('hidden'); render(); };
+                i.src = url;
+            };
+            container.appendChild(b);
+        }
+
+        document.getElementById('iconSearch').oninput = (e) => loadIcons(e.target.value);
+
+        document.getElementById('exportBtn').onclick = () => {
+            const link = document.createElement('a');
+            link.download = `cover-${Date.now()}.png`;
+            link.href = canvas.toDataURL('image/png', 1.0);
+            link.click();
+        };
+
+        window.onload = () => {
+            setupUI();
+            loadIcons();
+            generatePoints();
+        };
     </script>
 </body>
 </html>
