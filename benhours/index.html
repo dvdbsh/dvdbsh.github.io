@@ -4,7 +4,8 @@
     <title>Hours Calculator</title>
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="mobile-web-app-capable" content="yes">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Updated viewport to prevent user scaling/zooming -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <meta name="theme-color" content="#006241">
     <style>
@@ -19,12 +20,26 @@
             src: url('https://dvdbsh.github.io/benhours/SoDoSans-Bold.woff') format('woff');
         }
 
-        body {
+        /* App-like behavior: hide scrollbars and prevent overscroll */
+        html, body {
             margin: 0;
             padding: 0;
             font-family: "SoDoSans", sans-serif;
             background-color: #d4e9e2;
             color: #333;
+            overflow-x: hidden;
+            /* Hide scrollbar for IE, Edge and Firefox */
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            /* Prevent pull-to-refresh and rubber-banding on some browsers */
+            overscroll-behavior-y: contain;
+            /* Prevent text selection to feel more like an app */
+            user-select: none;
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        body::-webkit-scrollbar {
+            display: none;
         }
 
         .container {
@@ -69,6 +84,8 @@
             font-size: 1.6rem;
             font-weight: 700;
             outline: none;
+            /* Allow selection in input */
+            user-select: text;
         }
 
         #calendarContainer {
