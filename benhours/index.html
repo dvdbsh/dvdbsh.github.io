@@ -6,321 +6,436 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <link rel="shortcut icon" type="image/x-icon" href="favicon.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
-    <meta name="theme-color" content="#d4e9e2">
+    <meta name="theme-color" content="#006241">
     <style>
         @font-face {
             font-family: 'SoDoSans';
             font-weight: 400;
             src: url('https://dvdbsh.github.io/benhours/SoDoSans-Regular.woff') format('woff');
         }
-
         @font-face {
             font-family: 'SoDoSans';
-            font-weight: 500; /* SemiBold */
-            src: url('https://dvdbsh.github.io/benhours/SoDoSans-SemiBold.woff') format('woff');
-        }
-
-        @font-face {
-            font-family: 'SoDoSans';
-            font-weight: 700; /* Bold */
+            font-weight: 700;
             src: url('https://dvdbsh.github.io/benhours/SoDoSans-Bold.woff') format('woff');
-        }
-
-        @font-face {
-            font-family: 'SoDoSans';
-            font-weight: 300; /* Light */
-            src: url('https://dvdbsh.github.io/benhours/SoDoSans-Light.woff') format('woff');
         }
 
         body {
             margin: 0;
             padding: 0;
             font-family: "SoDoSans", sans-serif;
-            font-size: 1rem;
             background-color: #d4e9e2;
-        }
-
-        a {
-            color: #ffffff;
-            text-decoration: underline;
-        }
-
-        a:hover {
-            text-decoration: none;
+            color: #333;
         }
 
         .container {
             display: flex;
             flex-wrap: wrap;
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 10px auto;
             padding: 10px;
             box-sizing: border-box;
         }
 
-        /* CSS styles for the card-like elements */
         .card {
             flex-basis: calc(50% - 20px);
-            padding: 10px;
+            padding: 20px;
             box-sizing: border-box;
             border-radius: 20px;
             background: #ffffff;
             margin: 10px;
             text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
-        .two-columns {
-            flex-basis: calc(100% - 20px);
-        }
+        .two-columns { flex-basis: calc(100% - 20px); }
 
-        .header,
-        .footer {
+        .header {
             flex-basis: 100%;
-            border: none;
             background-color: #006241;
             color: #fff;
-            padding: 10px;
+            padding: 15px;
             border-radius: 20px;
-        }
-
-        .footer {
-            font-size: 0.8rem;
-            padding: 20px;
-        }
-
-        h2,
-        h3 {
-            margin: 10px;
-			color: #333;
-        }
-
-        h3 {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-
-        small {
-            margin-bottom: 0px;
-            font-size: 0.7rem;
-            color: #494949;
         }
 
         .input {
             border: 3px solid #006241;
             border-radius: 15px;
             background-color: #f6f6f6;
-            margin-left: 5px;
-            width: 95px;
-            height: 55px;
+            width: 140px;
+            height: 60px;
             font-family: "SoDoSans", sans-serif;
             color: #006241;
             text-align: center;
-            content-align: center;
-            font-size: 1.3rem;
+            font-size: 1.6rem;
             font-weight: 700;
+            outline: none;
+        }
+
+        #calendarContainer {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .month-container {
+            flex: 1;
+            min-width: 220px;
+            max-width: 280px;
+            background: #fafafa;
+            padding: 10px;
+            border-radius: 15px;
+            border: 1px solid #eee;
+        }
+
+        .month-name {
+            font-weight: 700;
+            color: #006241;
+            margin-bottom: 8px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 2px;
+        }
+
+        .weekday-header {
+            font-size: 0.55rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 2px 0;
+            opacity: 0.5;
+        }
+
+        .day-box {
+            aspect-ratio: 1 / 1;
+            border-radius: 4px;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            position: relative;
+            border: 1px solid #f0f0f0;
+        }
+
+        .day-box.empty { background: transparent; border: none; }
+        .day-box.past { opacity: 0.3; }
+        .day-box.today { border: 2px solid #006241; font-weight: 700; }
+        .day-box.payday { background: #d4e9e2; color: #006241; font-weight: 700; border: 1px solid #006241; }
+        .day-box.cutoff { background: #fce4ec; color: #c2185b; font-weight: 700; border: 1px solid #c2185b; }
+        
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            font-size: 0.7rem;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        .legend-item { display: flex; align-items: center; gap: 4px; }
+        .dot { width: 8px; height: 8px; border-radius: 2px; }
+
+        .footer {
+            flex-basis: 100%;
+            background-color: #006241;
+            color: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            text-align: left;
+            margin: 10px;
         }
 
         .section-divider {
             width: 90%;
             margin: 10px auto;
-            border-top: 1px solid #d7f7ed;
+            border-top: 1px solid #eee;
         }
 
         .footer .section-divider {
-            margin: 10px auto;
-            border-top: 1px solid #007850;
+            border-top: 1px solid rgba(255,255,255,0.2);
         }
 
-        /* Media query for smaller screens */
-        @media (max-width: 350px) {
-            .card, .two-columns {
-                flex-basis: 100%;
-            }
+        small {
+            display: block;
+            margin-top: 5px;
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        h3 { font-size: 1.1rem; margin-top: 10px; }
+
+        @media (max-width: 600px) {
+            .card { flex-basis: 100%; margin: 10px 0; }
+            .month-container { max-width: 100%; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="card header">
-            <h3 style="color:#fff;">Benefits Hours Calculator</h3>
+            <h3 style="margin:0; color:#fff;">Benefits Hours Calculator</h3>
         </div>
 
-        <!-- Cards for various information -->
+        <!-- Input Card -->
         <div class="two-columns card">
             <h2>Enter your current hours worked</h2>
-            <p><input type="tel" id="numberInput" class="input" inputmode="decimal" placeholder="91.25"></p>
-            <p id="differenceResult"></p>
+            <p><input type="tel" id="numberInput" class="input" inputmode="decimal" placeholder="0.00"></p>
+            <div id="differenceResult" style="font-weight: 700; color: #006241; margin-top: 10px;"></div>
         </div>
 
+        <!-- Days Left Card -->
         <div class="card">
             <div class="icon-wrapper">
-                <i class='bx bx-calendar' style="font-size: 2rem; text-align: center; display: block; color: #333;"></i>
-            </div>
-            <h3 id="quarterTitle"></h3>
-            <p id="quarterDates"></p>
-        </div>
-
-        <div class="card">
-            <div class="icon-wrapper">
-                <i class='bx bx-time-five' style="font-size: 2rem; text-align: center; display: block; color: #333;"></i>
+                <i class='bx bx-time-five' style="font-size: 2rem; color: #333;"></i>
             </div>
             <h3>Days left to qualify for next quarter</h3>
-            <p id="daysLeftCell"></p>
+            <p id="daysLeftCell" style="font-weight:700"></p>
         </div>
 
+        <!-- Eligibility Card -->
         <div class="card">
             <div class="icon-wrapper">
-                <i class='bx bx-calendar-event' style="font-size: 2rem; text-align: center; display: block; color: #333;"></i>
+                <i class='bx bx-calendar-event' style="font-size: 2rem; color: #333;"></i>
             </div>
             <h3>Last day for eligibility</h3>
-            <p id="lastEligibilityDate"></p>
+            <p id="lastEligibilityDate" style="font-weight:700"></p>
             <div class="section-divider"></div>
             <small>Last day to work that will count in the quarter toward benefits eligibility</small>
         </div>
 
+        <!-- Last Pay Date Card -->
         <div class="card">
             <div class="icon-wrapper">
-                <i class='bx bx-money' style="font-size: 2rem; text-align: center; display: block; color: #333;"></i>
+                <i class='bx bx-money' style="font-size: 2rem; color: #333;"></i>
             </div>
             <h3>Last pay date in the quarter</h3>
-            <p id="lastPayDateCell"></p>
+            <p id="lastPayDateCell" style="font-weight:700"></p>
             <div class="section-divider"></div>
             <small>You must have at least 240 total paid hours on this pay stub to remain eligible</small>
         </div>
 
+        <!-- Audit Date Card -->
+        <div class="card">
+            <div class="icon-wrapper">
+                <i class='bx bx-check-shield' style="font-size: 2rem; color: #333;"></i>
+            </div>
+            <h3>Audit Date</h3>
+            <p id="auditDateCell" style="font-weight:700"></p>
+            <div class="section-divider"></div>
+            <small>The date the 240-hour requirement is officially checked</small>
+        </div>
+
+        <!-- Next Quarter Start Card -->
+        <div class="card">
+            <div class="icon-wrapper">
+                <i class='bx bx-calendar-plus' style="font-size: 2rem; color: #333;"></i>
+            </div>
+            <h3>Next Quarter Start</h3>
+            <p id="nextQuarterStartCell" style="font-weight:700"></p>
+            <div class="section-divider"></div>
+            <small>When the first pay period of the next quarter begins</small>
+        </div>
+
+        <!-- Days Until Next Quarter Card -->
+        <div class="card">
+            <div class="icon-wrapper">
+                <i class='bx bx-hourglass' style="font-size: 2rem; color: #333;"></i>
+            </div>
+            <h3>Days until next quarter start</h3>
+            <p id="daysUntilNextCell" style="font-weight:700"></p>
+            <div class="section-divider"></div>
+            <small>Countdown to the start of the next benefit cycle</small>
+        </div>
+
+        <!-- Paid Hours Schedule Card -->
         <div class="two-columns card">
             <h3>These paid hours are the ones that count</h3>
-            <p id="paidHours"></p>
+            <p id="paidHours" style="line-height: 1.6; font-weight: 500;"></p>
             <div class="section-divider"></div>
             <small>Hours paid on these scheduled pay dates will apply toward benefits eligibility</small>
         </div>
 
+        <!-- Calendar Card (Moved to bottom) -->
+        <div class="two-columns card">
+            <div class="icon-wrapper">
+                <i class='bx bx-calendar' style="font-size: 2rem; color: #333;"></i>
+            </div>
+            <h3 id="quarterTitle">Current calendar quarter period</h3>
+            <p id="quarterDates" style="font-weight:700"></p>
+            <div id="calendarContainer"></div>
+            <div class="legend">
+                <div class="legend-item"><div class="dot" style="background: #fff; border: 2px solid #006241;"></div> Today</div>
+                <div class="legend-item"><div class="dot" style="background: #d4e9e2; border: 1px solid #006241;"></div> Pay Date</div>
+                <div class="legend-item"><div class="dot" style="background: #fce4ec; border: 1px solid #c2185b;"></div> Cutoff</div>
+            </div>
+        </div>
+
+        <!-- Original Footer -->
         <div class="two-columns card footer">
             <b>All information has been sourced from Partner Hub.</b>
             <div class="section-divider"></div>
-            Retail hourly partners can monitor their paid hours through their pay stubs on <a href="https://partnercentral.starbucks.com/">Partner Central</a>. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
+            Retail hourly partners can monitor their paid hours through their pay stubs on <a href="https://partnercentral.starbucks.com/" style="color: #fff;">Partner Central</a>. Check the QTD (Quarter to Date) Hours under the Benefits Info on your pay stub.
         </div>
     </div>
 
 <script>
-function updateQuarterInfo() {
-    const now = new Date().getTime();
-    const quarters = [
-        {
-            title: "October - December 2024",
-            startDate: new Date("October 4, 2024").getTime(),
-            endDate: new Date("December 27, 2024").getTime(),
-            lastEligibilityDate: "December 22, 2024",
-            lastPayDate: "December 27, 2024",
-            paidHours: "October 4 & 18<br>November 1, 15 & 29<br>December 13 & 27"
-        },
-        {
-            title: "January - March 2025",
-            startDate: new Date("January 10, 2025").getTime(),
-            endDate: new Date("March 21, 2025").getTime(),
-            lastEligibilityDate: "March 16, 2025",
-            lastPayDate: "March 21, 2025",
-            paidHours: "January 10 & 24<br>February 7 & 21<br>March 7 & 21"
-        },
-        {
-            title: "April - June 2025",
-            startDate: new Date("April 4, 2025").getTime(),
-            endDate: new Date("June 27, 2025").getTime(),
-            lastEligibilityDate: "June 22, 2025",
-            lastPayDate: "June 27, 2025",
-            paidHours: "April 4 & 18<br>May 2, 16 & 30<br>June 13 & 27"
-        },
-        {
-            title: "July - September 2025",
-            startDate: new Date("July 11, 2025").getTime(),
-            endDate: new Date("September 19, 2025").getTime(),
-            lastEligibilityDate: "September 14, 2025",
-            lastPayDate: "September 19, 2025",
-            paidHours: "July 11 & 25<br>August 8 & 22<br>September 5 & 19"
-        }
-    ];
-
-    let currentQuarter = quarters.find(quarter => now >= quarter.startDate && now <= quarter.endDate);
-    if (!currentQuarter) {
-        currentQuarter = quarters[quarters.length - 1];
+const QUARTERS = [
+    {
+        title: "October - December 2025",
+        months: [9, 10, 11],
+        year: 2025,
+        cutoff: new Date("December 21, 2025"),
+        payDates: ["2025-10-03", "2025-10-17", "2025-10-31", "2025-11-14", "2025-11-28", "2025-12-12", "2025-12-26"],
+        lastPayDate: "December 26, 2025",
+        audit: "January 1, 2026",
+        start: new Date("October 3, 2025"),
+        paidHoursDisplay: "October 3, 17 & 31<br>November 14 & 28<br>December 12 & 26"
+    },
+    {
+        title: "January - March 2026",
+        months: [0, 1, 2],
+        year: 2026,
+        cutoff: new Date("March 15, 2026"),
+        payDates: ["2026-01-09", "2026-01-23", "2026-02-06", "2026-02-20", "2026-03-06", "2026-03-20"],
+        lastPayDate: "March 20, 2026",
+        audit: "April 1, 2026",
+        start: new Date("January 9, 2026"),
+        paidHoursDisplay: "January 9 & 23<br>February 6 & 20<br>March 6 & 20"
+    },
+    {
+        title: "April - June 2026",
+        months: [3, 4, 5],
+        year: 2026,
+        cutoff: new Date("June 21, 2026"),
+        payDates: ["2026-04-03", "2026-04-17", "2026-05-01", "2026-05-15", "2026-05-29", "2026-06-12", "2026-06-26"],
+        lastPayDate: "June 26, 2026",
+        audit: "July 1, 2026",
+        start: new Date("April 3, 2026"),
+        paidHoursDisplay: "April 3 & 17<br>May 1, 15 & 29<br>June 12 & 26"
+    },
+    {
+        title: "July - September 2026",
+        months: [6, 7, 8],
+        year: 2026,
+        cutoff: new Date("September 13, 2026"),
+        payDates: ["2026-07-10", "2026-07-24", "2026-08-07", "2026-08-21", "2026-09-04", "2026-09-18"],
+        lastPayDate: "September 18, 2026",
+        audit: "October 1, 2026",
+        start: new Date("July 10, 2026"),
+        paidHoursDisplay: "July 10 & 24<br>August 8 & 22<br>September 5 & 19"
     }
+];
 
-    document.getElementById("quarterTitle").innerHTML = "Current calendar quarter period";
-    document.getElementById("quarterDates").innerHTML = currentQuarter.title;
-    document.getElementById("lastEligibilityDate").innerHTML = currentQuarter.lastEligibilityDate;
-    document.getElementById("lastPayDateCell").innerHTML = currentQuarter.lastPayDate;
-    document.getElementById("paidHours").innerHTML = currentQuarter.paidHours;
+function getCurrentQuarterIndex() {
+    const now = new Date();
+    if (now < QUARTERS[0].start) return 0;
+    for (let i = 0; i < QUARTERS.length; i++) {
+        const q = QUARTERS[i];
+        const nextQ = QUARTERS[i+1];
+        if (now >= q.start && (!nextQ || now < nextQ.start)) return i;
+    }
+    return QUARTERS.length - 1;
+}
 
-    const daysLeft = Math.ceil((new Date(currentQuarter.lastEligibilityDate).getTime() - now) / (1000 * 60 * 60 * 24));
-    const weeksLeft = Math.floor(daysLeft / 7);
-    if (daysLeft > 0) {
-        document.getElementById("daysLeftCell").innerHTML = daysLeft + " days (" + weeksLeft + " weeks)";
+function renderMonth(month, year, q) {
+    const now = new Date();
+    now.setHours(0,0,0,0);
+    const monthDiv = document.createElement('div');
+    monthDiv.className = 'month-container';
+    const monthHeader = document.createElement('div');
+    monthHeader.className = 'month-name';
+    monthHeader.innerText = new Date(year, month).toLocaleString('default', { month: 'short' });
+    monthDiv.appendChild(monthHeader);
+    const grid = document.createElement('div');
+    grid.className = 'calendar-grid';
+    ['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach(day => {
+        const h = document.createElement('div');
+        h.className = 'weekday-header';
+        h.innerText = day;
+        grid.appendChild(h);
+    });
+    const firstDay = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    for (let i = 0; i < firstDay; i++) {
+        const empty = document.createElement('div');
+        empty.className = 'day-box empty';
+        grid.appendChild(empty);
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+        const dayDate = new Date(year, month, d);
+        const dateStr = dayDate.toISOString().split('T')[0];
+        const isToday = dayDate.getTime() === now.getTime();
+        const isPayday = q.payDates.includes(dateStr);
+        const isCutoff = dayDate.getTime() === q.cutoff.getTime();
+        const dayBox = document.createElement('div');
+        dayBox.className = `day-box ${dayDate < now ? 'past' : ''} ${isToday ? 'today' : ''} ${isPayday ? 'payday' : ''} ${isCutoff ? 'cutoff' : ''}`;
+        dayBox.innerText = d;
+        grid.appendChild(dayBox);
+    }
+    monthDiv.appendChild(grid);
+    return monthDiv;
+}
+
+function initUI() {
+    const currentIndex = getCurrentQuarterIndex();
+    const q = QUARTERS[currentIndex];
+    const container = document.getElementById('calendarContainer');
+    container.innerHTML = '';
+    
+    document.getElementById('quarterDates').innerText = q.title;
+    document.getElementById('lastEligibilityDate').innerText = q.cutoff.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+    document.getElementById('lastPayDateCell').innerText = q.lastPayDate;
+    document.getElementById('auditDateCell').innerText = q.audit;
+    document.getElementById('paidHours').innerHTML = q.paidHoursDisplay;
+
+    q.months.forEach(m => { container.appendChild(renderMonth(m, q.year, q)); });
+
+    const now = new Date();
+    now.setHours(0,0,0,0);
+    const diffDays = Math.ceil((q.cutoff - now) / (1000 * 60 * 60 * 24));
+    document.getElementById("daysLeftCell").innerHTML = diffDays > 0 ? `${diffDays} days (${Math.floor(diffDays/7)} weeks)` : "No days left";
+    
+    // Next Quarter Info
+    const nextQ = QUARTERS[currentIndex + 1];
+    if (nextQ) {
+        document.getElementById('nextQuarterStartCell').innerText = nextQ.start.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+        const diffNext = Math.ceil((nextQ.start - now) / (1000 * 60 * 60 * 24));
+        document.getElementById('daysUntilNextCell').innerText = diffNext > 0 ? diffNext + " days" : "Quarter has started";
     } else {
-        document.getElementById("daysLeftCell").innerHTML = "No days left";
+        document.getElementById('nextQuarterStartCell').innerText = "TBD";
+        document.getElementById('daysUntilNextCell').innerText = "N/A";
+    }
+    
+    calculate();
+}
+
+function calculate() {
+    const currentIndex = getCurrentQuarterIndex();
+    const q = QUARTERS[currentIndex];
+    const input = parseFloat(document.getElementById("numberInput").value);
+    const res = document.getElementById("differenceResult");
+    if (isNaN(input)) { res.innerHTML = ""; return; }
+    
+    const needed = Math.max(0, 240 - input);
+    const now = new Date();
+    const diffDays = (q.cutoff - now) / (1000 * 60 * 60 * 24);
+    const weeks = Math.max(1, diffDays / 7);
+    
+    if (needed <= 0) {
+        res.innerHTML = "Goal reached!";
+    } else {
+        res.innerHTML = `${needed.toFixed(1)} more hours needed (≈ ${Math.ceil(needed/weeks)} per week)<br><small>These numbers are rounded up and are approximate.</small>`;
     }
 }
 
-function updateDaysLeft() {
-    const enteredNumber = parseFloat(document.getElementById("numberInput").value);
-    if (!isNaN(enteredNumber)) {
-        let totalRequiredHours = 240 - enteredNumber;
-        if (totalRequiredHours < 0) {
-            totalRequiredHours = 0;
-        }
-        totalRequiredHours = Math.ceil(totalRequiredHours);
-
-        const now = new Date().getTime();
-        const quarters = [
-            {
-                startDate: new Date("October 4, 2024").getTime(),
-                endDate: new Date("December 27, 2024").getTime(),
-                lastEligibilityDate: "December 22, 2024"
-            },
-            {
-                startDate: new Date("January 10, 2025").getTime(),
-                endDate: new Date("March 21, 2025").getTime(),
-                lastEligibilityDate: "March 16, 2025"
-            },
-            {
-                startDate: new Date("April 4, 2025").getTime(),
-                endDate: new Date("June 27, 2025").getTime(),
-                lastEligibilityDate: "June 22, 2025"
-            },
-            {
-                startDate: new Date("July 11, 2025").getTime(),
-                endDate: new Date("September 19, 2025").getTime(),
-                lastEligibilityDate: "September 14, 2025"
-            }
-        ];
-
-        let currentQuarter = quarters.find(quarter => now >= quarter.startDate && now <= quarter.endDate);
-        if (!currentQuarter) {
-            currentQuarter = quarters[quarters.length - 1];
-        }
-
-        const daysLeft = Math.ceil((new Date(currentQuarter.lastEligibilityDate).getTime() - now) / (1000 * 60 * 60 * 24));
-        const weeksLeft = Math.floor(daysLeft / 7);
-        const requiredHoursPerWeek = Math.ceil(totalRequiredHours / weeksLeft);
-        document.getElementById("differenceResult").innerHTML = totalRequiredHours + " more hours needed (" + requiredHoursPerWeek + " hours per week)<p><small>These numbers are rounded up to the nearest hour and are approximate.</small>";
-    }
-}
-
-document.getElementById("numberInput").addEventListener("input", function () {
-    const enteredNumber = parseFloat(this.value);
-    if (!isNaN(enteredNumber)) {
-        updateDaysLeft();
-    } else {
-        document.getElementById("differenceResult").textContent = "";
-    }
-});
-
-updateQuarterInfo();
-updateDaysLeft();
-
+document.getElementById("numberInput").addEventListener("input", calculate);
+initUI();
 </script>
-
-    <!-- Made with coffee by David B :) -->
 </body>
 </html>
