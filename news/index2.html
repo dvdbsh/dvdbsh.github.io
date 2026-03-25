@@ -1,473 +1,614 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-  <title>London News</title>
-  <link rel="manifest" href="manifest.json">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
-  <link href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css" rel="stylesheet" />
-  <style>
-    :root { --accent: #181526; --read: #1a8b31; --button: #e8eeff; }
-    * { box-sizing: border-box; }
-    body {
-      font-family: 'Nunito', sans-serif;
-      background: #292a2d;
-      margin: 0;
-      padding: 0 1.5rem 60px;
-    }
-    header {
-      background: #1f1f1f;
-      padding: 1rem 1.5rem;
-      box-shadow: 0 1px 4px rgba(0,0,0,0.1);
-      margin: 0 -1.5rem 1.5rem;
-    }
-    h1 {
-      font-size: 1.5rem;
-      font-weight: 800;
-      color: #ffffff;
-      margin: 0;
-    }
-    .source-scroller-wrapper {
-      overflow-x: auto;
-      margin: 0 -1.5rem 1.5rem;
-      padding: 0 1.5rem;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    .source-scroller-wrapper::-webkit-scrollbar { display: none; }
-    .source-scroller {
-      display: flex;
-      gap: 0.75rem;
-      min-width: max-content;
-    }
-.source-scroller button {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.5rem;
-  background: #1f1f1f;
-  border: none;
-  border-radius: 12px;
-  padding: 0.5rem 1rem;
-  font-family: 'Nunito', sans-serif;
-  font-weight: 600;
-  font-size: 1rem;
-  color: #ffffff;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.source-scroller button img,
-.source-scroller button i {
-  height: 35px;
-  width: 35px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  border-radius: 5px;
-  object-fit: contain;
-}
-
-.source-scroller button i {
-	font-size: 1.3rem;
-	}
-    .source-scroller button.active {
-		background-color: #292a2d;
-      box-shadow: 0 0 0 2px #1f1f1f inset;
-    }
-    .feed {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.5rem;
-    }
-    .card {
-      background: #1f1f1f;
-      border-radius: 16px;
-      overflow: hidden;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-      transition: max-height 0.6s ease;
-      display: flex;
-      flex-direction: column;
-      position: relative;
-      max-height: 340px;
-      cursor: pointer;
-    }
-    .card.expanded {
-      max-height: 1000px;
-    }
-    .card-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.75rem 1rem;
-  font-size: 0.8rem;
-  color: #ffffff;
-  z-index: 2;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-    }
-	
-	.card-header > div:last-child {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-	
-    .read-icon {
-      display: inline-block;
-      font-size: 1.7rem;
-      margin-left: 0.4rem;
-      color: var(--read);
-	  text-shadow: 0 0px 10px rgba(25,25,25,0.7);
-    }
-    .card:not(.read) .read-icon {
-      display: none;
-    }
-	
-.card-image-wrapper {
-  position: relative;
-  width: 100%;
-  height: 210px;
-  overflow: hidden;
-}
-
-.card-image-wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-}
-
-.card-image-wrapper::after {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 40%;
-  background: linear-gradient(to bottom, rgba(25, 25, 25, 0.8), rgba(25, 25, 25, 0));
-  pointer-events: none;
-}
-	
-	
-    .card img {
-      width: 100%;
-      height: 210px;
-      object-fit: cover;
-    }
-    .card-content {
-      padding: 1rem;
-      display: flex;
-      flex-direction: column;
-    }
-    .card-content h2 {
-      font-size: 1.2rem;
-      margin: 0 0 0.5rem;
-      font-weight: 700;
-      color: #e8eeff;
-    }
-    .full-content {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: #aeafb1;
-      opacity: 0;
-      max-height: 0;
-      overflow: hidden;
-      margin-top: 0;
-      transition: opacity 0.4s ease, max-height 0.6s ease, margin-top 0.4s ease;
-    }
-    .card.expanded .full-content {
-      opacity: 1;
-      margin-top: 1rem;
-      max-height: 800px;
-    }
-.read-more {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1.25rem;
-  background: var(--button);
-  color: var(--accent);
-  padding: 0.5rem 1rem;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: 600;
-  width: fit-content;
-  font-size: 1rem;
-}
-
-.read-more i {
-  font-size: 1.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-    .related {
-      font-size: 0.875rem;
-      margin-top: 1rem;
-      padding-top: 1rem;
-      border-top: 1px solid #ddd;
-    }
-    .related a {
-      display: block;
-      color: #555;
-      margin-bottom: 0.5rem;
-      text-decoration: underline;
-    }
-	
-	.source-logo-name {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-.source-logo-name img {
-  height: 40px;
-  width: 40px;
-  border-radius: 5px;
-  object-fit: contain;
-}
-
-  </style>
-</head>
-<body>
-
-<header><h1>London News</h1></header>
-
-<div class="source-scroller-wrapper">
-  <div class="source-scroller" id="sourceScroller"></div>
-</div>
-
-<div class="feed" id="newsFeed"></div>
-
-<script>
-const PEXELS_API_KEY = 'fB6vzEHx5CsDIVByIpuDfQ2QoliM9TYWyBqmkzPgj6nPeEuWdBvbtJIx';
-
-function formatArticleDate(pubDate) {
-  const date = new Date(pubDate);
-
-  const time = date.toLocaleTimeString([], {
-    hour: 'numeric',
-    minute: '2-digit',
-    hour12: true
-  });
-
-  const today = new Date();
-  const todayDate = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-  const articleDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-
-  const diff = todayDate - articleDate;
-  const oneDay = 86400000;
-
-  if (diff === 0) {
-    return time;
-  } else if (diff === oneDay) {
-    return `Yesterday · ${time}`;
-  } else {
-    return date.toLocaleDateString('en-CA', {
-      month: 'short',
-      day: 'numeric'
-    });
-  }
-}
-
-function truncateWords(text, wordLimit) {
-  const words = text.trim().split(/\s+/);
-  return words.length > wordLimit
-    ? words.slice(0, wordLimit).join(" ") + "…"
-    : text;
-}
-
-async function getPexelsImage(query) {
-  try {
-    const res = await fetch(`https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1`, {
-      headers: { Authorization: PEXELS_API_KEY }
-    });
-    const data = await res.json();
-    return data.photos?.[0]?.src?.landscape || null;
-  } catch {
-    return null;
-  }
-}
-
-const sources = [
-  {
-    name: 'Global News',
-    url: 'https://globalnews.ca/london/feed',
-    logo: 'images/logos/global.png',
-    fallbackImage: 'https://placehold.co/800x400?text=Global+News'
-  },
-  {
-    name: 'CBC News London',
-    url: 'https://www.cbc.ca/cmlink/rss-canada-london',
-    logo: 'images/logos/cbc.png',
-    fallbackImage: 'https://placehold.co/800x400?text=CBC+News'
-  },
-  {
-    name: '106.9 The X',
-    url: 'https://www.1069thex.com/category/news-home-page/feed/',
-    logo: 'images/logos/1069thex.png',
-    fallbackImage: 'https://placehold.co/800x400?text=106.9+The+X'
-  },
-  {
-    name: 'The London Free Press',
-    url: 'https://lfpress.com/feed',
-    logo: 'images/logos/lfp.png',
-    fallbackImage: 'https://placehold.co/600x400/3F332A/A78873?text=The%20London%20Free%20Press&font=lora'
-  }
-];
-
-const state = {
-  read: new Set(JSON.parse(localStorage.getItem('readArticles') || '[]')),
-  filters: { source: 'all' }
-};
-
-function markAsRead(id) {
-  state.read.add(id);
-  localStorage.setItem('readArticles', JSON.stringify([...state.read]));
-}
-
-function scrollToCard(card) {
-  const offset = card.getBoundingClientRect().top + window.scrollY - 20;
-  window.scrollTo({ top: offset, behavior: 'smooth' });
-}
-
-function updateFilters() {
-  document.querySelectorAll('.card').forEach(card => {
-    const source = card.getAttribute('data-source');
-    let show = state.filters.source === 'all' || state.filters.source === source;
-    card.style.display = show ? '' : 'none';
-  });
-}
-
-const scroller = document.getElementById("sourceScroller");
-[{ name: 'All', logo: '' }, ...sources].forEach(source => {
-  const btn = document.createElement("button");
-  btn.title = source.name;
-  btn.onclick = () => {
-    state.filters.source = source.name === "All" ? "all" : source.name;
-    document.querySelectorAll("#sourceScroller button").forEach(b => b.classList.remove("active"));
-    btn.classList.add("active");
-    updateFilters();
-  };
-  btn.innerHTML = source.logo
-    ? `<img src="${source.logo}" alt="${source.name}"><span>${source.name.replace(" London","")}</span>`
-    : `<i class='bx bx-news'></i><span>${source.name}</span>`;
-  scroller.appendChild(btn);
-});
-
-function areTitlesSimilar(a, b) {
-  const normalize = str => str.toLowerCase().replace(/[^a-z0-9]/g, '');
-  return normalize(a).includes(normalize(b)) || normalize(b).includes(normalize(a));
-}
-
-const feedContainer = document.getElementById("newsFeed");
-
-Promise.all(
-  sources.map(source =>
-    fetch(`https://rss-proxy.davidbusch-02.workers.dev/?url=${encodeURIComponent(source.url)}`)
-      .then(res => res.json())
-      .then(data => {
-        if (!data.items) return [];
-		return Promise.all(data.items.map(async item => {
-		  const cleanedContent = (item.content || item.description || "").replace(/<img[^>]*>/g, '').replace(/<\/?a[^>]*>/g, '');
-		  const fallback = sources.find(s => s.name === source.name)?.fallbackImage;
-
-		  let thumbnail = item.thumbnail && item.thumbnail.trim() !== '' ? item.thumbnail : null;
-		  if (!thumbnail) {
-			thumbnail = await getPexelsImage(item.title) || fallback;
-		  }
-
-		  return {
-			title: item.title,
-			link: item.link,
-			date: new Date(item.pubDate),
-			source: source.name,
-			thumbnail,
-			content: cleanedContent
-		  };
-		}));
-
-      }).catch(() => [])
-  )
-).then(results => {
-  let articles = results.flat().sort((a, b) => b.date - a.date);
-  const clusters = [];
-
-  while (articles.length) {
-    const current = articles.shift();
-    const related = articles.filter(a => areTitlesSimilar(a.title, current.title));
-    articles = articles.filter(a => !related.includes(a));
-    clusters.push({ primary: current, related });
-  }
-
-  clusters.forEach(async group => {
-    const item = group.primary;
-    const id = btoa(item.link);
-    const timeString = formatArticleDate(item.date);
-
-    if (!item.thumbnail) {
-      item.thumbnail = await getPexelsImage(item.title);
-      if (!item.thumbnail) {
-        item.thumbnail = sources.find(s => s.name === item.source)?.fallbackImage;
-      }
-    }
-
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.setAttribute('data-source', item.source);
-    card.innerHTML = `
-      <div class="card-image-wrapper">
-        <img src="${item.thumbnail}" alt="thumbnail">
-      </div>
-      
-      <div class="card-header">
-        <div class="source-logo-name">
-          <img src="${sources.find(s => s.name === item.source)?.logo || ''}" alt="${item.source}" onerror="this.style.display='none'; this.nextElementSibling.style.display='inline';">
-          <span style="display:none;">${item.source}</span>
-        </div>
-        <div>${timeString}<span class="read-icon"><i class="bx bxs-check-circle"></i></span></div>
-      </div>
-
-      <div class="card-content">
-        <h2>${truncateWords(item.title, 14)}</h2>
-        <div class="full-content">
-          ${truncateWords(item.content, 60)}<br>
-          <a href="${item.link}" class="read-more" target="_blank">Read full article <i class='bx bx-right-arrow-alt'></i></a>
-          ${group.related.length ? '<div class="related"><strong>Related:</strong>' +
-            group.related.map(r => `<a href="${r.link}" target="_blank">${r.source} — ${r.date.toLocaleDateString()}</a>`).join('') +
-            '</div>' : ''}
-        </div>
-      </div>`;
-
-    card.addEventListener("click", (e) => {
-      if (e.target.tagName !== "A") {
-        const wasExpanded = card.classList.contains("expanded");
-        document.querySelectorAll('.card.expanded').forEach(c => c.classList.remove("expanded"));
-        if (!wasExpanded) {
-          card.classList.add("expanded");
-          scrollToCard(card);
-          markAsRead(id);
-          card.classList.add("read");
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>London News</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        heading: ['"Bebas Neue"', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        news: {
+                            bg: '#0a0f0c',
+                            surface: '#121a14',
+                            surfaceAlt: '#1a241c',
+                            border: '#233328',
+                            primary: '#2d6a4f',
+                            accent: '#10b981',
+                            cta: '#f59e0b',
+                            ctaHover: '#d97706',
+                            text: '#e2e8f0',
+                            muted: '#9ca3af'
+                        }
+                    }
+                }
+            }
         }
-        updateFilters();
-      }
-    });
+    </script>
+    <style>
+        body { background-color: #0a0f0c; color: #e2e8f0; overflow-x: hidden; }
+        ::selection { background-color: #f59e0b; color: #000; }
+        .bg-dots { background-image: radial-gradient(#233328 1px, transparent 1px); background-size: 20px 20px; }
+        .hide-scroll::-webkit-scrollbar { display: none; }
+        .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+        
+        /* Crosshair decorations */
+        .crosshair { position: relative; }
+        .crosshair::before, .crosshair::after { content: ''; position: absolute; background-color: #10b981; z-index: 10; }
+        .crosshair-tl::before { top: -4px; left: -1px; width: 3px; height: 9px; }
+        .crosshair-tl::after { top: -1px; left: -4px; width: 9px; height: 3px; }
 
-    if (state.read.has(id)) card.classList.add("read");
-    feedContainer.appendChild(card);
-  });
-});
-</script>
+        /* Animations */
+        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+        .fade-in.visible { opacity: 1; transform: translateY(0); }
+        
+        @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .ticker-inner { display: flex; animation: ticker 90s linear infinite; width: max-content; }
+        .ticker-inner:hover { animation-play-state: paused; }
+        .ticker-item { white-space: nowrap; padding: 0 2rem; display: flex; align-items: center; height: 100%; }
 
+        /* Progress Bar */
+        .progress-bar-anim { animation: progress 6s linear forwards; }
+        @keyframes progress { 0% { width: 0%; } 100% { width: 100%; } }
 
+        .dl-arrow { transition: all 0.2s; }
+        .article-card:hover .dl-arrow { color: #f59e0b; transform: translateX(4px); }
+    </style>
+</head>
+<body class="font-sans antialiased flex flex-col min-h-screen bg-dots text-[clamp(1rem,1.5vw,1.125rem)]">
 
+    <!-- Global Navigation -->
+    <nav class="fixed w-full z-50 bg-news-bg/95 backdrop-blur-sm border-b border-news-border">
+        <div class="max-w-[1600px] mx-auto grid grid-cols-2 lg:grid-cols-12 h-[clamp(4rem,6vw,5rem)] border-x border-news-border">
+            <div class="col-span-1 lg:col-span-3 border-r border-news-border flex items-center px-[clamp(1rem,2vw,1.5rem)] cursor-pointer group" onclick="closeSourceView()">
+                <div class="w-[clamp(0.5rem,1vw,0.75rem)] h-[clamp(0.5rem,1vw,0.75rem)] bg-news-accent mr-3 group-hover:scale-150 transition-transform"></div>
+                <h1 class="font-heading text-[clamp(1.5rem,3vw,2.25rem)] tracking-widest text-white group-hover:text-news-accent transition-colors pt-1">LONDON NEWS</h1>
+            </div>
+            
+            <div id="source-nav" class="hidden lg:flex col-span-9 border-r border-news-border overflow-x-auto hide-scroll">
+                <!-- Populated via JS -->
+            </div>
+
+            <div class="col-span-1 lg:hidden flex items-center justify-end px-[clamp(1rem,2vw,1.5rem)]">
+                <button id="menu-toggle" class="text-white font-heading text-[clamp(1.25rem,2.5vw,1.5rem)] tracking-widest pt-1 focus:outline-none z-50">
+                    MENU
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="fixed inset-0 bg-news-bg z-40 flex flex-col px-[clamp(1.5rem,3vw,2rem)] border-l-4 border-news-accent transform translate-x-full transition-transform duration-500 ease-in-out">
+        <nav class="flex flex-col gap-[clamp(1rem,2vw,1.5rem)] overflow-y-auto max-h-screen pt-[clamp(6rem,10vw,7rem)] pb-[clamp(2rem,4vw,2.5rem)] hide-scroll">
+            <h4 class="text-[clamp(0.7rem,1.2vw,0.875rem)] font-mono tracking-widest text-news-accent mb-2 uppercase">News Sources</h4>
+            <div id="mobile-source-grid" class="grid grid-cols-2 gap-[clamp(0.75rem,1.5vw,1rem)]"></div>
+        </nav>
+    </div>
+
+    <!-- Main Feed -->
+    <main id="main-feed" class="flex-grow pt-[clamp(4rem,6vw,5rem)] max-w-[1600px] mx-auto w-full border-x border-news-border opacity-0 transition-opacity duration-1000">
+        
+        <!-- Hero Section -->
+        <header class="grid grid-cols-1 lg:grid-cols-12 border-b-2 border-news-border bg-news-bg">
+            <div class="lg:col-span-7 p-[clamp(1.5rem,4vw,4rem)] border-b lg:border-b-0 lg:border-r border-news-border flex flex-col justify-center crosshair crosshair-tl">
+                <div class="inline-block border border-news-border text-white bg-news-primary font-mono text-[clamp(0.6rem,1vw,0.75rem)] font-bold tracking-[0.2em] px-[clamp(0.5rem,1vw,0.75rem)] py-[clamp(0.25rem,0.5vw,0.35rem)] mb-[clamp(1rem,2vw,1.5rem)] uppercase w-max">
+                    Top Story
+                </div>
+                <div class="flex items-center gap-3 mb-[clamp(0.75rem,1.5vw,1rem)]">
+                    <span id="hero-date" class="text-news-muted font-mono text-[clamp(0.75rem,1.5vw,0.875rem)] tracking-widest uppercase"></span>
+                </div>
+                <h2 id="hero-title" class="font-heading text-[clamp(2.5rem,6vw,5.5rem)] text-white leading-[0.9] tracking-wide mb-[clamp(1rem,2vw,1.5rem)] cursor-pointer hover:text-news-accent transition-colors"></h2>
+                <p id="hero-desc" class="text-news-muted text-[clamp(1rem,2vw,1.25rem)] font-light leading-relaxed max-w-2xl line-clamp-3 mb-[clamp(1.5rem,3vw,2rem)]"></p>
+                
+                <div class="flex items-center justify-between mt-auto">
+                    <div class="flex items-center gap-[clamp(0.5rem,1vw,0.75rem)]">
+                        <div class="bg-news-surfaceAlt p-[clamp(0.35rem,0.7vw,0.5rem)] border border-news-border rounded">
+                            <img id="hero-logo" src="" class="h-[clamp(1.25rem,2.5vw,1.5rem)] w-auto object-contain" alt="Source Logo">
+                        </div>
+                        <span id="hero-source-name" class="text-[clamp(0.75rem,1.5vw,0.875rem)] font-mono tracking-widest text-news-muted uppercase"></span>
+                    </div>
+                    <button id="hero-btn" class="bg-news-cta text-black font-bold text-[clamp(0.75rem,1.5vw,0.875rem)] tracking-[0.2em] px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,1.5vw,1rem)] uppercase hover:bg-news-ctaHover transition-colors flex items-center gap-2 rounded">
+                        Read Article <i data-lucide="arrow-right" class="w-[clamp(1rem,2vw,1.25rem)] h-[clamp(1rem,2vw,1.25rem)]"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="lg:col-span-5 relative min-h-[clamp(300px,30vw,500px)] bg-news-surface border-news-border overflow-hidden group cursor-pointer" id="hero-img-container">
+                <img id="hero-img" src="" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000" alt="Headline Image">
+                <div class="absolute inset-0 bg-gradient-to-t from-news-bg via-news-bg/20 to-transparent pointer-events-none"></div>
+            </div>
+        </header>
+
+        <!-- News Ticker -->
+        <div class="border-b border-news-border bg-news-surfaceAlt overflow-hidden">
+            <div class="flex items-center h-[clamp(2.5rem,4vw,3rem)]">
+                <div class="shrink-0 bg-news-primary text-white font-bold text-[clamp(0.6rem,1.2vw,0.75rem)] tracking-[0.2em] px-[clamp(1rem,2vw,1.5rem)] h-full flex items-center uppercase border-r border-news-border z-10">
+                    <span class="md:hidden">LATEST</span>
+                    <span class="hidden md:inline">LATEST HEADLINES</span>
+                </div>
+                <div class="overflow-hidden flex-1 h-full">
+                    <div id="ticker-content" class="ticker-inner h-full items-center font-mono text-[clamp(0.75rem,1.5vw,0.875rem)] tracking-widest text-news-muted">
+                        <!-- Populated via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-12 gap-0 items-start">
+            
+            <!-- Left Column: News Feed -->
+            <div class="xl:col-span-8 border-b xl:border-b-0 xl:border-r border-news-border">
+                
+                <!-- Briefing -->
+                <section class="bg-news-surface border-b border-news-border">
+                    <div class="p-[clamp(1.25rem,2.5vw,2rem)] border-b border-news-border bg-news-surfaceAlt flex items-center gap-[clamp(0.5rem,1vw,1rem)]">
+                        <div class="w-[clamp(0.5rem,1vw,0.75rem)] h-[clamp(0.5rem,1vw,0.75rem)] bg-news-primary"></div>
+                        <h2 class="font-heading text-[clamp(1.75rem,3.5vw,2.5rem)] tracking-widest pt-1 leading-none text-white">LATEST ARTICLES</h2>
+                    </div>
+                    <div id="briefing-grid" class="divide-y divide-news-border bg-news-bg">
+                        <!-- Populated via JS -->
+                    </div>
+                    <div class="p-[clamp(1.25rem,2.5vw,1.5rem)] bg-news-bg flex justify-center">
+                        <button id="load-more-btn" class="border border-news-border text-white font-bold text-[clamp(0.75rem,1.5vw,0.875rem)] tracking-[0.2em] px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,1.5vw,1rem)] uppercase hover:bg-news-surface hover:text-news-cta hover:border-news-cta rounded transition-colors w-full md:w-auto">
+                            Load More Articles
+                        </button>
+                    </div>
+                </section>
+
+                <!-- Prior Updates -->
+                <section class="bg-news-surface">
+                    <div class="p-[clamp(1.25rem,2.5vw,2rem)] border-y border-b border-news-border bg-news-surfaceAlt flex items-center gap-[clamp(0.5rem,1vw,1rem)]">
+                        <div class="w-[clamp(0.5rem,1vw,0.75rem)] h-[clamp(0.5rem,1vw,0.75rem)] bg-news-primary"></div>
+                        <h2 class="font-heading text-[clamp(1.75rem,3.5vw,2.5rem)] tracking-widest pt-1 leading-none text-white">OLDER STORIES</h2>
+                    </div>
+                    <div id="recent-grid" class="divide-y divide-news-border bg-news-bg">
+                        <!-- Populated via JS -->
+                    </div>
+                </section>
+
+            </div>
+
+            <!-- Right Column: Sidebar Widgets -->
+            <div class="xl:col-span-4 bg-news-bg flex flex-col gap-[clamp(1.5rem,3vw,2rem)] p-[clamp(1.5rem,3vw,2rem)] border-l border-news-border">
+                
+                <!-- City Newsroom -->
+                <section id="newsroom-section" class="hidden bg-news-surface border border-news-border rounded-[clamp(1rem,2vw,2rem)] overflow-hidden shadow-xl">
+                    <div class="p-[clamp(1rem,2vw,1.5rem)] border-b-2 border-news-accent bg-news-surfaceAlt flex items-center gap-[clamp(0.5rem,1vw,0.75rem)] relative">
+                        <div class="w-[clamp(0.4rem,0.8vw,0.5rem)] h-[clamp(0.4rem,0.8vw,0.5rem)] bg-news-accent"></div>
+                        <h2 class="font-heading text-[clamp(1.25rem,2.5vw,1.5rem)] tracking-widest pt-1 leading-none text-white">CITY HALL</h2>
+                    </div>
+                    <div class="relative p-[clamp(1.5rem,3vw,2rem)] text-center bg-news-surface">
+                        <!-- Progress Bar -->
+                        <div class="absolute top-0 left-0 w-full h-[clamp(0.2rem,0.4vw,0.25rem)] bg-news-border">
+                            <div id="slider-progress" class="h-full bg-news-cta w-0"></div>
+                        </div>
+
+                        <div class="inline-block border border-news-border text-news-accent font-mono text-[clamp(0.5rem,1vw,0.65rem)] tracking-widest px-[clamp(0.4rem,0.8vw,0.5rem)] py-[clamp(0.2rem,0.4vw,0.25rem)] mb-[clamp(0.75rem,1.5vw,1rem)] uppercase mt-2">
+                            Official Press Release
+                        </div>
+                        <h3 id="slider-title" class="font-heading text-[clamp(1.5rem,3vw,2rem)] text-white tracking-wide mb-[clamp(0.75rem,1.5vw,1rem)] cursor-pointer hover:text-news-cta transition-colors line-clamp-3 min-h-[clamp(5rem,10vw,6.75rem)] flex items-center justify-center"></h3>
+                        <p id="slider-date" class="font-mono text-[clamp(0.6rem,1.2vw,0.75rem)] text-news-muted uppercase"></p>
+                        
+                        <!-- Explicit Controls -->
+                        <div class="absolute inset-y-0 left-2 flex items-center">
+                            <button id="slider-prev" class="bg-news-bg/80 border border-news-border text-news-muted hover:text-white p-[clamp(0.4rem,0.8vw,0.5rem)] rounded-full transition-colors">
+                                <i data-lucide="chevron-left" class="w-[clamp(1rem,2vw,1.25rem)] h-[clamp(1rem,2vw,1.25rem)]"></i>
+                            </button>
+                        </div>
+                        <div class="absolute inset-y-0 right-2 flex items-center">
+                            <button id="slider-next" class="bg-news-bg/80 border border-news-border text-news-muted hover:text-white p-[clamp(0.4rem,0.8vw,0.5rem)] rounded-full transition-colors">
+                                <i data-lucide="chevron-right" class="w-[clamp(1rem,2vw,1.25rem)] h-[clamp(1rem,2vw,1.25rem)]"></i>
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Weather Terminal -->
+                <section class="bg-news-surface border border-news-border rounded-[clamp(1rem,2vw,2rem)] overflow-hidden shadow-xl">
+                    <div class="p-[clamp(1rem,2vw,1.5rem)] border-b border-news-border bg-news-surfaceAlt">
+                        <h3 class="font-heading text-[clamp(1.25rem,2.5vw,1.5rem)] text-white tracking-wide flex items-center justify-between">
+                            Local Weather <i data-lucide="cloud-sun" class="text-news-accent w-[clamp(1.25rem,2.5vw,1.5rem)] h-[clamp(1.25rem,2.5vw,1.5rem)]"></i>
+                        </h3>
+                    </div>
+                    
+                    <div class="p-[clamp(1rem,2vw,1.5rem)] space-y-[clamp(1rem,2vw,1.5rem)]">
+                        <div class="flex items-end justify-between">
+                            <div class="flex items-start gap-[clamp(0.25rem,0.5vw,0.5rem)]">
+                                <span id="weather-temp" class="font-heading text-[clamp(3.5rem,6vw,4.5rem)] leading-none text-white tracking-wider">--°</span>
+                                <span class="font-mono text-[clamp(0.7rem,1.4vw,0.875rem)] text-news-muted mb-[clamp(0.1rem,0.2vw,0.25rem)]">C</span>
+                            </div>
+                            <div class="text-right">
+                                <i id="weather-main-icon" data-lucide="cloud" class="w-[clamp(1.5rem,3vw,2rem)] h-[clamp(1.5rem,3vw,2rem)] text-news-accent ml-auto mb-[clamp(0.25rem,0.5vw,0.5rem)]"></i>
+                                <p id="weather-desc" class="font-mono text-[clamp(0.6rem,1.2vw,0.75rem)] text-white uppercase tracking-widest">--</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-[clamp(0.25rem,0.5vw,0.5rem)] border border-news-border bg-news-surfaceAlt p-[clamp(0.75rem,1.5vw,1rem)] rounded-xl">
+                            <div class="text-center">
+                                <p class="font-mono text-[clamp(0.5rem,1vw,0.6rem)] text-news-muted uppercase mb-[clamp(0.1rem,0.2vw,0.25rem)]">WIND</p>
+                                <p id="weather-wind" class="font-mono text-[clamp(0.7rem,1.4vw,0.875rem)] text-white">--</p>
+                            </div>
+                            <div class="text-center border-x border-news-border">
+                                <p class="font-mono text-[clamp(0.5rem,1vw,0.6rem)] text-news-muted uppercase mb-[clamp(0.1rem,0.2vw,0.25rem)]">HUM</p>
+                                <p id="weather-hum" class="font-mono text-[clamp(0.7rem,1.4vw,0.875rem)] text-white">--</p>
+                            </div>
+                            <div class="text-center">
+                                <p class="font-mono text-[clamp(0.5rem,1vw,0.6rem)] text-news-muted uppercase mb-[clamp(0.1rem,0.2vw,0.25rem)]">DIR</p>
+                                <p id="weather-dir" class="font-mono text-[clamp(0.7rem,1.4vw,0.875rem)] text-white">--</p>
+                            </div>
+                        </div>
+
+                        <div class="border border-news-border bg-news-surfaceAlt rounded-xl overflow-hidden">
+                            <div class="p-[clamp(0.4rem,0.8vw,0.5rem)] border-b border-news-border bg-news-bg text-center font-mono text-[clamp(0.5rem,1vw,0.6rem)] text-news-muted uppercase tracking-widest">
+                                5-Day Projection
+                            </div>
+                            <div id="forecast-row" class="grid grid-cols-5 divide-x divide-news-border">
+                                <!-- Populated via JS -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Source Archive Overlay -->
+    <div id="source-view" class="hidden flex-grow pt-[clamp(4rem,6vw,5rem)] max-w-[1600px] mx-auto w-full border-x border-news-border bg-news-bg">
+        <div class="p-[clamp(1.5rem,3vw,3rem)] md:p-[clamp(2rem,4vw,4rem)] border-b-2 border-news-accent bg-news-surface flex flex-col md:flex-row items-start md:items-center justify-between gap-[clamp(1.5rem,3vw,2rem)] crosshair crosshair-tl">
+            <div class="flex items-center gap-[clamp(1rem,2vw,1.5rem)]">
+                <div class="bg-news-surfaceAlt p-[clamp(0.75rem,1.5vw,1rem)] border border-news-border rounded-xl">
+                    <img id="source-view-logo" src="" class="w-[clamp(3rem,6vw,4rem)] h-[clamp(3rem,6vw,4rem)] object-contain" alt="Source Logo">
+                </div>
+                <div>
+                    <span class="text-news-accent font-mono text-[clamp(0.6rem,1.2vw,0.75rem)] font-bold tracking-[0.2em] uppercase block mb-[clamp(0.25rem,0.5vw,0.5rem)]">Source Feed</span>
+                    <h2 id="source-view-title" class="font-heading text-[clamp(2rem,5vw,4rem)] tracking-widest leading-none text-white"></h2>
+                    <p id="source-view-count" class="font-mono text-news-muted text-[clamp(0.75rem,1.5vw,0.875rem)] mt-[clamp(0.25rem,0.5vw,0.5rem)] uppercase"></p>
+                </div>
+            </div>
+            <button onclick="closeSourceView()" class="border border-news-border text-white font-bold text-[clamp(0.75rem,1.5vw,0.875rem)] tracking-[0.2em] px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,1.5vw,1rem)] rounded uppercase hover:bg-news-surfaceAlt transition-colors flex items-center gap-2">
+                <i data-lucide="corner-down-left" class="w-[clamp(1rem,2vw,1.25rem)] h-[clamp(1rem,2vw,1.25rem)]"></i> Back to Home
+            </button>
+        </div>
+        <div id="source-grid" class="divide-y divide-news-border bg-news-bg"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="max-w-[1600px] mx-auto w-full border-x border-b border-news-border bg-news-surfaceAlt py-[clamp(1.5rem,3vw,2rem)] px-[clamp(1rem,2vw,1.5rem)] md:px-[clamp(2rem,4vw,3rem)] flex flex-col md:flex-row justify-between items-center gap-[clamp(0.75rem,1.5vw,1rem)] mt-auto">
+        <div class="font-heading text-[clamp(1.5rem,3vw,2.25rem)] tracking-widest text-news-muted flex items-center gap-[clamp(0.5rem,1vw,0.75rem)]">
+            LONDON NEWS <span class="text-[clamp(0.75rem,1.5vw,0.875rem)] font-mono tracking-normal ml-[clamp(0.25rem,0.5vw,0.5rem)] text-news-border">|</span> <span class="text-[clamp(0.75rem,1.5vw,0.875rem)] font-sans tracking-normal text-news-muted">© 2026</span>
+        </div>
+        <div class="text-[clamp(0.6rem,1.2vw,0.75rem)] font-mono text-news-muted text-center md:text-right leading-relaxed">
+            YOUR TRUSTED LOCAL NEWS SOURCE.<br>
+            UPDATED 24/7.
+        </div>
+    </footer>
+
+    <script>
+        let allArticles = [];
+        let feedSources = [];
+        let colIdx = 0;
+        let visibleCount = 8;
+        const RSS_PROXY = 'https://rss-proxy.davidbusch-02.workers.dev/local';
+
+        const decodeEntities = (html) => {
+            const txt = document.createElement("textarea");
+            txt.innerHTML = html;
+            return txt.value;
+        };
+
+        const stripHtml = (html) => {
+            const decoded = decodeEntities(html);
+            const tmp = document.createElement("DIV");
+            tmp.innerHTML = decoded;
+            return tmp.textContent || tmp.innerText || "";
+        };
+
+        const formatDate = (str) => {
+            if (!str) return "";
+            const date = new Date(str);
+            return date.toLocaleDateString("en-GB", { day: '2-digit', month: 'short', year: 'numeric' }).toUpperCase();
+        };
+
+        const getSourceLogo = (link = "", title = "") => {
+            if (!feedSources.length) return null;
+            const normLink = link.toLowerCase();
+            const normTitle = title.toLowerCase();
+            for (const f of feedSources) {
+                const domain = f.url.replace(/^https?:\/\//, '').split('/')[0].toLowerCase();
+                if (normLink.includes(domain)) return f.logo;
+            }
+            for (const f of feedSources) {
+                if (normTitle.includes(f.name.toLowerCase())) return f.logo;
+            }
+            return null;
+        };
+
+        // Create Database Row Card
+        const createNewsRow = (article) => {
+            const logo = getSourceLogo(article.link, article.title);
+            const imgUrl = article.thumbnail || 'https://images.unsplash.com/photo-1544365558-35aa4afcf11f?auto=format&fit=crop&q=80&w=800';
+            const domain = article.link.replace(/^https?:\/\//, '').split('/')[0];
+            const cleanTitle = decodeEntities(article.title);
+
+            const row = document.createElement('div');
+            row.className = 'article-card flex flex-col md:flex-row p-[clamp(1.25rem,2.5vw,2rem)] hover:bg-news-surface transition-colors cursor-pointer gap-[clamp(1rem,2vw,1.5rem)] group';
+            row.onclick = () => window.open(article.link, '_blank');
+            
+            row.innerHTML = `
+                <div class="w-full md:w-[clamp(12rem,24vw,14rem)] aspect-video shrink-0 border border-news-border overflow-hidden relative rounded">
+                    <img src="${imgUrl}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" alt="Thumbnail">
+                </div>
+                <div class="flex-grow flex flex-col justify-center">
+                    <div class="flex items-center gap-[clamp(0.5rem,1vw,1rem)] text-[clamp(0.6rem,1.2vw,0.75rem)] font-mono text-news-muted uppercase mb-[clamp(0.5rem,1vw,0.75rem)]">
+                        <span class="text-white">${formatDate(article.pubDate)}</span>
+                        <span>//</span>
+                        <span class="flex items-center gap-[clamp(0.25rem,0.5vw,0.5rem)]">
+                            ${logo ? `<img src="${logo}" class="h-[clamp(0.75rem,1.5vw,1rem)] w-auto opacity-90 rounded-sm" alt="">` : ''}
+                            ${domain}
+                        </span>
+                    </div>
+                    <h3 class="font-heading text-[clamp(1.5rem,3vw,2rem)] text-white tracking-wide group-hover:text-news-cta transition-colors leading-tight mb-[clamp(0.25rem,0.5vw,0.5rem)] line-clamp-2">
+                        ${cleanTitle}
+                    </h3>
+                    <p class="text-news-muted font-sans text-[clamp(0.875rem,1.5vw,1rem)] line-clamp-2 mt-auto">
+                        ${stripHtml(article.description || "")}
+                    </p>
+                </div>
+                <div class="hidden md:flex items-center pl-[clamp(1rem,2vw,1.5rem)]">
+                    <span class="dl-arrow text-[clamp(1.5rem,3vw,2rem)] font-light text-news-muted group-hover:text-news-cta">&rarr;</span>
+                </div>
+            `;
+            return row;
+        };
+
+        const renderMain = () => {
+            const todaysArticles = allArticles.filter(a => new Date(a.pubDate).toDateString() === new Date().toDateString());
+            const olderArticles = allArticles.filter(a => new Date(a.pubDate).toDateString() !== new Date().toDateString());
+            const hero = allArticles.find(a => a.thumbnail) || allArticles[0];
+
+            if(hero) {
+                // Hero
+                const heroImgUrl = hero.thumbnail || 'https://images.unsplash.com/photo-1544365558-35aa4afcf11f?q=80&w=1200';
+                document.getElementById('hero-img').src = heroImgUrl;
+                document.getElementById('hero-title').textContent = decodeEntities(hero.title);
+                document.getElementById('hero-desc').textContent = stripHtml(hero.description || "");
+                document.getElementById('hero-date').textContent = "PUBLISHED // " + formatDate(hero.pubDate);
+                document.getElementById('hero-source-name').textContent = hero.link.replace(/^https?:\/\//, '').split('/')[0];
+                const heroLogo = getSourceLogo(hero.link, hero.title);
+                if(heroLogo) document.getElementById('hero-logo').src = heroLogo;
+                
+                const openHero = () => window.open(hero.link, '_blank');
+                document.getElementById('hero-btn').onclick = openHero;
+                document.getElementById('hero-img-container').onclick = openHero;
+            }
+
+            // Ticker
+            const ticker = document.getElementById('ticker-content');
+            if (ticker) {
+                ticker.innerHTML = '';
+                allArticles.slice(0, 8).forEach(a => {
+                    ticker.innerHTML += `<span class="ticker-item cursor-pointer hover:text-news-cta transition-colors" onclick="window.open('${a.link}', '_blank')"><span class="text-news-accent mr-3">&#9670;</span> ${decodeEntities(a.title)}</span>`;
+                });
+                // duplicate for infinite scroll
+                ticker.innerHTML += ticker.innerHTML;
+            }
+
+            // Briefing Grid
+            const briefingGrid = document.getElementById('briefing-grid');
+            if (briefingGrid) {
+                briefingGrid.innerHTML = '';
+                todaysArticles.slice(0, visibleCount).forEach(a => briefingGrid.appendChild(createNewsRow(a)));
+            }
+
+            // Older Grid
+            const recentGrid = document.getElementById('recent-grid');
+            if (recentGrid) {
+                recentGrid.innerHTML = '';
+                olderArticles.slice(0, 4).forEach(a => recentGrid.appendChild(createNewsRow(a)));
+            }
+
+            // Carousel Logic
+            const colArticles = allArticles.filter(a => (a.title || '').toLowerCase().includes("city of london"));
+            const newsroomSection = document.getElementById('newsroom-section');
+            if(colArticles.length > 0 && newsroomSection) {
+                newsroomSection.classList.remove('hidden');
+                
+                document.getElementById('slider-prev').onclick = () => {
+                    colIdx = (colIdx - 1 + colArticles.length) % colArticles.length;
+                    renderCarouselSlide(colArticles);
+                };
+                
+                document.getElementById('slider-next').onclick = () => {
+                    colIdx = (colIdx + 1) % colArticles.length;
+                    renderCarouselSlide(colArticles);
+                };
+
+                renderCarouselSlide(colArticles);
+            }
+
+            lucide.createIcons();
+            document.getElementById('main-feed').style.opacity = '1';
+        };
+
+        const renderCarouselSlide = (articles) => {
+            const article = articles[colIdx];
+            const titleEl = document.getElementById('slider-title');
+            if(titleEl) {
+                titleEl.textContent = stripHtml(article.title).replace(/\s*-\s*City of London\s*$/i, "");
+                titleEl.onclick = () => window.open(article.link, '_blank');
+            }
+            const dateEl = document.getElementById('slider-date');
+            if(dateEl) dateEl.textContent = "DATE: " + formatDate(article.pubDate);
+
+            // Restart progress bar animation
+            const progress = document.getElementById('slider-progress');
+            if (progress) {
+                progress.classList.remove('progress-bar-anim');
+                void progress.offsetWidth; // trigger reflow
+                progress.classList.add('progress-bar-anim');
+            }
+        };
+
+        // Navigation
+        const openSourceView = (source) => {
+            const domain = source.url.replace(/^https?:\/\//, '').split('/')[0].toLowerCase();
+            const isTitleBased = domain.includes('google.com') || source.name.toLowerCase().includes('city of london');
+            
+            const filtered = allArticles.filter(a => {
+                if (isTitleBased) return (a.title || "").toLowerCase().includes(source.name.toLowerCase().replace('newsroom','').trim());
+                return (a.link || "").includes(domain);
+            });
+
+            document.getElementById('source-view-logo').src = source.logo;
+            document.getElementById('source-view-title').textContent = source.name;
+            document.getElementById('source-view-count').textContent = `Total Articles: ${filtered.length}`;
+            
+            const grid = document.getElementById('source-grid');
+            if (grid) {
+                grid.innerHTML = '';
+                filtered.forEach(a => grid.appendChild(createNewsRow(a)));
+            }
+
+            document.getElementById('main-feed').classList.add('hidden');
+            document.getElementById('source-view').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            lucide.createIcons();
+        };
+
+        const closeSourceView = () => {
+            document.getElementById('source-view').classList.add('hidden');
+            document.getElementById('main-feed').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+        // Weather
+        const fetchWeather = async () => {
+            try {
+                const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=42.9837&longitude=-81.2497&current_weather=true&daily=temperature_2m_max,temperature_2m_min,weathercode&timezone=auto`);
+                const data = await res.json();
+                
+                const tempEl = document.getElementById('weather-temp');
+                if(tempEl) tempEl.textContent = `${Math.round(data.current_weather.temperature)}`;
+                const windEl = document.getElementById('weather-wind');
+                if(windEl) windEl.textContent = `${Math.round(data.current_weather.windspeed)} kph`;
+                const humEl = document.getElementById('weather-hum');
+                if(humEl) humEl.textContent = `76%`;
+                const dirEl = document.getElementById('weather-dir');
+                if(dirEl) {
+                    dirEl.textContent = (() => {
+                        const arr = ["N","NNE","NE","ENE","E","ESE","SE","SSE","S","SSW","SW","WSW","W","WNW","NW","NNW"];
+                        return arr[Math.floor((data.current_weather.winddirection / 22.5) + 0.5) % 16];
+                    })();
+                }
+                
+                const iconMap = { 0: 'sun', 1: 'cloud-sun', 2: 'cloud', 3: 'cloud', 45: 'cloud', 61: 'cloud-rain', 71: 'cloud-snow', 95: 'cloud-lightning' };
+                const descMap = { 0: 'Sunny', 1: 'Clear', 2: 'Cloudy', 3: 'Overcast', 45: 'Foggy', 61: 'Rainy', 71: 'Snowy', 95: 'Stormy' };
+                
+                const descEl = document.getElementById('weather-desc');
+                if(descEl) descEl.textContent = descMap[data.current_weather.weathercode] || 'Cloudy';
+                
+                const mainIcon = document.getElementById('weather-main-icon');
+                if(mainIcon) mainIcon.setAttribute('data-lucide', iconMap[data.current_weather.weathercode] || 'cloud');
+
+                const forecastRow = document.getElementById('forecast-row');
+                if(forecastRow) {
+                    forecastRow.innerHTML = '';
+                    for(let i=0; i<5; i++) {
+                        const day = new Date(data.daily.time[i]).toLocaleDateString("en-US", { weekday: "short" });
+                        const code = data.daily.weathercode[i];
+                        forecastRow.innerHTML += `
+                            <div class="flex flex-col items-center p-[clamp(0.5rem,1vw,0.75rem)]">
+                                <span class="font-mono text-[clamp(0.5rem,1vw,0.6rem)] text-news-muted uppercase mb-[clamp(0.1rem,0.2vw,0.25rem)]">${day}</span>
+                                <i data-lucide="${iconMap[code] || 'cloud'}" class="w-[clamp(0.75rem,1.5vw,1rem)] h-[clamp(0.75rem,1.5vw,1rem)] text-news-accent mb-[clamp(0.1rem,0.2vw,0.25rem)]"></i>
+                                <span class="font-mono text-[clamp(0.6rem,1.2vw,0.75rem)] text-white">${Math.round(data.daily.temperature_2m_max[i])}°</span>
+                            </div>
+                        `;
+                    }
+                }
+                lucide.createIcons();
+            } catch (err) { console.error("Weather error:", err); }
+        };
+
+        // Init
+        const init = async () => {
+            try {
+                // Sources
+                const sRes = await fetch("https://dvdbsh.github.io/news/feeds.json");
+                const sData = await sRes.json();
+                feedSources = sData.Local || [];
+
+                const nav = document.getElementById('source-nav');
+                const mobileGrid = document.getElementById('mobile-source-grid');
+                feedSources.forEach((s, idx) => {
+                    if (nav && idx < 6) {
+                        const btn = document.createElement('a');
+                        btn.className = 'flex-1 min-w-[clamp(6rem,12vw,8rem)] flex items-center justify-center gap-[clamp(0.25rem,0.5vw,0.5rem)] text-[clamp(0.6rem,1.2vw,0.75rem)] font-mono tracking-[0.15em] text-news-muted hover:text-white hover:bg-news-surface transition-colors border-r border-news-border h-full cursor-pointer uppercase group';
+                        btn.innerHTML = `<img src="${s.logo}" class="w-[clamp(1rem,2vw,1.25rem)] h-[clamp(1rem,2vw,1.25rem)] object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all rounded-sm" alt="${s.name}"><span class="truncate">${s.name.split(' ')[0]}</span>`;
+                        btn.onclick = () => openSourceView(s);
+                        nav.appendChild(btn);
+                    }
+
+                    if (mobileGrid) {
+                        const mBtn = document.createElement('button');
+                        mBtn.className = 'flex flex-col items-center justify-center gap-[clamp(0.5rem,1vw,0.75rem)] bg-news-surface border border-news-border p-[clamp(0.75rem,1.5vw,1rem)] rounded-xl hover:border-news-accent transition-colors text-center';
+                        mBtn.innerHTML = `<img src="${s.logo}" class="w-[clamp(1.5rem,3vw,2rem)] h-[clamp(1.5rem,3vw,2rem)] object-contain rounded-sm" alt=""><span class="font-mono text-[clamp(0.5rem,1vw,0.6rem)] font-bold text-news-muted uppercase leading-tight">${s.name}</span>`;
+                        mBtn.onclick = () => { openSourceView(s); document.getElementById('mobile-menu').classList.add('translate-x-full'); };
+                        mobileGrid.appendChild(mBtn);
+                    }
+                });
+
+                // Articles
+                const aRes = await fetch(`${RSS_PROXY}?_=${Math.floor(Date.now() / 60000)}`);
+                const aData = await aRes.json();
+                allArticles = aData.items || [];
+
+                renderMain();
+                fetchWeather();
+
+                // Interactions
+                const loadBtn = document.getElementById('load-more-btn');
+                if (loadBtn) {
+                    loadBtn.onclick = () => {
+                        visibleCount += 8;
+                        renderMain();
+                    };
+                }
+
+                const mobileMenu = document.getElementById('mobile-menu');
+                const menuToggle = document.getElementById('menu-toggle');
+                if (menuToggle && mobileMenu) {
+                    menuToggle.onclick = () => {
+                        const isClosed = mobileMenu.classList.contains('translate-x-full');
+                        mobileMenu.classList.toggle('translate-x-full', !isClosed);
+                        menuToggle.textContent = isClosed ? 'CLOSE' : 'MENU';
+                        menuToggle.classList.toggle('text-news-accent', isClosed);
+                    };
+                }
+
+                setInterval(() => {
+                    const col = allArticles.filter(a => (a.title || '').toLowerCase().includes("city of london"));
+                    if(col.length > 0) {
+                        colIdx = (colIdx + 1) % col.length;
+                        renderCarouselSlide(col);
+                    }
+                }, 6000);
+
+            } catch (err) { console.error("Init error:", err); }
+        };
+
+        window.onload = init;
+    </script>
 </body>
 </html>
