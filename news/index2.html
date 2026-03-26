@@ -21,16 +21,16 @@
                     },
                     colors: {
                         news: {
-                            bg: '#0a0f0c',
-                            surface: '#121a14',
-                            surfaceAlt: '#1a241c',
-                            border: '#233328',
-                            primary: '#2d6a4f',
-                            accent: '#10b981',
-                            cta: '#f59e0b',
-                            ctaHover: '#d97706',
-                            text: '#e2e8f0',
-                            muted: '#9ca3af'
+                            bg: '#131A1C',
+                            surface: '#1A2326',
+                            surfaceAlt: '#212D31',
+                            border: '#2E4045',
+                            primary: '#265126',
+                            accent: '#28B4EA',
+                            cta: '#488795',
+                            ctaHover: '#CECEBF',
+                            text: '#CECEBF',
+                            muted: '#7A8C91'
                         }
                     }
                 }
@@ -38,15 +38,15 @@
         }
     </script>
     <style>
-        body { background-color: #0a0f0c; color: #e2e8f0; overflow-x: hidden; }
-        ::selection { background-color: #f59e0b; color: #000; }
-        .bg-dots { background-image: radial-gradient(#233328 1px, transparent 1px); background-size: 20px 20px; }
+        body { background-color: #131A1C; color: #CECEBF; overflow-x: hidden; }
+        ::selection { background-color: #488795; color: #131A1C; }
+        .bg-dots { background-image: radial-gradient(#2E4045 1px, transparent 1px); background-size: 20px 20px; }
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
         
         /* Crosshair decorations */
         .crosshair { position: relative; }
-        .crosshair::before, .crosshair::after { content: ''; position: absolute; background-color: #10b981; z-index: 10; }
+        .crosshair::before, .crosshair::after { content: ''; position: absolute; background-color: #28B4EA; z-index: 10; }
         .crosshair-tl::before { top: -4px; left: -1px; width: 3px; height: 9px; }
         .crosshair-tl::after { top: -1px; left: -4px; width: 9px; height: 3px; }
 
@@ -64,25 +64,25 @@
         @keyframes progress { 0% { width: 0%; } 100% { width: 100%; } }
 
         .dl-arrow { transition: all 0.2s; }
-        .article-card:hover .dl-arrow { color: #f59e0b; transform: translateX(4px); }
+        .article-card:hover .dl-arrow { color: #488795; transform: translateX(4px); }
     </style>
 </head>
-<body class="font-sans antialiased flex flex-col min-h-screen bg-dots text-[clamp(1rem,1.5vw,1.125rem)]">
+<body class="font-sans antialiased flex flex-col min-h-screen bg-dots text-base lg:text-lg">
 
     <!-- Global Navigation -->
     <nav class="fixed w-full z-50 bg-news-bg/95 backdrop-blur-sm border-b border-news-border">
-        <div class="max-w-[1600px] mx-auto grid grid-cols-2 lg:grid-cols-12 h-[clamp(4rem,6vw,5rem)] border-x border-news-border">
-            <div class="col-span-1 lg:col-span-3 border-r border-news-border flex items-center px-[clamp(1rem,2vw,1.5rem)] cursor-pointer group" onclick="closeSourceView()">
-                <div class="w-[clamp(0.5rem,1vw,0.75rem)] h-[clamp(0.5rem,1vw,0.75rem)] bg-news-accent mr-3 group-hover:scale-150 transition-transform"></div>
-                <h1 class="font-heading text-[clamp(1.5rem,3vw,2.25rem)] tracking-widest text-white group-hover:text-news-accent transition-colors pt-1">LONDON NEWS</h1>
+        <div class="max-w-[1600px] mx-auto grid grid-cols-2 lg:grid-cols-12 h-16 lg:h-20 border-x border-news-border">
+            <div class="col-span-1 lg:col-span-3 border-r border-news-border flex items-center px-4 lg:px-6 cursor-pointer group" onclick="closeSourceView()">
+                <div class="w-2 h-2 lg:w-3 lg:h-3 bg-news-accent mr-3 group-hover:scale-150 transition-transform"></div>
+                <h1 class="font-heading text-2xl lg:text-3xl tracking-widest text-white group-hover:text-news-accent transition-colors pt-1">LONDON NEWS</h1>
             </div>
             
             <div id="source-nav" class="hidden lg:flex col-span-9 border-r border-news-border overflow-x-auto hide-scroll">
                 <!-- Populated via JS -->
             </div>
 
-            <div class="col-span-1 lg:hidden flex items-center justify-end px-[clamp(1rem,2vw,1.5rem)]">
-                <button id="menu-toggle" class="text-white font-heading text-[clamp(1.25rem,2.5vw,1.5rem)] tracking-widest pt-1 focus:outline-none z-50">
+            <div class="col-span-1 lg:hidden flex items-center justify-end px-4">
+                <button id="menu-toggle" class="text-white font-heading text-xl tracking-widest pt-1 focus:outline-none z-50">
                     MENU
                 </button>
             </div>
@@ -90,41 +90,41 @@
     </nav>
 
     <!-- Mobile Menu -->
-    <div id="mobile-menu" class="fixed inset-0 bg-news-bg z-40 flex flex-col px-[clamp(1.5rem,3vw,2rem)] border-l-4 border-news-accent transform translate-x-full transition-transform duration-500 ease-in-out">
-        <nav class="flex flex-col gap-[clamp(1rem,2vw,1.5rem)] overflow-y-auto max-h-screen pt-[clamp(6rem,10vw,7rem)] pb-[clamp(2rem,4vw,2.5rem)] hide-scroll">
-            <h4 class="text-[clamp(0.7rem,1.2vw,0.875rem)] font-mono tracking-widest text-news-accent mb-2 uppercase">News Sources</h4>
-            <div id="mobile-source-grid" class="grid grid-cols-2 gap-[clamp(0.75rem,1.5vw,1rem)]"></div>
+    <div id="mobile-menu" class="fixed inset-0 bg-news-bg z-40 flex flex-col px-6 border-l-4 border-news-accent transform translate-x-full transition-transform duration-500 ease-in-out">
+        <nav class="flex flex-col gap-4 overflow-y-auto max-h-screen pt-24 pb-8 hide-scroll">
+            <h4 class="text-sm font-mono tracking-widest text-news-accent mb-2 uppercase">News Sources</h4>
+            <div id="mobile-source-grid" class="grid grid-cols-2 gap-4"></div>
         </nav>
     </div>
 
     <!-- Main Feed -->
-    <main id="main-feed" class="flex-grow pt-[clamp(4rem,6vw,5rem)] max-w-[1600px] mx-auto w-full border-x border-news-border opacity-0 transition-opacity duration-1000">
+    <main id="main-feed" class="flex-grow pt-16 lg:pt-20 max-w-[1600px] mx-auto w-full border-x border-news-border opacity-0 transition-opacity duration-1000">
         
         <!-- Hero Section -->
         <header class="grid grid-cols-1 lg:grid-cols-12 border-b-2 border-news-border bg-news-bg">
-            <div class="lg:col-span-7 p-[clamp(1.5rem,4vw,4rem)] border-b lg:border-b-0 lg:border-r border-news-border flex flex-col justify-center crosshair crosshair-tl">
-                <div class="inline-block border border-news-border text-white bg-news-primary font-mono text-[clamp(0.6rem,1vw,0.75rem)] font-bold tracking-[0.2em] px-[clamp(0.5rem,1vw,0.75rem)] py-[clamp(0.25rem,0.5vw,0.35rem)] mb-[clamp(1rem,2vw,1.5rem)] uppercase w-max">
+            <div class="lg:col-span-7 p-6 lg:p-12 border-b lg:border-b-0 lg:border-r border-news-border flex flex-col justify-center crosshair crosshair-tl">
+                <div class="inline-block border border-news-border text-white bg-news-primary font-mono text-xs lg:text-sm font-bold tracking-[0.2em] px-3 py-1.5 mb-4 uppercase w-max">
                     Top Story
                 </div>
-                <div class="flex items-center gap-3 mb-[clamp(0.75rem,1.5vw,1rem)]">
-                    <span id="hero-date" class="text-news-muted font-mono text-[clamp(0.75rem,1.5vw,0.875rem)] tracking-widest uppercase"></span>
+                <div class="flex items-center gap-3 mb-3">
+                    <span id="hero-date" class="text-news-muted font-mono text-xs lg:text-sm tracking-widest uppercase"></span>
                 </div>
-                <h2 id="hero-title" class="font-heading text-[clamp(2.5rem,6vw,5.5rem)] text-white leading-[0.9] tracking-wide mb-[clamp(1rem,2vw,1.5rem)] cursor-pointer hover:text-news-accent transition-colors"></h2>
-                <p id="hero-desc" class="text-news-muted text-[clamp(1rem,2vw,1.25rem)] font-light leading-relaxed max-w-2xl line-clamp-3 mb-[clamp(1.5rem,3vw,2rem)]"></p>
+                <h2 id="hero-title" class="font-heading text-4xl lg:text-6xl text-white leading-[0.9] tracking-wide mb-4 lg:mb-6 cursor-pointer hover:text-news-accent transition-colors"></h2>
+                <p id="hero-desc" class="text-news-muted text-base lg:text-xl font-light leading-relaxed max-w-2xl line-clamp-3 mb-6 lg:mb-8"></p>
                 
-                <div class="flex items-center justify-between mt-auto">
-                    <div class="flex items-center gap-[clamp(0.5rem,1vw,0.75rem)]">
-                        <div class="bg-news-surfaceAlt p-[clamp(0.35rem,0.7vw,0.5rem)] border border-news-border rounded">
-                            <img id="hero-logo" src="" class="h-[clamp(1.25rem,2.5vw,1.5rem)] w-auto object-contain" alt="Source Logo">
+                <div class="flex items-center justify-between mt-auto pt-4">
+                    <div class="flex items-center gap-2 lg:gap-3">
+                        <div class="bg-news-surfaceAlt p-2 border border-news-border rounded">
+                            <img id="hero-logo" src="" class="h-5 lg:h-6 w-auto object-contain" alt="Source Logo">
                         </div>
-                        <span id="hero-source-name" class="text-[clamp(0.75rem,1.5vw,0.875rem)] font-mono tracking-widest text-news-muted uppercase"></span>
+                        <span id="hero-source-name" class="text-xs lg:text-sm font-mono tracking-widest text-news-muted uppercase"></span>
                     </div>
-                    <button id="hero-btn" class="bg-news-cta text-black font-bold text-[clamp(0.75rem,1.5vw,0.875rem)] tracking-[0.2em] px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,1.5vw,1rem)] uppercase hover:bg-news-ctaHover transition-colors flex items-center gap-2 rounded">
-                        Read Article <i data-lucide="arrow-right" class="w-[clamp(1rem,2vw,1.25rem)] h-[clamp(1rem,2vw,1.25rem)]"></i>
+                    <button id="hero-btn" class="bg-news-cta text-black font-bold text-xs lg:text-sm tracking-[0.2em] px-6 py-3 lg:px-8 lg:py-4 uppercase hover:bg-news-ctaHover transition-colors flex items-center gap-2 rounded">
+                        Read Article <i data-lucide="arrow-right" class="w-4 h-4 lg:w-5 lg:h-5"></i>
                     </button>
                 </div>
             </div>
-            <div class="lg:col-span-5 relative min-h-[clamp(300px,30vw,500px)] bg-news-surface border-news-border overflow-hidden group cursor-pointer" id="hero-img-container">
+            <div class="lg:col-span-5 relative min-h-[300px] lg:min-h-[500px] bg-news-surface border-news-border overflow-hidden group cursor-pointer" id="hero-img-container">
                 <img id="hero-img" src="" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000" alt="Headline Image">
                 <div class="absolute inset-0 bg-gradient-to-t from-news-bg via-news-bg/20 to-transparent pointer-events-none"></div>
             </div>
@@ -132,13 +132,13 @@
 
         <!-- News Ticker -->
         <div class="border-b border-news-border bg-news-surfaceAlt overflow-hidden">
-            <div class="flex items-center h-[clamp(2.5rem,4vw,3rem)]">
-                <div class="shrink-0 bg-news-primary text-white font-bold text-[clamp(0.6rem,1.2vw,0.75rem)] tracking-[0.2em] px-[clamp(1rem,2vw,1.5rem)] h-full flex items-center uppercase border-r border-news-border z-10">
+            <div class="flex items-center h-10 lg:h-12">
+                <div class="shrink-0 bg-news-primary text-white font-bold text-xs tracking-[0.2em] px-4 lg:px-6 h-full flex items-center uppercase border-r border-news-border z-10">
                     <span class="md:hidden">LATEST</span>
                     <span class="hidden md:inline">LATEST HEADLINES</span>
                 </div>
                 <div class="overflow-hidden flex-1 h-full">
-                    <div id="ticker-content" class="ticker-inner h-full items-center font-mono text-[clamp(0.75rem,1.5vw,0.875rem)] tracking-widest text-news-muted">
+                    <div id="ticker-content" class="ticker-inner h-full items-center font-mono text-xs lg:text-sm tracking-widest text-news-muted">
                         <!-- Populated via JS -->
                     </div>
                 </div>
@@ -151,106 +151,111 @@
             <div class="xl:col-span-8 border-b xl:border-b-0 xl:border-r border-news-border">
                 
                 <!-- Briefing -->
-                <section class="bg-news-surface border-b border-news-border">
-                    <div class="p-[clamp(1.25rem,2.5vw,2rem)] border-b border-news-border bg-news-surfaceAlt flex items-center gap-[clamp(0.5rem,1vw,1rem)]">
-                        <div class="w-[clamp(0.5rem,1vw,0.75rem)] h-[clamp(0.5rem,1vw,0.75rem)] bg-news-primary"></div>
-                        <h2 class="font-heading text-[clamp(1.75rem,3.5vw,2.5rem)] tracking-widest pt-1 leading-none text-white">LATEST ARTICLES</h2>
+                <section class="bg-news-surface border-b border-news-border relative">
+                    <div class="sticky top-16 lg:top-20 z-30 p-5 lg:p-8 border-b border-news-border bg-news-surfaceAlt flex items-center gap-3">
+                        <div class="w-2 h-2 lg:w-3 lg:h-3 bg-news-primary"></div>
+                        <h2 class="font-heading text-3xl lg:text-4xl tracking-widest pt-1 leading-none text-white">LATEST ARTICLES</h2>
                     </div>
                     <div id="briefing-grid" class="divide-y divide-news-border bg-news-bg">
                         <!-- Populated via JS -->
                     </div>
-                    <div class="p-[clamp(1.25rem,2.5vw,1.5rem)] bg-news-bg flex justify-center">
-                        <button id="load-more-btn" class="border border-news-border text-white font-bold text-[clamp(0.75rem,1.5vw,0.875rem)] tracking-[0.2em] px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,1.5vw,1rem)] uppercase hover:bg-news-surface hover:text-news-cta hover:border-news-cta rounded transition-colors w-full md:w-auto">
+                    <div class="p-6 bg-news-bg flex justify-center">
+                        <button id="load-more-btn" class="border border-news-border text-white font-bold text-xs lg:text-sm tracking-[0.2em] px-6 py-3 lg:px-8 lg:py-4 uppercase hover:bg-news-surface hover:text-news-cta hover:border-news-cta rounded transition-colors w-full md:w-auto">
                             Load More Articles
                         </button>
                     </div>
                 </section>
 
                 <!-- Prior Updates -->
-                <section class="bg-news-surface">
-                    <div class="p-[clamp(1.25rem,2.5vw,2rem)] border-y border-b border-news-border bg-news-surfaceAlt flex items-center gap-[clamp(0.5rem,1vw,1rem)]">
-                        <div class="w-[clamp(0.5rem,1vw,0.75rem)] h-[clamp(0.5rem,1vw,0.75rem)] bg-news-primary"></div>
-                        <h2 class="font-heading text-[clamp(1.75rem,3.5vw,2.5rem)] tracking-widest pt-1 leading-none text-white">OLDER STORIES</h2>
+                <section class="bg-news-surface relative">
+                    <div class="sticky top-16 lg:top-20 z-30 p-5 lg:p-8 border-y border-b border-news-border bg-news-surfaceAlt flex items-center gap-3">
+                        <div class="w-2 h-2 lg:w-3 lg:h-3 bg-news-primary"></div>
+                        <h2 class="font-heading text-3xl lg:text-4xl tracking-widest pt-1 leading-none text-white">OLDER STORIES</h2>
                     </div>
                     <div id="recent-grid" class="divide-y divide-news-border bg-news-bg">
                         <!-- Populated via JS -->
+                    </div>
+                    <div class="p-6 bg-news-bg flex justify-center">
+                        <button id="load-more-older-btn" class="border border-news-border text-white font-bold text-xs lg:text-sm tracking-[0.2em] px-6 py-3 lg:px-8 lg:py-4 uppercase hover:bg-news-surface hover:text-news-cta hover:border-news-cta rounded transition-colors w-full md:w-auto">
+                            Load More Articles
+                        </button>
                     </div>
                 </section>
 
             </div>
 
             <!-- Right Column: Sidebar Widgets -->
-            <div class="xl:col-span-4 bg-news-bg flex flex-col gap-[clamp(1.5rem,3vw,2rem)] p-[clamp(1.5rem,3vw,2rem)] border-l border-news-border">
+            <div class="xl:col-span-4 bg-news-bg flex flex-col gap-6 lg:gap-8 p-6 lg:p-8">
                 
                 <!-- City Newsroom -->
-                <section id="newsroom-section" class="hidden bg-news-surface border border-news-border rounded-[clamp(1rem,2vw,2rem)] overflow-hidden shadow-xl">
-                    <div class="p-[clamp(1rem,2vw,1.5rem)] border-b-2 border-news-accent bg-news-surfaceAlt flex items-center gap-[clamp(0.5rem,1vw,0.75rem)] relative">
-                        <div class="w-[clamp(0.4rem,0.8vw,0.5rem)] h-[clamp(0.4rem,0.8vw,0.5rem)] bg-news-accent"></div>
-                        <h2 class="font-heading text-[clamp(1.25rem,2.5vw,1.5rem)] tracking-widest pt-1 leading-none text-white">CITY HALL</h2>
+                <section id="newsroom-section" class="hidden bg-news-surface border border-news-border rounded-2xl overflow-hidden shadow-xl">
+                    <div class="p-4 lg:p-6 border-b-2 border-news-accent bg-news-surfaceAlt flex items-center gap-2 relative">
+                        <div class="w-2 h-2 bg-news-accent"></div>
+                        <h2 class="font-heading text-xl lg:text-2xl tracking-widest pt-1 leading-none text-white">CITY HALL</h2>
                     </div>
-                    <div class="relative p-[clamp(1.5rem,3vw,2rem)] text-center bg-news-surface">
+                    <div class="relative p-6 lg:p-8 text-center bg-news-surface">
                         <!-- Progress Bar -->
-                        <div class="absolute top-0 left-0 w-full h-[clamp(0.2rem,0.4vw,0.25rem)] bg-news-border">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-news-border">
                             <div id="slider-progress" class="h-full bg-news-cta w-0"></div>
                         </div>
 
-                        <div class="inline-block border border-news-border text-news-accent font-mono text-[clamp(0.5rem,1vw,0.65rem)] tracking-widest px-[clamp(0.4rem,0.8vw,0.5rem)] py-[clamp(0.2rem,0.4vw,0.25rem)] mb-[clamp(0.75rem,1.5vw,1rem)] uppercase mt-2">
+                        <div class="inline-block border border-news-border text-news-accent font-mono text-[10px] lg:text-xs tracking-widest px-2 py-1 mb-3 lg:mb-4 uppercase mt-2">
                             Official Press Release
                         </div>
-                        <h3 id="slider-title" class="font-heading text-[clamp(1.5rem,3vw,2rem)] text-white tracking-wide mb-[clamp(0.75rem,1.5vw,1rem)] cursor-pointer hover:text-news-cta transition-colors line-clamp-3 min-h-[clamp(5rem,10vw,6.75rem)] flex items-center justify-center"></h3>
-                        <p id="slider-date" class="font-mono text-[clamp(0.6rem,1.2vw,0.75rem)] text-news-muted uppercase"></p>
+                        <h3 id="slider-title" class="font-heading text-2xl lg:text-3xl text-white tracking-wide mb-3 lg:mb-4 cursor-pointer hover:text-news-cta transition-colors line-clamp-3 min-h-[5rem] lg:min-h-[7rem] flex items-center justify-center"></h3>
+                        <p id="slider-date" class="font-mono text-[10px] lg:text-xs text-news-muted uppercase"></p>
                         
                         <!-- Explicit Controls -->
                         <div class="absolute inset-y-0 left-2 flex items-center">
-                            <button id="slider-prev" class="bg-news-bg/80 border border-news-border text-news-muted hover:text-white p-[clamp(0.4rem,0.8vw,0.5rem)] rounded-full transition-colors">
-                                <i data-lucide="chevron-left" class="w-[clamp(1rem,2vw,1.25rem)] h-[clamp(1rem,2vw,1.25rem)]"></i>
+                            <button id="slider-prev" class="bg-news-bg/80 border border-news-border text-news-muted hover:text-white p-2 rounded-full transition-colors">
+                                <i data-lucide="chevron-left" class="w-4 h-4 lg:w-5 lg:h-5"></i>
                             </button>
                         </div>
                         <div class="absolute inset-y-0 right-2 flex items-center">
-                            <button id="slider-next" class="bg-news-bg/80 border border-news-border text-news-muted hover:text-white p-[clamp(0.4rem,0.8vw,0.5rem)] rounded-full transition-colors">
-                                <i data-lucide="chevron-right" class="w-[clamp(1rem,2vw,1.25rem)] h-[clamp(1rem,2vw,1.25rem)]"></i>
+                            <button id="slider-next" class="bg-news-bg/80 border border-news-border text-news-muted hover:text-white p-2 rounded-full transition-colors">
+                                <i data-lucide="chevron-right" class="w-4 h-4 lg:w-5 lg:h-5"></i>
                             </button>
                         </div>
                     </div>
                 </section>
 
                 <!-- Weather Terminal -->
-                <section class="bg-news-surface border border-news-border rounded-[clamp(1rem,2vw,2rem)] overflow-hidden shadow-xl">
-                    <div class="p-[clamp(1rem,2vw,1.5rem)] border-b border-news-border bg-news-surfaceAlt">
-                        <h3 class="font-heading text-[clamp(1.25rem,2.5vw,1.5rem)] text-white tracking-wide flex items-center justify-between">
-                            Local Weather <i data-lucide="cloud-sun" class="text-news-accent w-[clamp(1.25rem,2.5vw,1.5rem)] h-[clamp(1.25rem,2.5vw,1.5rem)]"></i>
+                <section class="bg-news-surface border border-news-border rounded-2xl overflow-hidden shadow-xl">
+                    <div class="p-4 lg:p-6 border-b border-news-border bg-news-surfaceAlt">
+                        <h3 class="font-heading text-xl lg:text-2xl text-white tracking-wide flex items-center justify-between">
+                            Local Weather <i data-lucide="cloud-sun" class="text-news-accent w-5 h-5 lg:w-6 lg:h-6"></i>
                         </h3>
                     </div>
                     
-                    <div class="p-[clamp(1rem,2vw,1.5rem)] space-y-[clamp(1rem,2vw,1.5rem)]">
+                    <div class="p-6 space-y-6">
                         <div class="flex items-end justify-between">
-                            <div class="flex items-start gap-[clamp(0.25rem,0.5vw,0.5rem)]">
-                                <span id="weather-temp" class="font-heading text-[clamp(3.5rem,6vw,4.5rem)] leading-none text-white tracking-wider">--°</span>
-                                <span class="font-mono text-[clamp(0.7rem,1.4vw,0.875rem)] text-news-muted mb-[clamp(0.1rem,0.2vw,0.25rem)]">C</span>
+                            <div class="flex items-start gap-2">
+                                <span id="weather-temp" class="font-heading text-6xl lg:text-7xl leading-none text-white tracking-wider">--°</span>
+                                <span class="font-mono text-sm text-news-muted mb-1">C</span>
                             </div>
                             <div class="text-right">
-                                <i id="weather-main-icon" data-lucide="cloud" class="w-[clamp(1.5rem,3vw,2rem)] h-[clamp(1.5rem,3vw,2rem)] text-news-accent ml-auto mb-[clamp(0.25rem,0.5vw,0.5rem)]"></i>
-                                <p id="weather-desc" class="font-mono text-[clamp(0.6rem,1.2vw,0.75rem)] text-white uppercase tracking-widest">--</p>
+                                <i id="weather-main-icon" data-lucide="cloud" class="w-6 h-6 lg:w-8 lg:h-8 text-news-accent ml-auto mb-2"></i>
+                                <p id="weather-desc" class="font-mono text-xs text-white uppercase tracking-widest">--</p>
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-3 gap-[clamp(0.25rem,0.5vw,0.5rem)] border border-news-border bg-news-surfaceAlt p-[clamp(0.75rem,1.5vw,1rem)] rounded-xl">
+                        <div class="grid grid-cols-3 gap-2 border border-news-border bg-news-surfaceAlt p-3 lg:p-4 rounded-xl">
                             <div class="text-center">
-                                <p class="font-mono text-[clamp(0.5rem,1vw,0.6rem)] text-news-muted uppercase mb-[clamp(0.1rem,0.2vw,0.25rem)]">WIND</p>
-                                <p id="weather-wind" class="font-mono text-[clamp(0.7rem,1.4vw,0.875rem)] text-white">--</p>
+                                <p class="font-mono text-[10px] text-news-muted uppercase mb-1">WIND</p>
+                                <p id="weather-wind" class="font-mono text-xs lg:text-sm text-white">--</p>
                             </div>
                             <div class="text-center border-x border-news-border">
-                                <p class="font-mono text-[clamp(0.5rem,1vw,0.6rem)] text-news-muted uppercase mb-[clamp(0.1rem,0.2vw,0.25rem)]">HUM</p>
-                                <p id="weather-hum" class="font-mono text-[clamp(0.7rem,1.4vw,0.875rem)] text-white">--</p>
+                                <p class="font-mono text-[10px] text-news-muted uppercase mb-1">HUM</p>
+                                <p id="weather-hum" class="font-mono text-xs lg:text-sm text-white">--</p>
                             </div>
                             <div class="text-center">
-                                <p class="font-mono text-[clamp(0.5rem,1vw,0.6rem)] text-news-muted uppercase mb-[clamp(0.1rem,0.2vw,0.25rem)]">DIR</p>
-                                <p id="weather-dir" class="font-mono text-[clamp(0.7rem,1.4vw,0.875rem)] text-white">--</p>
+                                <p class="font-mono text-[10px] text-news-muted uppercase mb-1">DIR</p>
+                                <p id="weather-dir" class="font-mono text-xs lg:text-sm text-white">--</p>
                             </div>
                         </div>
 
                         <div class="border border-news-border bg-news-surfaceAlt rounded-xl overflow-hidden">
-                            <div class="p-[clamp(0.4rem,0.8vw,0.5rem)] border-b border-news-border bg-news-bg text-center font-mono text-[clamp(0.5rem,1vw,0.6rem)] text-news-muted uppercase tracking-widest">
+                            <div class="p-2 border-b border-news-border bg-news-bg text-center font-mono text-[10px] text-news-muted uppercase tracking-widest">
                                 5-Day Projection
                             </div>
                             <div id="forecast-row" class="grid grid-cols-5 divide-x divide-news-border">
@@ -265,31 +270,31 @@
     </main>
 
     <!-- Source Archive Overlay -->
-    <div id="source-view" class="hidden flex-grow pt-[clamp(4rem,6vw,5rem)] max-w-[1600px] mx-auto w-full border-x border-news-border bg-news-bg">
-        <div class="p-[clamp(1.5rem,3vw,3rem)] md:p-[clamp(2rem,4vw,4rem)] border-b-2 border-news-accent bg-news-surface flex flex-col md:flex-row items-start md:items-center justify-between gap-[clamp(1.5rem,3vw,2rem)] crosshair crosshair-tl">
-            <div class="flex items-center gap-[clamp(1rem,2vw,1.5rem)]">
-                <div class="bg-news-surfaceAlt p-[clamp(0.75rem,1.5vw,1rem)] border border-news-border rounded-xl">
-                    <img id="source-view-logo" src="" class="w-[clamp(3rem,6vw,4rem)] h-[clamp(3rem,6vw,4rem)] object-contain" alt="Source Logo">
+    <div id="source-view" class="hidden flex-grow pt-16 lg:pt-20 max-w-[1600px] mx-auto w-full border-x border-news-border bg-news-bg">
+        <div class="p-6 md:p-12 border-b-2 border-news-accent bg-news-surface flex flex-col md:flex-row items-start md:items-center justify-between gap-6 crosshair crosshair-tl">
+            <div class="flex items-center gap-4 lg:gap-6">
+                <div class="bg-news-surfaceAlt p-3 lg:p-4 border border-news-border rounded-xl">
+                    <img id="source-view-logo" src="" class="w-12 h-12 lg:w-16 lg:h-16 object-contain" alt="Source Logo">
                 </div>
                 <div>
-                    <span class="text-news-accent font-mono text-[clamp(0.6rem,1.2vw,0.75rem)] font-bold tracking-[0.2em] uppercase block mb-[clamp(0.25rem,0.5vw,0.5rem)]">Source Feed</span>
-                    <h2 id="source-view-title" class="font-heading text-[clamp(2rem,5vw,4rem)] tracking-widest leading-none text-white"></h2>
-                    <p id="source-view-count" class="font-mono text-news-muted text-[clamp(0.75rem,1.5vw,0.875rem)] mt-[clamp(0.25rem,0.5vw,0.5rem)] uppercase"></p>
+                    <span class="text-news-accent font-mono text-xs font-bold tracking-[0.2em] uppercase block mb-1">Source Feed</span>
+                    <h2 id="source-view-title" class="font-heading text-4xl lg:text-5xl tracking-widest leading-none text-white"></h2>
+                    <p id="source-view-count" class="font-mono text-news-muted text-sm mt-2 uppercase"></p>
                 </div>
             </div>
-            <button onclick="closeSourceView()" class="border border-news-border text-white font-bold text-[clamp(0.75rem,1.5vw,0.875rem)] tracking-[0.2em] px-[clamp(1.5rem,3vw,2rem)] py-[clamp(0.75rem,1.5vw,1rem)] rounded uppercase hover:bg-news-surfaceAlt transition-colors flex items-center gap-2">
-                <i data-lucide="corner-down-left" class="w-[clamp(1rem,2vw,1.25rem)] h-[clamp(1rem,2vw,1.25rem)]"></i> Back to Home
+            <button onclick="closeSourceView()" class="border border-news-border text-white font-bold text-xs lg:text-sm tracking-[0.2em] px-6 py-3 lg:px-8 lg:py-4 rounded uppercase hover:bg-news-surfaceAlt transition-colors flex items-center gap-2">
+                <i data-lucide="corner-down-left" class="w-4 h-4 lg:w-5 lg:h-5"></i> Back to Home
             </button>
         </div>
         <div id="source-grid" class="divide-y divide-news-border bg-news-bg"></div>
     </div>
 
     <!-- Footer -->
-    <footer class="max-w-[1600px] mx-auto w-full border-x border-b border-news-border bg-news-surfaceAlt py-[clamp(1.5rem,3vw,2rem)] px-[clamp(1rem,2vw,1.5rem)] md:px-[clamp(2rem,4vw,3rem)] flex flex-col md:flex-row justify-between items-center gap-[clamp(0.75rem,1.5vw,1rem)] mt-auto">
-        <div class="font-heading text-[clamp(1.5rem,3vw,2.25rem)] tracking-widest text-news-muted flex items-center gap-[clamp(0.5rem,1vw,0.75rem)]">
-            LONDON NEWS <span class="text-[clamp(0.75rem,1.5vw,0.875rem)] font-mono tracking-normal ml-[clamp(0.25rem,0.5vw,0.5rem)] text-news-border">|</span> <span class="text-[clamp(0.75rem,1.5vw,0.875rem)] font-sans tracking-normal text-news-muted">© 2026</span>
+    <footer class="max-w-[1600px] mx-auto w-full border-x border-b border-news-border bg-news-surfaceAlt py-8 px-6 lg:px-12 flex flex-col md:flex-row justify-between items-center gap-4 mt-auto">
+        <div class="font-heading text-2xl lg:text-3xl tracking-widest text-news-muted flex items-center gap-2">
+            LONDON NEWS <span class="text-sm font-mono tracking-normal ml-2 text-news-border">|</span> <span class="text-sm font-sans tracking-normal text-news-muted">© 2026</span>
         </div>
-        <div class="text-[clamp(0.6rem,1.2vw,0.75rem)] font-mono text-news-muted text-center md:text-right leading-relaxed">
+        <div class="text-xs font-mono text-news-muted text-center md:text-right leading-relaxed">
             YOUR TRUSTED LOCAL NEWS SOURCE.<br>
             UPDATED 24/7.
         </div>
@@ -300,6 +305,7 @@
         let feedSources = [];
         let colIdx = 0;
         let visibleCount = 8;
+        let visibleOlderCount = 4;
         const RSS_PROXY = 'https://rss-proxy.davidbusch-02.workers.dev/local';
 
         const decodeEntities = (html) => {
@@ -335,39 +341,68 @@
             return null;
         };
 
+        const getFallbackGraphic = (title) => {
+            const gradients = [
+                'from-[#265126] to-[#131A1C]',
+                'from-[#28B4EA] to-[#131A1C]',
+                'from-[#488795] to-[#131A1C]',
+                'from-[#193619] to-[#131A1C]'
+            ];
+            const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
+            
+            const t = title.toLowerCase();
+            let icon = 'newspaper';
+            if (t.match(/police|crash|crime|court|arrest|fire/)) icon = 'shield-alert';
+            else if (t.match(/council|city|mayor|tax|housing/)) icon = 'building-2';
+            else if (t.match(/sports|hockey|game|knights/)) icon = 'trophy';
+            else if (t.match(/weather|snow|rain|storm/)) icon = 'cloud-lightning';
+            else if (t.match(/business|economy|jobs/)) icon = 'briefcase';
+
+            return { gradient: randomGradient, icon };
+        };
+
         // Create Database Row Card
         const createNewsRow = (article) => {
             const logo = getSourceLogo(article.link, article.title);
-            const imgUrl = article.thumbnail || 'https://images.unsplash.com/photo-1544365558-35aa4afcf11f?auto=format&fit=crop&q=80&w=800';
             const domain = article.link.replace(/^https?:\/\//, '').split('/')[0];
             const cleanTitle = decodeEntities(article.title);
 
+            let mediaContent = '';
+            if (article.thumbnail) {
+                mediaContent = `<img src="${article.thumbnail}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" alt="Thumbnail">`;
+            } else {
+                const fallback = getFallbackGraphic(cleanTitle);
+                mediaContent = `<div class="w-full h-full bg-gradient-to-br ${fallback.gradient} flex items-center justify-center opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
+                    <i data-lucide="${fallback.icon}" class="w-12 h-12 text-white/40 group-hover:text-white/70 transition-colors"></i>
+                </div>`;
+            }
+
             const row = document.createElement('div');
-            row.className = 'article-card flex flex-col md:flex-row p-[clamp(1.25rem,2.5vw,2rem)] hover:bg-news-surface transition-colors cursor-pointer gap-[clamp(1rem,2vw,1.5rem)] group';
+            row.className = 'article-card flex flex-col md:flex-row p-6 lg:p-8 hover:bg-news-surface transition-colors cursor-pointer gap-6 group';
             row.onclick = () => window.open(article.link, '_blank');
             
             row.innerHTML = `
-                <div class="w-full md:w-[clamp(12rem,24vw,14rem)] aspect-video shrink-0 border border-news-border overflow-hidden relative rounded">
-                    <img src="${imgUrl}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" alt="Thumbnail">
+                <div class="w-full md:w-48 lg:w-56 aspect-video shrink-0 border border-news-border overflow-hidden relative rounded">
+                    ${mediaContent}
                 </div>
                 <div class="flex-grow flex flex-col justify-center">
-                    <div class="flex items-center gap-[clamp(0.5rem,1vw,1rem)] text-[clamp(0.6rem,1.2vw,0.75rem)] font-mono text-news-muted uppercase mb-[clamp(0.5rem,1vw,0.75rem)]">
+                    <div class="flex items-center gap-3 text-xs lg:text-sm font-mono text-news-muted uppercase mb-2">
                         <span class="text-white">${formatDate(article.pubDate)}</span>
                         <span>//</span>
-                        <span class="flex items-center gap-[clamp(0.25rem,0.5vw,0.5rem)]">
-                            ${logo ? `<img src="${logo}" class="h-[clamp(0.75rem,1.5vw,1rem)] w-auto opacity-90 rounded-sm" alt="">` : ''}
+                        <span class="flex items-center gap-2">
+                            ${logo ? `<img src="${logo}" class="h-4 w-auto opacity-90 rounded-sm" alt="">` : ''}
                             ${domain}
                         </span>
                     </div>
-                    <h3 class="font-heading text-[clamp(1.5rem,3vw,2rem)] text-white tracking-wide group-hover:text-news-cta transition-colors leading-tight mb-[clamp(0.25rem,0.5vw,0.5rem)] line-clamp-2">
+                    <h3 class="font-heading text-2xl lg:text-3xl text-white tracking-wide group-hover:text-news-cta transition-colors leading-tight mb-2 line-clamp-2">
                         ${cleanTitle}
                     </h3>
-                    <p class="text-news-muted font-sans text-[clamp(0.875rem,1.5vw,1rem)] line-clamp-2 mt-auto">
+                    <p class="text-news-muted font-sans text-sm lg:text-base line-clamp-2 mt-auto">
                         ${stripHtml(article.description || "")}
                     </p>
                 </div>
-                <div class="hidden md:flex items-center pl-[clamp(1rem,2vw,1.5rem)]">
-                    <span class="dl-arrow text-[clamp(1.5rem,3vw,2rem)] font-light text-news-muted group-hover:text-news-cta">&rarr;</span>
+                <div class="hidden md:flex items-center pl-4 lg:pl-6">
+                    <span class="dl-arrow text-2xl lg:text-3xl font-light text-news-muted group-hover:text-news-cta">&rarr;</span>
                 </div>
             `;
             return row;
@@ -416,7 +451,7 @@
             const recentGrid = document.getElementById('recent-grid');
             if (recentGrid) {
                 recentGrid.innerHTML = '';
-                olderArticles.slice(0, 4).forEach(a => recentGrid.appendChild(createNewsRow(a)));
+                olderArticles.slice(0, visibleOlderCount).forEach(a => recentGrid.appendChild(createNewsRow(a)));
             }
 
             // Carousel Logic
@@ -529,10 +564,10 @@
                         const day = new Date(data.daily.time[i]).toLocaleDateString("en-US", { weekday: "short" });
                         const code = data.daily.weathercode[i];
                         forecastRow.innerHTML += `
-                            <div class="flex flex-col items-center p-[clamp(0.5rem,1vw,0.75rem)]">
-                                <span class="font-mono text-[clamp(0.5rem,1vw,0.6rem)] text-news-muted uppercase mb-[clamp(0.1rem,0.2vw,0.25rem)]">${day}</span>
-                                <i data-lucide="${iconMap[code] || 'cloud'}" class="w-[clamp(0.75rem,1.5vw,1rem)] h-[clamp(0.75rem,1.5vw,1rem)] text-news-accent mb-[clamp(0.1rem,0.2vw,0.25rem)]"></i>
-                                <span class="font-mono text-[clamp(0.6rem,1.2vw,0.75rem)] text-white">${Math.round(data.daily.temperature_2m_max[i])}°</span>
+                            <div class="flex flex-col items-center p-2 lg:p-3">
+                                <span class="font-mono text-[10px] text-news-muted uppercase mb-1">${day}</span>
+                                <i data-lucide="${iconMap[code] || 'cloud'}" class="w-4 h-4 text-news-accent mb-1"></i>
+                                <span class="font-mono text-xs lg:text-sm text-white">${Math.round(data.daily.temperature_2m_max[i])}°</span>
                             </div>
                         `;
                     }
@@ -554,16 +589,16 @@
                 feedSources.forEach((s, idx) => {
                     if (nav && idx < 6) {
                         const btn = document.createElement('a');
-                        btn.className = 'flex-1 min-w-[clamp(6rem,12vw,8rem)] flex items-center justify-center gap-[clamp(0.25rem,0.5vw,0.5rem)] text-[clamp(0.6rem,1.2vw,0.75rem)] font-mono tracking-[0.15em] text-news-muted hover:text-white hover:bg-news-surface transition-colors border-r border-news-border h-full cursor-pointer uppercase group';
-                        btn.innerHTML = `<img src="${s.logo}" class="w-[clamp(1rem,2vw,1.25rem)] h-[clamp(1rem,2vw,1.25rem)] object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all rounded-sm" alt="${s.name}"><span class="truncate">${s.name.split(' ')[0]}</span>`;
+                        btn.className = 'flex-1 min-w-[100px] lg:min-w-[120px] flex items-center justify-center gap-2 text-xs font-mono tracking-[0.15em] text-news-muted hover:text-white hover:bg-news-surface transition-colors border-r border-news-border h-full cursor-pointer uppercase group';
+                        btn.innerHTML = `<img src="${s.logo}" class="w-4 h-4 lg:w-5 lg:h-5 object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all rounded-sm" alt="${s.name}"><span class="truncate">${s.name.split(' ')[0]}</span>`;
                         btn.onclick = () => openSourceView(s);
                         nav.appendChild(btn);
                     }
 
                     if (mobileGrid) {
                         const mBtn = document.createElement('button');
-                        mBtn.className = 'flex flex-col items-center justify-center gap-[clamp(0.5rem,1vw,0.75rem)] bg-news-surface border border-news-border p-[clamp(0.75rem,1.5vw,1rem)] rounded-xl hover:border-news-accent transition-colors text-center';
-                        mBtn.innerHTML = `<img src="${s.logo}" class="w-[clamp(1.5rem,3vw,2rem)] h-[clamp(1.5rem,3vw,2rem)] object-contain rounded-sm" alt=""><span class="font-mono text-[clamp(0.5rem,1vw,0.6rem)] font-bold text-news-muted uppercase leading-tight">${s.name}</span>`;
+                        mBtn.className = 'flex flex-col items-center justify-center gap-2 lg:gap-3 bg-news-surface border border-news-border p-3 lg:p-4 rounded-xl hover:border-news-accent transition-colors text-center';
+                        mBtn.innerHTML = `<img src="${s.logo}" class="w-6 h-6 lg:w-8 h-8 object-contain rounded-sm" alt=""><span class="font-mono text-[10px] lg:text-xs font-bold text-news-muted uppercase leading-tight">${s.name}</span>`;
                         mBtn.onclick = () => { openSourceView(s); document.getElementById('mobile-menu').classList.add('translate-x-full'); };
                         mobileGrid.appendChild(mBtn);
                     }
@@ -582,6 +617,14 @@
                 if (loadBtn) {
                     loadBtn.onclick = () => {
                         visibleCount += 8;
+                        renderMain();
+                    };
+                }
+
+                const loadOlderBtn = document.getElementById('load-more-older-btn');
+                if (loadOlderBtn) {
+                    loadOlderBtn.onclick = () => {
+                        visibleOlderCount += 8;
                         renderMain();
                     };
                 }
