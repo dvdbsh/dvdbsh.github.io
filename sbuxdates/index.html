@@ -1,58 +1,224 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-	<title>Starbucks Dates</title>
-	<link rel="stylesheet" type="text/css" href="main.css">
-	<link rel="shortcut icon" type="image/png" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689886612/icon_ejcwrp.png"/>
-	<link rel="apple-touch-icon" type="image/png" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689886612/icon_ejcwrp.png"/>
-	<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Starbucks Dates</title>
+    <link rel="shortcut icon" type="image/png" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689886612/icon_ejcwrp.png"/>
+    <link rel="apple-touch-icon" type="image/png" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689886612/icon_ejcwrp.png"/>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --sb-dark: #1e3932;
+            --sb-light: #d4e9e2;
+            --white: #ffffff;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--sb-light);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: var(--white);
+            padding: 10px;
+            overflow: hidden; /* Prevent body scroll */
+        }
+
+        #main {
+            width: 100%;
+            max-width: 400px;
+            max-height: 98vh; /* Ensure it fits within viewport height */
+            background-color: var(--sb-dark);
+            border-radius: 28px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        #header {
+            padding: 5vh 20px 2vh; /* Use vh for dynamic scaling */
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        #emoji {
+            font-size: clamp(32px, 8vh, 48px);
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        #greeting {
+            font-size: clamp(20px, 4vh, 26px);
+            font-weight: 300;
+            margin-bottom: 4px;
+            letter-spacing: -0.5px;
+        }
+
+        #today {
+            font-size: clamp(11px, 2vh, 14px);
+            font-weight: 400;
+            opacity: 0.7;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .divider {
+            height: 1px;
+            background: rgba(255,255,255,0.08);
+            margin: 0 25px;
+            flex-shrink: 0;
+        }
+
+        #list-container {
+            padding: 10px 25px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .section-label {
+            font-size: 10px;
+            font-weight: 600;
+            color: rgba(212, 233, 226, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 10px 0 5px;
+            flex-shrink: 0;
+        }
+
+        .date-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: clamp(6px, 1.2vh, 14px) 0;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .date-row:last-child {
+            border-bottom: none;
+        }
+
+        .label {
+            font-weight: 600;
+            font-size: clamp(12px, 2vh, 14px);
+            color: var(--sb-light);
+        }
+
+        .value {
+            font-weight: 400;
+            font-size: clamp(12px, 2vh, 15px);
+            text-align: right;
+            font-variant-numeric: tabular-nums;
+        }
+
+        @media (max-width: 400px) {
+            body { padding: 0; }
+            #main { border-radius: 0; max-height: 100vh; height: 100vh; }
+        }
+    </style>
 </head>
-<body onLoad="renderToday();">
-	<div id="wrapper">
-		<div id="main">
-			<div class="inner">
-				<div id="container01">
-					<div id="greeting"></div>
-					<div id="today"></div>
-					<table id="t1">
-						<tbody>
-							<tr>
-								<td style="font-weight: 600">2 days</td>
-								<td style="text-align: right" id="days2"></td>
-							</tr>
-							<tr>
-								<td style="font-weight: 600">3 days</td>
-								<td style="text-align: right" id="days3"></td>
-							</tr>
-							<tr>
-								<td style="font-weight: 600">5 days</td>
-								<td style="text-align: right" id="days5"></td>
-							</tr>
-							<tr>
-								<td style="font-weight: 600">7 days</td>
-								<td style="text-align: right" id="days7"></td>
-							</tr>
-							<tr>
-								<td style="font-weight: 600">12 days</td>
-								<td style="text-align: right" id="days12"></td>
-							</tr>
-							<tr>
-								<td style="font-weight: 600">14 days</td>
-								<td style="text-align: right" id="days14"></td>
-							</tr>
-							<tr>
-								<td style="font-weight: 600">30 days</td>
-								<td style="text-align: right" id="days30"></td>
-							</tr>
-						</tbody>
-					</table>
-				</div>
-			</div>
-		</div>
-	</div>
-	<script type="text/javascript" src="main.js"></script>
+<body>
+
+    <div id="main">
+        <div id="header">
+            <span id="emoji"></span>
+            <div id="greeting"></div>
+            <div id="today"></div>
+        </div>
+        
+        <div class="divider"></div>
+
+        <div id="list-container">
+            <div class="section-label">Hourly</div>
+            <div class="date-row"><span class="label">12 Hours</span><span class="value" id="hrs12"></span></div>
+            <div class="date-row"><span class="label">24 Hours</span><span class="value" id="hrs24"></span></div>
+            <div class="date-row"><span class="label">48 Hours</span><span class="value" id="hrs48"></span></div>
+            <div class="date-row"><span class="label">72 Hours</span><span class="value" id="hrs72"></span></div>
+            
+            <div class="section-label">Daily</div>
+            <div class="date-row"><span class="label">2 Days</span><span class="value" id="days2"></span></div>
+            <div class="date-row"><span class="label">3 Days</span><span class="value" id="days3"></span></div>
+            <div class="date-row"><span class="label">5 Days</span><span class="value" id="days5"></span></div>
+            <div class="date-row"><span class="label">7 Days</span><span class="value" id="days7"></span></div>
+            <div class="date-row"><span class="label">14 Days</span><span class="value" id="days14"></span></div>
+            <div class="date-row"><span class="label">30 Days</span><span class="value" id="days30"></span></div>
+        </div>
+    </div>
+
+    <script>
+        const daysShort = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+        Date.prototype.addHours = function(h) {
+            return new Date(this.getTime() + (h * 60 * 60 * 1000));
+        }
+
+        Date.prototype.addDays = function(d) {
+            return new Date(this.getTime() + (d * 24 * 60 * 60 * 1000));
+        }
+
+        function formatWithMinutes(date) {
+            let hours = date.getHours();
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            const ampm = hours >= 12 ? 'pm' : 'am';
+            hours = hours % 12 || 12;
+            return `${daysShort[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()} @ ${hours}:${minutes}${ampm}`;
+        }
+
+        function formatDateOnly(date) {
+            return `${daysShort[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()}`;
+        }
+
+        function renderToday() {
+            const now = new Date();
+            const h = now.getHours();
+            
+            let emoji, greet;
+            if (h >= 4 && h < 12) { emoji = "☀️"; greet = "Good Morning"; }
+            else if (h >= 12 && h < 17) { emoji = "☕️"; greet = "Good Afternoon"; }
+            else if (h >= 17 && h < 22) { emoji = "🌙"; greet = "Good Evening"; }
+            else { emoji = "😴"; greet = "Night Owl"; }
+
+            document.getElementById("emoji").textContent = emoji;
+            document.getElementById("greeting").textContent = greet;
+
+            const daysLong = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+            const monthsLong = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+            
+            document.getElementById("today").textContent = `${daysLong[now.getDay()]}, ${monthsLong[now.getMonth()]} ${now.getDate()}`;
+
+            [12, 24, 48, 72].forEach(num => {
+                const el = document.getElementById(`hrs${num}`);
+                if(el) el.textContent = formatWithMinutes(now.addHours(num));
+            });
+
+            [2, 3, 5, 7, 14, 30].forEach(num => {
+                const el = document.getElementById(`days${num}`);
+                if(el) el.textContent = formatDateOnly(now.addDays(num));
+            });
+        }
+
+        window.onload = renderToday;
+    </script>
 </body>
 </html>
