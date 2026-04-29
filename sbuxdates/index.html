@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Starbucks Dates</title>
     <link rel="shortcut icon" type="image/png" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689886612/icon_ejcwrp.png"/>
     <link rel="apple-touch-icon" type="image/png" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689886612/icon_ejcwrp.png"/>
@@ -29,16 +29,19 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            /* Use svh to account for mobile URL bars */
             height: 100vh;
+            height: 100svh; 
             color: var(--white);
             padding: 10px;
-            overflow: hidden; /* Prevent body scroll */
+            overflow: hidden;
         }
 
         #main {
             width: 100%;
             max-width: 400px;
-            max-height: 98vh; /* Ensure it fits within viewport height */
+            /* Ensure it fits within the small viewport */
+            max-height: 96svh;
             background-color: var(--sb-dark);
             border-radius: 28px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.2);
@@ -54,26 +57,26 @@
         }
 
         #header {
-            padding: 5vh 20px 2vh; /* Use vh for dynamic scaling */
+            padding: 4svh 20px 2svh;
             text-align: center;
             flex-shrink: 0;
         }
 
         #emoji {
-            font-size: clamp(32px, 8vh, 48px);
+            font-size: clamp(32px, 7svh, 48px);
             margin-bottom: 8px;
             display: block;
         }
 
         #greeting {
-            font-size: clamp(20px, 4vh, 26px);
+            font-size: clamp(20px, 3.5svh, 26px);
             font-weight: 300;
             margin-bottom: 4px;
             letter-spacing: -0.5px;
         }
 
         #today {
-            font-size: clamp(11px, 2vh, 14px);
+            font-size: clamp(11px, 1.8svh, 14px);
             font-weight: 400;
             opacity: 0.7;
             text-transform: uppercase;
@@ -102,7 +105,7 @@
             color: rgba(212, 233, 226, 0.5);
             text-transform: uppercase;
             letter-spacing: 2px;
-            margin: 10px 0 5px;
+            margin: 8px 0 4px;
             flex-shrink: 0;
         }
 
@@ -110,7 +113,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: clamp(6px, 1.2vh, 14px) 0;
+            padding: clamp(5px, 1.1svh, 12px) 0;
             border-bottom: 1px solid rgba(255,255,255,0.04);
         }
 
@@ -120,20 +123,24 @@
 
         .label {
             font-weight: 600;
-            font-size: clamp(12px, 2vh, 14px);
+            font-size: clamp(12px, 1.8svh, 14px);
             color: var(--sb-light);
         }
 
         .value {
             font-weight: 400;
-            font-size: clamp(12px, 2vh, 15px);
+            font-size: clamp(12px, 1.8svh, 15px);
             text-align: right;
             font-variant-numeric: tabular-nums;
         }
 
         @media (max-width: 400px) {
             body { padding: 0; }
-            #main { border-radius: 0; max-height: 100vh; height: 100vh; }
+            #main { 
+                border-radius: 0; 
+                max-height: 100svh; 
+                height: 100svh; 
+            }
         }
     </style>
 </head>
