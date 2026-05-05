@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Text Editor</title>
+    <style>
+        @font-face {
+            font-family: 'Lander Grande';
+            src: url('/fonts/Lander/LanderGrande-Regular.otf') format('opentype');
+        }
+        @font-face {
+            font-family: 'Lander Grande';
+            font-weight: bold;
+            src: url('/fonts/Lander/LanderGrande-Bold.otf') format('opentype');
+        }
+        @font-face {
+            font-family: 'Lander Grande';
+            font-style: italic;
+            src: url('/fonts/Lander/LanderGrande-Italic.otf') format('opentype');
+        }
+        @font-face {
+            font-family: 'Lander Tall';
+            src: url('/fonts/Lander/LanderTall-Regular.otf') format('opentype');
+        }
+        @font-face {
+            font-family: 'Lander Tall';
+            font-weight: bold;
+            src: url('/fonts/Lander/LanderTall-Bold.otf') format('opentype');
+        }
+        @font-face {
+            font-family: 'Lander Tall';
+            font-style: italic;
+            src: url('/fonts/Lander/LanderTall-Italic.otf') format('opentype');
+        }
+        @font-face {
+            font-family: 'Pike';
+            src: url('/fonts/Pike/Pike-Regular.otf') format('opentype');
+        }
+        @font-face {
+            font-family: 'Pike';
+            font-weight: bold;
+            src: url('/fonts/Pike/Pike-Bold.otf') format('opentype');
+        }
+        @font-face {
+            font-family: 'Sodo Sans';
+            src: url('/fonts/Sodo Sans/SoDoSans-Regular.otf') format('opentype');
+        }
+        @font-face {
+            font-family: 'Sodo Sans';
+            font-weight: bold;
+            src: url('/fonts/Sodo Sans/SoDoSans-Bold.otf') format('opentype');
+        }
+        @font-face {
+            font-family: 'Sodo Sans';
+            font-style: italic;
+            src: url('/fonts/Sodo Sans/SoDoSans-Italic.otf') format('opentype');
+        }
+
+        * { box-sizing: border-box; }
+        html, body { margin: 0; padding: 0; height: 100%; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #ddd;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .title-input {
+            font-size: 20px;
+            font-weight: 500;
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            padding: 4px 0;
+        }
+
+        .toolbar {
+            background: white;
+            border-bottom: 1px solid #ddd;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        select, button {
+            padding: 6px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background: white;
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        button:hover {
+            background: #f0f0f0;
+            border-color: #999;
+        }
+
+        button.active {
+            background: #333;
+            color: white;
+            border-color: #333;
+        }
+
+        select {
+            min-width: 120px;
+        }
+
+        .separator {
+            width: 1px;
+            height: 20px;
+            background: #ddd;
+        }
+
+        .editor-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .editor {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .canvas {
+            flex: 1;
+            background: white;
+            overflow: auto;
+            padding: 40px;
+        }
+
+        .page {
+            width: 8.5in;
+            height: 11in;
+            background: white;
+            margin: 0 auto;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 0.5in;
+            position: relative;
+            outline: 1px solid #ddd;
+        }
+
+        .text-area {
+            width: 100%;
+            height: 100%;
+            border: none;
+            outline: none;
+            font-size: 16px;
+            font-family: 'Lander Grande', serif;
+            line-height: 1.6;
+            resize: none;
+            padding: 0;
+            color: #333;
+        }
+
+        .status-bar {
+            background: white;
+            border-top: 1px solid #ddd;
+            padding: 8px 16px;
+            font-size: 12px;
+            color: #999;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        @media print {
+            .header, .toolbar, .status-bar {
+                display: none !important;
+            }
+            .canvas {
+                background: white;
+                padding: 0;
+            }
+            .page {
+                width: 8.5in;
+                height: 11in;
+                margin: 0;
+                box-shadow: none;
+                outline: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <input type="text" class="title-input" id="titleInput" placeholder="Untitled Document" value="Untitled Document">
+    </div>
+
+    <div class="toolbar">
+        <select id="fontFamily" onchange="applyFont()">
+            <option value="'Lander Grande', serif">Lander Grande</option>
+            <option value="'Lander Tall', serif">Lander Tall</option>
+            <option value="'Pike', monospace">Pike</option>
+            <option value="'Sodo Sans', sans-serif">Sodo Sans</option>
+            <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">System</option>
+        </select>
+
+        <select id="fontSize" onchange="applyFontSize()">
+            <option value="12">12px</option>
+            <option value="14">14px</option>
+            <option value="16" selected>16px</option>
+            <option value="18">18px</option>
+            <option value="20">20px</option>
+            <option value="24">24px</option>
+            <option value="28">28px</option>
+            <option value="32">32px</option>
+            <option value="36">36px</option>
+            <option value="48">48px</option>
+            <option value="72">72px</option>
+        </select>
+
+        <div class="separator"></div>
+
+        <button id="boldBtn" onclick="toggleBold()" title="Bold (Ctrl+B)"><strong>B</strong></button>
+        <button id="italicBtn" onclick="toggleItalic()" title="Italic (Ctrl+I)"><em>I</em></button>
+
+        <div class="separator"></div>
+
+        <label title="Text color">
+            <input type="color" id="colorPicker" value="#000000" onchange="applyColor()">
+        </label>
+
+        <div class="separator"></div>
+
+        <button onclick="saveDocument()" title="Save (Ctrl+S)">💾 Save</button>
+        <button onclick="loadDocument()" title="Load">📂 Load</button>
+        <button onclick="window.print()" title="Print (Ctrl+P)">🖨 Print</button>
+    </div>
+
+    <div class="editor-container">
+        <div class="editor">
+            <div class="canvas">
+                <div class="page">
+                    <textarea class="text-area" id="textArea" placeholder="Start typing..."></textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <span id="wordCount">0 words</span>
+        <span id="charCount">0 characters</span>
+    </div>
+
+    <input type="file" id="loadFile" accept=".txt,.json">
+
+    <script>
+        const textArea = document.getElementById('textArea');
+        const titleInput = document.getElementById('titleInput');
+        const fontFamily = document.getElementById('fontFamily');
+        const fontSize = document.getElementById('fontSize');
+        const boldBtn = document.getElementById('boldBtn');
+        const italicBtn = document.getElementById('italicBtn');
+        const colorPicker = document.getElementById('colorPicker');
+        const wordCount = document.getElementById('wordCount');
+        const charCount = document.getElementById('charCount');
+
+        let isBold = false;
+        let isItalic = false;
+
+        // Auto-save to localStorage
+        textArea.addEventListener('input', () => {
+            localStorage.setItem('editor_content', textArea.value);
+            updateStats();
+        });
+
+        titleInput.addEventListener('change', () => {
+            localStorage.setItem('editor_title', titleInput.value);
+        });
+
+        fontFamily.addEventListener('change', () => {
+            localStorage.setItem('editor_font', fontFamily.value);
+        });
+
+        fontSize.addEventListener('change', () => {
+            localStorage.setItem('editor_size', fontSize.value);
+        });
+
+        function applyFont() {
+            textArea.style.fontFamily = fontFamily.value;
+        }
+
+        function applyFontSize() {
+            textArea.style.fontSize = fontSize.value + 'px';
+        }
+
+        function applyColor() {
+            textArea.style.color = colorPicker.value;
+            localStorage.setItem('editor_color', colorPicker.value);
+        }
+
+        function toggleBold() {
+            isBold = !isBold;
+            textArea.style.fontWeight = isBold ? 'bold' : 'normal';
+            boldBtn.classList.toggle('active');
+        }
+
+        function toggleItalic() {
+            isItalic = !isItalic;
+            textArea.style.fontStyle = isItalic ? 'italic' : 'normal';
+            italicBtn.classList.toggle('active');
+        }
+
+        function updateStats() {
+            const text = textArea.value;
+            const words = text.trim().split(/\s+/).filter(w => w).length;
+            const chars = text.length;
+            wordCount.textContent = words + ' words';
+            charCount.textContent = chars + ' characters';
+        }
+
+        function saveDocument() {
+            const data = {
+                title: titleInput.value,
+                content: textArea.value,
+                font: fontFamily.value,
+                size: fontSize.value,
+                color: colorPicker.value,
+                bold: isBold,
+                italic: isItalic
+            };
+            const link = document.createElement('a');
+            link.href = 'data:application/json,' + encodeURIComponent(JSON.stringify(data));
+            link.download = (titleInput.value || 'document') + '.json';
+            link.click();
+        }
+
+        function loadDocument() {
+            document.getElementById('loadFile').click();
+        }
+
+        document.getElementById('loadFile').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                try {
+                    const data = JSON.parse(ev.target.result);
+                    titleInput.value = data.title || 'Untitled Document';
+                    textArea.value = data.content || '';
+                    fontFamily.value = data.font || "'Lander Grande', serif";
+                    fontSize.value = data.size || '16';
+                    colorPicker.value = data.color || '#000000';
+                    isBold = data.bold || false;
+                    isItalic = data.italic || false;
+                    boldBtn.classList.toggle('active', isBold);
+                    italicBtn.classList.toggle('active', isItalic);
+                    applyFont();
+                    applyFontSize();
+                    applyColor();
+                    textArea.style.fontWeight = isBold ? 'bold' : 'normal';
+                    textArea.style.fontStyle = isItalic ? 'italic' : 'normal';
+                    updateStats();
+                } catch (err) {
+                    // Try loading as plain text
+                    textArea.value = ev.target.result;
+                    updateStats();
+                }
+            };
+            reader.readAsText(file);
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+                e.preventDefault();
+                toggleBold();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'i') {
+                e.preventDefault();
+                toggleItalic();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                e.preventDefault();
+                saveDocument();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                window.print();
+            }
+        });
+
+        // Load from localStorage
+        function loadFromStorage() {
+            const saved = localStorage.getItem('editor_content');
+            if (saved) textArea.value = saved;
+
+            const savedTitle = localStorage.getItem('editor_title');
+            if (savedTitle) titleInput.value = savedTitle;
+
+            const savedFont = localStorage.getItem('editor_font');
+            if (savedFont) {
+                fontFamily.value = savedFont;
+                applyFont();
+            }
+
+            const savedSize = localStorage.getItem('editor_size');
+            if (savedSize) {
+                fontSize.value = savedSize;
+                applyFontSize();
+            }
+
+            const savedColor = localStorage.getItem('editor_color');
+            if (savedColor) {
+                colorPicker.value = savedColor;
+                applyColor();
+            }
+
+            updateStats();
+        }
+
+        // Focus on textarea
+        window.addEventListener('load', () => {
+            loadFromStorage();
+            textArea.focus();
+        });
+    </script>
+</body>
+</html>
