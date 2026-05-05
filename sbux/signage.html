@@ -4,57 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Text Editor</title>
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <style>
         @font-face {
             font-family: 'Lander Grande';
-            src: url('/fonts/Lander/LanderGrande-Regular.otf') format('opentype');
+            src: url('https://dvdbsh.github.io/sbux/fonts/Lander/LanderGrande-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
         }
         @font-face {
             font-family: 'Lander Grande';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Lander/LanderGrande-Bold.otf') format('opentype');
             font-weight: bold;
-            src: url('/fonts/Lander/LanderGrande-Bold.otf') format('opentype');
+            font-style: normal;
         }
         @font-face {
             font-family: 'Lander Grande';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Lander/LanderGrande-Italic.otf') format('opentype');
+            font-weight: normal;
             font-style: italic;
-            src: url('/fonts/Lander/LanderGrande-Italic.otf') format('opentype');
         }
         @font-face {
             font-family: 'Lander Tall';
-            src: url('/fonts/Lander/LanderTall-Regular.otf') format('opentype');
+            src: url('https://dvdbsh.github.io/sbux/fonts/Lander/LanderTall-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
         }
         @font-face {
             font-family: 'Lander Tall';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Lander/LanderTall-Bold.otf') format('opentype');
             font-weight: bold;
-            src: url('/fonts/Lander/LanderTall-Bold.otf') format('opentype');
+            font-style: normal;
         }
         @font-face {
             font-family: 'Lander Tall';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Lander/LanderTall-Italic.otf') format('opentype');
+            font-weight: normal;
             font-style: italic;
-            src: url('/fonts/Lander/LanderTall-Italic.otf') format('opentype');
         }
         @font-face {
             font-family: 'Pike';
-            src: url('/fonts/Pike/Pike-Regular.otf') format('opentype');
+            src: url('https://dvdbsh.github.io/sbux/fonts/Pike/Pike-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
         }
         @font-face {
             font-family: 'Pike';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Pike/Pike-Bold.otf') format('opentype');
             font-weight: bold;
-            src: url('/fonts/Pike/Pike-Bold.otf') format('opentype');
+            font-style: normal;
         }
         @font-face {
             font-family: 'Sodo Sans';
-            src: url('/fonts/Sodo Sans/SoDoSans-Regular.otf') format('opentype');
+            src: url('https://dvdbsh.github.io/sbux/fonts/Sodo Sans/SoDoSans-Regular.otf') format('opentype');
+            font-weight: normal;
+            font-style: normal;
         }
         @font-face {
             font-family: 'Sodo Sans';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Sodo Sans/SoDoSans-Bold.otf') format('opentype');
             font-weight: bold;
-            src: url('/fonts/Sodo Sans/SoDoSans-Bold.otf') format('opentype');
+            font-style: normal;
         }
         @font-face {
             font-family: 'Sodo Sans';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Sodo Sans/SoDoSans-Italic.otf') format('opentype');
+            font-weight: normal;
             font-style: italic;
-            src: url('/fonts/Sodo Sans/SoDoSans-Italic.otf') format('opentype');
         }
 
         * { box-sizing: border-box; }
@@ -106,6 +122,17 @@
             cursor: pointer;
             font-size: 13px;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            height: 32px;
+        }
+
+        button {
+            width: 32px;
+            padding: 0;
+            color: #666;
         }
 
         button:hover {
@@ -121,12 +148,23 @@
 
         select {
             min-width: 120px;
+            padding: 6px 10px;
+            width: auto;
         }
 
         .separator {
             width: 1px;
             height: 20px;
             background: #ddd;
+        }
+
+        .color-input {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 2px;
         }
 
         .editor-container {
@@ -144,7 +182,7 @@
 
         .canvas {
             flex: 1;
-            background: white;
+            background: #f5f5f5;
             overflow: auto;
             padding: 40px;
         }
@@ -160,7 +198,7 @@
             outline: 1px solid #ddd;
         }
 
-        .text-area {
+        .text-editor {
             width: 100%;
             height: 100%;
             border: none;
@@ -170,7 +208,18 @@
             line-height: 1.6;
             resize: none;
             padding: 0;
-            color: #333;
+            color: #000000;
+            overflow: auto;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .text-editor:focus {
+            outline: none;
+        }
+
+        .text-editor[contenteditable]:focus {
+            outline: none;
         }
 
         .status-bar {
@@ -185,6 +234,11 @@
 
         input[type="file"] {
             display: none;
+        }
+
+        .icon {
+            width: 18px;
+            height: 18px;
         }
 
         @media print {
@@ -217,7 +271,6 @@
             <option value="'Lander Tall', serif">Lander Tall</option>
             <option value="'Pike', monospace">Pike</option>
             <option value="'Sodo Sans', sans-serif">Sodo Sans</option>
-            <option value="-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif">System</option>
         </select>
 
         <select id="fontSize" onchange="applyFontSize()">
@@ -236,27 +289,64 @@
 
         <div class="separator"></div>
 
-        <button id="boldBtn" onclick="toggleBold()" title="Bold (Ctrl+B)"><strong>B</strong></button>
-        <button id="italicBtn" onclick="toggleItalic()" title="Italic (Ctrl+I)"><em>I</em></button>
+        <button id="boldBtn" onclick="toggleBold()" title="Bold (Ctrl+B)">
+            <i class="ph ph-bold"></i>
+        </button>
+        <button id="italicBtn" onclick="toggleItalic()" title="Italic (Ctrl+I)">
+            <i class="ph ph-italic"></i>
+        </button>
+        <button id="underlineBtn" onclick="toggleUnderline()" title="Underline (Ctrl+U)">
+            <i class="ph ph-underline"></i>
+        </button>
 
         <div class="separator"></div>
 
-        <label title="Text color">
-            <input type="color" id="colorPicker" value="#000000" onchange="applyColor()">
-        </label>
+        <button id="alignLeftBtn" onclick="setAlignment('left')" title="Align Left">
+            <i class="ph ph-text-align-left"></i>
+        </button>
+        <button id="alignCenterBtn" onclick="setAlignment('center')" title="Align Center">
+            <i class="ph ph-text-align-center"></i>
+        </button>
+        <button id="alignRightBtn" onclick="setAlignment('right')" title="Align Right">
+            <i class="ph ph-text-align-right"></i>
+        </button>
+        <button id="alignJustifyBtn" onclick="setAlignment('justify')" title="Justify">
+            <i class="ph ph-text-align-justify"></i>
+        </button>
 
         <div class="separator"></div>
 
-        <button onclick="saveDocument()" title="Save (Ctrl+S)">💾 Save</button>
-        <button onclick="loadDocument()" title="Load">📂 Load</button>
-        <button onclick="window.print()" title="Print (Ctrl+P)">🖨 Print</button>
+        <select id="lineSpacing" onchange="applyLineSpacing()" title="Line Spacing">
+            <option value="1">1.0</option>
+            <option value="1.15">1.15</option>
+            <option value="1.5" selected>1.5</option>
+            <option value="2">2.0</option>
+            <option value="2.5">2.5</option>
+            <option value="3">3.0</option>
+        </select>
+
+        <div class="separator"></div>
+
+        <input type="color" class="color-input" id="colorPicker" value="#000000" onchange="applyColor()" title="Text Color">
+
+        <div class="separator"></div>
+
+        <button onclick="saveDocument()" title="Save (Ctrl+S)">
+            <i class="ph ph-floppy-disk"></i>
+        </button>
+        <button onclick="loadDocument()" title="Load">
+            <i class="ph ph-folder-open"></i>
+        </button>
+        <button onclick="window.print()" title="Print (Ctrl+P)">
+            <i class="ph ph-printer"></i>
+        </button>
     </div>
 
     <div class="editor-container">
         <div class="editor">
             <div class="canvas">
                 <div class="page">
-                    <textarea class="text-area" id="textArea" placeholder="Start typing..."></textarea>
+                    <div class="text-editor" id="textEditor" contenteditable="true" placeholder="Start typing..."></div>
                 </div>
             </div>
         </div>
@@ -267,25 +357,26 @@
         <span id="charCount">0 characters</span>
     </div>
 
-    <input type="file" id="loadFile" accept=".txt,.json">
+    <input type="file" id="loadFile" accept=".txt,.json,.html">
 
     <script>
-        const textArea = document.getElementById('textArea');
+        const textEditor = document.getElementById('textEditor');
         const titleInput = document.getElementById('titleInput');
         const fontFamily = document.getElementById('fontFamily');
         const fontSize = document.getElementById('fontSize');
         const boldBtn = document.getElementById('boldBtn');
         const italicBtn = document.getElementById('italicBtn');
         const colorPicker = document.getElementById('colorPicker');
+        const lineSpacing = document.getElementById('lineSpacing');
         const wordCount = document.getElementById('wordCount');
         const charCount = document.getElementById('charCount');
 
-        let isBold = false;
-        let isItalic = false;
+        let currentAlignment = 'left';
+        let currentLineSpacing = '1.5';
 
-        // Auto-save to localStorage
-        textArea.addEventListener('input', () => {
-            localStorage.setItem('editor_content', textArea.value);
+        // Auto-save
+        textEditor.addEventListener('input', () => {
+            localStorage.setItem('editor_content', textEditor.innerHTML);
             updateStats();
         });
 
@@ -301,33 +392,89 @@
             localStorage.setItem('editor_size', fontSize.value);
         });
 
+        lineSpacing.addEventListener('change', () => {
+            localStorage.setItem('editor_spacing', lineSpacing.value);
+        });
+
+        colorPicker.addEventListener('change', () => {
+            localStorage.setItem('editor_color', colorPicker.value);
+        });
+
         function applyFont() {
-            textArea.style.fontFamily = fontFamily.value;
+            const font = fontFamily.value;
+            textEditor.style.fontFamily = font;
+            
+            // Also apply to selected text if there's a selection
+            const selection = window.getSelection();
+            if (selection.toString().length > 0) {
+                const range = selection.getRangeAt(0);
+                const span = document.createElement('span');
+                span.style.fontFamily = font;
+                span.appendChild(range.extractContents());
+                range.insertNode(span);
+            }
+            
+            localStorage.setItem('editor_font', font);
+            textEditor.focus();
         }
 
         function applyFontSize() {
-            textArea.style.fontSize = fontSize.value + 'px';
+            const sizeValue = fontSize.value;
+            textEditor.style.fontSize = sizeValue + 'px';
+            localStorage.setItem('editor_size', sizeValue);
+            textEditor.focus();
         }
 
         function applyColor() {
-            textArea.style.color = colorPicker.value;
-            localStorage.setItem('editor_color', colorPicker.value);
+            document.execCommand('foreColor', false, colorPicker.value);
+            textEditor.focus();
         }
 
         function toggleBold() {
-            isBold = !isBold;
-            textArea.style.fontWeight = isBold ? 'bold' : 'normal';
+            document.execCommand('bold', false, null);
             boldBtn.classList.toggle('active');
+            textEditor.focus();
         }
 
         function toggleItalic() {
-            isItalic = !isItalic;
-            textArea.style.fontStyle = isItalic ? 'italic' : 'normal';
+            document.execCommand('italic', false, null);
             italicBtn.classList.toggle('active');
+            textEditor.focus();
         }
 
+        function toggleUnderline() {
+            document.execCommand('underline', false, null);
+            document.getElementById('underlineBtn').classList.toggle('active');
+            textEditor.focus();
+        }
+
+        function setAlignment(align) {
+            currentAlignment = align;
+            textEditor.style.textAlign = align;
+            localStorage.setItem('editor_alignment', align);
+            updateAlignmentButtons();
+            textEditor.focus();
+        }
+
+        function applyLineSpacing() {
+            const spacing = lineSpacing.value;
+            currentLineSpacing = spacing;
+            textEditor.style.lineHeight = spacing;
+            localStorage.setItem('editor_spacing', spacing);
+            textEditor.focus();
+        }
+
+        function updateAlignmentButtons() {
+            document.getElementById('alignLeftBtn').classList.toggle('active', currentAlignment === 'left');
+            document.getElementById('alignCenterBtn').classList.toggle('active', currentAlignment === 'center');
+            document.getElementById('alignRightBtn').classList.toggle('active', currentAlignment === 'right');
+            document.getElementById('alignJustifyBtn').classList.toggle('active', currentAlignment === 'justify');
+        }
+
+
+
         function updateStats() {
-            const text = textArea.value;
+            const text = textEditor.innerText;
             const words = text.trim().split(/\s+/).filter(w => w).length;
             const chars = text.length;
             wordCount.textContent = words + ' words';
@@ -337,12 +484,12 @@
         function saveDocument() {
             const data = {
                 title: titleInput.value,
-                content: textArea.value,
+                content: textEditor.innerHTML,
                 font: fontFamily.value,
                 size: fontSize.value,
                 color: colorPicker.value,
-                bold: isBold,
-                italic: isItalic
+                spacing: lineSpacing.value,
+                alignment: currentAlignment
             };
             const link = document.createElement('a');
             link.href = 'data:application/json,' + encodeURIComponent(JSON.stringify(data));
@@ -361,23 +508,18 @@
                 try {
                     const data = JSON.parse(ev.target.result);
                     titleInput.value = data.title || 'Untitled Document';
-                    textArea.value = data.content || '';
+                    textEditor.innerHTML = data.content || '';
                     fontFamily.value = data.font || "'Lander Grande', serif";
                     fontSize.value = data.size || '16';
                     colorPicker.value = data.color || '#000000';
-                    isBold = data.bold || false;
-                    isItalic = data.italic || false;
-                    boldBtn.classList.toggle('active', isBold);
-                    italicBtn.classList.toggle('active', isItalic);
-                    applyFont();
+                    lineSpacing.value = data.spacing || '1.5';
+                    currentAlignment = data.alignment || 'left';
                     applyFontSize();
-                    applyColor();
-                    textArea.style.fontWeight = isBold ? 'bold' : 'normal';
-                    textArea.style.fontStyle = isItalic ? 'italic' : 'normal';
+                    applyLineSpacing();
+                    updateAlignmentButtons();
                     updateStats();
                 } catch (err) {
-                    // Try loading as plain text
-                    textArea.value = ev.target.result;
+                    textEditor.innerText = ev.target.result;
                     updateStats();
                 }
             };
@@ -386,14 +528,6 @@
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
-            if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
-                e.preventDefault();
-                toggleBold();
-            }
-            if ((e.ctrlKey || e.metaKey) && e.key === 'i') {
-                e.preventDefault();
-                toggleItalic();
-            }
             if ((e.ctrlKey || e.metaKey) && e.key === 's') {
                 e.preventDefault();
                 saveDocument();
@@ -402,12 +536,24 @@
                 e.preventDefault();
                 window.print();
             }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+                e.preventDefault();
+                toggleBold();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'i') {
+                e.preventDefault();
+                toggleItalic();
+            }
+            if ((e.ctrlKey || e.metaKey) && e.key === 'u') {
+                e.preventDefault();
+                toggleUnderline();
+            }
         });
 
         // Load from localStorage
         function loadFromStorage() {
             const saved = localStorage.getItem('editor_content');
-            if (saved) textArea.value = saved;
+            if (saved) textEditor.innerHTML = saved;
 
             const savedTitle = localStorage.getItem('editor_title');
             if (savedTitle) titleInput.value = savedTitle;
@@ -415,28 +561,52 @@
             const savedFont = localStorage.getItem('editor_font');
             if (savedFont) {
                 fontFamily.value = savedFont;
-                applyFont();
+                textEditor.style.fontFamily = savedFont;
+            } else {
+                textEditor.style.fontFamily = "'Lander Grande', serif";
             }
 
             const savedSize = localStorage.getItem('editor_size');
             if (savedSize) {
                 fontSize.value = savedSize;
-                applyFontSize();
+                textEditor.style.fontSize = savedSize + 'px';
+            } else {
+                textEditor.style.fontSize = '16px';
             }
 
             const savedColor = localStorage.getItem('editor_color');
-            if (savedColor) {
-                colorPicker.value = savedColor;
-                applyColor();
+            if (savedColor) colorPicker.value = savedColor;
+
+            const savedSpacing = localStorage.getItem('editor_spacing');
+            if (savedSpacing) {
+                lineSpacing.value = savedSpacing;
+                textEditor.style.lineHeight = savedSpacing;
+                currentLineSpacing = savedSpacing;
+            } else {
+                textEditor.style.lineHeight = '1.5';
+                currentLineSpacing = '1.5';
             }
+
+            const savedAlignment = localStorage.getItem('editor_alignment');
+            if (savedAlignment) {
+                currentAlignment = savedAlignment;
+                textEditor.style.textAlign = savedAlignment;
+                updateAlignmentButtons();
+            } else {
+                textEditor.style.textAlign = 'left';
+                currentAlignment = 'left';
+            }
+
+            textEditor.style.color = '#000000';
 
             updateStats();
         }
 
-        // Focus on textarea
+        // Focus on editor
         window.addEventListener('load', () => {
             loadFromStorage();
-            textArea.focus();
+            textEditor.focus();
+            updateAlignmentButtons();
         });
     </script>
 </body>
