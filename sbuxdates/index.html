@@ -6,15 +6,34 @@
     <title>Starbucks Dates</title>
     <link rel="shortcut icon" type="image/png" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689886612/icon_ejcwrp.png"/>
     <link rel="apple-touch-icon" type="image/png" href="https://res.cloudinary.com/di8j84ent/image/upload/v1689886612/icon_ejcwrp.png"/>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
+        /* Font Definitions */
+        @font-face {
+            font-family: 'SoDo Sans';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Sodo%20Sans/SoDoSans-Regular.otf') format('opentype');
+            font-weight: 400;
+        }
+        @font-face {
+            font-family: 'SoDo Sans';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Sodo%20Sans/SoDoSans-SemiBold.otf') format('opentype');
+            font-weight: 600;
+        }
+        @font-face {
+            font-family: 'Lander Grande';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Lander/LanderGrande-Regular.otf') format('opentype');
+            font-weight: 400;
+        }
+        @font-face {
+            font-family: 'Pike';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Pike/Pike-Bold.otf') format('opentype');
+            font-weight: 700;
+        }
+
         :root {
             --sb-dark: #1e3932;
             --sb-light: #d4e9e2;
             --white: #ffffff;
+            --sb-accent: #00704a;
         }
 
         * {
@@ -23,13 +42,12 @@
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: 'SoDo Sans', -apple-system, sans-serif;
             background-color: var(--sb-light);
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Use svh to account for mobile URL bars */
             height: 100vh;
             height: 100svh; 
             color: var(--white);
@@ -40,7 +58,6 @@
         #main {
             width: 100%;
             max-width: 400px;
-            /* Ensure it fits within the small viewport */
             max-height: 96svh;
             background-color: var(--sb-dark);
             border-radius: 28px;
@@ -57,30 +74,41 @@
         }
 
         #header {
-            padding: 4svh 20px 2svh;
-            text-align: center;
+            padding: 4svh 25px 2svh;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             flex-shrink: 0;
         }
 
-        #emoji {
-            font-size: clamp(32px, 7svh, 48px);
-            margin-bottom: 8px;
-            display: block;
+        .header-text {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
         }
 
         #greeting {
-            font-size: clamp(20px, 3.5svh, 26px);
-            font-weight: 300;
-            margin-bottom: 4px;
-            letter-spacing: -0.5px;
+            font-family: 'Pike', sans-serif;
+            font-size: clamp(32px, 5.5svh, 42px);
+            font-weight: 700;
+            margin-bottom: 2px;
+            letter-spacing: -0.8px;
+            line-height: 1.1;
         }
 
         #today {
-            font-size: clamp(11px, 1.8svh, 14px);
+            font-family: 'Lander Grande', serif;
+            font-size: clamp(14px, 2.2svh, 16px);
             font-weight: 400;
-            opacity: 0.7;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            opacity: 0.9;
+            letter-spacing: 0.2px;
+            color: var(--sb-light);
+        }
+
+        #emoji {
+            font-size: clamp(40px, 8svh, 54px);
+            line-height: 1;
+            margin-left: 15px;
         }
 
         .divider {
@@ -102,7 +130,7 @@
         .section-label {
             font-size: 10px;
             font-weight: 600;
-            color: rgba(212, 233, 226, 0.5);
+            color: rgba(212, 233, 226, 0.4);
             text-transform: uppercase;
             letter-spacing: 2px;
             margin: 8px 0 4px;
@@ -148,9 +176,11 @@
 
     <div id="main">
         <div id="header">
+            <div class="header-text">
+                <div id="greeting"></div>
+                <div id="today"></div>
+            </div>
             <span id="emoji"></span>
-            <div id="greeting"></div>
-            <div id="today"></div>
         </div>
         
         <div class="divider"></div>
@@ -189,7 +219,7 @@
             const minutes = date.getMinutes().toString().padStart(2, '0');
             const ampm = hours >= 12 ? 'pm' : 'am';
             hours = hours % 12 || 12;
-            return `${daysShort[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()} @ ${hours}:${minutes}${ampm}`;
+            return `${daysShort[date.getDay()]}, ${months[date.getMonth()]} ${date.getDate()} at ${hours}:${minutes}${ampm}`;
         }
 
         function formatDateOnly(date) {
