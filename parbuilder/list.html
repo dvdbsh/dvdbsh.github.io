@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Sheet Maker</title>
+    <style>
+        @font-face {
+            font-family: 'SoDo Sans';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Sodo%20Sans/SoDoSans-Regular.otf') format('opentype');
+            font-weight: 400;
+        }
+        @font-face {
+            font-family: 'SoDo Sans';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Sodo%20Sans/SoDoSans-SemiBold.otf') format('opentype');
+            font-weight: 600;
+        }
+        @font-face {
+            font-family: 'Lander Grande';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Lander/LanderGrande-Regular.otf') format('opentype');
+            font-weight: 400;
+        }
+        @font-face {
+            font-family: 'Pike';
+            src: url('https://dvdbsh.github.io/sbux/fonts/Pike/Pike-Bold.otf') format('opentype');
+            font-weight: 700;
+        }
+
+        :root {
+            --sbux-green: #006241;
+            --bg-gray: #f2f0eb;
+        }
+
+        body {
+            font-family: 'SoDo Sans', sans-serif;
+            background-color: var(--bg-gray);
+            margin: 0;
+            padding: 40px 20px;
+            color: #212121;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            border-radius: 4px;
+        }
+
+        header {
+            border-bottom: 3px solid var(--sbux-green);
+            margin-bottom: 25px;
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+        }
+
+        h1 {
+            font-family: 'Pike', sans-serif;
+            font-size: 34px;
+            text-transform: uppercase;
+            margin: 0;
+            color: var(--sbux-green);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            background-color: #f9f9f9;
+            font-weight: 600;
+            text-transform: uppercase;
+            text-align: left;
+            border: 1.5px solid #000;
+            padding: 12px;
+            font-size: 13px;
+        }
+
+        td {
+            border: 1.5px solid #000;
+            padding: 0;
+        }
+
+        input {
+            width: 100%;
+            border: none;
+            padding: 12px;
+            box-sizing: border-box;
+            font-family: 'SoDo Sans', sans-serif;
+            font-size: 15px;
+            outline: none;
+            background: transparent;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1.5px solid var(--sbux-green);
+            background: white;
+            color: var(--sbux-green);
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: var(--sbux-green);
+            color: white;
+        }
+
+        .primary { background: var(--sbux-green); color: white; }
+
+        .delete-row-btn {
+            background: none; border: none; color: #ccc; cursor: pointer; width: 100%; height: 100%;
+        }
+
+        @media print {
+            .controls, .remove-col { display: none !important; }
+            .container { box-shadow: none; padding: 0; width: 100%; max-width: 100%; }
+            body { background: white; padding: 0; }
+            th { background-color: #eee !important; -webkit-print-color-adjust: exact; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>Order Sheet</h1>
+    </header>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 50%;">item name</th>
+                <th style="width: 25%;">sku</th>
+                <th style="width: 25%;">par</th>
+                <th class="remove-col" style="width: 40px; border: none; background: transparent;"></th>
+            </tr>
+        </thead>
+        <tbody id="table-body"></tbody>
+    </table>
+
+    <div class="controls">
+        <button onclick="addRow()">+ Add more</button>
+        <button class="primary" onclick="window.print()">Print</button>
+        <button onclick="sendEmail()">Send via Email</button>
+        <button style="margin-left:auto; border-color: #ccc; color: #666;" onclick="clearList()">Reset</button>
+    </div>
+</div>
+
+<script>
+    const tableBody = document.getElementById('table-body');
+
+    function loadData() {
+        const saved = localStorage.getItem('sbux_inventory_exact');
+        if (saved) {
+            const data = JSON.parse(saved);
+            if (data.length > 0) {
+                data.forEach(item => addRow(item.name, item.sku, item.par));
+                return;
+            }
+        }
+        addRow(); // Start with exactly 1 row
+    }
+
+    function addRow(name = '', sku = '', par = '') {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="text" value="${name}" oninput="saveData()"></td>
+            <td><input type="text" value="${sku}" oninput="saveData()"></td>
+            <td><input type="text" value="${par}" oninput="saveData()"></td>
+            <td class="remove-col" style="border: none;">
+                <button class="delete-row-btn" onclick="this.parentElement.parentElement.remove(); saveData();">✕</button>
+            </td>
+        `;
+        tableBody.appendChild(tr);
+    }
+
+    function saveData() {
+        const data = Array.from(tableBody.querySelectorAll('tr')).map(row => {
+            const inputs = row.querySelectorAll('input');
+            return { name: inputs[0].value, sku: inputs[1].value, par: inputs[2].value };
+        });
+        localStorage.setItem('sbux_inventory_exact', JSON.stringify(data));
+    }
+
+    function sendEmail() {
+        const data = Array.from(tableBody.querySelectorAll('tr')).map(row => {
+            const inputs = row.querySelectorAll('input');
+            return { name: inputs[0].value || '-', sku: inputs[1].value || '-', par: inputs[2].value || '-' };
+        });
+
+        if (data.length === 0 || (data.length === 1 && !data[0].name)) {
+            alert("List is empty.");
+            return;
+        }
+
+        let body = "INVENTORY ORDER SHEET%0D%0A%0D%0A";
+        body += "ITEM NAME | SKU | PAR%0D%0A";
+        body += "--------------------------%0D%0A";
+        
+        data.forEach(item => {
+            body += `${item.name} | ${item.sku} | ${item.par}%0D%0A`;
+        });
+
+        const mailtoLink = `mailto:?subject=Inventory Order Sheet&body=${body}`;
+        window.location.href = mailtoLink;
+    }
+
+    function clearList() {
+        if(confirm("Clear list?")) {
+            tableBody.innerHTML = '';
+            localStorage.removeItem('sbux_inventory_exact');
+            addRow();
+        }
+    }
+
+    loadData();
+</script>
+
+</body>
+</html>
