@@ -1,300 +1,634 @@
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>London News</title>
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="description" content="Local news for London, Ontario. Updated 24/7." />
+    <!-- Fonts - Inter Only -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        heading: ['"Bebas Neue"', 'sans-serif'],
-                        sans: ['Inter', 'sans-serif'],
-                        mono: ['"JetBrains Mono"', 'monospace'],
-                    },
-                    colors: {
-                        news: {
-                            bg: '#131A1C',
-                            surface: '#1A2326',
-                            surfaceAlt: '#212D31',
-                            border: '#2E4045',
-                            primary: '#265126',
-                            accent: '#28B4EA',
-                            cta: '#488795',
-                            ctaHover: '#CECEBF',
-                            text: '#CECEBF',
-                            muted: '#7A8C91'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+
     <style>
-        body { background-color: #131A1C; color: #CECEBF; overflow-x: hidden; }
-        ::selection { background-color: #488795; color: #131A1C; }
-        .bg-dots { background-image: radial-gradient(#2E4045 1px, transparent 1px); background-size: 20px 20px; }
+        /* --- CSS Variables (Theme & Typography) --- */
+        :root {
+            /* Colors — Taichi palette (dark, seed #006ea9) */
+            --bg: #0C0E0A;
+            --surface: #161814;
+            --surface-alt: #1D1F1B;
+            --border: #393B37;
+            --primary: #3D5060;
+            --accent: #67B86E;
+            --cta: #35A28E;
+            --cta-hover: #F0F3ED;
+            --text: #F0F3ED;
+            --muted: #A6A8A3;
+
+            /* Fonts */
+            --font-main: 'Inter', sans-serif;
+            
+            /* Sizing */
+            --text-xs: 0.75rem;   /* 12px */
+            --text-sm: 0.875rem;  /* 14px */
+            --text-base: 1rem;    /* 16px */
+            --text-lg: 1.125rem;  /* 18px */
+            --text-xl: 1.25rem;   /* 20px */
+            --text-2xl: 1.5rem;   /* 24px */
+            --text-3xl: 1.875rem; /* 30px */
+            --text-4xl: 2.25rem;  /* 36px */
+            --text-5xl: 3rem;     /* 48px */
+            --text-6xl: 3.75rem;  /* 60px */
+        }
+
+        /* --- Reset & Base Styles --- */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        html { scroll-behavior: smooth; }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            font-family: var(--font-main);
+            font-size: var(--text-base);
+            line-height: 1.5;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+
+        }
+
+        ::selection { background-color: var(--cta); color: var(--bg); }
+        
+        button { cursor: pointer; border: none; background: none; font-family: inherit; }
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; display: block; }
+
+        /* SVG Icon fixes to prevent intersection artifacts */
+        svg {
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* --- Utility Classes --- */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            width: 100%;
+            border-left: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+        }
+        .hidden { display: none !important; }
+        .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .line-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .line-clamp-3 { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+
         .hide-scroll::-webkit-scrollbar { display: none; }
         .hide-scroll { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Crosshair decorations */
+
         .crosshair { position: relative; }
-        .crosshair::before, .crosshair::after { content: ''; position: absolute; background-color: #28B4EA; z-index: 10; }
+        .crosshair::before, .crosshair::after { content: ''; position: absolute; background-color: var(--accent); z-index: 10; }
         .crosshair-tl::before { top: -4px; left: -1px; width: 3px; height: 9px; }
         .crosshair-tl::after { top: -1px; left: -4px; width: 9px; height: 3px; }
 
-        /* Animations */
-        .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
-        .fade-in.visible { opacity: 1; transform: translateY(0); }
-        
-        @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .ticker-inner { display: flex; animation: ticker 90s linear infinite; width: max-content; }
-        .ticker-inner:hover { animation-play-state: paused; }
-        .ticker-item { white-space: nowrap; padding: 0 2rem; display: flex; align-items: center; height: 100%; }
+        .transition-opacity { transition: opacity 1s ease; }
+        .opacity-0 { opacity: 0; }
 
-        /* Progress Bar */
+        /* --- Global Button System --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-family: var(--font-main);
+            font-weight: 600;
+            font-size: var(--text-sm);
+            letter-spacing: 0.1em;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.25rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            border: 1px solid transparent;
+            text-align: center;
+            width: 100%;
+        }
+        @media (min-width: 768px) {
+            .btn { width: auto; font-size: var(--text-base); padding: 1rem 2rem; }
+        }
+        
+        .btn-primary { background-color: var(--cta); color: #000; border-color: var(--cta); }
+        .btn-primary:hover, .btn-primary:focus-visible { background-color: var(--cta-hover); border-color: var(--cta-hover); }
+        
+        .btn-outline { background-color: transparent; color: var(--text); border-color: var(--border); }
+        .btn-outline:hover, .btn-outline:focus-visible { background-color: var(--surface); color: var(--cta); border-color: var(--cta); }
+        
+        .btn-icon {
+            padding: 0.5rem; border-radius: 50%; width: 2.5rem; height: 2.5rem;
+            background-color: rgba(12, 14, 10, 0.9); border: 1px solid var(--border);
+            color: var(--text); display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .btn-icon:hover { color: var(--cta); border-color: var(--cta); background-color: var(--surface); }
+
+        /* --- Navigation --- */
+        .navbar {
+            position: fixed; width: 100%; z-index: 50;
+            background: rgba(12, 14, 10, 0.95); backdrop-filter: blur(8px);
+            border-bottom: 1px solid var(--border);
+        }
+        .navbar-inner { display: grid; grid-template-columns: 1fr 1fr; height: 4rem; }
+        @media (min-width: 1024px) { .navbar-inner { grid-template-columns: repeat(12, 1fr); height: 5rem; } }
+
+        .nav-brand {
+            grid-column: span 1; border-right: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 1rem; cursor: pointer;
+        }
+        @media (min-width: 1024px) { .nav-brand { grid-column: span 3; padding: 0 1.5rem; } }
+        .nav-brand-dot { width: 0.5rem; height: 0.5rem; background-color: var(--accent); margin-right: 0.75rem; transition: transform 0.3s; }
+        .nav-brand:hover .nav-brand-dot { transform: scale(1.5); }
+        .nav-brand h1 { font-size: var(--text-xl); font-weight: 700; letter-spacing: 0.1em; color: white; transition: color 0.3s; text-transform: uppercase; }
+        @media (min-width: 1024px) { .nav-brand h1 { font-size: var(--text-2xl); } }
+        .nav-brand:hover h1 { color: var(--accent); }
+
+        .nav-links { display: none; grid-column: span 9; border-right: 1px solid var(--border); overflow-x: auto; }
+        @media (min-width: 1024px) { .nav-links { display: flex; } }
+        .nav-source-btn {
+            flex: 1; min-width: 120px; display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+            font-size: var(--text-xs); font-weight: 500; letter-spacing: 0.1em; color: var(--muted);
+            border-right: 1px solid var(--border); cursor: pointer; transition: all 0.3s; text-transform: uppercase;
+        }
+        .nav-source-btn:hover { background-color: var(--surface); color: white; }
+        .nav-source-btn img { width: 1.25rem; height: 1.25rem; object-fit: contain; filter: grayscale(100%); opacity: 0.7; transition: all 0.3s; }
+        .nav-source-btn:hover img { filter: grayscale(0); opacity: 1; }
+
+        .nav-mobile-toggle { display: flex; align-items: center; justify-content: flex-end; padding: 0 1rem; }
+        @media (min-width: 1024px) { .nav-mobile-toggle { display: none; } }
+        .btn-menu { color: white; font-size: var(--text-xl); font-weight: 700; letter-spacing: 0.1em; z-index: 50; }
+        .btn-menu.active { color: var(--accent); }
+
+        /* --- Mobile Menu --- */
+        .mobile-menu {
+            position: fixed; inset: 0; background-color: var(--bg); z-index: 40;
+            display: flex; flex-direction: column; padding: 0 1.5rem; border-left: 4px solid var(--accent);
+            transform: translateX(100%); transition: transform 0.4s ease-in-out;
+        }
+        .mobile-menu.open { transform: translateX(0); }
+        .mobile-menu-inner { display: flex; flex-direction: column; gap: 1rem; overflow-y: auto; padding-top: 6rem; padding-bottom: 2rem; }
+        .mobile-menu-title { font-size: var(--text-sm); font-weight: 600; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 0.5rem; text-transform: uppercase; }
+        .mobile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .mobile-source-card {
+            display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+            background-color: var(--surface); border: 1px solid var(--border); padding: 1rem;
+            border-radius: 0.5rem; text-align: center; transition: border-color 0.3s;
+        }
+        .mobile-source-card:hover { border-color: var(--accent); }
+        .mobile-source-card img { width: 2rem; height: 2rem; object-fit: contain; }
+        .mobile-source-card span { font-size: var(--text-xs); font-weight: 600; color: var(--text); }
+
+        /* --- Main Layout --- */
+        .main-wrapper { flex-grow: 1; padding-top: 4rem; }
+        @media (min-width: 1024px) { .main-wrapper { padding-top: 5rem; } }
+
+        /* --- Hero Section --- */
+        .hero { display: grid; grid-template-columns: 1fr; border-bottom: 2px solid var(--border); background-color: var(--bg); }
+        @media (min-width: 1024px) { .hero { grid-template-columns: repeat(12, 1fr); } }
+
+        .hero-content { padding: 1.5rem; border-bottom: 1px solid var(--border); display: flex; flex-direction: column; justify-content: center; }
+        @media (min-width: 1024px) { .hero-content { grid-column: span 7; padding: 3rem; border-bottom: none; border-right: 1px solid var(--border); } }
+
+        .hero-badge {
+            display: inline-block; border: 1px solid var(--border); color: white; background-color: var(--primary);
+            font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.2em; padding: 0.375rem 0.75rem;
+            margin-bottom: 1rem; width: max-content; text-transform: uppercase;
+        }
+        .hero-date { font-size: var(--text-sm); font-weight: 500; color: var(--muted); letter-spacing: 0.1em; margin-bottom: 0.75rem; text-transform: uppercase; }
+
+        .hero-title { font-size: var(--text-3xl); font-weight: 700; color: white; line-height: 1.1; letter-spacing: 0.025em; margin-bottom: 1rem; cursor: pointer; transition: color 0.3s; }
+        @media (min-width: 1024px) { .hero-title { font-size: var(--text-5xl); margin-bottom: 1.5rem; } }
+        .hero-title:hover { color: var(--accent); }
+
+        .hero-desc { color: var(--muted); font-size: var(--text-base); margin-bottom: 1.5rem; max-width: 42rem; }
+        @media (min-width: 1024px) { .hero-desc { font-size: var(--text-lg); margin-bottom: 2rem; } }
+
+        .hero-footer { display: flex; align-items: center; justify-content: space-between; margin-top: auto; padding-top: 1rem; flex-wrap: wrap; gap: 1rem;}
+        .hero-source { display: flex; align-items: center; gap: 0.75rem; }
+        .hero-logo-box { background-color: var(--surface-alt); padding: 0.5rem; border: 1px solid var(--border); border-radius: 0.25rem; }
+        .hero-logo-box img { height: 1.25rem; width: auto; object-fit: contain; }
+        .hero-source-name { font-size: var(--text-sm); font-weight: 600; color: var(--muted); text-transform: uppercase; }
+
+        .hero-img-area { position: relative; min-height: 300px; background-color: var(--surface); border-color: var(--border); overflow: hidden; cursor: pointer; }
+        @media (min-width: 1024px) { .hero-img-area { grid-column: span 5; min-height: 500px; } }
+        .hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0.9; transition: transform 1s, opacity 0.5s; }
+        .hero-img-area:hover .hero-img { opacity: 1; transform: scale(1.03); }
+        .hero-img-overlay { position: absolute; inset: 0; pointer-events: none; background: linear-gradient(to top, var(--bg), rgba(12, 14, 10, 0.1), transparent); }
+
+        /* --- Ticker --- */
+        .ticker-section { border-bottom: 1px solid var(--border); background-color: var(--surface-alt); overflow: hidden; }
+        .ticker-wrap { display: flex; align-items: center; height: 3rem; }
+        
+        .ticker-label {
+            flex-shrink: 0; background-color: var(--primary); color: white; font-weight: 700;
+            font-size: var(--text-xs); letter-spacing: 0.2em; padding: 0 1.5rem; height: 100%;
+            display: flex; align-items: center; border-right: 1px solid var(--border); z-index: 10;
+        }
+        @media (min-width: 768px) { .ticker-label { font-size: var(--text-sm); } }
+        
+        .ticker-content { overflow: hidden; flex: 1; height: 100%; display: flex; align-items: center; }
+        
+        @keyframes ticker-anim { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .ticker-inner { display: flex; animation: ticker-anim 60s linear infinite; width: max-content; white-space: nowrap; }
+        .ticker-inner:hover { animation-play-state: paused; }
+        .ticker-item {
+            padding: 0 2rem; display: inline-flex; align-items: center; height: 100%;
+            font-size: var(--text-sm); font-weight: 500; color: var(--muted); cursor: pointer; transition: color 0.3s;
+        }
+        .ticker-item:hover { color: var(--cta); }
+        .ticker-item span { color: var(--accent); margin-right: 0.75rem; font-size: var(--text-xs); }
+
+        /* --- Content Grid --- */
+        .content-grid { display: grid; grid-template-columns: 1fr; align-items: start; }
+        @media (min-width: 1280px) { .content-grid { grid-template-columns: repeat(12, 1fr); } }
+
+        .feed-col { border-bottom: 1px solid var(--border); }
+        @media (min-width: 1280px) { .feed-col { grid-column: span 8; border-bottom: none; border-right: 1px solid var(--border); } }
+
+        .sidebar-col { background-color: var(--bg); display: flex; flex-direction: column; gap: 2rem; padding: 1.5rem; }
+        @media (min-width: 1024px) { .sidebar-col { padding: 2rem; } }
+        @media (min-width: 1280px) { .sidebar-col { grid-column: span 4; } }
+
+        /* --- Section Headers --- */
+        .section-wrap { background-color: var(--surface); border-bottom: 1px solid var(--border); position: relative; }
+        .section-header {
+            position: sticky; top: 4rem; z-index: 30; padding: 1.5rem; border-bottom: 1px solid var(--border);
+            background-color: var(--surface-alt); display: flex; align-items: center; gap: 0.75rem;
+        }
+        @media (min-width: 1024px) { .section-header { top: 5rem; padding: 2rem; } }
+        .section-header-dot { width: 0.5rem; height: 0.5rem; background-color: var(--primary); }
+        .section-title { font-size: var(--text-2xl); font-weight: 700; letter-spacing: 0.05em; color: white; text-transform: uppercase; }
+        @media (min-width: 1024px) { .section-title { font-size: var(--text-3xl); } }
+
+        /* --- Article Cards --- */
+        .article-list { background-color: var(--bg); }
+        .article-card {
+            display: flex; flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border);
+            background-color: var(--bg); transition: background-color 0.3s; cursor: pointer; gap: 1.5rem;
+        }
+        @media (min-width: 768px) { .article-card { flex-direction: row; } }
+        @media (min-width: 1024px) { .article-card { padding: 2rem; } }
+        .article-card:hover { background-color: var(--surface); }
+
+        .article-thumb-box {
+            width: 100%; aspect-ratio: 16/9; flex-shrink: 0; border: 1px solid var(--border);
+            border-radius: 0.25rem; overflow: hidden; position: relative; background-color: var(--surface-alt);
+        }
+        @media (min-width: 768px) { .article-thumb-box { width: 14rem; } }
+        .article-thumb-box img { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; transition: transform 0.5s, opacity 0.3s; }
+        .article-card:hover .article-thumb-box img { opacity: 1; transform: scale(1.05); }
+        
+        .article-fallback {
+            width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+            opacity: 0.9; transition: transform 0.5s, opacity 0.3s;
+        }
+        .article-card:hover .article-fallback { opacity: 1; transform: scale(1.05); }
+        .article-fallback svg { width: 2.5rem; height: 2.5rem; color: white; opacity: 0.3; transition: opacity 0.3s; }
+        .article-card:hover .article-fallback svg { opacity: 0.8; }
+
+        .article-content { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
+        .article-meta {
+            display: flex; align-items: center; gap: 0.75rem; font-size: var(--text-xs);
+            font-weight: 500; color: var(--muted); margin-bottom: 0.75rem; text-transform: uppercase;
+        }
+        @media (min-width: 1024px) { .article-meta { font-size: var(--text-sm); } }
+        .article-meta .date { color: white; }
+        .article-source { display: flex; align-items: center; gap: 0.5rem; }
+        .article-source img { height: 1rem; width: auto; opacity: 0.9; border-radius: 2px; }
+
+        .article-title {
+            font-size: var(--text-xl); font-weight: 700; color: white; line-height: 1.3;
+            margin-bottom: 0.5rem; transition: color 0.3s;
+        }
+        @media (min-width: 1024px) { .article-title { font-size: var(--text-2xl); } }
+        .article-card:hover .article-title { color: var(--cta); }
+
+        .article-desc { font-size: var(--text-sm); color: var(--muted); margin-top: auto; }
+        @media (min-width: 1024px) { .article-desc { font-size: var(--text-base); } }
+
+        .article-arrow { display: none; padding-left: 1rem; align-items: center; }
+        @media (min-width: 768px) { .article-arrow { display: flex; } }
+        .article-arrow-icon { font-size: var(--text-2xl); font-weight: 300; color: var(--border); transition: all 0.3s; }
+        .article-card:hover .article-arrow-icon { color: var(--cta); transform: translateX(6px); }
+
+        .load-more-wrap { padding: 2rem 1.5rem; display: flex; justify-content: center; background-color: var(--bg); }
+
+        /* --- Widgets --- */
+        .widget { background-color: var(--surface); border: 1px solid var(--border); border-radius: 0.5rem; overflow: hidden; }
+        .widget-header { padding: 1.25rem 1.5rem; background-color: var(--surface-alt); display: flex; align-items: center; }
+        
+        .slider-widget-header { border-bottom: 2px solid var(--accent); gap: 0.75rem; position: relative; }
+        .slider-dot { width: 0.5rem; height: 0.5rem; background-color: var(--accent); }
+        .slider-title { font-size: var(--text-lg); font-weight: 700; letter-spacing: 0.1em; color: white; text-transform: uppercase; }
+
+        .slider-body { position: relative; padding: 2rem 3rem; text-align: center; }
+        .progress-track { position: absolute; top: 0; left: 0; width: 100%; height: 4px; background-color: var(--surface-alt); }
+        .progress-bar { height: 100%; background-color: var(--cta); width: 0; }
         .progress-bar-anim { animation: progress 6s linear forwards; }
         @keyframes progress { 0% { width: 0%; } 100% { width: 100%; } }
 
-        .dl-arrow { transition: all 0.2s; }
-        .article-card:hover .dl-arrow { color: #488795; transform: translateX(4px); }
+        .slider-tag {
+            display: inline-block; border: 1px solid var(--border); color: var(--accent);
+            font-size: var(--text-xs); font-weight: 600; letter-spacing: 0.1em; padding: 0.375rem 0.75rem; margin-bottom: 1rem; text-transform: uppercase;
+        }
+
+        .slider-content-title {
+            font-size: var(--text-lg); font-weight: 600; color: white; line-height: 1.4; margin-bottom: 1rem;
+            cursor: pointer; transition: color 0.3s; min-height: 4rem; display: flex; align-items: center; justify-content: center;
+        }
+        @media (min-width: 1024px) { .slider-content-title { font-size: var(--text-xl); min-height: 6rem; } }
+        .slider-content-title:hover { color: var(--cta); }
+        .slider-date { font-size: var(--text-xs); font-weight: 500; color: var(--muted); text-transform: uppercase; }
+
+        .slider-controls { position: absolute; inset-y: 0; display: flex; align-items: center; z-index: 10; }
+        .slider-controls.left { left: 0.75rem; }
+        .slider-controls.right { right: 0.75rem; }
+
+        .weather-header { border-bottom: 1px solid var(--border); justify-content: space-between; }
+        .weather-header h3 { font-size: var(--text-lg); font-weight: 700; color: white; display: flex; align-items: center; justify-content: space-between; width: 100%; text-transform: uppercase; }
+        .weather-header svg { color: var(--accent); width: 1.5rem; height: 1.5rem; }
+
+        .weather-body { padding: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem; }
+        .weather-main { display: flex; align-items: flex-end; justify-content: space-between; }
+        .temp-box { display: flex; align-items: flex-start; gap: 0.25rem; }
+        .temp-val { font-size: var(--text-6xl); font-weight: 700; line-height: 1; color: white; letter-spacing: -0.025em; }
+        .temp-unit { font-size: var(--text-lg); font-weight: 500; color: var(--muted); padding-top: 0.5rem;}
+        .weather-icon-box { text-align: right; }
+        .weather-icon-box svg { width: 2.5rem; height: 2.5rem; color: var(--accent); margin-left: auto; margin-bottom: 0.5rem; }
+        .weather-desc { font-size: var(--text-sm); font-weight: 600; color: white; letter-spacing: 0.1em; text-transform: uppercase; }
+
+        .weather-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; border: 1px solid var(--border); background-color: var(--surface-alt); padding: 1rem; border-radius: 0.5rem; }
+        .stat-item { text-align: center; }
+        .stat-item.mid { border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+        .stat-label { font-size: var(--text-xs); font-weight: 600; color: var(--muted); margin-bottom: 0.25rem; text-transform: uppercase; }
+        .stat-val { font-size: var(--text-sm); font-weight: 500; color: white; }
+
+        .forecast-box { border: 1px solid var(--border); background-color: var(--surface-alt); border-radius: 0.5rem; overflow: hidden; }
+        .forecast-title { padding: 0.75rem; border-bottom: 1px solid var(--border); background-color: var(--bg); text-align: center; font-size: var(--text-xs); font-weight: 600; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
+        .forecast-row { display: grid; grid-template-columns: repeat(5, 1fr); }
+        .forecast-day { display: flex; flex-direction: column; align-items: center; padding: 0.75rem; border-right: 1px solid var(--border); text-align: center; }
+        .forecast-day:last-child { border-right: none; }
+        .forecast-day span:first-child { font-size: var(--text-xs); font-weight: 600; color: var(--muted); margin-bottom: 0.5rem; text-transform: uppercase; }
+        .forecast-day svg { width: 1.25rem; height: 1.25rem; color: var(--accent); margin: 0 auto 0.5rem auto; }
+        .forecast-day span:last-child { font-size: var(--text-sm); font-weight: 600; color: white; }
+
+        /* --- Source View --- */
+        .source-view { flex-grow: 1; padding-top: 4rem; background-color: var(--bg); }
+        @media (min-width: 1024px) { .source-view { padding-top: 5rem; } }
+        
+        .sv-header {
+            padding: 2rem 1.5rem; border-bottom: 2px solid var(--accent); background-color: var(--surface);
+            display: flex; flex-direction: column; gap: 1.5rem; justify-content: space-between;
+        }
+        @media (min-width: 768px) { .sv-header { flex-direction: row; align-items: center; padding: 3rem; } }
+        
+        .sv-info { display: flex; align-items: center; gap: 1.5rem; }
+        .sv-logo-box { background-color: var(--surface-alt); padding: 1rem; border: 1px solid var(--border); border-radius: 0.5rem; }
+        .sv-logo-box img { width: 3rem; height: 3rem; object-fit: contain; }
+        @media (min-width: 1024px) { .sv-logo-box img { width: 4rem; height: 4rem; } }
+
+        .sv-label { color: var(--accent); font-size: var(--text-xs); font-weight: 700; letter-spacing: 0.2em; display: block; margin-bottom: 0.5rem; text-transform: uppercase; }
+        .sv-title { font-size: var(--text-3xl); font-weight: 700; line-height: 1; color: white; }
+        @media (min-width: 1024px) { .sv-title { font-size: var(--text-4xl); } }
+        .sv-count { font-size: var(--text-sm); font-weight: 500; color: var(--muted); margin-top: 0.75rem; text-transform: uppercase; }
+
+        /* --- Footer --- */
+        .app-footer {
+            background-color: var(--surface-alt); padding: 2rem 1.5rem; border-top: 1px solid var(--border);
+            display: flex; flex-direction: column; justify-content: space-between; align-items: center; gap: 1rem; margin-top: auto;
+        }
+        @media (min-width: 768px) { .app-footer { flex-direction: row; } }
+        @media (min-width: 1024px) { .app-footer { padding: 2rem 3rem; } }
+        
+        .footer-brand { font-size: var(--text-xl); font-weight: 700; letter-spacing: 0.1em; color: var(--muted); display: flex; align-items: center; gap: 0.5rem; text-transform: uppercase; }
+        .footer-brand .sep { font-size: var(--text-sm); margin: 0 0.25rem; color: var(--border); }
+        .footer-brand .copy { font-size: var(--text-sm); font-weight: 400; letter-spacing: normal; color: var(--muted); text-transform: none; }
+        .footer-text { font-size: var(--text-xs); font-weight: 500; color: var(--muted); text-align: center; line-height: 1.6; text-transform: uppercase; }
+        @media (min-width: 768px) { .footer-text { text-align: right; } }
     </style>
 </head>
-<body class="font-sans antialiased flex flex-col min-h-screen bg-dots text-base lg:text-lg">
+<body>
 
     <!-- Global Navigation -->
-    <nav class="fixed w-full z-50 bg-news-bg/95 backdrop-blur-sm border-b border-news-border">
-        <div class="max-w-[1600px] mx-auto grid grid-cols-2 lg:grid-cols-12 h-16 lg:h-20 border-x border-news-border">
-            <div class="col-span-1 lg:col-span-3 border-r border-news-border flex items-center px-4 lg:px-6 cursor-pointer group" onclick="closeSourceView()">
-                <div class="w-2 h-2 lg:w-3 lg:h-3 bg-news-accent mr-3 group-hover:scale-150 transition-transform"></div>
-                <h1 class="font-heading text-2xl lg:text-3xl tracking-widest text-white group-hover:text-news-accent transition-colors pt-1">LONDON NEWS</h1>
+    <nav class="navbar" aria-label="Main Navigation">
+        <div class="navbar-inner container">
+            <div class="nav-brand" onclick="closeSourceView()" role="button" tabindex="0">
+                <div class="nav-brand-dot"></div>
+                <h1>London News</h1>
             </div>
             
-            <div id="source-nav" class="hidden lg:flex col-span-9 border-r border-news-border overflow-x-auto hide-scroll">
+            <div id="source-nav" class="nav-links hide-scroll" aria-label="News Sources">
                 <!-- Populated via JS -->
             </div>
 
-            <div class="col-span-1 lg:hidden flex items-center justify-end px-4">
-                <button id="menu-toggle" class="text-white font-heading text-xl tracking-widest pt-1 focus:outline-none z-50">
-                    MENU
-                </button>
+            <div class="nav-mobile-toggle">
+                <button id="menu-toggle" class="btn-menu" aria-label="Toggle Menu" aria-expanded="false">MENU</button>
             </div>
         </div>
     </nav>
 
     <!-- Mobile Menu -->
-    <div id="mobile-menu" class="fixed inset-0 bg-news-bg z-40 flex flex-col px-6 border-l-4 border-news-accent transform translate-x-full transition-transform duration-500 ease-in-out">
-        <nav class="flex flex-col gap-4 overflow-y-auto max-h-screen pt-24 pb-8 hide-scroll">
-            <h4 class="text-sm font-mono tracking-widest text-news-accent mb-2 uppercase">News Sources</h4>
-            <div id="mobile-source-grid" class="grid grid-cols-2 gap-4"></div>
+    <div id="mobile-menu" class="mobile-menu" aria-hidden="true">
+        <nav class="mobile-menu-inner hide-scroll">
+            <h4 class="mobile-menu-title">News Sources</h4>
+            <div id="mobile-source-grid" class="mobile-grid"></div>
         </nav>
     </div>
 
     <!-- Main Feed -->
-    <main id="main-feed" class="flex-grow pt-16 lg:pt-20 max-w-[1600px] mx-auto w-full border-x border-news-border opacity-0 transition-opacity duration-1000">
+    <main id="main-feed" class="main-wrapper container opacity-0 transition-opacity">
         
         <!-- Hero Section -->
-        <header class="grid grid-cols-1 lg:grid-cols-12 border-b-2 border-news-border bg-news-bg">
-            <div class="lg:col-span-7 p-6 lg:p-12 border-b lg:border-b-0 lg:border-r border-news-border flex flex-col justify-center crosshair crosshair-tl">
-                <div class="inline-block border border-news-border text-white bg-news-primary font-mono text-xs lg:text-sm font-bold tracking-[0.2em] px-3 py-1.5 mb-4 uppercase w-max">
-                    Top Story
-                </div>
-                <div class="flex items-center gap-3 mb-3">
-                    <span id="hero-date" class="text-news-muted font-mono text-xs lg:text-sm tracking-widest uppercase"></span>
-                </div>
-                <h2 id="hero-title" class="font-heading text-4xl lg:text-6xl text-white leading-[0.9] tracking-wide mb-4 lg:mb-6 cursor-pointer hover:text-news-accent transition-colors"></h2>
-                <p id="hero-desc" class="text-news-muted text-base lg:text-xl font-light leading-relaxed max-w-2xl line-clamp-3 mb-6 lg:mb-8"></p>
+        <header class="hero">
+            <div class="hero-content crosshair crosshair-tl">
+                <div class="hero-badge">Top Story</div>
+                <div class="hero-date" id="hero-date"></div>
+                <h2 id="hero-title" class="hero-title" tabindex="0"></h2>
+                <p id="hero-desc" class="hero-desc line-clamp-3"></p>
                 
-                <div class="flex items-center justify-between mt-auto pt-4">
-                    <div class="flex items-center gap-2 lg:gap-3">
-                        <div class="bg-news-surfaceAlt p-2 border border-news-border rounded">
-                            <img id="hero-logo" src="" class="h-5 lg:h-6 w-auto object-contain" alt="Source Logo">
+                <div class="hero-footer">
+                    <div class="hero-source">
+                        <div class="hero-logo-box">
+                            <img id="hero-logo" src="" alt="Source Logo">
                         </div>
-                        <span id="hero-source-name" class="text-xs lg:text-sm font-mono tracking-widest text-news-muted uppercase"></span>
+                        <span id="hero-source-name" class="hero-source-name"></span>
                     </div>
-                    <button id="hero-btn" class="bg-news-cta text-black font-bold text-xs lg:text-sm tracking-[0.2em] px-6 py-3 lg:px-8 lg:py-4 uppercase hover:bg-news-ctaHover transition-colors flex items-center gap-2 rounded">
-                        Read Article <i data-lucide="arrow-right" class="w-4 h-4 lg:w-5 lg:h-5"></i>
-                    </button>
+                    <div>
+                        <button id="hero-btn" class="btn btn-primary" aria-label="Read full article">
+                            Read Article <i data-lucide="arrow-right"></i>
+                        </button>
+                    </div>
                 </div>
             </div>
-            <div class="lg:col-span-5 relative min-h-[300px] lg:min-h-[500px] bg-news-surface border-news-border overflow-hidden group cursor-pointer" id="hero-img-container">
-                <img id="hero-img" src="" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-105 transition-all duration-1000" alt="Headline Image">
-                <div class="absolute inset-0 bg-gradient-to-t from-news-bg via-news-bg/20 to-transparent pointer-events-none"></div>
+            <div class="hero-img-area" id="hero-img-container" role="img" aria-label="Hero Image">
+                <img id="hero-img" src="" class="hero-img" alt="">
+                <div class="hero-img-overlay"></div>
             </div>
         </header>
 
         <!-- News Ticker -->
-        <div class="border-b border-news-border bg-news-surfaceAlt overflow-hidden">
-            <div class="flex items-center h-10 lg:h-12">
-                <div class="shrink-0 bg-news-primary text-white font-bold text-xs tracking-[0.2em] px-4 lg:px-6 h-full flex items-center uppercase border-r border-news-border z-10">
-                    <span class="md:hidden">LATEST</span>
-                    <span class="hidden md:inline">LATEST HEADLINES</span>
-                </div>
-                <div class="overflow-hidden flex-1 h-full">
-                    <div id="ticker-content" class="ticker-inner h-full items-center font-mono text-xs lg:text-sm tracking-widest text-news-muted">
+        <section class="ticker-section" aria-label="Latest Headlines">
+            <div class="ticker-wrap">
+                <div class="ticker-label">LATEST</div>
+                <div class="ticker-content">
+                    <div id="ticker-content" class="ticker-inner">
                         <!-- Populated via JS -->
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <div class="grid grid-cols-1 xl:grid-cols-12 gap-0 items-start">
+        <div class="content-grid">
             
             <!-- Left Column: News Feed -->
-            <div class="xl:col-span-8 border-b xl:border-b-0 xl:border-r border-news-border">
-                
+            <div class="feed-col">
                 <!-- Briefing -->
-                <section class="bg-news-surface border-b border-news-border relative">
-                    <div class="sticky top-16 lg:top-20 z-30 p-5 lg:p-8 border-b border-news-border bg-news-surfaceAlt flex items-center gap-3">
-                        <div class="w-2 h-2 lg:w-3 lg:h-3 bg-news-primary"></div>
-                        <h2 class="font-heading text-3xl lg:text-4xl tracking-widest pt-1 leading-none text-white">LATEST ARTICLES</h2>
-                    </div>
-                    <div id="briefing-grid" class="divide-y divide-news-border bg-news-bg">
+                <section class="section-wrap">
+                    <header class="section-header">
+                        <div class="section-header-dot"></div>
+                        <h2 class="section-title">Latest Articles</h2>
+                    </header>
+                    <div id="briefing-grid" class="article-list">
                         <!-- Populated via JS -->
                     </div>
-                    <div class="p-6 bg-news-bg flex justify-center">
-                        <button id="load-more-btn" class="border border-news-border text-white font-bold text-xs lg:text-sm tracking-[0.2em] px-6 py-3 lg:px-8 lg:py-4 uppercase hover:bg-news-surface hover:text-news-cta hover:border-news-cta rounded transition-colors w-full md:w-auto">
-                            Load More Articles
-                        </button>
+                    <div class="load-more-wrap">
+                        <button id="load-more-btn" class="btn btn-outline">Load More Articles</button>
                     </div>
                 </section>
 
                 <!-- Prior Updates -->
-                <section class="bg-news-surface relative">
-                    <div class="sticky top-16 lg:top-20 z-30 p-5 lg:p-8 border-y border-b border-news-border bg-news-surfaceAlt flex items-center gap-3">
-                        <div class="w-2 h-2 lg:w-3 lg:h-3 bg-news-primary"></div>
-                        <h2 class="font-heading text-3xl lg:text-4xl tracking-widest pt-1 leading-none text-white">OLDER STORIES</h2>
-                    </div>
-                    <div id="recent-grid" class="divide-y divide-news-border bg-news-bg">
+                <section class="section-wrap border-top">
+                    <header class="section-header" style="border-top: 1px solid var(--border);">
+                        <div class="section-header-dot"></div>
+                        <h2 class="section-title">Older Stories</h2>
+                    </header>
+                    <div id="recent-grid" class="article-list">
                         <!-- Populated via JS -->
                     </div>
-                    <div class="p-6 bg-news-bg flex justify-center">
-                        <button id="load-more-older-btn" class="border border-news-border text-white font-bold text-xs lg:text-sm tracking-[0.2em] px-6 py-3 lg:px-8 lg:py-4 uppercase hover:bg-news-surface hover:text-news-cta hover:border-news-cta rounded transition-colors w-full md:w-auto">
-                            Load More Articles
-                        </button>
+                    <div class="load-more-wrap">
+                        <button id="load-more-older-btn" class="btn btn-outline">Load More Articles</button>
                     </div>
                 </section>
-
             </div>
 
             <!-- Right Column: Sidebar Widgets -->
-            <div class="xl:col-span-4 bg-news-bg flex flex-col gap-6 lg:gap-8 p-6 lg:p-8">
-                
+            <aside class="sidebar-col">
                 <!-- City Newsroom -->
-                <section id="newsroom-section" class="hidden bg-news-surface border border-news-border rounded-2xl overflow-hidden shadow-xl">
-                    <div class="p-4 lg:p-6 border-b-2 border-news-accent bg-news-surfaceAlt flex items-center gap-2 relative">
-                        <div class="w-2 h-2 bg-news-accent"></div>
-                        <h2 class="font-heading text-xl lg:text-2xl tracking-widest pt-1 leading-none text-white">CITY HALL</h2>
-                    </div>
-                    <div class="relative p-6 lg:p-8 text-center bg-news-surface">
+                <section id="newsroom-section" class="widget hidden" aria-label="City Hall Updates">
+                    <header class="widget-header slider-widget-header">
+                        <div class="slider-dot"></div>
+                        <h2 class="slider-title">CITY HALL</h2>
+                    </header>
+                    <div class="slider-body">
                         <!-- Progress Bar -->
-                        <div class="absolute top-0 left-0 w-full h-1 bg-news-border">
-                            <div id="slider-progress" class="h-full bg-news-cta w-0"></div>
+                        <div class="progress-track">
+                            <div id="slider-progress" class="progress-bar"></div>
                         </div>
 
-                        <div class="inline-block border border-news-border text-news-accent font-mono text-[10px] lg:text-xs tracking-widest px-2 py-1 mb-3 lg:mb-4 uppercase mt-2">
-                            Official Press Release
-                        </div>
-                        <h3 id="slider-title" class="font-heading text-2xl lg:text-3xl text-white tracking-wide mb-3 lg:mb-4 cursor-pointer hover:text-news-cta transition-colors line-clamp-3 min-h-[5rem] lg:min-h-[7rem] flex items-center justify-center"></h3>
-                        <p id="slider-date" class="font-mono text-[10px] lg:text-xs text-news-muted uppercase"></p>
+                        <div class="slider-tag">Official Release</div>
+                        <h3 id="slider-title" class="slider-content-title line-clamp-3" tabindex="0"></h3>
+                        <p id="slider-date" class="slider-date"></p>
                         
                         <!-- Explicit Controls -->
-                        <div class="absolute inset-y-0 left-2 flex items-center">
-                            <button id="slider-prev" class="bg-news-bg/80 border border-news-border text-news-muted hover:text-white p-2 rounded-full transition-colors">
-                                <i data-lucide="chevron-left" class="w-4 h-4 lg:w-5 lg:h-5"></i>
-                            </button>
+                        <div class="slider-controls left">
+                            <button id="slider-prev" class="btn-icon" aria-label="Previous update"><i data-lucide="chevron-left"></i></button>
                         </div>
-                        <div class="absolute inset-y-0 right-2 flex items-center">
-                            <button id="slider-next" class="bg-news-bg/80 border border-news-border text-news-muted hover:text-white p-2 rounded-full transition-colors">
-                                <i data-lucide="chevron-right" class="w-4 h-4 lg:w-5 lg:h-5"></i>
-                            </button>
+                        <div class="slider-controls right">
+                            <button id="slider-next" class="btn-icon" aria-label="Next update"><i data-lucide="chevron-right"></i></button>
                         </div>
                     </div>
                 </section>
 
                 <!-- Weather Terminal -->
-                <section class="bg-news-surface border border-news-border rounded-2xl overflow-hidden shadow-xl">
-                    <div class="p-4 lg:p-6 border-b border-news-border bg-news-surfaceAlt">
-                        <h3 class="font-heading text-xl lg:text-2xl text-white tracking-wide flex items-center justify-between">
-                            Local Weather <i data-lucide="cloud-sun" class="text-news-accent w-5 h-5 lg:w-6 lg:h-6"></i>
-                        </h3>
-                    </div>
+                <section class="widget" aria-label="Local Weather">
+                    <header class="widget-header weather-header">
+                        <h3>Local Weather <i data-lucide="cloud-sun"></i></h3>
+                    </header>
                     
-                    <div class="p-6 space-y-6">
-                        <div class="flex items-end justify-between">
-                            <div class="flex items-start gap-2">
-                                <span id="weather-temp" class="font-heading text-6xl lg:text-7xl leading-none text-white tracking-wider">--°</span>
-                                <span class="font-mono text-sm text-news-muted mb-1">C</span>
+                    <div class="weather-body">
+                        <div class="weather-main">
+                            <div class="temp-box">
+                                <span id="weather-temp" class="temp-val">--</span>
+                                <span class="temp-unit">°C</span>
                             </div>
-                            <div class="text-right">
-                                <i id="weather-main-icon" data-lucide="cloud" class="w-6 h-6 lg:w-8 lg:h-8 text-news-accent ml-auto mb-2"></i>
-                                <p id="weather-desc" class="font-mono text-xs text-white uppercase tracking-widest">--</p>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-3 gap-2 border border-news-border bg-news-surfaceAlt p-3 lg:p-4 rounded-xl">
-                            <div class="text-center">
-                                <p class="font-mono text-[10px] text-news-muted uppercase mb-1">WIND</p>
-                                <p id="weather-wind" class="font-mono text-xs lg:text-sm text-white">--</p>
-                            </div>
-                            <div class="text-center border-x border-news-border">
-                                <p class="font-mono text-[10px] text-news-muted uppercase mb-1">HUM</p>
-                                <p id="weather-hum" class="font-mono text-xs lg:text-sm text-white">--</p>
-                            </div>
-                            <div class="text-center">
-                                <p class="font-mono text-[10px] text-news-muted uppercase mb-1">DIR</p>
-                                <p id="weather-dir" class="font-mono text-xs lg:text-sm text-white">--</p>
+                            <div class="weather-icon-box">
+                                <i id="weather-main-icon" data-lucide="cloud"></i>
+                                <p id="weather-desc" class="weather-desc">--</p>
                             </div>
                         </div>
 
-                        <div class="border border-news-border bg-news-surfaceAlt rounded-xl overflow-hidden">
-                            <div class="p-2 border-b border-news-border bg-news-bg text-center font-mono text-[10px] text-news-muted uppercase tracking-widest">
-                                5-Day Projection
+                        <div class="weather-stats">
+                            <div class="stat-item">
+                                <p class="stat-label">WIND</p>
+                                <p id="weather-wind" class="stat-val">--</p>
                             </div>
-                            <div id="forecast-row" class="grid grid-cols-5 divide-x divide-news-border">
+                            <div class="stat-item mid">
+                                <p class="stat-label">HUM</p>
+                                <p id="weather-hum" class="stat-val">--</p>
+                            </div>
+                            <div class="stat-item">
+                                <p class="stat-label">DIR</p>
+                                <p id="weather-dir" class="stat-val">--</p>
+                            </div>
+                        </div>
+
+                        <div class="forecast-box">
+                            <div class="forecast-title">5-Day Projection</div>
+                            <div id="forecast-row" class="forecast-row">
                                 <!-- Populated via JS -->
                             </div>
                         </div>
                     </div>
                 </section>
-
-            </div>
+            </aside>
         </div>
     </main>
 
     <!-- Source Archive Overlay -->
-    <div id="source-view" class="hidden flex-grow pt-16 lg:pt-20 max-w-[1600px] mx-auto w-full border-x border-news-border bg-news-bg">
-        <div class="p-6 md:p-12 border-b-2 border-news-accent bg-news-surface flex flex-col md:flex-row items-start md:items-center justify-between gap-6 crosshair crosshair-tl">
-            <div class="flex items-center gap-4 lg:gap-6">
-                <div class="bg-news-surfaceAlt p-3 lg:p-4 border border-news-border rounded-xl">
-                    <img id="source-view-logo" src="" class="w-12 h-12 lg:w-16 lg:h-16 object-contain" alt="Source Logo">
+    <section id="source-view" class="source-view container hidden" aria-label="Source Archive">
+        <header class="sv-header crosshair crosshair-tl">
+            <div class="sv-info">
+                <div class="sv-logo-box">
+                    <img id="source-view-logo" src="" alt="Source Logo">
                 </div>
                 <div>
-                    <span class="text-news-accent font-mono text-xs font-bold tracking-[0.2em] uppercase block mb-1">Source Feed</span>
-                    <h2 id="source-view-title" class="font-heading text-4xl lg:text-5xl tracking-widest leading-none text-white"></h2>
-                    <p id="source-view-count" class="font-mono text-news-muted text-sm mt-2 uppercase"></p>
+                    <span class="sv-label">Source Feed</span>
+                    <h2 id="source-view-title" class="sv-title"></h2>
+                    <p id="source-view-count" class="sv-count"></p>
                 </div>
             </div>
-            <button onclick="closeSourceView()" class="border border-news-border text-white font-bold text-xs lg:text-sm tracking-[0.2em] px-6 py-3 lg:px-8 lg:py-4 rounded uppercase hover:bg-news-surfaceAlt transition-colors flex items-center gap-2">
-                <i data-lucide="corner-down-left" class="w-4 h-4 lg:w-5 lg:h-5"></i> Back to Home
-            </button>
-        </div>
-        <div id="source-grid" class="divide-y divide-news-border bg-news-bg"></div>
-    </div>
+            <div>
+                <button onclick="closeSourceView()" class="btn btn-outline" aria-label="Go back to home">
+                    <i data-lucide="corner-down-left"></i> Back to Home
+                </button>
+            </div>
+        </header>
+        <div id="source-grid" class="article-list"></div>
+    </section>
 
     <!-- Footer -->
-    <footer class="max-w-[1600px] mx-auto w-full border-x border-b border-news-border bg-news-surfaceAlt py-8 px-6 lg:px-12 flex flex-col md:flex-row justify-between items-center gap-4 mt-auto">
-        <div class="font-heading text-2xl lg:text-3xl tracking-widest text-news-muted flex items-center gap-2">
-            LONDON NEWS <span class="text-sm font-mono tracking-normal ml-2 text-news-border">|</span> <span class="text-sm font-sans tracking-normal text-news-muted">© 2026</span>
+    <footer class="app-footer container">
+        <div class="footer-brand">
+            LONDON NEWS <span class="sep">|</span> <span class="copy">© 2026</span>
         </div>
-        <div class="text-xs font-mono text-news-muted text-center md:text-right leading-relaxed">
+        <div class="footer-text">
             YOUR TRUSTED LOCAL NEWS SOURCE.<br>
             UPDATED 24/7.
         </div>
@@ -307,6 +641,14 @@
         let visibleCount = 8;
         let visibleOlderCount = 4;
         const RSS_PROXY = 'https://rss-proxy.davidbusch-02.workers.dev/local';
+
+        // Predefined gradients from the theme palette for random fallback assignments
+        const fallbackGradients = [
+            'linear-gradient(135deg, var(--primary), var(--bg))',
+            'linear-gradient(135deg, var(--accent), var(--bg))',
+            'linear-gradient(135deg, var(--cta), var(--bg))',
+            'linear-gradient(135deg, var(--border), var(--surface-alt))'
+        ];
 
         const decodeEntities = (html) => {
             const txt = document.createElement("textarea");
@@ -341,26 +683,6 @@
             return null;
         };
 
-        const getFallbackGraphic = (title) => {
-            const gradients = [
-                'from-[#265126] to-[#131A1C]',
-                'from-[#28B4EA] to-[#131A1C]',
-                'from-[#488795] to-[#131A1C]',
-                'from-[#193619] to-[#131A1C]'
-            ];
-            const randomGradient = gradients[Math.floor(Math.random() * gradients.length)];
-            
-            const t = title.toLowerCase();
-            let icon = 'newspaper';
-            if (t.match(/police|crash|crime|court|arrest|fire/)) icon = 'shield-alert';
-            else if (t.match(/council|city|mayor|tax|housing/)) icon = 'building-2';
-            else if (t.match(/sports|hockey|game|knights/)) icon = 'trophy';
-            else if (t.match(/weather|snow|rain|storm/)) icon = 'cloud-lightning';
-            else if (t.match(/business|economy|jobs/)) icon = 'briefcase';
-
-            return { gradient: randomGradient, icon };
-        };
-
         // Create Database Row Card
         const createNewsRow = (article) => {
             const logo = getSourceLogo(article.link, article.title);
@@ -369,40 +691,42 @@
 
             let mediaContent = '';
             if (article.thumbnail) {
-                mediaContent = `<img src="${article.thumbnail}" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500" alt="Thumbnail">`;
+                mediaContent = `<img src="${article.thumbnail}" alt="Thumbnail">`;
             } else {
-                const fallback = getFallbackGraphic(cleanTitle);
-                mediaContent = `<div class="w-full h-full bg-gradient-to-br ${fallback.gradient} flex items-center justify-center opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500">
-                    <i data-lucide="${fallback.icon}" class="w-12 h-12 text-white/40 group-hover:text-white/70 transition-colors"></i>
-                </div>`;
+                let icon = 'newspaper';
+                const t = cleanTitle.toLowerCase();
+                if (t.match(/police|crash|crime|court|arrest|fire/)) icon = 'shield-alert';
+                else if (t.match(/council|city|mayor|tax|housing/)) icon = 'building-2';
+                else if (t.match(/sports|hockey|game|knights/)) icon = 'trophy';
+                else if (t.match(/weather|snow|rain|storm/)) icon = 'cloud-lightning';
+                else if (t.match(/business|economy|jobs/)) icon = 'briefcase';
+
+                const randomGrad = fallbackGradients[Math.floor(Math.random() * fallbackGradients.length)];
+                mediaContent = `<div class="article-fallback" style="background: ${randomGrad}"><i data-lucide="${icon}"></i></div>`;
             }
 
-            const row = document.createElement('div');
-            row.className = 'article-card flex flex-col md:flex-row p-6 lg:p-8 hover:bg-news-surface transition-colors cursor-pointer gap-6 group';
-            row.onclick = () => window.open(article.link, '_blank');
+            const row = document.createElement('article');
+            row.className = 'article-card';
+            row.onclick = () => window.open(article.link, '_blank', 'noopener,noreferrer');
             
             row.innerHTML = `
-                <div class="w-full md:w-48 lg:w-56 aspect-video shrink-0 border border-news-border overflow-hidden relative rounded">
+                <div class="article-thumb-box">
                     ${mediaContent}
                 </div>
-                <div class="flex-grow flex flex-col justify-center">
-                    <div class="flex items-center gap-3 text-xs lg:text-sm font-mono text-news-muted uppercase mb-2">
-                        <span class="text-white">${formatDate(article.pubDate)}</span>
+                <div class="article-content">
+                    <div class="article-meta">
+                        <span class="date">${formatDate(article.pubDate)}</span>
                         <span>//</span>
-                        <span class="flex items-center gap-2">
-                            ${logo ? `<img src="${logo}" class="h-4 w-auto opacity-90 rounded-sm" alt="">` : ''}
+                        <span class="article-source">
+                            ${logo ? `<img src="${logo}" alt="">` : ''}
                             ${domain}
                         </span>
                     </div>
-                    <h3 class="font-heading text-2xl lg:text-3xl text-white tracking-wide group-hover:text-news-cta transition-colors leading-tight mb-2 line-clamp-2">
-                        ${cleanTitle}
-                    </h3>
-                    <p class="text-news-muted font-sans text-sm lg:text-base line-clamp-2 mt-auto">
-                        ${stripHtml(article.description || "")}
-                    </p>
+                    <h3 class="article-title line-clamp-2">${cleanTitle}</h3>
+                    <p class="article-desc line-clamp-2">${stripHtml(article.description || "")}</p>
                 </div>
-                <div class="hidden md:flex items-center pl-4 lg:pl-6">
-                    <span class="dl-arrow text-2xl lg:text-3xl font-light text-news-muted group-hover:text-news-cta">&rarr;</span>
+                <div class="article-arrow">
+                    <span class="article-arrow-icon">&rarr;</span>
                 </div>
             `;
             return row;
@@ -414,7 +738,6 @@
             const hero = allArticles.find(a => a.thumbnail) || allArticles[0];
 
             if(hero) {
-                // Hero
                 const heroImgUrl = hero.thumbnail || 'https://images.unsplash.com/photo-1544365558-35aa4afcf11f?q=80&w=1200';
                 document.getElementById('hero-img').src = heroImgUrl;
                 document.getElementById('hero-title').textContent = decodeEntities(hero.title);
@@ -424,7 +747,7 @@
                 const heroLogo = getSourceLogo(hero.link, hero.title);
                 if(heroLogo) document.getElementById('hero-logo').src = heroLogo;
                 
-                const openHero = () => window.open(hero.link, '_blank');
+                const openHero = () => window.open(hero.link, '_blank', 'noopener,noreferrer');
                 document.getElementById('hero-btn').onclick = openHero;
                 document.getElementById('hero-img-container').onclick = openHero;
             }
@@ -433,11 +756,11 @@
             const ticker = document.getElementById('ticker-content');
             if (ticker) {
                 ticker.innerHTML = '';
-                allArticles.slice(0, 8).forEach(a => {
-                    ticker.innerHTML += `<span class="ticker-item cursor-pointer hover:text-news-cta transition-colors" onclick="window.open('${a.link}', '_blank')"><span class="text-news-accent mr-3">&#9670;</span> ${decodeEntities(a.title)}</span>`;
+                allArticles.slice(0, 10).forEach(a => {
+                    ticker.innerHTML += `<span class="ticker-item" onclick="window.open('${a.link}', '_blank', 'noopener,noreferrer')"><span>&#9670;</span> ${decodeEntities(a.title)}</span>`;
                 });
-                // duplicate for infinite scroll
-                ticker.innerHTML += ticker.innerHTML;
+                // Duplicate for smooth infinite scroll
+                ticker.innerHTML += ticker.innerHTML; 
             }
 
             // Briefing Grid
@@ -474,7 +797,7 @@
             }
 
             lucide.createIcons();
-            document.getElementById('main-feed').style.opacity = '1';
+            document.getElementById('main-feed').classList.remove('opacity-0');
         };
 
         const renderCarouselSlide = (articles) => {
@@ -482,16 +805,15 @@
             const titleEl = document.getElementById('slider-title');
             if(titleEl) {
                 titleEl.textContent = stripHtml(article.title).replace(/\s*-\s*City of London\s*$/i, "");
-                titleEl.onclick = () => window.open(article.link, '_blank');
+                titleEl.onclick = () => window.open(article.link, '_blank', 'noopener,noreferrer');
             }
             const dateEl = document.getElementById('slider-date');
             if(dateEl) dateEl.textContent = "DATE: " + formatDate(article.pubDate);
 
-            // Restart progress bar animation
             const progress = document.getElementById('slider-progress');
             if (progress) {
                 progress.classList.remove('progress-bar-anim');
-                void progress.offsetWidth; // trigger reflow
+                void progress.offsetWidth;
                 progress.classList.add('progress-bar-anim');
             }
         };
@@ -564,10 +886,10 @@
                         const day = new Date(data.daily.time[i]).toLocaleDateString("en-US", { weekday: "short" });
                         const code = data.daily.weathercode[i];
                         forecastRow.innerHTML += `
-                            <div class="flex flex-col items-center p-2 lg:p-3">
-                                <span class="font-mono text-[10px] text-news-muted uppercase mb-1">${day}</span>
-                                <i data-lucide="${iconMap[code] || 'cloud'}" class="w-4 h-4 text-news-accent mb-1"></i>
-                                <span class="font-mono text-xs lg:text-sm text-white">${Math.round(data.daily.temperature_2m_max[i])}°</span>
+                            <div class="forecast-day">
+                                <span>${day}</span>
+                                <i data-lucide="${iconMap[code] || 'cloud'}"></i>
+                                <span>${Math.round(data.daily.temperature_2m_max[i])}°</span>
                             </div>
                         `;
                     }
@@ -589,17 +911,17 @@
                 feedSources.forEach((s, idx) => {
                     if (nav && idx < 6) {
                         const btn = document.createElement('a');
-                        btn.className = 'flex-1 min-w-[100px] lg:min-w-[120px] flex items-center justify-center gap-2 text-xs font-mono tracking-[0.15em] text-news-muted hover:text-white hover:bg-news-surface transition-colors border-r border-news-border h-full cursor-pointer uppercase group';
-                        btn.innerHTML = `<img src="${s.logo}" class="w-4 h-4 lg:w-5 lg:h-5 object-contain grayscale opacity-70 group-hover:grayscale-0 group-hover:opacity-100 transition-all rounded-sm" alt="${s.name}"><span class="truncate">${s.name.split(' ')[0]}</span>`;
+                        btn.className = 'nav-source-btn';
+                        btn.innerHTML = `<img src="${s.logo}" alt="${s.name}"><span class="truncate">${s.name.split(' ')[0]}</span>`;
                         btn.onclick = () => openSourceView(s);
                         nav.appendChild(btn);
                     }
 
                     if (mobileGrid) {
                         const mBtn = document.createElement('button');
-                        mBtn.className = 'flex flex-col items-center justify-center gap-2 lg:gap-3 bg-news-surface border border-news-border p-3 lg:p-4 rounded-xl hover:border-news-accent transition-colors text-center';
-                        mBtn.innerHTML = `<img src="${s.logo}" class="w-6 h-6 lg:w-8 h-8 object-contain rounded-sm" alt=""><span class="font-mono text-[10px] lg:text-xs font-bold text-news-muted uppercase leading-tight">${s.name}</span>`;
-                        mBtn.onclick = () => { openSourceView(s); document.getElementById('mobile-menu').classList.add('translate-x-full'); };
+                        mBtn.className = 'mobile-source-card';
+                        mBtn.innerHTML = `<img src="${s.logo}" alt=""><span>${s.name}</span>`;
+                        mBtn.onclick = () => { openSourceView(s); document.getElementById('mobile-menu').classList.remove('open'); };
                         mobileGrid.appendChild(mBtn);
                     }
                 });
@@ -633,10 +955,10 @@
                 const menuToggle = document.getElementById('menu-toggle');
                 if (menuToggle && mobileMenu) {
                     menuToggle.onclick = () => {
-                        const isClosed = mobileMenu.classList.contains('translate-x-full');
-                        mobileMenu.classList.toggle('translate-x-full', !isClosed);
-                        menuToggle.textContent = isClosed ? 'CLOSE' : 'MENU';
-                        menuToggle.classList.toggle('text-news-accent', isClosed);
+                        const isOpen = mobileMenu.classList.contains('open');
+                        mobileMenu.classList.toggle('open', !isOpen);
+                        menuToggle.textContent = isOpen ? 'MENU' : 'CLOSE';
+                        menuToggle.setAttribute('aria-expanded', !isOpen);
                     };
                 }
 
