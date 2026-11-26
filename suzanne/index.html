@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="dark">
+<title>Suzanne Raider — Video Archive</title>
+<style>
+:root{color-scheme:dark;--bg:#101114;--panel:#191b20;--line:#30333b;--text:#f2f0ed;--muted:#a9acb5;--accent:#efb58c;font-family:system-ui,-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text)}a{color:inherit}button,input{font:inherit}button,a,input{outline-offset:5px} :focus-visible{outline:2px solid var(--accent)}.wrap{width:min(1320px,calc(100% - 48px));margin:auto}header{border-bottom:1px solid var(--line);padding:42px 0 32px}.brand{display:flex;align-items:center;gap:16px}.mark{width:52px;height:52px;border-radius:16px;background:#efb58c;color:#201711;display:grid;place-items:center;flex-shrink:0}.mark svg{width:27px}h1{font-size:clamp(1.7rem,4vw,2.7rem);letter-spacing:-.055em;margin:0;font-weight:730}.subtitle{color:var(--muted);margin:6px 0 0}.header-row{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}.channel{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);padding:10px 15px;border-radius:9px;text-decoration:none;font-size:.9rem}.channel:hover{background:var(--panel)}main{padding:30px 0 60px}.toolbar{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-bottom:24px}h2{font-size:1.35rem;margin:0 0 5px;letter-spacing:-.03em}.count{color:var(--muted);font-size:.9rem}.search{display:flex;align-items:center;gap:10px;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:0 14px;width:min(100%,360px)}.search svg{width:18px;color:var(--muted);flex-shrink:0}.search input{border:0;background:transparent;color:var(--text);width:100%;padding:13px 0;outline:none}.search:focus-within{border-color:var(--accent)}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,270px),1fr));gap:22px}.video{display:block;text-align:left;padding:0;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:var(--text);overflow:hidden;cursor:pointer;transition:border-color .18s,transform .18s}.video:hover{border-color:#77717a;transform:translateY(-3px)}.thumbnail{aspect-ratio:16/9;position:relative;background:#25262c;overflow:hidden}.thumbnail img{width:100%;height:100%;object-fit:cover;display:block}.play{position:absolute;bottom:12px;right:12px;background:#101114dd;border-radius:50%;width:36px;height:36px;display:grid;place-items:center}.play svg{width:17px}.info{padding:15px 16px 18px}.info h3{font-size:1rem;line-height:1.45;margin:0 0 9px;overflow-wrap:anywhere}.info time{color:var(--muted);font-size:.85rem}.state{padding:64px 20px;text-align:center;border:1px dashed var(--line);border-radius:12px;color:var(--muted);line-height:1.6}.state[hidden]{display:none}footer{border-top:1px solid var(--line);padding:24px 0;color:var(--muted);font-size:.85rem}dialog{width:min(900px,calc(100% - 24px));max-height:90vh;overflow:auto;background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:16px;padding:0}dialog::backdrop{background:#000c}.modal-head{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;gap:15px}.modal-head h2{font-size:1rem;margin:0;overflow-wrap:anywhere}.close{border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:8px;width:36px;height:36px;cursor:pointer;flex-shrink:0;font-size:22px}.player{aspect-ratio:16/9;background:#000}.player iframe{display:block;width:100%;height:100%;border:0}.modal-foot{padding:18px 20px}.modal-foot a{color:var(--accent)}.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}@media(max-width:600px){.wrap{width:calc(100% - 32px)}header{padding:28px 0}.search{width:100%}.grid{gap:16px}}@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap header-row"><div class="brand"><div class="mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="4"/><path d="m10 8 6 4-6 4z"/></svg></div><div><h1>Suzanne Raider</h1><p class="subtitle">Unofficial video archive</p></div></div><a class="channel" href="https://www.youtube.com/@suzanneraider" target="_blank" rel="noopener noreferrer">Visit YouTube channel ↗</a></div></header>
+<main class="wrap"><div class="toolbar"><div><h2>All videos</h2><div class="count" id="count" role="status" aria-live="polite">Loading archive…</div></div><label class="search"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m16 16 5 5"/></svg><span class="sr">Search videos by title</span><input id="search" type="search" placeholder="Search videos…" disabled></label></div><div id="state" class="state" role="status">Loading videos…</div><div id="grid" class="grid"></div></main>
+<footer><div class="wrap">An independent fan archive. Videos are hosted by YouTube and belong to their respective owners.</div></footer>
+<dialog id="dialog" aria-labelledby="modal-title"><div class="modal-head"><h2 id="modal-title"></h2><button class="close" id="close" aria-label="Close video" autofocus>×</button></div><div class="player"><iframe id="player" title="YouTube video player" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen referrerpolicy="strict-origin-when-cross-origin"></iframe></div><div class="modal-foot"><a id="watch" target="_blank" rel="noopener noreferrer">Watch on YouTube ↗</a></div></dialog>
+<script>
+'use strict';
+const $=id=>document.getElementById(id), grid=$('grid'), state=$('state'), search=$('search'), count=$('count'), dialog=$('dialog'), player=$('player');
+let videos=[], opener=null;
+const dateFormat=new Intl.DateTimeFormat('en-CA',{year:'numeric',month:'long',day:'numeric',timeZone:'UTC'});
+function render(){
+ const query=search.value.trim().toLocaleLowerCase();
+ const filtered=videos.filter(v=>v.title.toLocaleLowerCase().includes(query));
+ count.textContent=`${videos.length.toLocaleString()} synced ${videos.length===1?'video':'videos'}`+(query?` · ${filtered.length} matching`:'');
+ grid.replaceChildren(); state.hidden=filtered.length>0;
+ state.textContent=videos.length===0?'The archive is empty. Videos will appear after the first successful sync.':'No videos match your search.';
+ const fragment=document.createDocumentFragment();
+ for(const v of filtered){
+  const card=document.createElement('button');card.type='button';card.className='video';
+  const thumb=document.createElement('div');thumb.className='thumbnail';
+  const img=document.createElement('img');img.src=`https://i.ytimg.com/vi/${v.id}/hqdefault.jpg`;img.alt='';img.loading='lazy';img.decoding='async';
+  const play=document.createElement('span');play.className='play';play.setAttribute('aria-hidden','true');play.innerHTML='<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>';
+  thumb.append(img,play);
+  const info=document.createElement('div');info.className='info';const title=document.createElement('h3');title.textContent=v.title;const time=document.createElement('time');time.dateTime=v.published;const date=new Date(v.published);time.textContent=Number.isNaN(date.getTime())?'Date unavailable':dateFormat.format(date);info.append(title,time);card.append(thumb,info);
+  card.addEventListener('click',()=>{opener=card;$('modal-title').textContent=v.title;$('watch').href=`https://www.youtube.com/watch?v=${v.id}`;player.title=v.title;player.src=`https://www.youtube-nocookie.com/embed/${v.id}?autoplay=1`;dialog.showModal();});fragment.append(card);
+ }
+ grid.append(fragment);
+}
+$('close').addEventListener('click',()=>dialog.close());
+dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close();}});
+dialog.addEventListener('close',()=>{player.removeAttribute('src');if(opener?.isConnected)opener.focus();});
+search.addEventListener('input',render);
+(async()=>{try{const response=await fetch('./videos.json',{cache:'no-cache'});if(!response.ok)throw Error('Fetch failed');const data=await response.json();if(!Array.isArray(data))throw Error('Invalid archive');videos=data.filter(v=>v&&typeof v.title==='string'&&typeof v.published==='string'&&/^[\w-]{11}$/.test(v.id)).sort((a,b)=>b.published.localeCompare(a.published));search.disabled=false;render();}catch(error){count.textContent='Archive unavailable';state.textContent='Could not load the video archive. Please refresh the page to try again.';console.error(error);}})();
+</script>
+</body>
+</html>

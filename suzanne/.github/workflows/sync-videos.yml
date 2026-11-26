@@ -1,0 +1,54 @@
+name: Sync videos
+on:
+  schedule:
+    - cron: '0 */4 * * *'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: sync-videos
+  cancel-in-progress: false
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Fetch and merge RSS feed
+        run: |
+          python3 - <<'PY'
+          import urllib.request
+          import xml.etree.ElementTree as ET
+          import json
+
+          feed = 'https://www.youtube.com/feeds/videos.xml?channel_id=UCAwcolgWYbKI8sCr9-dJQ0g'
+          ns = {'atom': 'http://www.w3.org/2005/Atom', 'yt': 'http://www.youtube.com/xml/schemas/2015'}
+          with urllib.request.urlopen(feed, timeout=30) as response:
+              root = ET.fromstring(response.read())
+          if root.tag != '{http://www.w3.org/2005/Atom}feed':
+              raise ValueError('Unexpected RSS response')
+          with open('videos.json', encoding='utf-8') as f:
+              archive = {video['id']: video for video in json.load(f)}
+          for entry in root.findall('atom:entry', ns):
+              id = entry.findtext('yt:videoId', namespaces=ns)
+              title = entry.findtext('atom:title', namespaces=ns)
+              published = entry.findtext('atom:published', namespaces=ns)
+              if not all((id, title, published)):
+                  continue
+              archive[id] = {'id': id, 'title': title, 'published': published,
+                             'thumb': f'https://i.ytimg.com/vi/{id}/hqdefault.jpg',
+                             'url': f'https://www.youtube.com/watch?v={id}'}
+          videos = sorted(archive.values(), key=lambda v: v['published'], reverse=True)
+          with open('videos.json', 'w', encoding='utf-8') as f:
+              json.dump(videos, f, ensure_ascii=False, indent=2)
+              f.write('\n')
+          PY
+      - name: Commit changes
+        run: |
+          if git diff --quiet -- videos.json; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add videos.json
+          git commit -m 'Sync YouTube video archive'
+          git push origin main
